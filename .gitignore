@@ -1,0 +1,11 @@
+# External skill libraries (cloned each session by scripts/sync-external-skills.sh)
+.claude/external-skills/
+
+# Xcode
+build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+.swiftpm/
+.DS_Store
+__pycache__/
