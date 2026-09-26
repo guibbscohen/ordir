@@ -10,6 +10,7 @@ Launch games: Dune: War for Arrakis, Star Wars: Rebellion, War of the Ring (2nd 
 | Piece | State |
 | --- | --- |
 | `Ordir/Mascot/OrdirMascotView.swift` | Written, not yet compiled. Geometry generated from `Assets/ordir-logo.svg` via `tools/svg_to_swift.py`. |
+| `Ordir/Mascot/OrdirThinkingIndicator.swift` | Thinking mascot with rotating board game / nerd-culture spinner verbs (`OrdirSpinnerVerbs.swift`), themed per game. Not yet compiled. |
 | Xcode project, auth, sessions, game data, rules Q&A | Not started |
 
 ## Proposed architecture
