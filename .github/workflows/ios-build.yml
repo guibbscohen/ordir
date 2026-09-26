@@ -1,0 +1,73 @@
+name: iOS build
+
+on:
+  push:
+    branches: [main, "claude/**"]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ios-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Pick an iPhone simulator
+        id: sim
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c '
+          import json, sys
+          devices = json.load(sys.stdin)["devices"]
+          print(next(d["udid"] for runtime, ds in sorted(devices.items(), reverse=True)
+                     if "iOS" in runtime for d in ds if d["name"].startswith("iPhone")))')
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+          xcrun simctl list devices | grep "$UDID"
+
+      - name: Build for simulator
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -project Ordir.xcodeproj \
+            -scheme Ordir \
+            -destination "id=${{ steps.sim.outputs.udid }}" \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            2>&1 | tee build.log | grep -E "error:|warning:|BUILD (SUCCEEDED|FAILED)" || true
+          grep -q "BUILD SUCCEEDED" build.log
+
+      - name: Launch and capture screenshots
+        run: |
+          UDID=${{ steps.sim.outputs.udid }}
+          mkdir -p screenshots
+          xcrun simctl boot "$UDID"
+          xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl install "$UDID" build/Build/Products/Debug-iphonesimulator/Ordir.app
+          xcrun simctl launch "$UDID" com.guibbscohen.ordir
+          sleep 8
+          xcrun simctl io "$UDID" screenshot screenshots/home-light.png
+          xcrun simctl ui "$UDID" appearance dark
+          sleep 3
+          xcrun simctl io "$UDID" screenshot screenshots/home-dark.png
+          xcrun simctl io "$UDID" recordVideo --codec h264 screenshots/home-dark.mp4 &
+          REC=$!
+          sleep 6
+          kill -INT $REC
+          wait $REC || true
+
+      - name: Upload build log and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ordir-simulator
+          path: |
+            build.log
+            screenshots/
+          if-no-files-found: ignore
