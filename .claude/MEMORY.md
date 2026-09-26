@@ -11,3 +11,5 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
 - 2026-09-26: Ordir UI direction — minimalist, sleek and modern, with smooth animations. The crystal-ball
   mascot is animated for loading answers, waiting for turns, and "speaking" to the player. Always respect
   Reduce Motion.
+- 2026-09-26: Ordir palette leans black: dark mode uses true black (#000) and neutral greys (iOS system
+  style), no navy tint. The mascot and app icon keep their colours (white/ink orb, blue sparkles, navy icon).
