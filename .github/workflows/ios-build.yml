@@ -20,6 +20,12 @@ jobs:
       - name: Show Xcode version
         run: xcodebuild -version
 
+      - name: Validate turn scripts against the official PDFs
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install --quiet pypdf
+          .venv/bin/python tools/validate_turn_scripts.py
+
       - name: Pick an iPhone simulator
         id: sim
         run: |
@@ -61,6 +67,13 @@ jobs:
           sleep 6
           kill -INT $REC
           wait $REC || true
+          xcrun simctl terminate "$UDID" com.guibbscohen.ordir
+          xcrun simctl launch "$UDID" com.guibbscohen.ordir -OrdirOpenGame duneWarForArrakis
+          sleep 5
+          xcrun simctl io "$UDID" screenshot screenshots/dune-guide-dark.png
+          xcrun simctl ui "$UDID" appearance light
+          sleep 3
+          xcrun simctl io "$UDID" screenshot screenshots/dune-guide-light.png
 
       - name: Upload build log and screenshots
         if: always()

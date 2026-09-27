@@ -1,0 +1,101 @@
+#!/usr/bin/env python3
+"""Check every turn script under Ordir/Games against its official sources.
+
+For each step (and each loop) it verifies the shape of the data and that every citation's
+excerpt really appears on the cited page of the downloaded PDF. Run from the repo root:
+
+    python3 tools/validate_turn_scripts.py
+
+Needs pypdf (`pip install pypdf`). Exits non-zero on the first file with problems.
+"""
+import json
+import pathlib
+import re
+import sys
+import unicodedata
+
+from pypdf import PdfReader
+
+ROOT = pathlib.Path(__file__).resolve().parent.parent
+SIDES = {"atreides", "harkonnen", "both"}
+
+
+def normalise(text):
+    # PDF extraction splits words ("STRA TEGY") and mangles punctuation, so compare letters and digits only.
+    text = unicodedata.normalize("NFKC", text).lower()
+    return re.sub(r"[^a-z0-9]", "", text)
+
+
+def check_citations(citations, where, sources, pages, errors):
+    if not citations:
+        errors.append(f"{where}: no citations")
+    for c in citations:
+        source, page = c.get("source"), c.get("page")
+        if source not in sources:
+            errors.append(f"{where}: unknown source {source!r}")
+            continue
+        if not isinstance(page, int) or not 1 <= page <= len(pages[source]):
+            errors.append(f"{where}: {source} has no page {page}")
+            continue
+        if source == "faq" and not c.get("entry"):
+            errors.append(f"{where}: FAQ citation needs an entry")
+        excerpt = c.get("excerpt", "")
+        if len(normalise(excerpt)) < 20:
+            errors.append(f"{where}: excerpt too short to verify")
+        elif normalise(excerpt) not in pages[source][page - 1]:
+            errors.append(f"{where}: excerpt not found on {source} p. {page}: {excerpt[:60]!r}")
+
+
+def validate(path):
+    script = json.loads(path.read_text())
+    errors = []
+    sources = {s["id"]: s for s in script["sources"]}
+    pages = {
+        sid: [normalise(p.extract_text() or "") for p in PdfReader(ROOT / s["file"]).pages]
+        for sid, s in sources.items()
+    }
+    ids = set()
+    for phase in script["phases"]:
+        if not phase.get("steps"):
+            errors.append(f"{phase['id']}: phase has no steps")
+        if "loop" in phase:
+            loop = phase["loop"]
+            if not loop.get("endLabel") or not loop.get("note"):
+                errors.append(f"{phase['id']}: loop needs endLabel and note")
+            check_citations(loop.get("citations", []), f"{phase['id']} loop", sources, pages, errors)
+        for step in phase["steps"]:
+            where = step.get("id", "?")
+            if where in ids:
+                errors.append(f"{where}: duplicate step id")
+            ids.add(where)
+            if step.get("side") not in SIDES:
+                errors.append(f"{where}: side must be one of {sorted(SIDES)}")
+            for field in ("title", "instruction"):
+                if not step.get(field, "").strip():
+                    errors.append(f"{where}: missing {field}")
+            if not step.get("components"):
+                errors.append(f"{where}: no components")
+            check_citations(step.get("citations", []), where, sources, pages, errors)
+    return errors
+
+
+def main():
+    scripts = sorted((ROOT / "Ordir" / "Games").rglob("*.turnscript.json"))
+    if not scripts:
+        sys.exit("No turn scripts found.")
+    failed = False
+    for path in scripts:
+        errors = validate(path)
+        rel = path.relative_to(ROOT)
+        if errors:
+            failed = True
+            print(f"FAIL {rel}")
+            for e in errors:
+                print(f"  - {e}")
+        else:
+            print(f"ok   {rel}")
+    sys.exit(1 if failed else 0)
+
+
+if __name__ == "__main__":
+    main()

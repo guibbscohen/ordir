@@ -22,7 +22,10 @@ Any file added under `Ordir/` joins the app target automatically, with no projec
 | --- | --- |
 | `Ordir/App/` | App entry point and home screen (mascot + game list) |
 | `Ordir/Mascot/` | `OrdirMascotView` (animated logo), `OrdirThinkingIndicator` + spinner verbs |
-| `Ordir/Games/` | `OrdirGame`, the launch games |
+| `Ordir/Games/` | `OrdirGame`, the launch games, and each game's turn script (`<game>.turnscript.json`) |
+| `Ordir/TurnGuide/` | `TurnScript` model, `TurnGuideSession` (step state machine), `TurnGuideView` (pass-and-play screen) |
+| `Sources/<game>/` | Official rulebook and FAQ PDFs the turn scripts cite |
+| `tools/validate_turn_scripts.py` | Checks every citation's excerpt appears on the cited PDF page (runs in CI) |
 | `Ordir/Assets.xcassets` | App icon, `AccentColor`, `Sparkle` (light/dark) |
 | `Assets/ordir-logo.svg` | Source logo; `tools/svg_to_swift.py` regenerates the mascot paths from it |
 
@@ -32,7 +35,8 @@ Any file added under `Ordir/` joins the app target automatically, with no projec
 | --- | --- |
 | Xcode project, home screen, app icon | Done; first build pending on a Mac |
 | Mascot (idle / speaking / thinking) and spinner verbs | Done; first build pending |
-| Auth, sessions, turn scripts, rules Q&A | Not started |
+| Dune turn guide: setup + one full round, pass-and-play on one phone | Done; every step cites a rulebook page or FAQ entry |
+| Auth, multiplayer sessions, rules Q&A | Not started |
 
 ## Proposed architecture
 

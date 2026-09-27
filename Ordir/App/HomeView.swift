@@ -8,8 +8,13 @@
 import SwiftUI
 
 struct HomeView: View {
+    // `-OrdirOpenGame <game>` at launch opens that game directly (used by CI screenshots).
+    @State private var path: [OrdirGame] = UserDefaults.standard.string(forKey: "OrdirOpenGame")
+        .flatMap(OrdirGame.init(rawValue:))
+        .map { [$0] } ?? []
+
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             ScrollView {
                 VStack(spacing: 40) {
                     header
@@ -19,7 +24,11 @@ struct HomeView: View {
                 .padding(.bottom, 32)
             }
             .navigationDestination(for: OrdirGame.self) { game in
-                GamePlaceholderView(game: game)
+                if let script = TurnScript.bundled(for: game) {
+                    TurnGuideView(script: script)
+                } else {
+                    GamePlaceholderView(game: game)
+                }
             }
         }
     }
