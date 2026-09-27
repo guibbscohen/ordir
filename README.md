@@ -5,13 +5,34 @@ rules questions with citations to the official rulebook and errata.
 
 Launch games: Dune: War for Arrakis, Star Wars: Rebellion, War of the Ring (2nd Edition).
 
+## Getting started
+
+Requires Xcode 16 or later (the project uses folder-synced groups).
+
+1. Open `Ordir.xcodeproj`.
+2. Select the **Ordir** target → Signing & Capabilities → choose your Team. Change the bundle ID
+   (`com.guibbscohen.ordir`) if you want a different one.
+3. Run on an iPhone simulator or device (iOS 17+).
+
+Any file added under `Ordir/` joins the app target automatically, with no project-file edits.
+
+## Layout
+
+| Path | What it is |
+| --- | --- |
+| `Ordir/App/` | App entry point and home screen (mascot + game list) |
+| `Ordir/Mascot/` | `OrdirMascotView` (animated logo), `OrdirThinkingIndicator` + spinner verbs |
+| `Ordir/Games/` | `OrdirGame`, the launch games |
+| `Ordir/Assets.xcassets` | App icon, `AccentColor`, `Sparkle` (light/dark) |
+| `Assets/ordir-logo.svg` | Source logo; `tools/svg_to_swift.py` regenerates the mascot paths from it |
+
 ## Status
 
 | Piece | State |
 | --- | --- |
-| `Ordir/Mascot/OrdirMascotView.swift` | Written, not yet compiled. Geometry generated from `Assets/ordir-logo.svg` via `tools/svg_to_swift.py`. |
-| `Ordir/Mascot/OrdirThinkingIndicator.swift` | Thinking mascot with rotating board game / nerd-culture spinner verbs (`OrdirSpinnerVerbs.swift`), themed per game. Not yet compiled. |
-| Xcode project, auth, sessions, game data, rules Q&A | Not started |
+| Xcode project, home screen, app icon | Done; first build pending on a Mac |
+| Mascot (idle / speaking / thinking) and spinner verbs | Done; first build pending |
+| Auth, sessions, turn scripts, rules Q&A | Not started |
 
 ## Proposed architecture
 
