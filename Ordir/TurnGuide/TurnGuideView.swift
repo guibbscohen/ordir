@@ -12,17 +12,105 @@
 import SwiftUI
 
 struct TurnGuideView: View {
-    @State private var session: TurnGuideSession
+    let script: TurnScript
+    @State private var session: TurnGuideSession?
+
+    /// `startAt` and `expansions` skip the expansion picker (CI screenshots use them).
+    init(script: TurnScript, startAt stepID: String? = nil, expansions: Set<String>? = nil) {
+        self.script = script
+        if stepID != nil || script.expansions.isEmpty {
+            let session = TurnGuideSession(script: script, expansions: expansions ?? [], startAt: stepID)
+            _session = State(initialValue: session)
+        }
+    }
+
+    var body: some View {
+        if let session {
+            TurnGuideRunner(session: session)
+        } else {
+            ExpansionPicker(script: script) { chosen in
+                session = TurnGuideSession(script: script, expansions: chosen)
+            }
+        }
+    }
+}
+
+// MARK: - Expansion picker
+
+/// Asked once before the guide starts: which expansions are on the table.
+private struct ExpansionPicker: View {
+    let script: TurnScript
+    let start: (Set<String>) -> Void
+    @State private var chosen: Set<String> = []
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 24) {
+                HStack(spacing: 14) {
+                    OrdirMascotView()
+                        .frame(width: 48, height: 48)
+                    Text("Which expansions are you playing with?")
+                        .font(.title3.weight(.semibold))
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                VStack(spacing: 12) {
+                    ForEach(script.expansions) { expansion in
+                        Toggle(isOn: binding(for: expansion.id)) {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(expansion.title)
+                                    .font(.headline)
+                                Text(expansion.summary)
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                                    .fixedSize(horizontal: false, vertical: true)
+                            }
+                        }
+                        .padding(16)
+                        .background(Color(white: 0.11), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    }
+                }
+                Text("Leave them all off to play the base game.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
+            .padding(20)
+        }
+        .safeAreaInset(edge: .bottom) {
+            Button {
+                start(chosen)
+            } label: {
+                Text("Start guide")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity, minHeight: 54)
+            }
+            .buttonStyle(PrimaryButtonStyle())
+            .padding(.horizontal, 20)
+            .padding(.bottom, 8)
+        }
+        .navigationTitle(script.title)
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func binding(for id: String) -> Binding<Bool> {
+        Binding(
+            get: { chosen.contains(id) },
+            set: { isOn in
+                if isOn { chosen.insert(id) } else { chosen.remove(id) }
+            }
+        )
+    }
+}
+
+// MARK: - Guide
+
+private struct TurnGuideRunner: View {
+    let session: TurnGuideSession
     @State private var isSpeaking = false
     /// Which faction sits at the bottom edge of the phone; the other half faces the far player.
     @State private var nearSeat: TurnScript.Side = .atreides
     @State private var enlarged: EnlargedImage?
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dismiss) private var dismiss
-
-    init(script: TurnScript, startAt stepID: String? = nil) {
-        _session = State(initialValue: TurnGuideSession(script: script, startAt: stepID))
-    }
 
     var body: some View {
         Group {
@@ -58,6 +146,7 @@ struct TurnGuideView: View {
             script: session.script,
             phase: session.phase,
             step: session.step,
+            additions: session.additions,
             stepTitle: stepTitle,
             stepKey: stepKey,
             startedAt: session.stepStartedAt,
@@ -192,6 +281,7 @@ private struct SeatPanel: View {
     let script: TurnScript
     let phase: TurnScript.Phase
     let step: TurnScript.Step
+    let additions: [TurnScript.Addition]
     let stepTitle: String
     let stepKey: String
     let startedAt: Date
@@ -212,6 +302,7 @@ private struct SeatPanel: View {
                         script: script,
                         phase: phase,
                         step: step,
+                        additions: additions,
                         title: stepTitle,
                         isSpeaking: isSpeaking,
                         enlarge: enlarge
@@ -274,6 +365,7 @@ private struct StepCard: View {
     let script: TurnScript
     let phase: TurnScript.Phase
     let step: TurnScript.Step
+    let additions: [TurnScript.Addition]
     let title: String
     let isSpeaking: Bool
     let enlarge: (TurnScript.SourceImage) -> Void
@@ -284,8 +376,8 @@ private struct StepCard: View {
                 OrdirMascotView(isSpeaking: isSpeaking)
                     .frame(width: 48, height: 48)
                 VStack(alignment: .leading, spacing: 2) {
-                    if step.side == .both {
-                        Text("Both players")
+                    if let context {
+                        Text(context)
                             .font(.footnote.weight(.semibold))
                             .foregroundStyle(.secondary)
                     }
@@ -302,7 +394,7 @@ private struct StepCard: View {
                 .fixedSize(horizontal: false, vertical: true)
 
             section("You’ll need") {
-                PictureStrip(script: script, pictures: script.pictures(for: step), enlarge: enlarge)
+                PictureStrip(script: script, pictures: script.pictures(step.images), enlarge: enlarge)
                 Text(step.components.joined(separator: ", "))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
@@ -311,6 +403,17 @@ private struct StepCard: View {
 
             section("Source") {
                 CitationList(script: script, citations: step.citations)
+            }
+
+            ForEach(Array(additions.enumerated()), id: \.offset) { _, addition in
+                section(script.expansionTitle(addition.expansion)) {
+                    Text(addition.text)
+                        .font(.body)
+                        .lineSpacing(3)
+                        .fixedSize(horizontal: false, vertical: true)
+                    PictureStrip(script: script, pictures: script.pictures(addition.images), enlarge: enlarge)
+                    CitationList(script: script, citations: addition.citations)
+                }
             }
 
             if let loop = phase.loop {
@@ -323,6 +426,13 @@ private struct StepCard: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    /// "Both players" and/or the expansion a step belongs to.
+    private var context: String? {
+        let parts = [step.side == .both ? "Both players" : nil, step.expansion.map(script.expansionTitle)]
+            .compactMap { $0 }
+        return parts.isEmpty ? nil : parts.joined(separator: " · ")
     }
 
     private func section<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {

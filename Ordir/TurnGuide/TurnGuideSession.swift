@@ -18,6 +18,10 @@ final class TurnGuideSession {
     }
 
     let script: TurnScript
+    /// Expansion ids the players switched on.
+    let expansions: Set<String>
+    /// The script's phases with steps for switched-off expansions left out.
+    let phases: [TurnScript.Phase]
     private(set) var position = Position()
     private(set) var isFinished = false
     /// When the current step began; drives the running timer.
@@ -25,17 +29,29 @@ final class TurnGuideSession {
     private var history: [Position] = []
 
     /// `startAt` jumps to a step by id (CI screenshots use it); unknown ids start at the beginning.
-    init(script: TurnScript, startAt stepID: String? = nil) {
+    init(script: TurnScript, expansions: Set<String>, startAt stepID: String? = nil) {
         self.script = script
-        for (phaseIndex, phase) in script.phases.enumerated() {
+        self.expansions = expansions
+        self.phases = script.phases.compactMap { phase in
+            let steps = phase.steps.filter { step in
+                guard let expansion = step.expansion else { return true }
+                return expansions.contains(expansion)
+            }
+            return steps.isEmpty ? nil : TurnScript.Phase(id: phase.id, title: phase.title, steps: steps, loop: phase.loop)
+        }
+        for (phaseIndex, phase) in phases.enumerated() {
             if let stepIndex = phase.steps.firstIndex(where: { $0.id == stepID }) {
                 position = Position(phase: phaseIndex, step: stepIndex)
             }
         }
     }
 
-    var phase: TurnScript.Phase { script.phases[position.phase] }
+    var phase: TurnScript.Phase { phases[position.phase] }
     var step: TurnScript.Step { phase.steps[position.step] }
+    /// Expansion additions that apply to the current step.
+    var additions: [TurnScript.Addition] {
+        (step.additions ?? []).filter { expansions.contains($0.expansion) }
+    }
     var canGoBack: Bool { !history.isEmpty || isFinished }
 
     /// Turn number inside a looping phase, e.g. the 5th alternating Action turn.
@@ -78,7 +94,7 @@ final class TurnGuideSession {
     }
 
     private func moveToNextPhase(from current: Position) {
-        guard current.phase + 1 < script.phases.count else {
+        guard current.phase + 1 < phases.count else {
             isFinished = true
             return
         }

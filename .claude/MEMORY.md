@@ -29,5 +29,6 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   Steps for both players show on both halves, and either player's "Done" advances the step for both.
 - 2026-09-27: Every guide step shows pictures of the components/cards involved (cropped from the official
   sources, each labelled with its page), not text alone.
-- 2026-09-27: Before building a game's guide, ask the user which expansions to include.
+- 2026-09-27: Before building a game's guide, ask the user which expansions to include. Expansions are
+  optional modules the players switch on before the guide starts; their rules are tagged steps or additions.
 - 2026-09-27: Dune: the Atreides check their Secret Objective at the beginning of each new round.

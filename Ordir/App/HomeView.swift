@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct HomeView: View {
-    // `-OrdirOpenGame <game>` (and optionally `-OrdirStartStep <step id>`) at launch opens that game
-    // directly; used by CI screenshots.
+    // `-OrdirOpenGame <game>` at launch opens that game directly; `-OrdirStartStep <step id>` and
+    // `-OrdirExpansions <id,id>` also skip the expansion picker. Used by CI screenshots.
     @State private var path: [OrdirGame] = UserDefaults.standard.string(forKey: "OrdirOpenGame")
         .flatMap(OrdirGame.init(rawValue:))
         .map { [$0] } ?? []
@@ -26,7 +26,12 @@ struct HomeView: View {
             }
             .navigationDestination(for: OrdirGame.self) { game in
                 if let script = TurnScript.bundled(for: game) {
-                    TurnGuideView(script: script, startAt: UserDefaults.standard.string(forKey: "OrdirStartStep"))
+                    TurnGuideView(
+                        script: script,
+                        startAt: UserDefaults.standard.string(forKey: "OrdirStartStep"),
+                        expansions: UserDefaults.standard.string(forKey: "OrdirExpansions")
+                            .map { Set($0.split(separator: ",").map(String.init)) }
+                    )
                 } else {
                     GamePlaceholderView(game: game)
                 }

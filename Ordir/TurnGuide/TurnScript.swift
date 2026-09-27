@@ -14,6 +14,8 @@ struct TurnScript: Decodable {
     let title: String
     let version: Int
     let sources: [Source]
+    /// Optional modules players can switch on before starting; steps and additions name one by id.
+    let expansions: [Expansion]
     /// Component pictures cropped from the sources by tools/crop_source_images.py.
     let images: [SourceImage]
     let phases: [Phase]
@@ -23,6 +25,12 @@ struct TurnScript: Decodable {
         let title: String
         let shortTitle: String
         let url: URL
+    }
+
+    struct Expansion: Decodable, Identifiable {
+        let id: String
+        let title: String
+        let summary: String
     }
 
     struct SourceImage: Decodable, Identifiable {
@@ -48,10 +56,21 @@ struct TurnScript: Decodable {
 
     struct Step: Decodable {
         let id: String
+        /// Set when the whole step only applies with that expansion.
+        let expansion: String?
         let side: Side
         let title: String
         let instruction: String
         let components: [String]
+        let images: [String]
+        let citations: [Citation]
+        /// Extra rules an expansion adds to this step.
+        let additions: [Addition]?
+    }
+
+    struct Addition: Decodable {
+        let expansion: String
+        let text: String
         let images: [String]
         let citations: [Citation]
     }
@@ -73,8 +92,12 @@ struct TurnScript: Decodable {
         sources.first { $0.id == citation.source }
     }
 
-    func pictures(for step: Step) -> [SourceImage] {
-        step.images.compactMap { id in images.first { $0.id == id } }
+    func pictures(_ ids: [String]) -> [SourceImage] {
+        ids.compactMap { id in images.first { $0.id == id } }
+    }
+
+    func expansionTitle(_ id: String) -> String {
+        expansions.first { $0.id == id }?.title ?? id
     }
 
     /// Asset catalog name written by tools/crop_source_images.py.

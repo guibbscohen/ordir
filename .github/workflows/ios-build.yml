@@ -64,13 +64,17 @@ jobs:
           sleep 6
           kill -INT $REC
           wait $REC || true
-          # Dune guide: a step for both players, then a Harkonnen step (Atreides half waiting).
-          for STEP in setup-board vehicles-place; do
-            xcrun simctl terminate "$UDID" com.guibbscohen.ordir
-            xcrun simctl launch "$UDID" com.guibbscohen.ordir -OrdirOpenGame duneWarForArrakis -OrdirStartStep "$STEP"
+          # Dune guide: the expansion picker, a step for both players, then an Atreides turn with
+          # every expansion on (expansion additions on the near half).
+          shot() {
+            xcrun simctl terminate "$UDID" com.guibbscohen.ordir || true
+            xcrun simctl launch "$UDID" com.guibbscohen.ordir -OrdirOpenGame duneWarForArrakis "${@:2}"
             sleep 5
-            xcrun simctl io "$UDID" screenshot "screenshots/dune-$STEP.png"
-          done
+            xcrun simctl io "$UDID" screenshot "screenshots/dune-$1.png"
+          }
+          shot expansions
+          shot setup-board -OrdirStartStep setup-board
+          shot turn-atreides -OrdirStartStep turn-atreides -OrdirExpansions desertWar,smugglers,spacingGuild
 
       - name: Upload build log and screenshots
         if: always()

@@ -70,6 +70,10 @@ def validate(path):
         if not (ROOT / "Ordir" / "Assets.xcassets" / script["game"] / f"{name}.imageset" / f"{name}.jpg").exists():
             errors.append(f"{where}: asset missing, run tools/crop_source_images.py")
 
+    expansions = {e["id"] for e in script.get("expansions", [])}
+    for e in expansions - set(sources):
+        errors.append(f"expansion {e}: needs a source with the same id")
+
     ids = set()
     for phase in script["phases"]:
         if not phase.get("steps"):
@@ -96,7 +100,21 @@ def validate(path):
             for image_id in step.get("images", []):
                 if image_id not in images:
                     errors.append(f"{where}: unknown image {image_id!r}")
+            if "expansion" in step and step["expansion"] not in expansions:
+                errors.append(f"{where}: unknown expansion {step['expansion']!r}")
             check_citations(step.get("citations", []), where, sources, pages, errors)
+            for n, addition in enumerate(step.get("additions", []), 1):
+                at = f"{where} addition {n}"
+                if addition.get("expansion") not in expansions:
+                    errors.append(f"{at}: unknown expansion {addition.get('expansion')!r}")
+                if not addition.get("text", "").strip():
+                    errors.append(f"{at}: missing text")
+                if not addition.get("images"):
+                    errors.append(f"{at}: no images")
+                for image_id in addition.get("images", []):
+                    if image_id not in images:
+                        errors.append(f"{at}: unknown image {image_id!r}")
+                check_citations(addition.get("citations", []), at, sources, pages, errors)
     return errors
 
 
