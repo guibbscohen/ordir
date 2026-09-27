@@ -312,7 +312,7 @@ private struct WaitingStrip: View {
                 .fill(side.color)
                 .frame(width: 8, height: 8)
                 .accessibilityHidden(true)
-            Text(line)
+            line
                 .font(.footnote)
                 .lineLimit(2)
             Spacer(minLength: 8)
