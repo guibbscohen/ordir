@@ -50,6 +50,7 @@ jobs:
           grep -q "BUILD SUCCEEDED" build.log
 
       - name: Launch and capture screenshots
+        timeout-minutes: 15
         run: |
           UDID=${{ steps.sim.outputs.udid }}
           mkdir -p screenshots
@@ -62,8 +63,10 @@ jobs:
           xcrun simctl io "$UDID" recordVideo --codec h264 screenshots/home.mp4 &
           REC=$!
           sleep 6
-          kill -INT $REC
-          wait $REC || true
+          # recordVideo sometimes ignores SIGINT on slow runners; never wait on it unbounded.
+          kill -INT $REC || true
+          for _ in 1 2 3 4 5 6 7 8 9 10; do kill -0 $REC 2>/dev/null || break; sleep 1; done
+          kill -KILL $REC 2>/dev/null || true
           # Dune guide: the expansion picker, a step for both players, then an Atreides turn with
           # every expansion on (expansion additions on the near half).
           shot() {
