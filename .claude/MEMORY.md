@@ -23,3 +23,11 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   interpretation with a link. No scraping.
 - 2026-09-27: The app name is Ordir. Never use "Palantír" in app copy or metadata.
 - 2026-09-27: After pushing, check the GitHub Actions iOS build; if it is red, fix it before reporting done.
+- 2026-09-27: Where a publisher FAQ/errata conflicts with the rulebook, the FAQ wins (Dune: FAQ 3.0 is final).
+- 2026-09-27: Ordir is always dark, even when the phone is in light mode.
+- 2026-09-27: One-phone play uses a 180° split screen: the far half faces the player across the table.
+  Steps for both players show on both halves, and either player's "Done" advances the step for both.
+- 2026-09-27: Every guide step shows pictures of the components/cards involved (cropped from the official
+  sources, each labelled with its page), not text alone.
+- 2026-09-27: Before building a game's guide, ask the user which expansions to include.
+- 2026-09-27: Dune: the Atreides check their Secret Objective at the beginning of each new round.

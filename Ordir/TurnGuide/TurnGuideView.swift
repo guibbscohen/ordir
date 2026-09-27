@@ -2,9 +2,11 @@
 //  TurnGuideView.swift
 //  Ordir
 //
-//  Pass-and-play turn guide on one phone: who acts, what to do, what you need, where the rule is.
-//  "Done" advances; the mascot speaks each new instruction; the top strip tells the waiting
-//  player where the other side is and for how long.
+//  Pass-and-play turn guide on one phone lying flat between two players. The screen splits in two:
+//  the far half is turned 180° to face the player across the table. The acting side's half shows
+//  the step (instruction, component pictures, sources, "Done"); the other half shows who is acting,
+//  on which step, and for how long. Steps for both players show on both halves; either "Done"
+//  advances. The mascot speaks each new instruction.
 //
 
 import SwiftUI
@@ -12,10 +14,14 @@ import SwiftUI
 struct TurnGuideView: View {
     @State private var session: TurnGuideSession
     @State private var isSpeaking = false
+    /// Which faction sits at the bottom edge of the phone; the other half faces the far player.
+    @State private var nearSeat: TurnScript.Side = .atreides
+    @State private var enlarged: EnlargedImage?
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @Environment(\.dismiss) private var dismiss
 
-    init(script: TurnScript) {
-        _session = State(initialValue: TurnGuideSession(script: script))
+    init(script: TurnScript, startAt stepID: String? = nil) {
+        _session = State(initialValue: TurnGuideSession(script: script, startAt: stepID))
     }
 
     var body: some View {
@@ -23,61 +29,83 @@ struct TurnGuideView: View {
             if session.isFinished {
                 finished
             } else {
-                guide
+                splitScreen
             }
         }
-        .navigationTitle(session.script.title)
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    withAnimation(stepAnimation) { session.goBack() }
-                } label: {
-                    Label("Previous step", systemImage: "arrow.uturn.backward")
-                }
-                .disabled(!session.canGoBack)
-            }
-        }
+        .toolbar(.hidden, for: .navigationBar)
         .task(id: stepKey) { await speak() }
+        .sheet(item: $enlarged) { item in
+            EnlargedImageView(script: session.script, item: item)
+        }
     }
 
-    // MARK: Guide
+    // MARK: Split screen
 
-    private var guide: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
-                progressHeader
-                StepCard(
-                    script: session.script,
-                    phase: session.phase,
-                    step: session.step,
-                    title: stepTitle,
-                    isSpeaking: isSpeaking
-                )
-                .id(stepKey)
-                .transition(stepTransition)
+    private var farSeat: TurnScript.Side { nearSeat == .atreides ? .harkonnen : .atreides }
+
+    private var splitScreen: some View {
+        VStack(spacing: 0) {
+            panel(for: farSeat, isFar: true)
+                .rotationEffect(.degrees(180))
+            centerBar
+            panel(for: nearSeat, isFar: false)
+        }
+    }
+
+    private func panel(for seat: TurnScript.Side, isFar: Bool) -> some View {
+        SeatPanel(
+            seat: seat,
+            script: session.script,
+            phase: session.phase,
+            step: session.step,
+            stepTitle: stepTitle,
+            stepKey: stepKey,
+            startedAt: session.stepStartedAt,
+            isSpeaking: isSpeaking,
+            stepTransition: stepTransition,
+            done: { withAnimation(stepAnimation) { session.advance() } },
+            endLoop: { withAnimation(stepAnimation) { session.endLoop() } },
+            enlarge: { enlarged = EnlargedImage(image: $0, isFar: isFar) }
+        )
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    /// Shared controls between the two halves, read from the near side.
+    private var centerBar: some View {
+        HStack(spacing: 4) {
+            barButton("Close guide", systemImage: "xmark") { dismiss() }
+            Spacer(minLength: 8)
+            VStack(spacing: 1) {
+                Text(session.phase.title)
+                    .font(.footnote.weight(.semibold))
+                Text(progressText)
+                    .font(.caption.monospacedDigit())
+                    .foregroundStyle(.secondary)
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 20)
+            .accessibilityElement(children: .combine)
+            Spacer(minLength: 8)
+            barButton("Previous step", systemImage: "arrow.uturn.backward") {
+                withAnimation(stepAnimation) { session.goBack() }
+            }
+            .disabled(!session.canGoBack)
+            barButton("Swap seats", systemImage: "arrow.up.arrow.down") {
+                withAnimation(stepAnimation) { nearSeat = farSeat }
+            }
         }
-        .safeAreaInset(edge: .top, spacing: 0) {
-            WaitingStrip(side: session.step.side, stepTitle: stepTitle, startedAt: session.stepStartedAt)
-        }
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            actionBar
-        }
+        .padding(.horizontal, 8)
+        .frame(height: 52)
+        .background(.bar)
+        .overlay(alignment: .top) { Divider() }
+        .overlay(alignment: .bottom) { Divider() }
     }
 
-    private var progressHeader: some View {
-        HStack(alignment: .firstTextBaseline) {
-            Text(session.phase.title)
-                .font(.subheadline.weight(.semibold))
-            Spacer()
-            Text(progressText)
-                .font(.subheadline.monospacedDigit())
-                .foregroundStyle(.secondary)
+    private func barButton(_ title: String, systemImage: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Image(systemName: systemImage)
+                .font(.body.weight(.medium))
+                .frame(width: 44, height: 44)
         }
-        .accessibilityElement(children: .combine)
+        .accessibilityLabel(title)
     }
 
     private var progressText: String {
@@ -85,30 +113,6 @@ struct TurnGuideView: View {
             return "Turn \(session.turnNumber)"
         }
         return "\(session.position.step + 1) of \(session.phase.steps.count)"
-    }
-
-    private var actionBar: some View {
-        VStack(spacing: 4) {
-            if let loop = session.phase.loop {
-                Button(loop.endLabel) {
-                    withAnimation(stepAnimation) { session.endLoop() }
-                }
-                .font(.subheadline.weight(.semibold))
-                .frame(minHeight: 44)
-            }
-            Button {
-                withAnimation(stepAnimation) { session.advance() }
-            } label: {
-                Text("Done")
-                    .font(.headline)
-                    .frame(maxWidth: .infinity, minHeight: 54)
-            }
-            .buttonStyle(PrimaryButtonStyle())
-        }
-        .padding(.horizontal, 20)
-        .padding(.top, 8)
-        .padding(.bottom, 8)
-        .background(.bar)
     }
 
     // MARK: Finished
@@ -132,6 +136,9 @@ struct TurnGuideView: View {
             }
             .buttonStyle(PrimaryButtonStyle())
             .padding(.top, 12)
+            Button("Back to games") { dismiss() }
+                .font(.subheadline.weight(.semibold))
+                .frame(minHeight: 44)
         }
         .padding(32)
         .transition(stepTransition)
@@ -177,6 +184,90 @@ struct TurnGuideView: View {
     }
 }
 
+// MARK: - Seat panel
+
+/// One player's half of the screen: the step when they act, otherwise who they are waiting for.
+private struct SeatPanel: View {
+    let seat: TurnScript.Side
+    let script: TurnScript
+    let phase: TurnScript.Phase
+    let step: TurnScript.Step
+    let stepTitle: String
+    let stepKey: String
+    let startedAt: Date
+    let isSpeaking: Bool
+    let stepTransition: AnyTransition
+    let done: () -> Void
+    let endLoop: () -> Void
+    let enlarge: (TurnScript.SourceImage) -> Void
+
+    private var isActing: Bool { step.side == seat || step.side == .both }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            seatLabel
+            if isActing {
+                ScrollView {
+                    StepCard(
+                        script: script,
+                        phase: phase,
+                        step: step,
+                        title: stepTitle,
+                        isSpeaking: isSpeaking,
+                        enlarge: enlarge
+                    )
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 16)
+                    .id(stepKey)
+                    .transition(stepTransition)
+                }
+                .scrollIndicators(.hidden)
+                actions
+            } else {
+                WaitingView(side: step.side, stepTitle: stepTitle, startedAt: startedAt)
+                    .id(stepKey)
+                    .transition(stepTransition)
+            }
+        }
+    }
+
+    private var seatLabel: some View {
+        HStack(spacing: 8) {
+            Circle()
+                .fill(seat.color)
+                .frame(width: 8, height: 8)
+            Text(seat.displayName)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(seat.color)
+            Spacer()
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, 12)
+        .padding(.bottom, 8)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(seat.displayName) side")
+    }
+
+    private var actions: some View {
+        HStack(spacing: 12) {
+            if let loop = phase.loop {
+                Button(loop.endLabel, action: endLoop)
+                    .font(.subheadline.weight(.semibold))
+                    .multilineTextAlignment(.center)
+                    .frame(minHeight: 44)
+            }
+            Button(action: done) {
+                Text("Done")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity, minHeight: 50)
+            }
+            .buttonStyle(PrimaryButtonStyle())
+        }
+        .padding(.horizontal, 20)
+        .padding(.vertical, 10)
+    }
+}
+
 // MARK: - Step card
 
 private struct StepCard: View {
@@ -185,18 +276,21 @@ private struct StepCard: View {
     let step: TurnScript.Step
     let title: String
     let isSpeaking: Bool
+    let enlarge: (TurnScript.SourceImage) -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 24) {
+        VStack(alignment: .leading, spacing: 20) {
             HStack(spacing: 14) {
                 OrdirMascotView(isSpeaking: isSpeaking)
-                    .frame(width: 52, height: 52)
+                    .frame(width: 48, height: 48)
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(step.side.displayName)
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(step.side.color)
+                    if step.side == .both {
+                        Text("Both players")
+                            .font(.footnote.weight(.semibold))
+                            .foregroundStyle(.secondary)
+                    }
                     Text(title)
-                        .font(.title2.weight(.semibold))
+                        .font(.title3.weight(.semibold))
                 }
                 .accessibilityElement(children: .combine)
                 .accessibilityAddTraits(.isHeader)
@@ -208,10 +302,11 @@ private struct StepCard: View {
                 .fixedSize(horizontal: false, vertical: true)
 
             section("You’ll need") {
-                ForEach(step.components, id: \.self) { component in
-                    Text(component)
-                        .font(.subheadline)
-                }
+                PictureStrip(script: script, pictures: script.pictures(for: step), enlarge: enlarge)
+                Text(step.components.joined(separator: ", "))
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
             }
 
             section("Source") {
@@ -231,13 +326,51 @@ private struct StepCard: View {
     }
 
     private func section<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             Text(title)
                 .font(.footnote.weight(.semibold))
                 .foregroundStyle(.secondary)
                 .accessibilityAddTraits(.isHeader)
             content()
         }
+    }
+}
+
+/// Component pictures cropped from the rulebook, each labelled with its page. Tap to enlarge.
+private struct PictureStrip: View {
+    let script: TurnScript
+    let pictures: [TurnScript.SourceImage]
+    let enlarge: (TurnScript.SourceImage) -> Void
+
+    var body: some View {
+        ScrollView(.horizontal) {
+            HStack(alignment: .top, spacing: 12) {
+                ForEach(pictures) { picture in
+                    Button { enlarge(picture) } label: {
+                        VStack(alignment: .leading, spacing: 6) {
+                            Image(script.assetName(for: picture))
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 176, height: 112)
+                                .background(Color(white: 0.12))
+                                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                            Text(picture.caption)
+                                .font(.caption)
+                                .foregroundStyle(.primary)
+                                .lineLimit(2)
+                            Text(script.label(for: picture))
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                        }
+                        .frame(width: 176, alignment: .leading)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityElement(children: .combine)
+                    .accessibilityHint("Shows the picture larger")
+                }
+            }
+        }
+        .scrollIndicators(.hidden)
     }
 }
 
@@ -288,7 +421,6 @@ private struct CitationList: View {
                             .accessibilityHidden(true)
                     }
                     .font(.subheadline)
-                    .foregroundStyle(.primary)
                     .frame(minHeight: 44)
                     .contentShape(Rectangle())
                 }
@@ -298,41 +430,78 @@ private struct CitationList: View {
     }
 }
 
-// MARK: - Waiting strip
+// MARK: - Waiting
 
-/// What the waiting player glances at: who is acting, on which step, and for how long.
-private struct WaitingStrip: View {
+/// What the waiting player sees: who is acting, on which step, and for how long.
+private struct WaitingView: View {
     let side: TurnScript.Side
     let stepTitle: String
     let startedAt: Date
 
     var body: some View {
-        HStack(spacing: 10) {
-            Circle()
-                .fill(side.color)
-                .frame(width: 8, height: 8)
-                .accessibilityHidden(true)
+        VStack(spacing: 14) {
+            Spacer(minLength: 0)
+            OrdirMascotView(isThinking: true)
+                .frame(height: 64)
             line
-                .font(.footnote)
-                .lineLimit(2)
-            Spacer(minLength: 8)
+                .font(.title3)
+                .multilineTextAlignment(.center)
             Text(startedAt, style: .timer)
-                .font(.footnote.monospacedDigit())
+                .font(.title2.monospacedDigit())
                 .foregroundStyle(.secondary)
+            Spacer(minLength: 0)
         }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 10)
-        .frame(maxWidth: .infinity)
-        .background(.bar)
+        .padding(.horizontal, 24)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .accessibilityElement(children: .combine)
     }
 
     private var line: Text {
         let step = Text(stepTitle).fontWeight(.semibold)
-        switch side {
-        case .both: return Text("Both players are on \(step)")
-        case .atreides, .harkonnen: return Text("The \(side.displayName) is on \(step)")
+        return Text("The \(side.displayName) is on \(step)")
+    }
+}
+
+// MARK: - Enlarged picture
+
+private struct EnlargedImage: Identifiable {
+    let image: TurnScript.SourceImage
+    /// Opened from the far half, so it is shown turned to face that player.
+    let isFar: Bool
+    var id: String { image.id }
+}
+
+private struct EnlargedImageView: View {
+    let script: TurnScript
+    let item: EnlargedImage
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Image(script.assetName(for: item.image))
+                .resizable()
+                .scaledToFit()
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .accessibilityLabel(item.image.caption)
+            Text(item.image.caption)
+                .font(.headline)
+            Text(script.label(for: item.image))
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+            Button {
+                dismiss()
+            } label: {
+                Text("Close")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity, minHeight: 50)
+            }
+            .buttonStyle(PrimaryButtonStyle())
+            .padding(.top, 8)
         }
+        .padding(20)
+        .frame(maxHeight: .infinity)
+        .rotationEffect(.degrees(item.isFar ? 180 : 0))
+        .presentationDetents([.medium, .large])
     }
 }
 

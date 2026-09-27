@@ -58,22 +58,19 @@ jobs:
           xcrun simctl install "$UDID" build/Build/Products/Debug-iphonesimulator/Ordir.app
           xcrun simctl launch "$UDID" com.guibbscohen.ordir
           sleep 8
-          xcrun simctl io "$UDID" screenshot screenshots/home-light.png
-          xcrun simctl ui "$UDID" appearance dark
-          sleep 3
-          xcrun simctl io "$UDID" screenshot screenshots/home-dark.png
-          xcrun simctl io "$UDID" recordVideo --codec h264 screenshots/home-dark.mp4 &
+          xcrun simctl io "$UDID" screenshot screenshots/home.png
+          xcrun simctl io "$UDID" recordVideo --codec h264 screenshots/home.mp4 &
           REC=$!
           sleep 6
           kill -INT $REC
           wait $REC || true
-          xcrun simctl terminate "$UDID" com.guibbscohen.ordir
-          xcrun simctl launch "$UDID" com.guibbscohen.ordir -OrdirOpenGame duneWarForArrakis
-          sleep 5
-          xcrun simctl io "$UDID" screenshot screenshots/dune-guide-dark.png
-          xcrun simctl ui "$UDID" appearance light
-          sleep 3
-          xcrun simctl io "$UDID" screenshot screenshots/dune-guide-light.png
+          # Dune guide: a step for both players, then a Harkonnen step (Atreides half waiting).
+          for STEP in setup-board vehicles-place; do
+            xcrun simctl terminate "$UDID" com.guibbscohen.ordir
+            xcrun simctl launch "$UDID" com.guibbscohen.ordir -OrdirOpenGame duneWarForArrakis -OrdirStartStep "$STEP"
+            sleep 5
+            xcrun simctl io "$UDID" screenshot "screenshots/dune-$STEP.png"
+          done
 
       - name: Upload build log and screenshots
         if: always()

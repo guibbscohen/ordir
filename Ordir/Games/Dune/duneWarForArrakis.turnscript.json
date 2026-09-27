@@ -1,7 +1,7 @@
 {
   "game": "duneWarForArrakis",
   "title": "Dune: War for Arrakis",
-  "version": 1,
+  "version": 2,
   "scope": "Setup and one full round, 2 players (Atreides vs Harkonnen), pass-and-play",
   "sources": [
     {
@@ -19,6 +19,392 @@
       "file": "Sources/dune/Dune-FAQ-3_0.pdf"
     }
   ],
+  "images": [
+    {
+      "id": "game-board",
+      "caption": "Game board, set up",
+      "source": "rulebook",
+      "page": 14,
+      "crop": [
+        0.186,
+        0.524,
+        0.882,
+        0.837
+      ]
+    },
+    {
+      "id": "atreides-dashboard",
+      "caption": "Atreides player board (Sietch Tabr)",
+      "source": "rulebook",
+      "page": 5,
+      "crop": [
+        0.111,
+        0.25,
+        0.5,
+        0.377
+      ]
+    },
+    {
+      "id": "harkonnen-dashboard",
+      "caption": "Harkonnen player board (Giedi Prime)",
+      "source": "rulebook",
+      "page": 5,
+      "crop": [
+        0.188,
+        0.081,
+        0.54,
+        0.209
+      ]
+    },
+    {
+      "id": "spice-must-flow",
+      "caption": "The Spice Must Flow board",
+      "source": "rulebook",
+      "page": 16,
+      "crop": [
+        0.534,
+        0.248,
+        0.932,
+        0.493
+      ]
+    },
+    {
+      "id": "prescience-markers",
+      "caption": "Prescience markers",
+      "source": "rulebook",
+      "page": 5,
+      "crop": [
+        0.368,
+        0.493,
+        0.474,
+        0.541
+      ]
+    },
+    {
+      "id": "imperium-markers",
+      "caption": "Imperium markers",
+      "source": "rulebook",
+      "page": 5,
+      "crop": [
+        0.525,
+        0.493,
+        0.662,
+        0.541
+      ]
+    },
+    {
+      "id": "supremacy-marker",
+      "caption": "Supremacy marker",
+      "source": "rulebook",
+      "page": 5,
+      "crop": [
+        0.711,
+        0.503,
+        0.771,
+        0.55
+      ]
+    },
+    {
+      "id": "spice-reserve-token",
+      "caption": "Spice Reserve token",
+      "source": "rulebook",
+      "page": 5,
+      "crop": [
+        0.832,
+        0.497,
+        0.905,
+        0.55
+      ]
+    },
+    {
+      "id": "atreides-garrison-tokens",
+      "caption": "Atreides Garrison Deployment tokens",
+      "source": "rulebook",
+      "page": 5,
+      "crop": [
+        0.339,
+        0.61,
+        0.499,
+        0.663
+      ]
+    },
+    {
+      "id": "atreides-deployment-tokens",
+      "caption": "Atreides Deployment tokens",
+      "source": "rulebook",
+      "page": 5,
+      "crop": [
+        0.525,
+        0.604,
+        0.657,
+        0.663
+      ]
+    },
+    {
+      "id": "harkonnen-garrison-tokens",
+      "caption": "Harkonnen Garrison Deployment tokens",
+      "source": "rulebook",
+      "page": 5,
+      "crop": [
+        0.695,
+        0.604,
+        0.902,
+        0.663
+      ]
+    },
+    {
+      "id": "deployment-legend",
+      "caption": "Harkonnen Deployment token symbols",
+      "source": "rulebook",
+      "page": 15,
+      "crop": [
+        0.057,
+        0.668,
+        0.492,
+        0.934
+      ]
+    },
+    {
+      "id": "wormsign-tokens",
+      "caption": "Wormsign tokens",
+      "source": "rulebook",
+      "page": 5,
+      "crop": [
+        0.116,
+        0.707,
+        0.286,
+        0.788
+      ]
+    },
+    {
+      "id": "wormsign-effects",
+      "caption": "Wormsign effects: Sand, Sandworm, Burrowing Sandworm",
+      "source": "rulebook",
+      "page": 20,
+      "crop": [
+        0.088,
+        0.483,
+        0.487,
+        0.687
+      ]
+    },
+    {
+      "id": "testing-stations",
+      "caption": "Ecological Testing Stations",
+      "source": "rulebook",
+      "page": 5,
+      "crop": [
+        0.405,
+        0.711,
+        0.588,
+        0.769
+      ]
+    },
+    {
+      "id": "settlement-tokens",
+      "caption": "Settlements: Arrakeen, Pyon Villages, Carthag, Sietches",
+      "source": "rulebook",
+      "page": 5,
+      "crop": [
+        0.668,
+        0.707,
+        0.92,
+        0.78
+      ]
+    },
+    {
+      "id": "action-dice",
+      "caption": "Action dice: Atreides (black and green), Harkonnen (black and red)",
+      "source": "rulebook",
+      "page": 5,
+      "crop": [
+        0.088,
+        0.859,
+        0.475,
+        0.927
+      ]
+    },
+    {
+      "id": "combat-dice",
+      "caption": "Combat dice: Atreides (green), Harkonnen (red)",
+      "source": "rulebook",
+      "page": 5,
+      "crop": [
+        0.546,
+        0.862,
+        0.907,
+        0.93
+      ]
+    },
+    {
+      "id": "harkonnen-leaders",
+      "caption": "Harkonnen Leaders",
+      "source": "rulebook",
+      "page": 4,
+      "crop": [
+        0.111,
+        0.197,
+        0.467,
+        0.505
+      ]
+    },
+    {
+      "id": "atreides-leaders",
+      "caption": "Atreides Leaders",
+      "source": "rulebook",
+      "page": 4,
+      "crop": [
+        0.481,
+        0.197,
+        0.955,
+        0.505
+      ]
+    },
+    {
+      "id": "naib-leader",
+      "caption": "Naib Leader",
+      "source": "rulebook",
+      "page": 4,
+      "crop": [
+        0.834,
+        0.379,
+        0.945,
+        0.505
+      ]
+    },
+    {
+      "id": "harkonnen-units",
+      "caption": "Harkonnen units: Regular, Elite, Sardaukar",
+      "source": "rulebook",
+      "page": 4,
+      "crop": [
+        0.111,
+        0.532,
+        0.467,
+        0.675
+      ]
+    },
+    {
+      "id": "atreides-units",
+      "caption": "Atreides units: Regular, Elite, Fedaykin",
+      "source": "rulebook",
+      "page": 4,
+      "crop": [
+        0.528,
+        0.539,
+        0.886,
+        0.675
+      ]
+    },
+    {
+      "id": "vehicles",
+      "caption": "Ornithopter, Harvester, Carryall",
+      "source": "rulebook",
+      "page": 4,
+      "crop": [
+        0.06,
+        0.746,
+        0.555,
+        0.898
+      ]
+    },
+    {
+      "id": "sandworms",
+      "caption": "Sandworm and Wild Maker",
+      "source": "rulebook",
+      "page": 4,
+      "crop": [
+        0.54,
+        0.715,
+        0.915,
+        0.915
+      ]
+    },
+    {
+      "id": "atreides-planning-decks",
+      "caption": "House Atreides and Fremen Ally decks",
+      "source": "rulebook",
+      "page": 6,
+      "crop": [
+        0.085,
+        0.155,
+        0.48,
+        0.299
+      ]
+    },
+    {
+      "id": "harkonnen-planning-decks",
+      "caption": "House Harkonnen and Corrino Ally decks",
+      "source": "rulebook",
+      "page": 6,
+      "crop": [
+        0.513,
+        0.155,
+        0.907,
+        0.299
+      ]
+    },
+    {
+      "id": "atreides-leader-cards",
+      "caption": "Atreides Leader cards",
+      "source": "rulebook",
+      "page": 6,
+      "crop": [
+        0.053,
+        0.335,
+        0.467,
+        0.497
+      ]
+    },
+    {
+      "id": "harkonnen-leader-cards",
+      "caption": "Harkonnen Leader cards",
+      "source": "rulebook",
+      "page": 6,
+      "crop": [
+        0.505,
+        0.335,
+        0.94,
+        0.497
+      ]
+    },
+    {
+      "id": "prescience-cards",
+      "caption": "Prescience cards",
+      "source": "rulebook",
+      "page": 6,
+      "crop": [
+        0.04,
+        0.539,
+        0.299,
+        0.652
+      ]
+    },
+    {
+      "id": "objective-cards",
+      "caption": "Secret Objective cards",
+      "source": "rulebook",
+      "page": 6,
+      "crop": [
+        0.304,
+        0.544,
+        0.475,
+        0.665
+      ]
+    },
+    {
+      "id": "imperium-bans-cards",
+      "caption": "Imperium Bans cards",
+      "source": "rulebook",
+      "page": 6,
+      "crop": [
+        0.731,
+        0.539,
+        0.932,
+        0.663
+      ]
+    }
+  ],
   "phases": [
     {
       "id": "setup",
@@ -29,9 +415,18 @@
           "side": "both",
           "title": "Lay out the board",
           "instruction": "Put the two halves of the map board together in the middle of the table.",
-          "components": ["Game board (2 sections)"],
+          "components": [
+            "Game board (2 sections)"
+          ],
+          "images": [
+            "game-board"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 14, "excerpt": "Arrange the two sections of the map board in the center of the game area." }
+            {
+              "source": "rulebook",
+              "page": 14,
+              "excerpt": "Arrange the two sections of the map board in the center of the game area."
+            }
           ]
         },
         {
@@ -39,9 +434,18 @@
           "side": "atreides",
           "title": "Place the Sietches",
           "instruction": "Shuffle the 8 Sietch tokens facedown and put 1 on each Sietch symbol on the board. Only you, the Atreides, may look at their hidden side during the game.",
-          "components": ["8 Sietch tokens"],
+          "components": [
+            "8 Sietch tokens"
+          ],
+          "images": [
+            "settlement-tokens"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 14, "excerpt": "Shuffle the 8 Sietch tokens facedown and place them on the indicated Areas of the board, 1 token per Area." }
+            {
+              "source": "rulebook",
+              "page": 14,
+              "excerpt": "Shuffle the 8 Sietch tokens facedown and place them on the indicated Areas of the board, 1 token per Area."
+            }
           ]
         },
         {
@@ -49,9 +453,20 @@
           "side": "atreides",
           "title": "Garrison the Sietches",
           "instruction": "Shuffle the Atreides Garrison Deployment tokens facedown. Put 1 token and 1 Naib Leader figure in each Area with a Sietch.",
-          "components": ["8 Atreides Garrison Deployment tokens", "8 Naib Leader figures"],
+          "components": [
+            "8 Atreides Garrison Deployment tokens",
+            "8 Naib Leader figures"
+          ],
+          "images": [
+            "atreides-garrison-tokens",
+            "naib-leader"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 14, "excerpt": "Shuffle the Atreides Garrison Deployment tokens facedown and place 1 token and 1 Naib Leader figure in each Area containing a Sietch." }
+            {
+              "source": "rulebook",
+              "page": 14,
+              "excerpt": "Shuffle the Atreides Garrison Deployment tokens facedown and place 1 token and 1 Naib Leader figure in each Area containing a Sietch."
+            }
           ]
         },
         {
@@ -59,9 +474,18 @@
           "side": "atreides",
           "title": "Ready your Deployment tokens",
           "instruction": "Shuffle the standard Atreides Deployment tokens and keep them facedown next to you.",
-          "components": ["8 Atreides Deployment tokens"],
+          "components": [
+            "8 Atreides Deployment tokens"
+          ],
+          "images": [
+            "atreides-deployment-tokens"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 14, "excerpt": "Shuffle the standard Atreides Deployment tokens and keep them facedown next to the Atreides player." }
+            {
+              "source": "rulebook",
+              "page": 14,
+              "excerpt": "Shuffle the standard Atreides Deployment tokens and keep them facedown next to the Atreides player."
+            }
           ]
         },
         {
@@ -69,9 +493,20 @@
           "side": "harkonnen",
           "title": "Place the Settlements",
           "instruction": "Put the 6 Harkonnen Settlements on their marked Areas: the 4 Pyon Villages, Carthag and Arrakeen. Their ratings are public.",
-          "components": ["4 Pyon Village tokens", "Carthag token", "Arrakeen token"],
+          "components": [
+            "4 Pyon Village tokens",
+            "Carthag token",
+            "Arrakeen token"
+          ],
+          "images": [
+            "settlement-tokens"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 14, "excerpt": "Place the 6 Harkonnen Settlements (4 Pyon Villages, the city of Carthag and the planetary capital of Arrakeen) on the indicated areas of the board." }
+            {
+              "source": "rulebook",
+              "page": 14,
+              "excerpt": "Place the 6 Harkonnen Settlements (4 Pyon Villages, the city of Carthag and the planetary capital of Arrakeen) on the indicated areas of the board."
+            }
           ]
         },
         {
@@ -79,10 +514,27 @@
           "side": "harkonnen",
           "title": "Garrison the Settlements",
           "instruction": "Shuffle the two sets of Harkonnen Garrison Deployment tokens separately, facedown. Put 1 token from each set in each Area with a Harkonnen Settlement. Flip them faceup and swap each token for the figures it shows. The legend on page 15 explains the symbols.",
-          "components": ["12 Harkonnen Garrison Deployment tokens", "Harkonnen Regular, Elite and Sardaukar figures", "Bashar Leader figures"],
+          "components": [
+            "12 Harkonnen Garrison Deployment tokens",
+            "Harkonnen Regular, Elite and Sardaukar figures",
+            "Bashar Leader figures"
+          ],
+          "images": [
+            "harkonnen-garrison-tokens",
+            "deployment-legend",
+            "harkonnen-units"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 14, "excerpt": "Shuffle separately the two sets of Harkonnen Garrison Deployment tokens face down and place 1 token of each type in each Area containing a Harkonnen Settlement." },
-            { "source": "rulebook", "page": 15, "excerpt": "For example, this token deploys 1 Bashar Leader, 1 Sardaukar, and 1 Harkonnen Regular." }
+            {
+              "source": "rulebook",
+              "page": 14,
+              "excerpt": "Shuffle separately the two sets of Harkonnen Garrison Deployment tokens face down and place 1 token of each type in each Area containing a Harkonnen Settlement."
+            },
+            {
+              "source": "rulebook",
+              "page": 15,
+              "excerpt": "For example, this token deploys 1 Bashar Leader, 1 Sardaukar, and 1 Harkonnen Regular."
+            }
           ]
         },
         {
@@ -90,9 +542,18 @@
           "side": "both",
           "title": "Place the Testing Stations",
           "instruction": "Shuffle the 6 Ecological Testing Stations facedown and put 1 on each marked Area. Nobody looks at them. A Station is revealed only when an Atreides Legion enters its Area.",
-          "components": ["6 Ecological Testing Station tokens"],
+          "components": [
+            "6 Ecological Testing Station tokens"
+          ],
+          "images": [
+            "testing-stations"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 14, "excerpt": "Shuffle the 6 Ecological Testing Stations facedown and place them on the indicated Areas of the board, one token per Area." }
+            {
+              "source": "rulebook",
+              "page": 14,
+              "excerpt": "Shuffle the 6 Ecological Testing Stations facedown and place them on the indicated Areas of the board, one token per Area."
+            }
           ]
         },
         {
@@ -100,9 +561,20 @@
           "side": "both",
           "title": "Zero the score tracks",
           "instruction": "Put the 3 Prescience markers on space 0 of the Prescience track, and the Supremacy marker on space 0 of the Supremacy track.",
-          "components": ["3 Prescience markers", "Supremacy marker"],
+          "components": [
+            "3 Prescience markers",
+            "Supremacy marker"
+          ],
+          "images": [
+            "prescience-markers",
+            "supremacy-marker"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 15, "excerpt": "Place the 3 Prescience markers on the 0 space of the Prescience track. Place the Supremacy marker on the 0 space of the Supremacy track." }
+            {
+              "source": "rulebook",
+              "page": 15,
+              "excerpt": "Place the 3 Prescience markers on the 0 space of the Prescience track. Place the Supremacy marker on the 0 space of the Supremacy track."
+            }
           ]
         },
         {
@@ -110,9 +582,18 @@
           "side": "both",
           "title": "Build the Prescience deck",
           "instruction": "Shuffle all 16 Prescience cards into a facedown deck next to the board.",
-          "components": ["16 Prescience cards"],
+          "components": [
+            "16 Prescience cards"
+          ],
+          "images": [
+            "prescience-cards"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 15, "excerpt": "Shuffle all Prescience cards into a facedown deck placed next to the board." }
+            {
+              "source": "rulebook",
+              "page": 15,
+              "excerpt": "Shuffle all Prescience cards into a facedown deck placed next to the board."
+            }
           ]
         },
         {
@@ -120,9 +601,18 @@
           "side": "both",
           "title": "Make the Wormsign pool",
           "instruction": "Shuffle the 16 Wormsign tokens facedown to form the Wormsign pool.",
-          "components": ["16 Wormsign tokens"],
+          "components": [
+            "16 Wormsign tokens"
+          ],
+          "images": [
+            "wormsign-tokens"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 15, "excerpt": "Shuffle the 16 Wormsign tokens facedown to form the Wormsign tokens pool." }
+            {
+              "source": "rulebook",
+              "page": 15,
+              "excerpt": "Shuffle the 16 Wormsign tokens facedown to form the Wormsign tokens pool."
+            }
           ]
         },
         {
@@ -130,10 +620,28 @@
           "side": "both",
           "title": "Set up the dashboards",
           "instruction": "Take your dashboard: Sietch Tabr for the Atreides, Giedi Prime for the Harkonnen. Put each named Leader card marked ‘in play at the start of the game’ on the Action box with the matching symbol. Keep the generic Leader cards (Naib and Bashar) and the other named Leader cards nearby.",
-          "components": ["Sietch Tabr dashboard", "Giedi Prime dashboard", "Leader cards"],
+          "components": [
+            "Sietch Tabr dashboard",
+            "Giedi Prime dashboard",
+            "Leader cards"
+          ],
+          "images": [
+            "atreides-dashboard",
+            "harkonnen-dashboard",
+            "atreides-leader-cards",
+            "harkonnen-leader-cards"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 15, "excerpt": "Take your faction’s appropriate dashboard, placing all named Leader cards marked as ‘in play at the start of the game’ on the Action boxes showing the corresponding Action symbol." },
-            { "source": "rulebook", "page": 11, "excerpt": "the Giedi Prime dashboard for the Harkonnen player and the Sietch Tabr dashboard for the Atreides player." }
+            {
+              "source": "rulebook",
+              "page": 15,
+              "excerpt": "Take your faction’s appropriate dashboard, placing all named Leader cards marked as ‘in play at the start of the game’ on the Action boxes showing the corresponding Action symbol."
+            },
+            {
+              "source": "rulebook",
+              "page": 11,
+              "excerpt": "the Giedi Prime dashboard for the Harkonnen player and the Sietch Tabr dashboard for the Atreides player."
+            }
           ]
         },
         {
@@ -141,9 +649,20 @@
           "side": "harkonnen",
           "title": "Set up The Spice Must Flow",
           "instruction": "Put The Spice Must Flow board next to your Giedi Prime dashboard. Line up the 3 Imperium markers on the step marked ‘start here’.",
-          "components": ["The Spice Must Flow board", "3 Imperium markers"],
+          "components": [
+            "The Spice Must Flow board",
+            "3 Imperium markers"
+          ],
+          "images": [
+            "spice-must-flow",
+            "imperium-markers"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 15, "excerpt": "The Harkonnen player takes the Spice Must Flow board and places it next to the Giedi Prime dashboard, lining up the 3 Imperium markers along the step marked ‘start here’." }
+            {
+              "source": "rulebook",
+              "page": 15,
+              "excerpt": "The Harkonnen player takes the Spice Must Flow board and places it next to the Giedi Prime dashboard, lining up the 3 Imperium markers along the step marked ‘start here’."
+            }
           ]
         },
         {
@@ -151,9 +670,22 @@
           "side": "both",
           "title": "Shuffle the Planning decks",
           "instruction": "Sort the Planning cards into four decks by their backs and shuffle each. The Harkonnen keeps House Harkonnen and Corrino Ally. The Atreides keeps House Atreides and Fremen Ally.",
-          "components": ["House Harkonnen deck", "Corrino Ally deck", "House Atreides deck", "Fremen Ally deck"],
+          "components": [
+            "House Harkonnen deck",
+            "Corrino Ally deck",
+            "House Atreides deck",
+            "Fremen Ally deck"
+          ],
+          "images": [
+            "atreides-planning-decks",
+            "harkonnen-planning-decks"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 15, "excerpt": "Shuffle the Planning cards into four separate decks based on their backs." }
+            {
+              "source": "rulebook",
+              "page": 15,
+              "excerpt": "Shuffle the Planning cards into four separate decks based on their backs."
+            }
           ]
         },
         {
@@ -161,9 +693,18 @@
           "side": "atreides",
           "title": "Draw a Secret Objective",
           "instruction": "Shuffle the 6 Secret Objective cards and draw 1. Put the other 5 back in the box. Keep your card hidden from the Harkonnen for the whole game.",
-          "components": ["6 Secret Objective cards"],
+          "components": [
+            "6 Secret Objective cards"
+          ],
+          "images": [
+            "objective-cards"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 15, "excerpt": "The Atreides player shuffles the 6 Secret Objective cards and draws one of them (put the remaining 5 cards back in the box)." }
+            {
+              "source": "rulebook",
+              "page": 15,
+              "excerpt": "The Atreides player shuffles the 6 Secret Objective cards and draws one of them (put the remaining 5 cards back in the box)."
+            }
           ]
         },
         {
@@ -171,9 +712,24 @@
           "side": "both",
           "title": "Gather your pieces",
           "instruction": "Keep your faction’s figures, Action dice, Combat dice, other tokens and reference cards within reach.",
-          "components": ["Figures", "Action dice", "Combat dice", "Reference cards"],
+          "components": [
+            "Figures",
+            "Action dice",
+            "Combat dice",
+            "Reference cards"
+          ],
+          "images": [
+            "action-dice",
+            "combat-dice",
+            "atreides-units",
+            "harkonnen-units"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 15, "excerpt": "The players keep their faction’s figures, sets of Action dice, Combat dice, additional tokens and reference cards within reach." }
+            {
+              "source": "rulebook",
+              "page": 15,
+              "excerpt": "The players keep their faction’s figures, sets of Action dice, Combat dice, additional tokens and reference cards within reach."
+            }
           ]
         }
       ]
@@ -183,13 +739,50 @@
       "title": "Start of the round",
       "steps": [
         {
+          "id": "round-check-objective",
+          "side": "atreides",
+          "title": "Check the Secret Objective",
+          "instruction": "Before anything else this round, compare your 3 Prescience markers with your Secret Objective card. If every marker has reached its target, the Atreides win. Destroying Arrakeen triggers this check at once.",
+          "components": [
+            "Secret Objective card",
+            "Prescience track"
+          ],
+          "images": [
+            "objective-cards",
+            "prescience-markers"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 27,
+              "excerpt": "The aim of the Atreides player is to reach a precise score with each of the 3 Prescience markers, as indicated on their Secret Objective card"
+            },
+            {
+              "source": "faq",
+              "page": 1,
+              "entry": "Modified rule 2: immediate Atreides victory when taking Arrakeen",
+              "excerpt": "If they did, they win immediately (instead of at the End of the Round)."
+            }
+          ]
+        },
+        {
           "id": "round-draw-planning",
           "side": "both",
           "title": "Draw Planning cards",
           "instruction": "Each player draws 1 Planning card from each of their two decks, 2 cards in total.",
-          "components": ["Planning decks"],
+          "components": [
+            "Planning decks"
+          ],
+          "images": [
+            "atreides-planning-decks",
+            "harkonnen-planning-decks"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 15, "excerpt": "Both players draw 1 Planning card from each of their decks (2 cards total each)." }
+            {
+              "source": "rulebook",
+              "page": 15,
+              "excerpt": "Both players draw 1 Planning card from each of their decks (2 cards total each)."
+            }
           ]
         },
         {
@@ -197,20 +790,23 @@
           "side": "both",
           "title": "Reveal Prescience cards",
           "instruction": "Draw 3 Prescience cards and lay them faceup in a row next to the deck, where both players can see them. The Atreides can claim up to 2 of them this round, as soon as a card’s requirements are met.",
-          "components": ["Prescience deck"],
+          "components": [
+            "Prescience deck"
+          ],
+          "images": [
+            "prescience-cards"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 15, "excerpt": "Draw 3 cards from the Prescience deck and place them faceup in a row next to the deck, within view of all players." },
-            { "source": "rulebook", "page": 28, "excerpt": "The Atreides player can claim a maximum of 2 Prescience cards each round." }
-          ]
-        },
-        {
-          "id": "round-imperium-bans",
-          "side": "harkonnen",
-          "title": "Check Imperium Bans",
-          "instruction": "If any Imperium marker is on the bottom step of The Spice Must Flow board, apply that marker’s Ban as its reference card describes. If none is at the bottom, there is nothing to do.",
-          "components": ["The Spice Must Flow board", "Imperium Bans cards"],
-          "citations": [
-            { "source": "rulebook", "page": 21, "excerpt": "If, at the beginning of a round, one or more Imperium markers are at the lowest step of The Spice Must Flow board, the Harkonnen player must immediately apply their corresponding Imperium Bans effects" }
+            {
+              "source": "rulebook",
+              "page": 15,
+              "excerpt": "Draw 3 cards from the Prescience deck and place them faceup in a row next to the deck, within view of all players."
+            },
+            {
+              "source": "rulebook",
+              "page": 28,
+              "excerpt": "The Atreides player can claim a maximum of 2 Prescience cards each round."
+            }
           ]
         }
       ]
@@ -224,9 +820,20 @@
           "side": "harkonnen",
           "title": "Set aside Action dice",
           "instruction": "Find the active row on The Spice Must Flow board: the row where your lowest Imperium marker sits. Set aside as many Action dice as its first column shows. They stay on your dashboard and aren’t used this round.",
-          "components": ["The Spice Must Flow board", "8 Harkonnen Action dice"],
+          "components": [
+            "The Spice Must Flow board",
+            "8 Harkonnen Action dice"
+          ],
+          "images": [
+            "spice-must-flow",
+            "action-dice"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 16, "excerpt": "First, the Harkonnen player must set aside a number of their Action dice as indicated on the first column of the active row." }
+            {
+              "source": "rulebook",
+              "page": 16,
+              "excerpt": "First, the Harkonnen player must set aside a number of their Action dice as indicated on the first column of the active row."
+            }
           ]
         },
         {
@@ -234,10 +841,25 @@
           "side": "harkonnen",
           "title": "Place vehicles",
           "instruction": "Take the vehicles the active row shows. Put Harvesters in free Desert Areas, 1 per Area. Put Ornithopters and Carryalls in Air Zones, 1 per Zone. A free Area has no enemy Settlements, enemy Units or Sandworms.",
-          "components": ["Harvesters", "Ornithopters", "Carryalls"],
+          "components": [
+            "Harvesters",
+            "Ornithopters",
+            "Carryalls"
+          ],
+          "images": [
+            "vehicles"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 16, "excerpt": "Harvesters are placed in free Desert Areas, 1 figure per Area." },
-            { "source": "rulebook", "page": 8, "excerpt": "An area is free for a player when it doesn’t contain enemy Settlements, enemy Units, or Sandworms." }
+            {
+              "source": "rulebook",
+              "page": 16,
+              "excerpt": "Harvesters are placed in free Desert Areas, 1 figure per Area."
+            },
+            {
+              "source": "rulebook",
+              "page": 8,
+              "excerpt": "An area is free for a player when it doesn’t contain enemy Settlements, enemy Units, or Sandworms."
+            }
           ]
         }
       ]
@@ -250,11 +872,33 @@
           "id": "actions-roll",
           "side": "both",
           "title": "Roll Action dice",
-          "instruction": "The Atreides rolls 4 Action dice. The Harkonnen rolls every die not set aside. Put each die on the dashboard box that matches its result. If 4 or more of your dice show the same result, keep 1 and reroll the other matching dice (only once each round).",
-          "components": ["Action dice", "Dashboards"],
+          "instruction": "The Atreides rolls 4 Action dice. The Harkonnen rolls every die not set aside. Put each die on the dashboard box that matches its result. If 4 or more of your dice show the same result, keep 1 and reroll the other matching dice (only once each round). If both players must change dice results because they exceed an Action box’s slots, choose the new results one at a time, taking turns, Harkonnen first.",
+          "components": [
+            "Action dice",
+            "Dashboards"
+          ],
+          "images": [
+            "action-dice",
+            "atreides-dashboard",
+            "harkonnen-dashboard"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 17, "excerpt": "The Atreides player rolls 4 Action dice throughout the game" },
-            { "source": "rulebook", "page": 17, "excerpt": "Players getting the same result on 4 or more of their Action dice must keep 1 result and roll again the remaining matching dice (only once each round)." }
+            {
+              "source": "rulebook",
+              "page": 17,
+              "excerpt": "The Atreides player rolls 4 Action dice throughout the game"
+            },
+            {
+              "source": "rulebook",
+              "page": 17,
+              "excerpt": "Players getting the same result on 4 or more of their Action dice must keep 1 result and roll again the remaining matching dice (only once each round)."
+            },
+            {
+              "source": "faq",
+              "page": 2,
+              "entry": "Order for changing dice that exceed the Action slots",
+              "excerpt": "The new die results are chosen one at a time, in turns, starting with the Harkonnen player."
+            }
           ]
         }
       ]
@@ -266,7 +910,12 @@
         "endLabel": "Harkonnen dice all used",
         "note": "Action resolution ends once the Harkonnen has used every Action die. Any Atreides dice left are lost.",
         "citations": [
-          { "source": "faq", "page": 1, "entry": "Can the Atreides act after the Harkonnen’s last die?", "excerpt": "the Action Resolution phase is over once the Harkonnen player has executed all their available Actions." }
+          {
+            "source": "faq",
+            "page": 1,
+            "entry": "Can the Atreides act after the Harkonnen’s last die?",
+            "excerpt": "the Action Resolution phase is over once the Harkonnen player has executed all their available Actions."
+          }
         ]
       },
       "steps": [
@@ -275,12 +924,36 @@
           "side": "atreides",
           "title": "Action turn",
           "instruction": "Take one Action. Spend 1 Action die on an Action its result allows, or spend any die to play a Planning card, or take a Desert Power Action with no die, if you have fewer unused dice than the Harkonnen. At any time in your turn you may reveal Deployment tokens (Guerrilla Training). When you finish, move each figure on your Regeneration Tank one step right. If nothing is left to do, tap Done.",
-          "components": ["Sietch Tabr dashboard", "4 Atreides Action dice", "Planning cards"],
+          "components": [
+            "Sietch Tabr dashboard",
+            "4 Atreides Action dice",
+            "Planning cards"
+          ],
+          "images": [
+            "atreides-dashboard",
+            "action-dice"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 17, "excerpt": "Spend 1 Action Die to execute 1 of the Actions corresponding to its die result." },
-            { "source": "rulebook", "page": 18, "excerpt": "it can only be chosen if the Atreides player has fewer unused Action dice than the Harkonnen player." },
-            { "source": "rulebook", "page": 19, "excerpt": "The Atreides player can reveal any number of Deployment tokens on the board at any time during their Action turn." },
-            { "source": "rulebook", "page": 27, "excerpt": "Each time the controlling player ends an Action turn, all figures on their Regeneration Tank track are moved one step to the right." }
+            {
+              "source": "rulebook",
+              "page": 17,
+              "excerpt": "Spend 1 Action Die to execute 1 of the Actions corresponding to its die result."
+            },
+            {
+              "source": "rulebook",
+              "page": 18,
+              "excerpt": "it can only be chosen if the Atreides player has fewer unused Action dice than the Harkonnen player."
+            },
+            {
+              "source": "rulebook",
+              "page": 19,
+              "excerpt": "The Atreides player can reveal any number of Deployment tokens on the board at any time during their Action turn."
+            },
+            {
+              "source": "rulebook",
+              "page": 27,
+              "excerpt": "Each time the controlling player ends an Action turn, all figures on their Regeneration Tank track are moved one step to the right."
+            }
           ]
         },
         {
@@ -288,11 +961,32 @@
           "side": "harkonnen",
           "title": "Action turn",
           "instruction": "Take one Action. Spend 1 Action die on an Action its result allows, or spend any die to play a Planning card. At any time this round you may remove an Ornithopter to reveal a Sietch in a connected Sector (Scouting). When you finish, move each figure on your Regeneration Tank one step right.",
-          "components": ["Giedi Prime dashboard", "Harkonnen Action dice", "Planning cards"],
+          "components": [
+            "Giedi Prime dashboard",
+            "Harkonnen Action dice",
+            "Planning cards"
+          ],
+          "images": [
+            "harkonnen-dashboard",
+            "action-dice"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 17, "excerpt": "Spend any 1 Action Die to play a Planning card from their hand." },
-            { "source": "rulebook", "page": 19, "excerpt": "The Harkonnen player can remove an Ornithopter from the board at any time during a round to reveal a Sietch in a connected Sector" },
-            { "source": "faq", "page": 2, "entry": "When do Named Leaders in the Regeneration Tank advance?", "excerpt": "When do Named Leaders in the Regeneration Tank advance, exactly? A: At the end of the Action turn." }
+            {
+              "source": "rulebook",
+              "page": 17,
+              "excerpt": "Spend any 1 Action Die to play a Planning card from their hand."
+            },
+            {
+              "source": "rulebook",
+              "page": 19,
+              "excerpt": "The Harkonnen player can remove an Ornithopter from the board at any time during a round to reveal a Sietch in a connected Sector"
+            },
+            {
+              "source": "faq",
+              "page": 2,
+              "entry": "When do Named Leaders in the Regeneration Tank advance?",
+              "excerpt": "When do Named Leaders in the Regeneration Tank advance, exactly? A: At the end of the Action turn."
+            }
           ]
         }
       ]
@@ -306,9 +1000,18 @@
           "side": "atreides",
           "title": "Place Wormsigns",
           "instruction": "Without looking, draw Wormsign tokens and put 1 facedown in each Desert Area that has a Harkonnen Legion or Harvester and no Wormsign or Sandworm yet.",
-          "components": ["Wormsign pool"],
+          "components": [
+            "Wormsign pool"
+          ],
+          "images": [
+            "wormsign-tokens"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 20, "excerpt": "places them on the board, facedown without looking at them, 1 in each Desert Area that contains a Harkonnen Legion or Harvester and does not already contain a Wormsign token or Sandworm." }
+            {
+              "source": "rulebook",
+              "page": 20,
+              "excerpt": "places them on the board, facedown without looking at them, 1 in each Desert Area that contains a Harkonnen Legion or Harvester and does not already contain a Wormsign token or Sandworm."
+            }
           ]
         },
         {
@@ -316,9 +1019,18 @@
           "side": "atreides",
           "title": "Reveal Wormsigns",
           "instruction": "Flip every Wormsign token on the board and resolve them in any order. Sand: nothing happens. Sandworm: a Sandworm attacks or is placed. Burrowing Sandworm: the same, but only in Deep Desert. A token in an Area with an Atreides Legion or a Sandworm does nothing.",
-          "components": ["Wormsign tokens"],
+          "components": [
+            "Wormsign tokens"
+          ],
+          "images": [
+            "wormsign-effects"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 20, "excerpt": "Then, the player flips all Wormsign tokens on the board faceup, and resolves their effects in any order desired" }
+            {
+              "source": "rulebook",
+              "page": 20,
+              "excerpt": "Then, the player flips all Wormsign tokens on the board faceup, and resolves their effects in any order desired"
+            }
           ]
         },
         {
@@ -326,12 +1038,37 @@
           "side": "atreides",
           "title": "Resolve Sandworms",
           "instruction": "Only a Harvester there: remove it. The Harkonnen may remove a Carryall from a connected Air Zone instead: the Harvester stays and a Sandworm is placed in the Area too. A Harkonnen Legion there: roll Combat dice for a Sandworm attack, 5 in Deep Desert, 4 in Desert, 3 in Minor Erg or Plateau. If the Legion is destroyed, remove any Harvester there too. Empty Area: place a Sandworm. Then shuffle all Wormsign tokens back into the pool.",
-          "components": ["Sandworm figures", "Atreides Combat dice", "Wormsign pool"],
+          "components": [
+            "Sandworm figures",
+            "Atreides Combat dice",
+            "Wormsign pool"
+          ],
+          "images": [
+            "sandworms",
+            "vehicles",
+            "combat-dice"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 20, "excerpt": "If the token is flipped in an Area containing only a Harvester, simply remove the Harvester." },
-            { "source": "rulebook", "page": 20, "excerpt": "the Harkonnen player can remove a Carryall from a connected Air Zone instead of removing the Harvester." },
-            { "source": "rulebook", "page": 31, "excerpt": "Deep Desert: 5 dice Desert: 4 dice Minor Erg or Plateau: 3 dice" },
-            { "source": "rulebook", "page": 20, "excerpt": "After all Wormsign tokens have been resolved, they are shuffled back face down into the Wormsign pool." }
+            {
+              "source": "rulebook",
+              "page": 20,
+              "excerpt": "If the token is flipped in an Area containing only a Harvester, simply remove the Harvester."
+            },
+            {
+              "source": "rulebook",
+              "page": 20,
+              "excerpt": "the Harkonnen player can remove a Carryall from a connected Air Zone instead of removing the Harvester."
+            },
+            {
+              "source": "rulebook",
+              "page": 31,
+              "excerpt": "Deep Desert: 5 dice Desert: 4 dice Minor Erg or Plateau: 3 dice"
+            },
+            {
+              "source": "rulebook",
+              "page": 20,
+              "excerpt": "After all Wormsign tokens have been resolved, they are shuffled back face down into the Wormsign pool."
+            }
           ]
         },
         {
@@ -339,11 +1076,28 @@
           "side": "atreides",
           "title": "Roll for Coriolis Storms",
           "instruction": "For each Harkonnen Legion in a Plateau, Minor Erg or Desert Area with no Harkonnen Settlement, roll Combat dice: 3 in Deep Desert, 2 in Desert, 1 in Minor Erg or Plateau. Each Hit or Special result is 1 hit. For each hit, the Harkonnen removes a Regular, swaps an Elite for a Regular, or removes a Leader.",
-          "components": ["Atreides Combat dice"],
+          "components": [
+            "Atreides Combat dice"
+          ],
+          "images": [
+            "combat-dice"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 20, "excerpt": "All Plateau, Minor Erg, and Desert Areas on the board that do not contain a Harkonnen Settlement are subject to the fury of the Coriolis Storms." },
-            { "source": "rulebook", "page": 20, "excerpt": "Deep Desert: 3 dice Desert: 2 dice Minor Erg or Plateau: 1 dice" },
-            { "source": "rulebook", "page": 26, "excerpt": "Replace 1 Elite Unit (Special or not) with 1 Regular Unit" }
+            {
+              "source": "rulebook",
+              "page": 20,
+              "excerpt": "All Plateau, Minor Erg, and Desert Areas on the board that do not contain a Harkonnen Settlement are subject to the fury of the Coriolis Storms."
+            },
+            {
+              "source": "rulebook",
+              "page": 20,
+              "excerpt": "Deep Desert: 3 dice Desert: 2 dice Minor Erg or Plateau: 1 dice"
+            },
+            {
+              "source": "rulebook",
+              "page": 26,
+              "excerpt": "Replace 1 Elite Unit (Special or not) with 1 Regular Unit"
+            }
           ]
         }
       ]
@@ -357,22 +1111,67 @@
           "side": "harkonnen",
           "title": "Collect spice",
           "instruction": "Remove every Harvester still on the board: 1 spice for each in Desert, 2 for each in Deep Desert. If you saved spice last round, you may discard the Spice Reserve token to add 1.",
-          "components": ["Harvesters", "Spice Reserve token"],
+          "components": [
+            "Harvesters",
+            "Spice Reserve token"
+          ],
+          "images": [
+            "vehicles",
+            "spice-reserve-token"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 21, "excerpt": "During this step, the Harkonnen player removes Harvesters still on the board to collect spice." },
-            { "source": "rulebook", "page": 21, "excerpt": "The Spice Reserve token can be discarded during any Spice Harvesting step to add 1 point to the total spice collected that round." }
+            {
+              "source": "rulebook",
+              "page": 21,
+              "excerpt": "During this step, the Harkonnen player removes Harvesters still on the board to collect spice."
+            },
+            {
+              "source": "rulebook",
+              "page": 21,
+              "excerpt": "The Spice Reserve token can be discarded during any Spice Harvesting step to add 1 point to the total spice collected that round."
+            }
           ]
         },
         {
           "id": "spice-spend",
           "side": "harkonnen",
           "title": "Pay the Imperium",
-          "instruction": "For each Imperium marker, pay 2 spice to keep it where it is, or 3 to raise it one step (one step at most). Each marker you don’t pay for drops 1 step. You may save 1 spice for later by placing the Spice Reserve token, whether or not you paid for every marker.",
-          "components": ["The Spice Must Flow board", "3 Imperium markers", "Spice Reserve token"],
+          "instruction": "For each Imperium marker, pay 2 spice to keep it where it is, or 3 to raise it one step (one step at most). Each marker you don’t pay for drops 1 step. You may save 1 spice for later by placing the Spice Reserve token, whether or not you paid for every marker. Then activate the Ban of every Imperium marker that just moved down, all of them, as each Imperium Bans card describes.",
+          "components": [
+            "The Spice Must Flow board",
+            "3 Imperium markers",
+            "Spice Reserve token",
+            "Imperium Bans cards"
+          ],
+          "images": [
+            "spice-must-flow",
+            "imperium-markers",
+            "imperium-bans-cards",
+            "spice-reserve-token"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 21, "excerpt": "It costs 2 points to keep a token in the position it currently occupies" },
-            { "source": "rulebook", "page": 21, "excerpt": "The Harkonnen player may choose to save a maximum of 1 spice point, to spend it for better effect in a following round." },
-            { "source": "faq", "page": 2, "entry": "Can you save spice without paying for every marker?", "excerpt": "Can Stockpiling be done regardless of whether you keep the Imperium markers in place (or raise them)? A: Yes." }
+            {
+              "source": "rulebook",
+              "page": 21,
+              "excerpt": "It costs 2 points to keep a token in the position it currently occupies"
+            },
+            {
+              "source": "rulebook",
+              "page": 21,
+              "excerpt": "The Harkonnen player may choose to save a maximum of 1 spice point, to spend it for better effect in a following round."
+            },
+            {
+              "source": "faq",
+              "page": 2,
+              "entry": "Can you save spice without paying for every marker?",
+              "excerpt": "Can Stockpiling be done regardless of whether you keep the Imperium markers in place (or raise them)? A: Yes."
+            },
+            {
+              "source": "faq",
+              "page": 1,
+              "entry": "Modified rule 1: Imperium Ban limit removed",
+              "excerpt": "ALL Bans corresponding to markers that just moved down are activated."
+            }
           ]
         }
       ]
@@ -386,9 +1185,19 @@
           "side": "harkonnen",
           "title": "Remove air vehicles",
           "instruction": "Remove all Ornithopters and Carryalls still on the board. You can use an Ornithopter’s Scouting as you remove it.",
-          "components": ["Ornithopters", "Carryalls"],
+          "components": [
+            "Ornithopters",
+            "Carryalls"
+          ],
+          "images": [
+            "vehicles"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 16, "excerpt": "Remove all Ornithopters and Carryalls still on the board (the Ornithopters’ Scouting ability can be used now, if possible)." }
+            {
+              "source": "rulebook",
+              "page": 16,
+              "excerpt": "Remove all Ornithopters and Carryalls still on the board (the Ornithopters’ Scouting ability can be used now, if possible)."
+            }
           ]
         },
         {
@@ -396,10 +1205,25 @@
           "side": "harkonnen",
           "title": "Swap named Leaders",
           "instruction": "You may replace any named Leader on the board with a generic Bashar. If no Bashar is left, the named Leader is still removed, with no replacement.",
-          "components": ["Named Leader figures", "Bashar Leader figures"],
+          "components": [
+            "Named Leader figures",
+            "Bashar Leader figures"
+          ],
+          "images": [
+            "harkonnen-leaders"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 16, "excerpt": "starting with the Harkonnen player, both players may replace any named Leader with a generic one." },
-            { "source": "faq", "page": 1, "entry": "Replacing a named Leader with no generic Leaders left", "excerpt": "the Named Leader can still be removed, but is not replaced with any Generic Leader." }
+            {
+              "source": "rulebook",
+              "page": 16,
+              "excerpt": "starting with the Harkonnen player, both players may replace any named Leader with a generic one."
+            },
+            {
+              "source": "faq",
+              "page": 1,
+              "entry": "Replacing a named Leader with no generic Leaders left",
+              "excerpt": "the Named Leader can still be removed, but is not replaced with any Generic Leader."
+            }
           ]
         },
         {
@@ -407,10 +1231,26 @@
           "side": "atreides",
           "title": "Swap named Leaders",
           "instruction": "You may replace any named Leader on the board with a generic Naib. If no Naib is left, the named Leader is still removed, with no replacement.",
-          "components": ["Named Leader figures", "Naib Leader figures"],
+          "components": [
+            "Named Leader figures",
+            "Naib Leader figures"
+          ],
+          "images": [
+            "atreides-leaders",
+            "naib-leader"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 16, "excerpt": "starting with the Harkonnen player, both players may replace any named Leader with a generic one." },
-            { "source": "faq", "page": 1, "entry": "Replacing a named Leader with no generic Leaders left", "excerpt": "the Named Leader can still be removed, but is not replaced with any Generic Leader." }
+            {
+              "source": "rulebook",
+              "page": 16,
+              "excerpt": "starting with the Harkonnen player, both players may replace any named Leader with a generic one."
+            },
+            {
+              "source": "faq",
+              "page": 1,
+              "entry": "Replacing a named Leader with no generic Leaders left",
+              "excerpt": "the Named Leader can still be removed, but is not replaced with any Generic Leader."
+            }
           ]
         },
         {
@@ -418,9 +1258,20 @@
           "side": "both",
           "title": "Refresh Leader cards",
           "instruction": "Put every spent named Leader card back on its Action box on your dashboard.",
-          "components": ["Leader cards", "Dashboards"],
+          "components": [
+            "Leader cards",
+            "Dashboards"
+          ],
+          "images": [
+            "atreides-leader-cards",
+            "harkonnen-leader-cards"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 16, "excerpt": "Place all ‘spent’ Named Leader cards back on the corresponding Action boxes on the player dashboards." }
+            {
+              "source": "rulebook",
+              "page": 16,
+              "excerpt": "Place all ‘spent’ Named Leader cards back on the corresponding Action boxes on the player dashboards."
+            }
           ]
         },
         {
@@ -428,9 +1279,19 @@
           "side": "both",
           "title": "Discard down to 6",
           "instruction": "If you hold more than 6 Planning cards, discard down to 6. You choose which to discard.",
-          "components": ["Planning cards"],
+          "components": [
+            "Planning cards"
+          ],
+          "images": [
+            "atreides-planning-decks",
+            "harkonnen-planning-decks"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 16, "excerpt": "Both players check their hand of Planning cards and discard down to 6 cards (if needed), choosing which cards to discard." }
+            {
+              "source": "rulebook",
+              "page": 16,
+              "excerpt": "Both players check their hand of Planning cards and discard down to 6 cards (if needed), choosing which cards to discard."
+            }
           ]
         },
         {
@@ -438,21 +1299,23 @@
           "side": "atreides",
           "title": "Sort Prescience cards",
           "instruction": "For the revealed Prescience cards nobody claimed, choose which to remove from the game. Shuffle the rest back into the Prescience deck.",
-          "components": ["Prescience cards"],
+          "components": [
+            "Prescience cards"
+          ],
+          "images": [
+            "prescience-cards"
+          ],
           "citations": [
-            { "source": "rulebook", "page": 16, "excerpt": "The Atreides player chooses whether to remove from the game or reshuffle back into the deck any revealed but unclaimed Prescience cards." },
-            { "source": "rulebook", "page": 28, "excerpt": "Any remaining cards must then be reshuffled into the Prescience deck for the following round." }
-          ]
-        },
-        {
-          "id": "end-atreides-victory",
-          "side": "atreides",
-          "title": "Check the Secret Objective",
-          "instruction": "Compare your 3 Prescience markers with your Secret Objective card. If every marker has reached its target, the Atreides win. Destroying Arrakeen triggers this check at once instead of waiting for the end of the round.",
-          "components": ["Secret Objective card", "Prescience track"],
-          "citations": [
-            { "source": "rulebook", "page": 27, "excerpt": "The aim of the Atreides player is to reach a precise score with each of the 3 Prescience markers, as indicated on their Secret Objective card" },
-            { "source": "faq", "page": 1, "entry": "Modified rule 2: immediate Atreides victory when taking Arrakeen", "excerpt": "If they did, they win immediately (instead of at the End of the Round)." }
+            {
+              "source": "rulebook",
+              "page": 16,
+              "excerpt": "The Atreides player chooses whether to remove from the game or reshuffle back into the deck any revealed but unclaimed Prescience cards."
+            },
+            {
+              "source": "rulebook",
+              "page": 28,
+              "excerpt": "Any remaining cards must then be reshuffled into the Prescience deck for the following round."
+            }
           ]
         }
       ]

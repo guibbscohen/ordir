@@ -14,6 +14,8 @@ struct TurnScript: Decodable {
     let title: String
     let version: Int
     let sources: [Source]
+    /// Component pictures cropped from the sources by tools/crop_source_images.py.
+    let images: [SourceImage]
     let phases: [Phase]
 
     struct Source: Decodable {
@@ -21,6 +23,13 @@ struct TurnScript: Decodable {
         let title: String
         let shortTitle: String
         let url: URL
+    }
+
+    struct SourceImage: Decodable, Identifiable {
+        let id: String
+        let caption: String
+        let source: String
+        let page: Int
     }
 
     struct Phase: Decodable {
@@ -43,6 +52,7 @@ struct TurnScript: Decodable {
         let title: String
         let instruction: String
         let components: [String]
+        let images: [String]
         let citations: [Citation]
     }
 
@@ -61,6 +71,20 @@ struct TurnScript: Decodable {
 
     func source(for citation: Citation) -> Source? {
         sources.first { $0.id == citation.source }
+    }
+
+    func pictures(for step: Step) -> [SourceImage] {
+        step.images.compactMap { id in images.first { $0.id == id } }
+    }
+
+    /// Asset catalog name written by tools/crop_source_images.py.
+    func assetName(for image: SourceImage) -> String {
+        "\(game.rawValue)-\(image.id)"
+    }
+
+    func label(for image: SourceImage) -> String {
+        let source = sources.first { $0.id == image.source }?.shortTitle ?? image.source
+        return "\(source), page \(image.page)"
     }
 
     /// The script bundled for `game`, or nil if the game has none yet.

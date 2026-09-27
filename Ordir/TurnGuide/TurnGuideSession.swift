@@ -24,8 +24,14 @@ final class TurnGuideSession {
     private(set) var stepStartedAt = Date.now
     private var history: [Position] = []
 
-    init(script: TurnScript) {
+    /// `startAt` jumps to a step by id (CI screenshots use it); unknown ids start at the beginning.
+    init(script: TurnScript, startAt stepID: String? = nil) {
         self.script = script
+        for (phaseIndex, phase) in script.phases.enumerated() {
+            if let stepIndex = phase.steps.firstIndex(where: { $0.id == stepID }) {
+                position = Position(phase: phaseIndex, step: stepIndex)
+            }
+        }
     }
 
     var phase: TurnScript.Phase { script.phases[position.phase] }

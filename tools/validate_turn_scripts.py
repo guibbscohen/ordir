@@ -2,7 +2,8 @@
 """Check every turn script under Ordir/Games against its official sources.
 
 For each step (and each loop) it verifies the shape of the data and that every citation's
-excerpt really appears on the cited page of the downloaded PDF. Run from the repo root:
+excerpt really appears on the cited page of the downloaded PDF. Every image must name a real source
+page and have its generated asset (tools/crop_source_images.py). Run from the repo root:
 
     python3 tools/validate_turn_scripts.py
 
@@ -54,6 +55,21 @@ def validate(path):
         sid: [normalise(p.extract_text() or "") for p in PdfReader(ROOT / s["file"]).pages]
         for sid, s in sources.items()
     }
+    images = {}
+    for image in script.get("images", []):
+        where = f"image {image.get('id')}"
+        images[image.get("id")] = image
+        source, page, crop = image.get("source"), image.get("page"), image.get("crop", [])
+        if not image.get("caption"):
+            errors.append(f"{where}: missing caption")
+        if source not in sources or not isinstance(page, int) or not 1 <= page <= len(pages[source]):
+            errors.append(f"{where}: no page {page} in source {source!r}")
+        if len(crop) != 4 or not (0 <= crop[0] < crop[2] <= 1 and 0 <= crop[1] < crop[3] <= 1):
+            errors.append(f"{where}: crop must be [x0, y0, x1, y1] fractions of the page")
+        name = f"{script['game']}-{image.get('id')}"
+        if not (ROOT / "Ordir" / "Assets.xcassets" / script["game"] / f"{name}.imageset" / f"{name}.jpg").exists():
+            errors.append(f"{where}: asset missing, run tools/crop_source_images.py")
+
     ids = set()
     for phase in script["phases"]:
         if not phase.get("steps"):
@@ -75,6 +91,11 @@ def validate(path):
                     errors.append(f"{where}: missing {field}")
             if not step.get("components"):
                 errors.append(f"{where}: no components")
+            if not step.get("images"):
+                errors.append(f"{where}: no images")
+            for image_id in step.get("images", []):
+                if image_id not in images:
+                    errors.append(f"{where}: unknown image {image_id!r}")
             check_citations(step.get("citations", []), where, sources, pages, errors)
     return errors
 
