@@ -147,6 +147,7 @@ private struct TurnGuideRunner: View {
             phase: session.phase,
             step: session.step,
             additions: session.additions,
+            reminders: session.reminders,
             stepTitle: stepTitle,
             stepKey: stepKey,
             startedAt: session.stepStartedAt,
@@ -164,14 +165,13 @@ private struct TurnGuideRunner: View {
         HStack(spacing: 4) {
             barButton("Close guide", systemImage: "xmark") { dismiss() }
             Spacer(minLength: 8)
-            VStack(spacing: 1) {
-                Text(session.phase.title)
-                    .font(.footnote.weight(.semibold))
-                Text(progressText)
-                    .font(.caption.monospacedDigit())
-                    .foregroundStyle(.secondary)
+            // The phase reads both ways: the upper copy is turned to face the far player.
+            VStack(spacing: 2) {
+                phaseLabel
+                    .rotationEffect(.degrees(180))
+                    .accessibilityHidden(true)
+                phaseLabel
             }
-            .accessibilityElement(children: .combine)
             Spacer(minLength: 8)
             barButton("Previous step", systemImage: "arrow.uturn.backward") {
                 withAnimation(stepAnimation) { session.goBack() }
@@ -182,7 +182,7 @@ private struct TurnGuideRunner: View {
             }
         }
         .padding(.horizontal, 8)
-        .frame(height: 52)
+        .frame(height: 60)
         .background(.bar)
         .overlay(alignment: .top) { Divider() }
         .overlay(alignment: .bottom) { Divider() }
@@ -195,6 +195,19 @@ private struct TurnGuideRunner: View {
                 .frame(width: 44, height: 44)
         }
         .accessibilityLabel(title)
+    }
+
+    private var phaseLabel: some View {
+        HStack(spacing: 6) {
+            Text(session.phase.title)
+                .font(.footnote.weight(.semibold))
+            Text(progressText)
+                .font(.caption.monospacedDigit())
+                .foregroundStyle(.secondary)
+        }
+        .lineLimit(1)
+        .minimumScaleFactor(0.8)
+        .accessibilityElement(children: .combine)
     }
 
     private var progressText: String {
@@ -282,6 +295,7 @@ private struct SeatPanel: View {
     let phase: TurnScript.Phase
     let step: TurnScript.Step
     let additions: [TurnScript.Addition]
+    let reminders: [TurnScript.Reminder]
     let stepTitle: String
     let stepKey: String
     let startedAt: Date
@@ -303,6 +317,7 @@ private struct SeatPanel: View {
                         phase: phase,
                         step: step,
                         additions: additions,
+                        reminders: reminders,
                         title: stepTitle,
                         isSpeaking: isSpeaking,
                         enlarge: enlarge
@@ -366,6 +381,7 @@ private struct StepCard: View {
     let phase: TurnScript.Phase
     let step: TurnScript.Step
     let additions: [TurnScript.Addition]
+    let reminders: [TurnScript.Reminder]
     let title: String
     let isSpeaking: Bool
     let enlarge: (TurnScript.SourceImage) -> Void
@@ -388,10 +404,30 @@ private struct StepCard: View {
                 .accessibilityAddTraits(.isHeader)
             }
 
-            Text(step.instruction)
-                .font(.body)
-                .lineSpacing(3)
-                .fixedSize(horizontal: false, vertical: true)
+            VStack(alignment: .leading, spacing: 10) {
+                Text(step.instruction)
+                    .font(.body.weight(.medium))
+                    .fixedSize(horizontal: false, vertical: true)
+                BulletList(items: step.bullets ?? [])
+            }
+
+            ForEach(Array(additions.enumerated()), id: \.offset) { _, addition in
+                section(script.expansionTitle(addition.expansion)) {
+                    Text(addition.text)
+                        .font(.body)
+                        .fixedSize(horizontal: false, vertical: true)
+                    BulletList(items: addition.bullets ?? [])
+                    PictureStrip(script: script, pictures: script.pictures(addition.images), enlarge: enlarge)
+                    CitationList(script: script, citations: addition.citations)
+                }
+            }
+
+            if !reminders.isEmpty {
+                section("Before you pass the turn") {
+                    ReminderChecklist(reminders: reminders)
+                    CitationList(script: script, citations: reminders.flatMap(\.citations))
+                }
+            }
 
             section("You’ll need") {
                 PictureStrip(script: script, pictures: script.pictures(step.images), enlarge: enlarge)
@@ -403,17 +439,6 @@ private struct StepCard: View {
 
             section("Source") {
                 CitationList(script: script, citations: step.citations)
-            }
-
-            ForEach(Array(additions.enumerated()), id: \.offset) { _, addition in
-                section(script.expansionTitle(addition.expansion)) {
-                    Text(addition.text)
-                        .font(.body)
-                        .lineSpacing(3)
-                        .fixedSize(horizontal: false, vertical: true)
-                    PictureStrip(script: script, pictures: script.pictures(addition.images), enlarge: enlarge)
-                    CitationList(script: script, citations: addition.citations)
-                }
             }
 
             if let loop = phase.loop {
@@ -442,6 +467,57 @@ private struct StepCard: View {
                 .foregroundStyle(.secondary)
                 .accessibilityAddTraits(.isHeader)
             content()
+        }
+    }
+}
+
+/// Options and sub-steps as a short list instead of a paragraph.
+private struct BulletList: View {
+    let items: [String]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            ForEach(Array(items.enumerated()), id: \.offset) { _, item in
+                HStack(alignment: .firstTextBaseline, spacing: 10) {
+                    Text("•")
+                        .foregroundStyle(.secondary)
+                        .accessibilityHidden(true)
+                    Text(item)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .font(.body)
+            }
+        }
+    }
+}
+
+/// Tick-off list for the moment the turn passes. Resets with every new step.
+private struct ReminderChecklist: View {
+    let reminders: [TurnScript.Reminder]
+    @State private var checked: Set<Int> = []
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 2) {
+            ForEach(Array(reminders.enumerated()), id: \.offset) { index, reminder in
+                let isChecked = checked.contains(index)
+                Button {
+                    if isChecked { checked.remove(index) } else { checked.insert(index) }
+                } label: {
+                    HStack(alignment: .firstTextBaseline, spacing: 12) {
+                        Image(systemName: isChecked ? "checkmark.circle.fill" : "circle")
+                            .foregroundStyle(isChecked ? Color.primary : Color.secondary)
+                        Text(reminder.text)
+                            .foregroundStyle(isChecked ? Color.secondary : Color.primary)
+                            .fixedSize(horizontal: false, vertical: true)
+                        Spacer(minLength: 0)
+                    }
+                    .font(.body)
+                    .frame(minHeight: 44)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityAddTraits(isChecked ? .isSelected : [])
+            }
         }
     }
 }

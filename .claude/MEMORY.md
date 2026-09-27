@@ -32,3 +32,8 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
 - 2026-09-27: Before building a game's guide, ask the user which expansions to include. Expansions are
   optional modules the players switch on before the guide starts; their rules are tagged steps or additions.
 - 2026-09-27: Dune: the Atreides check their Secret Objective at the beginning of each new round.
+- 2026-09-27: No big text blocks. When there are several options, selections or sub-steps, list them as
+  items: in guide steps a short lead line plus bullets, and in replies to the user.
+- 2026-09-27: Whenever the turn passes, the guide shows every turn-change reminder as a checklist (e.g. move
+  Regeneration Tank figures, used dice, spent Leader cards, stacking limit), each cited to its source.
+- 2026-09-27: Split-screen middle bar: the phase name and progress are mirrored so both players can read them.

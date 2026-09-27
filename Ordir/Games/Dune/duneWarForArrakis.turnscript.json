@@ -1,7 +1,7 @@
 {
   "game": "duneWarForArrakis",
   "title": "Dune: War for Arrakis",
-  "version": 3,
+  "version": 4,
   "scope": "Setup and one full round, 2 players (Atreides vs Harkonnen), one phone; optional Desert War, Smugglers and Spacing Guild expansions",
   "sources": [
     {
@@ -759,7 +759,11 @@
           "id": "setup-sietches",
           "side": "atreides",
           "title": "Place the Sietches",
-          "instruction": "Shuffle the 8 Sietch tokens facedown and put 1 on each Sietch symbol on the board. Only you, the Atreides, may look at their hidden side during the game.",
+          "instruction": "Shuffle the 8 Sietch tokens facedown.",
+          "bullets": [
+            "Put 1 on each Sietch symbol on the board.",
+            "Only you, the Atreides, may look at their hidden side."
+          ],
           "components": [
             "8 Sietch tokens"
           ],
@@ -778,7 +782,10 @@
           "id": "setup-atreides-garrisons",
           "side": "atreides",
           "title": "Garrison the Sietches",
-          "instruction": "Shuffle the Atreides Garrison Deployment tokens facedown. Put 1 token and 1 Naib Leader figure in each Area with a Sietch.",
+          "instruction": "Shuffle the Atreides Garrison Deployment tokens facedown.",
+          "bullets": [
+            "In each Area with a Sietch, put 1 token and 1 Naib Leader figure."
+          ],
           "components": [
             "8 Atreides Garrison Deployment tokens",
             "8 Naib Leader figures"
@@ -818,7 +825,11 @@
           "id": "setup-settlements",
           "side": "harkonnen",
           "title": "Place the Settlements",
-          "instruction": "Put the 6 Harkonnen Settlements on their marked Areas: the 4 Pyon Villages, Carthag and Arrakeen. Their ratings are public.",
+          "instruction": "Put the 6 Harkonnen Settlements on their marked Areas.",
+          "bullets": [
+            "4 Pyon Villages, Carthag and Arrakeen.",
+            "Their ratings are public."
+          ],
           "components": [
             "4 Pyon Village tokens",
             "Carthag token",
@@ -839,7 +850,12 @@
           "id": "setup-harkonnen-garrisons",
           "side": "harkonnen",
           "title": "Garrison the Settlements",
-          "instruction": "Shuffle the two sets of Harkonnen Garrison Deployment tokens separately, facedown. Put 1 token from each set in each Area with a Harkonnen Settlement. Flip them faceup and swap each token for the figures it shows. The legend on page 15 explains the symbols.",
+          "instruction": "Garrison each Harkonnen Settlement.",
+          "bullets": [
+            "Shuffle the two sets of Harkonnen Garrison Deployment tokens separately, facedown.",
+            "Put 1 token from each set in each Area with a Harkonnen Settlement.",
+            "Flip them faceup and swap each token for the figures it shows (legend on page 15)."
+          ],
           "components": [
             "12 Harkonnen Garrison Deployment tokens",
             "Harkonnen Regular, Elite and Sardaukar figures",
@@ -867,7 +883,12 @@
           "id": "setup-stations",
           "side": "both",
           "title": "Place the Testing Stations",
-          "instruction": "Shuffle the 6 Ecological Testing Stations facedown and put 1 on each marked Area. Nobody looks at them. A Station is revealed only when an Atreides Legion enters its Area.",
+          "instruction": "Shuffle the 6 Ecological Testing Stations facedown.",
+          "bullets": [
+            "Put 1 on each marked Area.",
+            "Nobody looks at them.",
+            "A Station is revealed only when an Atreides Legion enters its Area."
+          ],
           "components": [
             "6 Ecological Testing Station tokens"
           ],
@@ -886,7 +907,11 @@
           "id": "setup-tracks",
           "side": "both",
           "title": "Zero the score tracks",
-          "instruction": "Put the 3 Prescience markers on space 0 of the Prescience track, and the Supremacy marker on space 0 of the Supremacy track.",
+          "instruction": "Put every score marker on space 0.",
+          "bullets": [
+            "3 Prescience markers on the Prescience track.",
+            "The Supremacy marker on the Supremacy track."
+          ],
           "components": [
             "3 Prescience markers",
             "Supremacy marker"
@@ -945,7 +970,12 @@
           "id": "setup-dashboards",
           "side": "both",
           "title": "Set up the dashboards",
-          "instruction": "Take your dashboard: Sietch Tabr for the Atreides, Giedi Prime for the Harkonnen. Put each named Leader card marked ‘in play at the start of the game’ on the Action box with the matching symbol. Keep the generic Leader cards (Naib and Bashar) and the other named Leader cards nearby.",
+          "instruction": "Each player takes their dashboard.",
+          "bullets": [
+            "Atreides: Sietch Tabr. Harkonnen: Giedi Prime.",
+            "Put each named Leader card marked ‘in play at the start of the game’ on the Action box with the matching symbol.",
+            "Keep the generic Leader cards (Naib and Bashar) and the other named Leader cards nearby."
+          ],
           "components": [
             "Sietch Tabr dashboard",
             "Giedi Prime dashboard",
@@ -974,7 +1004,10 @@
           "id": "setup-spice-board",
           "side": "harkonnen",
           "title": "Set up The Spice Must Flow",
-          "instruction": "Put The Spice Must Flow board next to your Giedi Prime dashboard. Line up the 3 Imperium markers on the step marked ‘start here’.",
+          "instruction": "Put The Spice Must Flow board next to your Giedi Prime dashboard.",
+          "bullets": [
+            "Line up the 3 Imperium markers on the step marked ‘start here’."
+          ],
           "components": [
             "The Spice Must Flow board",
             "3 Imperium markers"
@@ -996,7 +1029,11 @@
           "expansion": "smugglers",
           "side": "atreides",
           "title": "Swap in the Drone Ornithopters",
-          "instruction": "Replace the 3 Smugglers Planning cards in the House Atreides deck with the 3 Drone Ornithopters cards from this expansion. Remove the replaced cards from the game.",
+          "instruction": "Change the House Atreides deck.",
+          "bullets": [
+            "Take out the 3 Smugglers Planning cards and remove them from the game.",
+            "Put in the 3 Drone Ornithopters cards from this expansion."
+          ],
           "components": [
             "3 Drone Ornithopters Planning cards",
             "House Atreides deck"
@@ -1037,7 +1074,11 @@
           "id": "setup-planning-decks",
           "side": "both",
           "title": "Shuffle the Planning decks",
-          "instruction": "Sort the Planning cards into four decks by their backs and shuffle each. The Harkonnen keeps House Harkonnen and Corrino Ally. The Atreides keeps House Atreides and Fremen Ally.",
+          "instruction": "Sort the Planning cards into four decks by their backs, and shuffle each.",
+          "bullets": [
+            "Harkonnen: House Harkonnen and Corrino Ally.",
+            "Atreides: House Atreides and Fremen Ally."
+          ],
           "components": [
             "House Harkonnen deck",
             "Corrino Ally deck",
@@ -1060,7 +1101,11 @@
           "id": "setup-secret-objective",
           "side": "atreides",
           "title": "Draw a Secret Objective",
-          "instruction": "Shuffle the 6 Secret Objective cards and draw 1. Put the other 5 back in the box. Keep your card hidden from the Harkonnen for the whole game.",
+          "instruction": "Shuffle the 6 Secret Objective cards and draw 1.",
+          "bullets": [
+            "Put the other 5 back in the box.",
+            "Keep your card hidden from the Harkonnen all game."
+          ],
           "components": [
             "6 Secret Objective cards"
           ],
@@ -1105,7 +1150,12 @@
           "expansion": "desertWar",
           "side": "harkonnen",
           "title": "Ready the Desert War forces",
-          "instruction": "Keep the 2 Escort Ornithopters, the 6 Suspensor Troopers and the Suspensor Troopers / Escort Ornithopters reference card within reach. Put the Harkonnen Desert War reference card on the right side of your dashboard.",
+          "instruction": "Keep your Desert War pieces within reach.",
+          "bullets": [
+            "2 Escort Ornithopters and 6 Suspensor Troopers.",
+            "The Suspensor Troopers / Escort Ornithopters reference card.",
+            "Put the Harkonnen Desert War reference card on the right side of your dashboard."
+          ],
           "components": [
             "2 Escort Ornithopters",
             "6 Suspensor Troopers",
@@ -1131,7 +1181,14 @@
           "expansion": "desertWar",
           "side": "atreides",
           "title": "Ready the Desert War forces",
-          "instruction": "Keep the 6 Rocket Launchers, the 2 Sandriders, the 3 Fremen Camp figures and tokens, and the Rocket Launchers / Sandriders reference card within reach. Put the Sandriders Leader card faceup on your Desert Power Action box and the Atreides Desert War card on the right side of your dashboard.",
+          "instruction": "Keep your Desert War pieces within reach.",
+          "bullets": [
+            "6 Rocket Launchers and 2 Sandriders.",
+            "3 Fremen Camp figures and their tokens.",
+            "The Rocket Launchers / Sandriders reference card.",
+            "Put the Sandriders Leader card faceup on your Desert Power Action box.",
+            "Put the Atreides Desert War card on the right side of your dashboard."
+          ],
           "components": [
             "6 Rocket Launchers",
             "2 Sandriders",
@@ -1163,7 +1220,12 @@
           "expansion": "smugglers",
           "side": "both",
           "title": "Set up the Smugglers",
-          "instruction": "Put the Smugglers board next to the main board with 1 Smuggler Regular and Gurney Halleck on it. Put the Staban Tuek figure on step 7 of the Prescience track. The Smugglers start neutral.",
+          "instruction": "Set out the Smugglers. They start neutral.",
+          "bullets": [
+            "Put the Smugglers board next to the main board.",
+            "Put 1 Smuggler Regular and Gurney Halleck on it.",
+            "Put the Staban Tuek figure on step 7 of the Prescience track."
+          ],
           "components": [
             "Smugglers board",
             "Smuggler Regular",
@@ -1237,7 +1299,11 @@
           "expansion": "spacingGuild",
           "side": "both",
           "title": "Set up the Space boards",
-          "instruction": "Attach the Space board and the two Heighliner boards to one side of the main board. Put each Heighliner on the starting space of its Heighliner board.",
+          "instruction": "Set up space travel.",
+          "bullets": [
+            "Attach the Space board and the two Heighliner boards to one side of the main board.",
+            "Put each Heighliner on the starting space of its Heighliner board."
+          ],
           "components": [
             "Space board",
             "2 Heighliner boards",
@@ -1266,7 +1332,12 @@
           "expansion": "spacingGuild",
           "side": "both",
           "title": "Load the first Troops",
-          "instruction": "Each player attaches a colour base of their faction to 2 Houses Major Troops and puts them on the Landsraad space of their Heighliner board. Keep the Space Frigates, the other Troops and colour bases, and the Guild Navigator card and figure at hand.",
+          "instruction": "Load the first Troops.",
+          "bullets": [
+            "Each player attaches a colour base of their faction to 2 Houses Major Troops.",
+            "Put them on the Landsraad space of your Heighliner board.",
+            "Keep the Space Frigates, the other Troops and colour bases, and the Guild Navigator card and figure at hand."
+          ],
           "components": [
             "4 Houses Major Troops",
             "Colour bases",
@@ -1297,7 +1368,12 @@
           "id": "round-check-objective",
           "side": "atreides",
           "title": "Check the Secret Objective",
-          "instruction": "Before anything else this round, compare your 3 Prescience markers with your Secret Objective card. If every marker has reached its target, the Atreides win. Destroying Arrakeen triggers this check at once.",
+          "instruction": "Before anything else this round, check your Secret Objective.",
+          "bullets": [
+            "Compare your 3 Prescience markers with the card.",
+            "If every marker has reached its target, the Atreides win.",
+            "Destroying Arrakeen triggers this check at once."
+          ],
           "components": [
             "Secret Objective card",
             "Prescience track"
@@ -1344,7 +1420,11 @@
           "id": "round-reveal-prescience",
           "side": "both",
           "title": "Reveal Prescience cards",
-          "instruction": "Draw 3 Prescience cards and lay them faceup in a row next to the deck, where both players can see them. The Atreides can claim up to 2 of them this round, as soon as a card’s requirements are met.",
+          "instruction": "Draw 3 Prescience cards and lay them faceup next to the deck.",
+          "bullets": [
+            "Both players can see them.",
+            "The Atreides can claim up to 2 this round, as soon as a card’s requirements are met."
+          ],
           "components": [
             "Prescience deck"
           ],
@@ -1369,7 +1449,11 @@
           "expansion": "smugglers",
           "side": "both",
           "title": "Grow the Smugglers",
-          "instruction": "While the Smugglers are neutral, add 1 Smuggler Regular to the Smugglers board. Once they have allied with the Atreides, skip this.",
+          "instruction": "Add 1 Smuggler Regular to the Smugglers board.",
+          "bullets": [
+            "Only while the Smugglers are neutral.",
+            "Once they have allied with the Atreides, skip this."
+          ],
           "components": [
             "Smuggler Regular",
             "Smugglers board"
@@ -1396,7 +1480,12 @@
           "id": "vehicles-set-aside-dice",
           "side": "harkonnen",
           "title": "Set aside Action dice",
-          "instruction": "Find the active row on The Spice Must Flow board: the row where your lowest Imperium marker sits. Set aside as many Action dice as its first column shows. They stay on your dashboard and aren’t used this round.",
+          "instruction": "Set aside Action dice for this round.",
+          "bullets": [
+            "Find the active row on The Spice Must Flow board: the row of your lowest Imperium marker.",
+            "Set aside as many Action dice as its first column shows.",
+            "They stay on your dashboard, unused this round."
+          ],
           "components": [
             "The Spice Must Flow board",
             "8 Harkonnen Action dice"
@@ -1418,7 +1507,12 @@
           "expansion": "desertWar",
           "side": "harkonnen",
           "title": "Consider an Escort Ornithopter",
-          "instruction": "As you place Ornithopters, you may place 1 (only 1) Escort Ornithopter instead of a standard one. It can’t Scout or Troop-transport; it escorts Troops instead.",
+          "instruction": "You may place 1 Escort Ornithopter instead of a standard one.",
+          "bullets": [
+            "Only 1, when you place Ornithopters.",
+            "It can’t Scout or Troop-transport.",
+            "It escorts Troops instead."
+          ],
           "components": [
             "Escort Ornithopter"
           ],
@@ -1442,7 +1536,12 @@
           "id": "vehicles-place",
           "side": "harkonnen",
           "title": "Place vehicles",
-          "instruction": "Take the vehicles the active row shows. Put Harvesters in free Desert Areas, 1 per Area. Put Ornithopters and Carryalls in Air Zones, 1 per Zone. A free Area has no enemy Settlements, enemy Units or Sandworms.",
+          "instruction": "Take the vehicles the active row shows and place them.",
+          "bullets": [
+            "Harvesters: free Desert Areas, 1 per Area.",
+            "Ornithopters and Carryalls: Air Zones, 1 per Zone.",
+            "A free Area has no enemy Settlements, enemy Units or Sandworms."
+          ],
           "components": [
             "Harvesters",
             "Ornithopters",
@@ -1469,7 +1568,11 @@
           "expansion": "smugglers",
           "side": "harkonnen",
           "title": "Place Smuggler vehicles",
-          "instruction": "While the Smugglers are neutral, you must also place every available Smuggler Harvester and the Smuggler Carryall, following the usual vehicle rules. If they have allied with the Atreides, the Atreides places Smuggler Ornithopters before your Carryalls and Ornithopters instead (Smugglers rulebook, page 7).",
+          "instruction": "Place the Smuggler vehicles too.",
+          "bullets": [
+            "Smugglers neutral: you must place every available Smuggler Harvester and the Smuggler Carryall, following the usual vehicle rules.",
+            "Smugglers allied with the Atreides: the Atreides places Smuggler Ornithopters first, before your Carryalls and Ornithopters (Smugglers rulebook, page 7)."
+          ],
           "components": [
             "Smuggler Harvesters",
             "Smuggler Carryall"
@@ -1495,7 +1598,11 @@
           "expansion": "desertWar",
           "side": "harkonnen",
           "title": "Place Desert War tokens",
-          "instruction": "Put a Desert War token on each empty slot of the first column of The Spice Must Flow board. Slots holding Action dice aren’t empty; tokens that don’t fit sit out this round.",
+          "instruction": "Put a Desert War token on each empty slot of the first column of The Spice Must Flow board.",
+          "bullets": [
+            "Slots holding Action dice aren’t empty.",
+            "Tokens that don’t fit sit out this round."
+          ],
           "components": [
             "Harkonnen Desert War tokens",
             "The Spice Must Flow board"
@@ -1523,7 +1630,13 @@
           "expansion": "desertWar",
           "side": "atreides",
           "title": "Place Fremen Camps",
-          "instruction": "Place every available Fremen Camp token facedown in an empty Desert Area, each in a different Sector, and put a Fremen Camp figure on each. Areas with a Camp are free for both players. A Harkonnen Legion entering one removes it.",
+          "instruction": "Place every available Fremen Camp.",
+          "bullets": [
+            "Token facedown in an empty Desert Area, each in a different Sector.",
+            "A Fremen Camp figure on top of each token.",
+            "Areas with a Camp are free for both players.",
+            "A Harkonnen Legion entering one removes it."
+          ],
           "components": [
             "Fremen Camp tokens",
             "Fremen Camp figures"
@@ -1548,7 +1661,13 @@
           "id": "actions-roll",
           "side": "both",
           "title": "Roll Action dice",
-          "instruction": "The Atreides rolls 4 Action dice. The Harkonnen rolls every die not set aside. Put each die on the dashboard box that matches its result. If 4 or more of your dice show the same result, keep 1 and reroll the other matching dice (only once each round). If both players must change dice results because they exceed an Action box’s slots, choose the new results one at a time, taking turns, Harkonnen first.",
+          "instruction": "Roll Action dice and put each on the dashboard box matching its result.",
+          "bullets": [
+            "Atreides: 4 dice.",
+            "Harkonnen: every die not set aside.",
+            "4 or more of your dice show the same result: keep 1 and reroll the other matching dice (once per round).",
+            "Both players must change dice that exceed an Action box’s slots: choose new results one at a time, taking turns, Harkonnen first."
+          ],
           "components": [
             "Action dice",
             "Dashboards"
@@ -1615,7 +1734,14 @@
           "id": "turn-atreides",
           "side": "atreides",
           "title": "Action turn",
-          "instruction": "Take one Action. Spend 1 Action die on an Action its result allows, or spend any die to play a Planning card, or take a Desert Power Action with no die, if you have fewer unused dice than the Harkonnen. At any time in your turn you may reveal Deployment tokens (Guerrilla Training). When you finish, move each figure on your Regeneration Tank one step right. If nothing is left to do, tap Done.",
+          "instruction": "Take one Action. Choose one:",
+          "bullets": [
+            "Spend 1 Action die on an Action its result allows.",
+            "Spend any die to play a Planning card.",
+            "Take a Desert Power Action with no die, if you have fewer unused dice than the Harkonnen.",
+            "Free, any time in your turn: reveal Deployment tokens (Guerrilla Training).",
+            "Nothing left to do: tap Done."
+          ],
           "components": [
             "Sietch Tabr dashboard",
             "4 Atreides Action dice",
@@ -1650,7 +1776,12 @@
           "additions": [
             {
               "expansion": "desertWar",
-              "text": "Each Desert Power Action also gives you a Desert War Action, before or after it: deploy 3 Rocket Launchers in Areas with a Fremen Camp, or make a Rocket Launcher special attack. When Desert Power places 2 Wormsigns, you may place 1 Sandrider instead of 1 of them, in an empty Desert Area.",
+              "text": "Each Desert Power Action also gives you a Desert War Action, before or after it. Choose one:",
+              "bullets": [
+                "Deploy 3 Rocket Launchers in Areas with a Fremen Camp.",
+                "Make a Rocket Launcher special attack.",
+                "When Desert Power places 2 Wormsigns, you may place 1 Sandrider instead of 1 of them, in an empty Desert Area."
+              ],
               "images": [
                 "dw-rocket-launchers",
                 "dw-sandriders"
@@ -1670,7 +1801,12 @@
             },
             {
               "expansion": "smugglers",
-              "text": "A Legion that ends its move in an Area with a Smuggler Harvester captures it: remove it from the game and move Staban Tuek down 1 step. When any Prescience marker reaches Staban Tuek, the Smugglers ally with you (Smugglers rulebook, page 5).",
+              "text": "Capture Smuggler Harvesters.",
+              "bullets": [
+                "A Legion that ends its move in an Area with a Smuggler Harvester captures it: remove it from the game.",
+                "Move Staban Tuek down 1 step for each capture.",
+                "When any Prescience marker reaches Staban Tuek, the Smugglers ally with you (Smugglers rulebook, page 5)."
+              ],
               "images": [
                 "sm-vehicles",
                 "sm-staban-tuek"
@@ -1690,7 +1826,13 @@
             },
             {
               "expansion": "spacingGuild",
-              "text": "When one of your Legions destroys a Harkonnen Harvester, take 1 Imperium Action at once: Spacing Guild (advance your Heighliner 1 step), CHOAM (put 1 Space Frigate on your Heighliner board) or Landsraad (put 2 Houses Major Troops on it). A Sandworm destroying it doesn’t count.",
+              "text": "When one of your Legions destroys a Harkonnen Harvester, take 1 Imperium Action at once. Choose one:",
+              "bullets": [
+                "Spacing Guild: advance your Heighliner 1 step.",
+                "CHOAM: put 1 Space Frigate on your Heighliner board.",
+                "Landsraad: put 2 Houses Major Troops on it.",
+                "A Sandworm destroying the Harvester doesn’t count."
+              ],
               "images": [
                 "sg-reference-cards",
                 "sg-heighliners"
@@ -1710,7 +1852,12 @@
             },
             {
               "expansion": "spacingGuild",
-              "text": "If a Heighliner reaches Arrakis, resolve its Landing at once: Troops go to empty Areas not adjacent to enemy Legions or Settlements, Frigates to different free Air Zones. Then the Heighliner returns to its start.",
+              "text": "A Heighliner reaching Arrakis lands at once.",
+              "bullets": [
+                "Troops: empty Areas not adjacent to enemy Legions or Settlements.",
+                "Frigates: different free Air Zones.",
+                "Then the Heighliner returns to its start."
+              ],
               "images": [
                 "sg-heighliners",
                 "sg-houses-major-troop",
@@ -1729,13 +1876,138 @@
                 }
               ]
             }
+          ],
+          "reminders": [
+            {
+              "text": "Move the Action die you spent to a Used Action Dice slot.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 17,
+                  "excerpt": "Spent Action dice are moved to Used Action Dice slots on the dashboard."
+                }
+              ]
+            },
+            {
+              "text": "Played a Planning card? Put it on the discard pile next to its deck.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 17,
+                  "excerpt": "The card is then discarded to a discard pile next to the corresponding deck."
+                }
+              ]
+            },
+            {
+              "text": "Used a named Leader’s special Action? Flip its card: it’s spent until next round.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 18,
+                  "excerpt": "the Leader card is pulled out of the dashboard and flipped: the Leader card is considered ‘spent’"
+                }
+              ]
+            },
+            {
+              "text": "No Area may hold more than 6 Units: remove any excess now. A Leader left without Units is eliminated.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 13,
+                  "excerpt": "All Areas on the board can contain a maximum of 6 Units. If this limit is exceeded at any time, the excess Units must be removed immediately by the controlling player."
+                },
+                {
+                  "source": "rulebook",
+                  "page": 12,
+                  "excerpt": "if they are ever left alone, they are eliminated"
+                }
+              ]
+            },
+            {
+              "text": "Move each figure on your Regeneration Tank one step right. A Leader moved off the last slot is back in play.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 27,
+                  "excerpt": "Each time the controlling player ends an Action turn, all figures on their Regeneration Tank track are moved one step to the right."
+                },
+                {
+                  "source": "rulebook",
+                  "page": 27,
+                  "excerpt": "When a Leader that is on the rightmost slot of the Regeneration tank is moved, it is immediately considered back in play."
+                },
+                {
+                  "source": "faq",
+                  "page": 2,
+                  "entry": "When do Named Leaders in the Regeneration Tank advance?",
+                  "excerpt": "When do Named Leaders in the Regeneration Tank advance, exactly? A: At the end of the Action turn."
+                }
+              ]
+            },
+            {
+              "text": "Destroyed a Harkonnen Settlement? Advance every Prescience marker by its rank.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 27,
+                  "excerpt": "When a Harkonnen Settlement is destroyed, the Atreides player immediately advances each Prescience marker a number of steps equal to the Settlement’s rank."
+                }
+              ]
+            },
+            {
+              "text": "Removed a Harvester? Set it aside. Every 2 set aside this phase advance the Jihad marker 1 step.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 28,
+                  "excerpt": "For every 2 Harvesters removed for any reason during the Action Resolution step: Advance the Jihad (red) marker 1 step."
+                }
+              ]
+            },
+            {
+              "text": "A revealed Prescience card’s requirements are met? Claim it (2 per round at most).",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 28,
+                  "excerpt": "The Atreides player can claim a card as soon as all requirements are met."
+                }
+              ]
+            },
+            {
+              "expansion": "desertWar",
+              "text": "Desert Troopers sharing an Area with an enemy Legion are removed.",
+              "citations": [
+                {
+                  "source": "desertWar",
+                  "page": 5,
+                  "excerpt": "As soon as one or more Desert Troopers are in the same Area as an opposing Legion, they are automatically removed as casualties."
+                }
+              ]
+            },
+            {
+              "expansion": "smugglers",
+              "text": "Staban Tuek coming back from the Regeneration Tank joins any Atreides Legion you choose.",
+              "citations": [
+                {
+                  "source": "smugglers",
+                  "page": 7,
+                  "excerpt": "When Staban Tuek returns in play from the Tank, his figure is placed with any Atreides Legion on the board"
+                }
+              ]
+            }
           ]
         },
         {
           "id": "turn-harkonnen",
           "side": "harkonnen",
           "title": "Action turn",
-          "instruction": "Take one Action. Spend 1 Action die on an Action its result allows, or spend any die to play a Planning card. At any time this round you may remove an Ornithopter to reveal a Sietch in a connected Sector (Scouting). When you finish, move each figure on your Regeneration Tank one step right.",
+          "instruction": "Take one Action. Choose one:",
+          "bullets": [
+            "Spend 1 Action die on an Action its result allows.",
+            "Spend any die to play a Planning card.",
+            "Free, any time this round: remove an Ornithopter to reveal a Sietch in a connected Sector (Scouting)."
+          ],
           "components": [
             "Giedi Prime dashboard",
             "Harkonnen Action dice",
@@ -1766,7 +2038,13 @@
           "additions": [
             {
               "expansion": "desertWar",
-              "text": "Each time you spend an Action die, you may also discard 1 Desert War token from The Spice Must Flow board for a Desert War Action, before or after: deploy 3 Suspensor Troopers in empty Desert Areas of one Sector connected to an Air Zone with one of your Vehicles, or move 1 Suspensor Trooper, or remove one to reveal any Sietch and all Deployment tokens in 1 adjacent Area. An Escort Ornithopter in a connected Air Zone can carry a moving or attacking Legion like Troop-transport, then joins it as a Generic Leader.",
+              "text": "Each time you spend an Action die, you may also discard 1 Desert War token for a Desert War Action, before or after. Choose one:",
+              "bullets": [
+                "Deploy 3 Suspensor Troopers in empty Desert Areas of one Sector connected to an Air Zone with one of your Vehicles.",
+                "Move 1 Suspensor Trooper.",
+                "Remove a Suspensor Trooper to reveal any Sietch and all Deployment tokens in 1 adjacent Area.",
+                "Escort Troops: an Escort Ornithopter in a connected Air Zone carries a moving or attacking Legion like Troop-transport, then joins it as a Generic Leader."
+              ],
               "images": [
                 "dw-desert-war-tokens",
                 "dw-suspensor-troopers",
@@ -1792,7 +2070,12 @@
             },
             {
               "expansion": "spacingGuild",
-              "text": "If a Heighliner reaches Arrakis, resolve its Landing at once: Troops go to empty Areas not adjacent to enemy Legions or Settlements, Frigates to different free Air Zones. Then the Heighliner returns to its start.",
+              "text": "A Heighliner reaching Arrakis lands at once.",
+              "bullets": [
+                "Troops: empty Areas not adjacent to enemy Legions or Settlements.",
+                "Frigates: different free Air Zones.",
+                "Then the Heighliner returns to its start."
+              ],
               "images": [
                 "sg-heighliners",
                 "sg-houses-major-troop",
@@ -1808,6 +2091,100 @@
                   "source": "spacingGuild",
                   "page": 6,
                   "excerpt": "The player places all Troops in any empty Area of their choice that is not adjacent to enemy Legions or Settlements."
+                }
+              ]
+            }
+          ],
+          "reminders": [
+            {
+              "text": "Move the Action die you spent to a Used Action Dice slot.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 17,
+                  "excerpt": "Spent Action dice are moved to Used Action Dice slots on the dashboard."
+                }
+              ]
+            },
+            {
+              "text": "Played a Planning card? Put it on the discard pile next to its deck.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 17,
+                  "excerpt": "The card is then discarded to a discard pile next to the corresponding deck."
+                }
+              ]
+            },
+            {
+              "text": "Used a named Leader’s special Action? Flip its card: it’s spent until next round.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 18,
+                  "excerpt": "the Leader card is pulled out of the dashboard and flipped: the Leader card is considered ‘spent’"
+                }
+              ]
+            },
+            {
+              "text": "No Area may hold more than 6 Units: remove any excess now. A Leader left without Units is eliminated.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 13,
+                  "excerpt": "All Areas on the board can contain a maximum of 6 Units. If this limit is exceeded at any time, the excess Units must be removed immediately by the controlling player."
+                },
+                {
+                  "source": "rulebook",
+                  "page": 12,
+                  "excerpt": "if they are ever left alone, they are eliminated"
+                }
+              ]
+            },
+            {
+              "text": "Move each figure on your Regeneration Tank one step right. A Leader moved off the last slot is back in play.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 27,
+                  "excerpt": "Each time the controlling player ends an Action turn, all figures on their Regeneration Tank track are moved one step to the right."
+                },
+                {
+                  "source": "rulebook",
+                  "page": 27,
+                  "excerpt": "When a Leader that is on the rightmost slot of the Regeneration tank is moved, it is immediately considered back in play."
+                },
+                {
+                  "source": "faq",
+                  "page": 2,
+                  "entry": "When do Named Leaders in the Regeneration Tank advance?",
+                  "excerpt": "When do Named Leaders in the Regeneration Tank advance, exactly? A: At the end of the Action turn."
+                }
+              ]
+            },
+            {
+              "text": "Destroyed a Sietch? Advance the Supremacy marker by its rank. 10 Supremacy points wins.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 27,
+                  "excerpt": "When a Sietch is destroyed, the Harkonnen player immediately gains a number of Supremacy points equal to the Sietch rank."
+                },
+                {
+                  "source": "rulebook",
+                  "page": 7,
+                  "excerpt": "To win the game, the Harkonnen player must accumulate 10 Supremacy Points (SP) or more."
+                }
+              ]
+            },
+            {
+              "expansion": "desertWar",
+              "text": "Desert Troopers sharing an Area with an enemy Legion are removed.",
+              "citations": [
+                {
+                  "source": "desertWar",
+                  "page": 5,
+                  "excerpt": "As soon as one or more Desert Troopers are in the same Area as an opposing Legion, they are automatically removed as casualties."
                 }
               ]
             }
@@ -1843,7 +2220,11 @@
           "id": "hazards-place-wormsigns",
           "side": "atreides",
           "title": "Place Wormsigns",
-          "instruction": "Without looking, draw Wormsign tokens and put 1 facedown in each Desert Area that has a Harkonnen Legion or Harvester and no Wormsign or Sandworm yet.",
+          "instruction": "Without looking, draw Wormsign tokens and put 1 facedown in each Desert Area that has:",
+          "bullets": [
+            "a Harkonnen Legion or Harvester, and",
+            "no Wormsign or Sandworm yet."
+          ],
           "components": [
             "Wormsign pool"
           ],
@@ -1892,7 +2273,13 @@
           "id": "hazards-reveal-wormsigns",
           "side": "atreides",
           "title": "Reveal Wormsigns",
-          "instruction": "Flip every Wormsign token on the board and resolve them in any order. Sand: nothing happens. Sandworm: a Sandworm attacks or is placed. Burrowing Sandworm: the same, but only in Deep Desert. A token in an Area with an Atreides Legion or a Sandworm does nothing.",
+          "instruction": "Flip every Wormsign token on the board and resolve them in any order.",
+          "bullets": [
+            "Sand: nothing happens.",
+            "Sandworm: a Sandworm attacks or is placed.",
+            "Burrowing Sandworm: the same, but only in Deep Desert.",
+            "A token in an Area with an Atreides Legion or a Sandworm does nothing."
+          ],
           "components": [
             "Wormsign tokens"
           ],
@@ -1911,7 +2298,13 @@
           "id": "hazards-sandworms",
           "side": "atreides",
           "title": "Resolve Sandworms",
-          "instruction": "Only a Harvester there: remove it. The Harkonnen may remove a Carryall from a connected Air Zone instead: the Harvester stays and a Sandworm is placed in the Area too. A Harkonnen Legion there: roll Combat dice for a Sandworm attack, 5 in Deep Desert, 4 in Desert, 3 in Minor Erg or Plateau. If the Legion is destroyed, remove any Harvester there too. Empty Area: place a Sandworm. Then shuffle all Wormsign tokens back into the pool.",
+          "instruction": "For each Sandworm that appears, check its Area:",
+          "bullets": [
+            "Only a Harvester: remove it. Or the Harkonnen removes a Carryall from a connected Air Zone; then the Harvester stays and a Sandworm is placed too.",
+            "A Harkonnen Legion: roll Combat dice for a Sandworm attack (5 in Deep Desert, 4 in Desert, 3 in Minor Erg or Plateau). If the Legion is destroyed, remove any Harvester there too.",
+            "Empty: place a Sandworm.",
+            "Then shuffle all Wormsign tokens back into the pool."
+          ],
           "components": [
             "Sandworm figures",
             "Atreides Combat dice",
@@ -1965,7 +2358,12 @@
           "id": "hazards-coriolis",
           "side": "atreides",
           "title": "Roll for Coriolis Storms",
-          "instruction": "For each Harkonnen Legion in a Plateau, Minor Erg or Desert Area with no Harkonnen Settlement, roll Combat dice: 3 in Deep Desert, 2 in Desert, 1 in Minor Erg or Plateau. Each Hit or Special result is 1 hit. For each hit, the Harkonnen removes a Regular, swaps an Elite for a Regular, or removes a Leader.",
+          "instruction": "Roll for each Harkonnen Legion in a Plateau, Minor Erg or Desert Area with no Harkonnen Settlement.",
+          "bullets": [
+            "Deep Desert: 3 Combat dice. Desert: 2. Minor Erg or Plateau: 1.",
+            "Each Hit or Special result is 1 hit.",
+            "For each hit, the Harkonnen removes a Regular, swaps an Elite for a Regular, or removes a Leader."
+          ],
           "components": [
             "Atreides Combat dice"
           ],
@@ -2018,7 +2416,12 @@
           "id": "spice-collect",
           "side": "harkonnen",
           "title": "Collect spice",
-          "instruction": "Remove every Harvester still on the board: 1 spice for each in Desert, 2 for each in Deep Desert. If you saved spice last round, you may discard the Spice Reserve token to add 1.",
+          "instruction": "Remove every Harvester still on the board and collect spice.",
+          "bullets": [
+            "Desert: 1 spice each.",
+            "Deep Desert: 2 spice each.",
+            "Saved spice last round? You may discard the Spice Reserve token to add 1."
+          ],
           "components": [
             "Harvesters",
             "Spice Reserve token"
@@ -2060,7 +2463,14 @@
           "id": "spice-spend",
           "side": "harkonnen",
           "title": "Pay the Imperium",
-          "instruction": "For each Imperium marker, pay 2 spice to keep it where it is, or 3 to raise it one step (one step at most). Each marker you don’t pay for drops 1 step. You may save 1 spice for later by placing the Spice Reserve token, whether or not you paid for every marker. Then activate the Ban of every Imperium marker that just moved down, all of them, as each Imperium Bans card describes.",
+          "instruction": "Spend spice on each Imperium marker. Choose per marker:",
+          "bullets": [
+            "Pay 2: it stays where it is.",
+            "Pay 3: it rises one step (one step at most).",
+            "Pay nothing: it drops 1 step.",
+            "You may save 1 spice by placing the Spice Reserve token, whether or not you paid for every marker.",
+            "Then activate the Ban of every marker that just moved down, as each Imperium Bans card describes."
+          ],
           "components": [
             "The Spice Must Flow board",
             "3 Imperium markers",
@@ -2100,7 +2510,14 @@
           "additions": [
             {
               "expansion": "spacingGuild",
-              "text": "Paying 2 to keep a marker also gives you 1 Imperium Action of that power; paying 3 to raise it gives 2. Spacing Guild: advance your Heighliner 1 step. CHOAM: put 1 Space Frigate on your Heighliner board. Landsraad: put 2 Houses Major Troops, with your colour bases, on it.",
+              "text": "Your spice also buys Imperium Actions of that marker’s power.",
+              "bullets": [
+                "Pay 2 to keep a marker: 1 Imperium Action.",
+                "Pay 3 to raise it: 2 Imperium Actions.",
+                "Spacing Guild: advance your Heighliner 1 step.",
+                "CHOAM: put 1 Space Frigate on your Heighliner board.",
+                "Landsraad: put 2 Houses Major Troops, with your colour bases, on it."
+              ],
               "images": [
                 "sg-reference-cards",
                 "sg-heighliners",
@@ -2183,7 +2600,11 @@
           "expansion": "desertWar",
           "side": "both",
           "title": "Clear the desert",
-          "instruction": "Remove all Escort Ornithopters, Fremen Camps and Desert Troopers still on the board, except Sandriders sharing an Area with a Sandworm.",
+          "instruction": "Remove what’s left of the Desert War.",
+          "bullets": [
+            "All Escort Ornithopters and Fremen Camps.",
+            "All Desert Troopers, except Sandriders sharing an Area with a Sandworm."
+          ],
           "components": [
             "Escort Ornithopters",
             "Fremen Camps",
@@ -2207,7 +2628,10 @@
           "id": "end-swap-leaders-harkonnen",
           "side": "harkonnen",
           "title": "Swap named Leaders",
-          "instruction": "You may replace any named Leader on the board with a generic Bashar. If no Bashar is left, the named Leader is still removed, with no replacement.",
+          "instruction": "You may replace any named Leader on the board with a generic Bashar.",
+          "bullets": [
+            "No Bashar left: the named Leader is still removed, with no replacement."
+          ],
           "components": [
             "Named Leader figures",
             "Bashar Leader figures"
@@ -2233,7 +2657,10 @@
           "id": "end-swap-leaders-atreides",
           "side": "atreides",
           "title": "Swap named Leaders",
-          "instruction": "You may replace any named Leader on the board with a generic Naib. If no Naib is left, the named Leader is still removed, with no replacement.",
+          "instruction": "You may replace any named Leader on the board with a generic Naib.",
+          "bullets": [
+            "No Naib left: the named Leader is still removed, with no replacement."
+          ],
           "components": [
             "Named Leader figures",
             "Naib Leader figures"
@@ -2301,7 +2728,11 @@
           "id": "end-prescience-cards",
           "side": "atreides",
           "title": "Sort Prescience cards",
-          "instruction": "For the revealed Prescience cards nobody claimed, choose which to remove from the game. Shuffle the rest back into the Prescience deck.",
+          "instruction": "Sort the revealed Prescience cards nobody claimed.",
+          "bullets": [
+            "Remove the ones you choose from the game.",
+            "Shuffle the rest back into the Prescience deck."
+          ],
           "components": [
             "Prescience cards"
           ],
@@ -2326,7 +2757,11 @@
           "expansion": "spacingGuild",
           "side": "both",
           "title": "Advance the Heighliners",
-          "instruction": "Move each Heighliner 1 step toward Arrakis. If one arrives, resolve its Landing now, Harkonnen first if both arrive, then return it to its starting space.",
+          "instruction": "Move each Heighliner 1 step toward Arrakis.",
+          "bullets": [
+            "One arrives: resolve its Landing now (Harkonnen first if both arrive).",
+            "Then return it to its starting space."
+          ],
           "components": [
             "Heighliners",
             "Space board"

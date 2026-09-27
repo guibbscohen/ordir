@@ -60,18 +60,29 @@ struct TurnScript: Decodable {
         let expansion: String?
         let side: Side
         let title: String
+        /// Lead line; options and sub-steps go in `bullets` rather than a long paragraph.
         let instruction: String
+        let bullets: [String]?
         let components: [String]
         let images: [String]
         let citations: [Citation]
         /// Extra rules an expansion adds to this step.
         let additions: [Addition]?
+        /// Checklist for the moment the turn passes, e.g. moving the Regeneration Tank.
+        let reminders: [Reminder]?
     }
 
     struct Addition: Decodable {
         let expansion: String
         let text: String
+        let bullets: [String]?
         let images: [String]
+        let citations: [Citation]
+    }
+
+    struct Reminder: Decodable {
+        let expansion: String?
+        let text: String
         let citations: [Citation]
     }
 

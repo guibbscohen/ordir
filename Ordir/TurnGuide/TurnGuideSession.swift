@@ -52,6 +52,13 @@ final class TurnGuideSession {
     var additions: [TurnScript.Addition] {
         (step.additions ?? []).filter { expansions.contains($0.expansion) }
     }
+    /// Turn-change reminders for the current step, without those of switched-off expansions.
+    var reminders: [TurnScript.Reminder] {
+        (step.reminders ?? []).filter { reminder in
+            guard let expansion = reminder.expansion else { return true }
+            return expansions.contains(expansion)
+        }
+    }
     var canGoBack: Bool { !history.isEmpty || isFinished }
 
     /// Turn number inside a looping phase, e.g. the 5th alternating Action turn.

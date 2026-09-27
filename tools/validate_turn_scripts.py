@@ -103,6 +103,15 @@ def validate(path):
             if "expansion" in step and step["expansion"] not in expansions:
                 errors.append(f"{where}: unknown expansion {step['expansion']!r}")
             check_citations(step.get("citations", []), where, sources, pages, errors)
+            if not all(isinstance(b, str) and b.strip() for b in step.get("bullets", [])):
+                errors.append(f"{where}: bullets must be non-empty strings")
+            for n, reminder in enumerate(step.get("reminders", []), 1):
+                at = f"{where} reminder {n}"
+                if not reminder.get("text", "").strip():
+                    errors.append(f"{at}: missing text")
+                if "expansion" in reminder and reminder["expansion"] not in expansions:
+                    errors.append(f"{at}: unknown expansion {reminder['expansion']!r}")
+                check_citations(reminder.get("citations", []), at, sources, pages, errors)
             for n, addition in enumerate(step.get("additions", []), 1):
                 at = f"{where} addition {n}"
                 if addition.get("expansion") not in expansions:
