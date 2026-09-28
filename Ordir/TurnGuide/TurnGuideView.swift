@@ -307,6 +307,9 @@ private struct SeatPanel: View {
     let endLoop: () -> Void
     let enlarge: (TurnScript.SourceImage) -> Void
 
+    /// Set while the turn-change checklist is up; holds what "Pass the turn" will do.
+    @State private var pendingPass: (() -> Void)?
+
     private var isActing: Bool { step.side == seat || step.side == .both }
 
     var body: some View {
@@ -319,7 +322,6 @@ private struct SeatPanel: View {
                         phase: phase,
                         step: step,
                         additions: additions,
-                        reminders: reminders,
                         title: stepTitle,
                         isSpeaking: isSpeaking,
                         enlarge: enlarge
@@ -336,6 +338,29 @@ private struct SeatPanel: View {
                     .id(stepKey)
                     .transition(stepTransition)
             }
+        }
+        .overlay {
+            if let pass = pendingPass {
+                PassTurnChecklist(
+                    script: script,
+                    reminders: reminders,
+                    pass: {
+                        pendingPass = nil
+                        pass()
+                    },
+                    cancel: { withAnimation { pendingPass = nil } }
+                )
+                .transition(stepTransition)
+            }
+        }
+    }
+
+    /// Turns with reminders stop at the checklist first; everything else moves on at once.
+    private func passTurn(then action: @escaping () -> Void) {
+        if reminders.isEmpty {
+            action()
+        } else {
+            withAnimation { pendingPass = action }
         }
     }
 
@@ -359,12 +384,12 @@ private struct SeatPanel: View {
     private var actions: some View {
         HStack(spacing: 12) {
             if let loop = phase.loop {
-                Button(loop.endLabel, action: endLoop)
+                Button(loop.endLabel) { passTurn(then: endLoop) }
                     .font(.subheadline.weight(.semibold))
                     .multilineTextAlignment(.center)
                     .frame(minHeight: 44)
             }
-            Button(action: done) {
+            Button { passTurn(then: done) } label: {
                 Text("Done")
                     .font(.headline)
                     .frame(maxWidth: .infinity, minHeight: 50)
@@ -383,7 +408,6 @@ private struct StepCard: View {
     let phase: TurnScript.Phase
     let step: TurnScript.Step
     let additions: [TurnScript.Addition]
-    let reminders: [TurnScript.Reminder]
     let title: String
     let isSpeaking: Bool
     let enlarge: (TurnScript.SourceImage) -> Void
@@ -421,13 +445,6 @@ private struct StepCard: View {
                     BulletList(items: addition.bullets ?? [])
                     PictureStrip(script: script, pictures: script.pictures(addition.images), enlarge: enlarge)
                     CitationList(script: script, citations: addition.citations)
-                }
-            }
-
-            if !reminders.isEmpty {
-                section("Before you pass the turn") {
-                    ReminderChecklist(reminders: reminders)
-                    CitationList(script: script, citations: reminders.flatMap(\.citations))
                 }
             }
 
@@ -490,6 +507,48 @@ private struct BulletList: View {
                 .font(.body)
             }
         }
+    }
+}
+
+/// Covers the acting half when the player taps Done on a turn with reminders.
+private struct PassTurnChecklist: View {
+    let script: TurnScript
+    let reminders: [TurnScript.Reminder]
+    let pass: () -> Void
+    let cancel: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 12) {
+                OrdirMascotView(isSpeaking: true)
+                    .frame(width: 40, height: 40)
+                Text("Before you pass the turn")
+                    .font(.title3.weight(.semibold))
+                    .accessibilityAddTraits(.isHeader)
+            }
+            ScrollView {
+                VStack(alignment: .leading, spacing: 12) {
+                    ReminderChecklist(reminders: reminders)
+                    CitationList(script: script, citations: reminders.flatMap(\.citations))
+                }
+            }
+            .scrollIndicators(.hidden)
+            HStack(spacing: 12) {
+                Button("Not yet", action: cancel)
+                    .font(.subheadline.weight(.semibold))
+                    .frame(minHeight: 44)
+                Button(action: pass) {
+                    Text("Pass the turn")
+                        .font(.headline)
+                        .frame(maxWidth: .infinity, minHeight: 50)
+                }
+                .buttonStyle(PrimaryButtonStyle())
+            }
+        }
+        .padding(.horizontal, 20)
+        .padding(.vertical, 12)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .background(.background)
     }
 }
 

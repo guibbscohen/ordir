@@ -70,6 +70,13 @@ final class TurnGuideUITests: XCTestCase {
                 XCTAssertTrue(done.waitForExistence(timeout: 5), "no Done button on \(before)")
                 done.tap()
             }
+            // Action turns stop at the "Before you pass the turn" checklist.
+            if endLoop.exists || before.hasPrefix("Action turns") {
+                let pass = app.buttons["Pass the turn"]
+                XCTAssertTrue(pass.waitForExistence(timeout: 5), "no turn-change checklist on \(before)")
+                if screenshots { capture(app, name: String(format: "%03d-checklist", steps)) }
+                pass.tap()
+            }
             waitForStepChange(progress, from: before, app: app)
         }
         XCTAssertGreaterThan(steps, 20, "too few steps for setup plus a round")
