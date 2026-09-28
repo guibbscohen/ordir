@@ -26,9 +26,12 @@ final class TurnGuideSessionTests: XCTestCase {
 
     /// Step ids in script order, keeping only those that apply with `expansions`.
     private func expectedSteps(with expansions: Set<String>) -> [String] {
-        script.phases.flatMap(\.steps)
-            .filter { step in step.expansion.map { expansions.contains($0) } ?? true }
-            .map(\.id)
+        let steps: [TurnScript.Step] = script.phases.flatMap(\.steps)
+        let applicable = steps.filter { step in
+            guard let expansion = step.expansion else { return true }
+            return expansions.contains(expansion)
+        }
+        return applicable.map(\.id)
     }
 
     /// Taps "Done" through the whole guide; each loop runs one pass of its turns, then ends.
@@ -125,10 +128,12 @@ final class TurnGuideSessionTests: XCTestCase {
     }
 
     func testEveryCitationNamesAKnownSource() {
-        let steps = script.phases.flatMap(\.steps)
-        let citations = steps.flatMap(\.citations)
-            + steps.flatMap { $0.additions ?? [] }.flatMap(\.citations)
-            + steps.flatMap { $0.reminders ?? [] }.flatMap(\.citations)
+        let steps: [TurnScript.Step] = script.phases.flatMap(\.steps)
+        let additions: [TurnScript.Addition] = steps.flatMap { $0.additions ?? [] }
+        let reminders: [TurnScript.Reminder] = steps.flatMap { $0.reminders ?? [] }
+        var citations: [TurnScript.Citation] = steps.flatMap(\.citations)
+        citations += additions.flatMap(\.citations)
+        citations += reminders.flatMap(\.citations)
         for citation in citations {
             XCTAssertNotNil(script.source(for: citation), "unknown source \(citation.source)")
         }
