@@ -3,8 +3,8 @@
 //  OrdirUITests
 //
 //  Taps "Done" through the whole Dune guide in the simulator. With every expansion on, it also
-//  screenshots each step before and after scrolling both halves, so sections below the fold
-//  (expansion rules, turn-change checklists) are captured. Screenshots go to SCREENSHOT_DIR when
+//  screenshots each step at the top, part-way down and at the bottom of both halves, so sections
+//  below the fold (expansion rules, turn-change checklists) are captured. Screenshots go to SCREENSHOT_DIR when
 //  set (CI passes it as TEST_RUNNER_SCREENSHOT_DIR) and are always attached to the test result.
 //
 
@@ -54,7 +54,9 @@ final class TurnGuideUITests: XCTestCase {
             if screenshots {
                 capture(app, name: String(format: "%03d-top", steps))
                 scrollBothHalves(app)
-                capture(app, name: String(format: "%03d-scrolled", steps))
+                capture(app, name: String(format: "%03d-middle", steps))
+                for _ in 0..<5 { scrollBothHalves(app) }
+                capture(app, name: String(format: "%03d-bottom", steps))
             }
 
             // Action turns loop: play one Atreides and one Harkonnen turn, then end the phase.
