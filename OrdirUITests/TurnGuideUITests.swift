@@ -1,0 +1,119 @@
+//
+//  TurnGuideUITests.swift
+//  OrdirUITests
+//
+//  Taps "Done" through the whole Dune guide in the simulator. With every expansion on, it also
+//  screenshots each step before and after scrolling both halves, so sections below the fold
+//  (expansion rules, turn-change checklists) are captured. Screenshots go to SCREENSHOT_DIR when
+//  set (CI passes it as TEST_RUNNER_SCREENSHOT_DIR) and are always attached to the test result.
+//
+
+import XCTest
+
+final class TurnGuideUITests: XCTestCase {
+    override func setUp() {
+        continueAfterFailure = false
+    }
+
+    func testBaseGameTapThrough() {
+        tapThrough(expansionIDs: [], screenshots: false)
+    }
+
+    func testAllExpansionsTapThroughWithScreenshots() {
+        tapThrough(expansionIDs: ["desertWar", "smugglers", "spacingGuild"], screenshots: true)
+    }
+
+    private func tapThrough(expansionIDs: [String], screenshots: Bool) {
+        let app = XCUIApplication()
+        app.launchArguments = ["-OrdirOpenGame", "duneWarForArrakis"]
+        app.launch()
+
+        XCTAssertTrue(app.buttons["Start guide"].waitForExistence(timeout: 20), "expansion picker not shown")
+        for id in expansionIDs {
+            let toggle = app.switches["expansion-\(id)"]
+            XCTAssertTrue(toggle.waitForExistence(timeout: 5), "no switch for \(id)")
+            toggle.tap()
+            if !isOn(toggle) {
+                // The switch element spans the row; tap the switch itself at the trailing edge.
+                toggle.coordinate(withNormalizedOffset: CGVector(dx: 0.92, dy: 0.5)).tap()
+            }
+            XCTAssertTrue(isOn(toggle), "\(id) did not switch on")
+        }
+        app.buttons["Start guide"].tap()
+
+        let progress = app.descendants(matching: .any)["guide-progress"]
+        XCTAssertTrue(progress.waitForExistence(timeout: 10), "guide did not start")
+
+        var steps = 0
+        var turnsInLoop = 0
+        while !app.staticTexts["Round complete"].exists {
+            steps += 1
+            XCTAssertLessThan(steps, 150, "guide never finished")
+            let before = progress.label
+
+            if screenshots {
+                capture(app, name: String(format: "%03d-top", steps))
+                scrollBothHalves(app)
+                capture(app, name: String(format: "%03d-scrolled", steps))
+            }
+
+            // Action turns loop: play one Atreides and one Harkonnen turn, then end the phase.
+            let endLoop = app.buttons["Harkonnen dice all used"]
+            if endLoop.exists, turnsInLoop >= 2 {
+                endLoop.tap()
+                turnsInLoop = 0
+            } else {
+                if endLoop.exists { turnsInLoop += 1 }
+                let done = app.buttons["Done"].firstMatch
+                XCTAssertTrue(done.waitForExistence(timeout: 5), "no Done button on \(before)")
+                done.tap()
+            }
+            waitForStepChange(progress, from: before, app: app)
+        }
+        XCTAssertGreaterThan(steps, 20, "too few steps for setup plus a round")
+        if screenshots { capture(app, name: "999-finished") }
+    }
+
+    private func isOn(_ toggle: XCUIElement) -> Bool {
+        (toggle.value as? String) == "1"
+    }
+
+    /// Waits until the progress label changes (or the guide finishes), then lets the transition settle
+    /// so the outgoing step's Done button is gone before the next tap.
+    private func waitForStepChange(_ progress: XCUIElement, from before: String, app: XCUIApplication) {
+        let deadline = Date().addingTimeInterval(8)
+        while Date() < deadline {
+            if app.staticTexts["Round complete"].exists { return }
+            if progress.exists, progress.label != before { break }
+            Thread.sleep(forTimeInterval: 0.1)
+        }
+        XCTAssertTrue(
+            app.staticTexts["Round complete"].exists || progress.label != before,
+            "Done did not advance past \(before)"
+        )
+        Thread.sleep(forTimeInterval: 0.6)
+    }
+
+    /// Drags each half toward the middle bar, which scrolls its content: the far half is upside down.
+    private func scrollBothHalves(_ app: XCUIApplication) {
+        let window = app.windows.firstMatch
+        func drag(from start: CGFloat, to end: CGFloat) {
+            window.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: start))
+                .press(forDuration: 0.05, thenDragTo: window.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: end)))
+        }
+        drag(from: 0.85, to: 0.6)
+        drag(from: 0.15, to: 0.4)
+    }
+
+    private func capture(_ app: XCUIApplication, name: String) {
+        let screenshot = XCUIScreen.main.screenshot()
+        let attachment = XCTAttachment(screenshot: screenshot)
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
+        if let dir = ProcessInfo.processInfo.environment["SCREENSHOT_DIR"], !dir.isEmpty {
+            let url = URL(fileURLWithPath: dir).appendingPathComponent("\(name).png")
+            try? screenshot.pngRepresentation.write(to: url)
+        }
+    }
+}

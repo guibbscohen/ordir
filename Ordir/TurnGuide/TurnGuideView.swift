@@ -65,6 +65,7 @@ private struct ExpansionPicker: View {
                                     .fixedSize(horizontal: false, vertical: true)
                             }
                         }
+                        .accessibilityIdentifier("expansion-\(expansion.id)")
                         .padding(16)
                         .background(Color(white: 0.11), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                     }
@@ -171,6 +172,7 @@ private struct TurnGuideRunner: View {
                     .rotationEffect(.degrees(180))
                     .accessibilityHidden(true)
                 phaseLabel
+                    .accessibilityIdentifier("guide-progress")
             }
             Spacer(minLength: 8)
             barButton("Previous step", systemImage: "arrow.uturn.backward") {

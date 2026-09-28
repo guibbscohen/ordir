@@ -13,7 +13,7 @@ concurrency:
 jobs:
   build:
     runs-on: macos-15
-    timeout-minutes: 30
+    timeout-minutes: 50
     steps:
       - uses: actions/checkout@v5
 
@@ -79,6 +79,20 @@ jobs:
           shot setup-board -OrdirStartStep setup-board
           shot turn-atreides -OrdirStartStep turn-atreides -OrdirExpansions desertWar,smugglers,spacingGuild
 
+      - name: Run unit tests and the UI tap-through
+        timeout-minutes: 30
+        run: |
+          set -o pipefail
+          mkdir -p screenshots/walkthrough
+          TEST_RUNNER_SCREENSHOT_DIR="$PWD/screenshots/walkthrough" xcodebuild test \
+            -project Ordir.xcodeproj \
+            -scheme Ordir \
+            -destination "id=${{ steps.sim.outputs.udid }}" \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            2>&1 | tee test.log | grep -E "Test Case .*(passed|failed)|error:|Executed|\*\* TEST" || true
+          grep -q "\*\* TEST SUCCEEDED \*\*" test.log
+
       - name: Upload build log and screenshots
         if: always()
         uses: actions/upload-artifact@v5
@@ -86,5 +100,6 @@ jobs:
           name: ordir-simulator
           path: |
             build.log
+            test.log
             screenshots/
           if-no-files-found: ignore

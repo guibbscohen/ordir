@@ -26,6 +26,8 @@ Any file added under `Ordir/` joins the app target automatically, with no projec
 | `Ordir/TurnGuide/` | `TurnScript` model, `TurnGuideSession` (step state machine), `TurnGuideView` (pass-and-play screen) |
 | `Sources/<game>/` | Official rulebook and FAQ PDFs the turn scripts cite |
 | `tools/validate_turn_scripts.py` | Checks every citation's excerpt appears on the cited PDF page, and every picture has its asset (runs in CI) |
+| `OrdirTests/` | Unit tests: walks the Dune script for every expansion combination; checks filters, the turn loop, Back, and picture assets |
+| `OrdirUITests/` | UI tap-through of the whole guide in the simulator; with all expansions on, screenshots every step before and after scrolling |
 | `tools/crop_source_images.py` | Crops component pictures from the source PDFs into `Assets.xcassets/<game>/` |
 | `Ordir/Assets.xcassets` | App icon, `AccentColor`, `Sparkle` (light/dark) |
 | `Assets/ordir-logo.svg` | Source logo; `tools/svg_to_swift.py` regenerates the mascot paths from it |
