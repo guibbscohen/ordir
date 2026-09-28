@@ -55,23 +55,25 @@ final class TurnGuideUITests: XCTestCase {
                 capture(app, name: String(format: "%03d-top", steps))
                 scrollBothHalves(app)
                 capture(app, name: String(format: "%03d-middle", steps))
-                for _ in 0..<5 { scrollBothHalves(app) }
+                for _ in 0..<3 { scrollBothHalves(app) }
                 capture(app, name: String(format: "%03d-bottom", steps))
             }
 
             // Action turns loop: play one Atreides and one Harkonnen turn, then end the phase.
             let endLoop = app.buttons["Harkonnen dice all used"]
-            if endLoop.exists, turnsInLoop >= 2 {
+            // Read before tapping: Done on the last step before the loop makes this button appear.
+            let isActionTurn = endLoop.exists
+            if isActionTurn, turnsInLoop >= 2 {
                 endLoop.tap()
                 turnsInLoop = 0
             } else {
-                if endLoop.exists { turnsInLoop += 1 }
+                if isActionTurn { turnsInLoop += 1 }
                 let done = app.buttons["Done"].firstMatch
                 XCTAssertTrue(done.waitForExistence(timeout: 5), "no Done button on \(before)")
                 done.tap()
             }
             // Action turns stop at the "Before you pass the turn" checklist.
-            if endLoop.exists || before.hasPrefix("Action turns") {
+            if isActionTurn {
                 let pass = app.buttons["Pass the turn"]
                 XCTAssertTrue(pass.waitForExistence(timeout: 5), "no turn-change checklist on \(before)")
                 if screenshots { capture(app, name: String(format: "%03d-checklist", steps)) }
