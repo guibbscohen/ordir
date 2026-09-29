@@ -1,27 +1,20 @@
-name: iOS build
+name: iOS walkthrough
 
-# macOS minutes count 10x, so this runs on pull requests (not every push) and skips
-# docs-only changes. Build + unit tests only; the UI walkthrough is ios-walkthrough.yml.
+# On demand only (Actions tab → iOS walkthrough → Run workflow): taps through the whole guide in
+# the simulator and uploads screenshots of every step. Slow on macOS runners, which cost 10x.
 on:
-  pull_request:
-    paths-ignore:
-      - "**/*.md"
-      - ".claude/**"
   workflow_dispatch:
 
 concurrency:
-  group: ios-build-${{ github.ref }}
+  group: ios-walkthrough-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  build:
+  walkthrough:
     runs-on: macos-15
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v5
-
-      - name: Show Xcode version
-        run: xcodebuild -version
 
       - name: Pick an iPhone simulator
         id: sim
@@ -33,23 +26,27 @@ jobs:
                      if "iOS" in runtime for d in ds if d["name"].startswith("iPhone")))')
           echo "udid=$UDID" >> "$GITHUB_OUTPUT"
 
-      - name: Build and run unit tests
+      - name: Run the UI tap-through with screenshots
+        timeout-minutes: 35
         run: |
           set -o pipefail
-          xcodebuild test \
+          mkdir -p screenshots
+          TEST_RUNNER_SCREENSHOT_DIR="$PWD/screenshots" xcodebuild test \
             -project Ordir.xcodeproj \
             -scheme Ordir \
             -destination "id=${{ steps.sim.outputs.udid }}" \
             -derivedDataPath build \
-            -only-testing:OrdirTests \
+            -only-testing:OrdirUITests \
             CODE_SIGNING_ALLOWED=NO \
             2>&1 | tee test.log | grep -E "Test Case .*(passed|failed)|error:|Executed|\*\* TEST" || true
           grep -q "\*\* TEST SUCCEEDED \*\*" test.log
 
-      - name: Upload test log
-        if: failure()
+      - name: Upload screenshots
+        if: always()
         uses: actions/upload-artifact@v5
         with:
-          name: ordir-test-log
-          path: test.log
+          name: ordir-walkthrough
+          path: |
+            test.log
+            screenshots/
           if-no-files-found: ignore

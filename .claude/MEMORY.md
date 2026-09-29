@@ -22,7 +22,9 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   BoardGameGeek/Reddit: hand-picked threads only, shown after official sources, labelled as community
   interpretation with a link. No scraping.
 - 2026-09-27: The app name is Ordir. Never use "Palantír" in app copy or metadata.
-- 2026-09-27: After pushing, check the GitHub Actions iOS build; if it is red, fix it before reporting done.
+- 2026-09-29: Keep GitHub Actions cheap (macOS minutes count 10x). Every push runs only the Linux turn-script
+  check; the macOS build + unit tests run on pull requests; the UI walkthrough runs only on demand. After
+  pushing, check the Linux check, and the iOS build when a PR is updated; if red, fix before reporting done.
 - 2026-09-27: Where a publisher FAQ/errata conflicts with the rulebook, the FAQ wins (Dune: FAQ 3.0 is final).
 - 2026-09-27: Ordir is always dark, even when the phone is in light mode.
 - 2026-09-27: One-phone play uses a 180° split screen: the far half faces the player across the table.
