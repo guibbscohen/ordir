@@ -16,6 +16,8 @@ Requires Xcode 16 or later (the project uses folder-synced groups).
 
 Any file added under `Ordir/` joins the app target automatically, with no project-file edits.
 
+To ship builds to testers, see [TestFlight via Xcode Cloud](docs/testflight.md).
+
 ## Layout
 
 | Path | What it is |
