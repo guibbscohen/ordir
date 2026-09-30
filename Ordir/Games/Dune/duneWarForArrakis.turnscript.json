@@ -1,8 +1,8 @@
 {
   "game": "duneWarForArrakis",
   "title": "Dune: War for Arrakis",
-  "version": 4,
-  "scope": "Setup and one full round, 2 players (Atreides vs Harkonnen), one phone; optional Desert War, Smugglers and Spacing Guild expansions",
+  "version": 5,
+  "scope": "Setup, then rounds until someone wins; 2 players (Atreides vs Harkonnen) on one phone; optional Desert War, Smugglers and Spacing Guild expansions",
   "sources": [
     {
       "id": "rulebook",
@@ -60,6 +60,65 @@
       "id": "spacingGuild",
       "title": "The Spacing Guild",
       "summary": "Heighliners, Space Frigates, Houses Major Troops and Imperium Actions."
+    }
+  ],
+  "states": [
+    {
+      "id": "smugglersAllied",
+      "expansion": "smugglers",
+      "title": "Smugglers allied with the Atreides",
+      "markLabel": "The Smugglers have joined us",
+      "trigger": "Any Prescience marker reaches (or passes) Staban Tuek on the Prescience track.",
+      "citations": [
+        {
+          "source": "smugglers",
+          "page": 5,
+          "excerpt": "The Smugglers faction allies with the Atreides when any Prescience marker reaches (or surpasses) the Staban Tuek figure on the Prescience track."
+        }
+      ],
+      "event": {
+        "title": "The Smugglers join the Atreides",
+        "side": "atreides",
+        "bullets": [
+          "Remove every Smuggler Harvester and the Smuggler Carryall from the game.",
+          "Place the Smugglers Base in any empty Desert Area of one of the four lowest Sectors (below the North Pole).",
+          "Move Staban Tuek, Gurney Halleck and every Smuggler Regular on the Smugglers board to the Smugglers Base’s Area.",
+          "Put Staban Tuek’s Leader card on your Desert Power Action box.",
+          "Add the Smugglers Action die to your Action dice from the next Action Resolution."
+        ],
+        "images": [
+          "sm-smugglers-base",
+          "sm-staban-tuek",
+          "sm-action-die"
+        ],
+        "citations": [
+          {
+            "source": "smugglers",
+            "page": 5,
+            "excerpt": "All Smuggler Harvesters and the Smuggler Carryall are immediately and permanently removed from the game"
+          },
+          {
+            "source": "smugglers",
+            "page": 5,
+            "excerpt": "The Atreides player places the Smugglers Base figure in any empty Desert Area of one of the four lowest Sectors of the game board"
+          },
+          {
+            "source": "smugglers",
+            "page": 5,
+            "excerpt": "Move the Leader figures of Staban Tuek and Gurney Halleck and all Smuggler Regular figures that are on the Smugglers board to the Area containing the Smugglers Base."
+          },
+          {
+            "source": "smugglers",
+            "page": 7,
+            "excerpt": "place his Leader card on the Desert Power Action box of the Atreides player’s board"
+          },
+          {
+            "source": "smugglers",
+            "page": 5,
+            "excerpt": "The Atreides player adds the Smugglers Action die to their available Action dice"
+          }
+        ]
+      }
     }
   ],
   "images": [
@@ -739,6 +798,7 @@
   "phases": [
     {
       "id": "setup",
+      "part": "setup",
       "title": "Setup",
       "steps": [
         {
@@ -1367,6 +1427,7 @@
     },
     {
       "id": "round-start",
+      "part": "round",
       "title": "Start of the round",
       "steps": [
         {
@@ -1452,12 +1513,15 @@
         {
           "id": "sm-round-regular",
           "expansion": "smugglers",
+          "when": {
+            "state": "smugglersAllied",
+            "is": false
+          },
           "side": "both",
           "title": "Grow the Smugglers",
           "instruction": "Add 1 Smuggler Regular to the Smugglers board.",
           "bullets": [
-            "Only while the Smugglers are neutral.",
-            "Once they have allied with the Atreides, skip this."
+            "Only while the Smugglers are neutral."
           ],
           "components": [
             "Smuggler Regular",
@@ -1479,6 +1543,7 @@
     },
     {
       "id": "vehicle-placement",
+      "part": "round",
       "title": "Vehicle placement",
       "steps": [
         {
@@ -1504,6 +1569,39 @@
               "source": "rulebook",
               "page": 16,
               "excerpt": "First, the Harkonnen player must set aside a number of their Action dice as indicated on the first column of the active row."
+            }
+          ]
+        },
+        {
+          "id": "sm-vehicles-allied",
+          "expansion": "smugglers",
+          "when": {
+            "state": "smugglersAllied",
+            "is": true
+          },
+          "side": "atreides",
+          "title": "Place Smuggler Ornithopters",
+          "instruction": "Place every available Smuggler Ornithopter in an Air Zone, 1 per Zone, before the Harkonnen places Carryalls and Ornithopters.",
+          "bullets": [
+            "They take their Air Zone: no other Ornithopter or Carryall can go there.",
+            "Thopter Battle: the Harkonnen may give up 1 of their Ornithopters this round to remove 1 Smuggler Ornithopter."
+          ],
+          "components": [
+            "Smuggler Ornithopters"
+          ],
+          "images": [
+            "sm-vehicles"
+          ],
+          "citations": [
+            {
+              "source": "smugglers",
+              "page": 7,
+              "excerpt": "the Atreides player can place all available Smuggler Ornithopters on Air Zones of the board of their choice (1 Vehicle per Zone), before the Harkonnen player places their Carryalls and Ornithopters."
+            },
+            {
+              "source": "smugglers",
+              "page": 7,
+              "excerpt": "the Harkonnen player can choose to forfeit 1 of their available Ornithopters for the round to remove 1 Smuggler Ornithopter from an Air Zone of their choice"
             }
           ]
         },
@@ -1569,14 +1667,18 @@
           ]
         },
         {
-          "id": "sm-vehicles",
+          "id": "sm-vehicles-neutral",
           "expansion": "smugglers",
+          "when": {
+            "state": "smugglersAllied",
+            "is": false
+          },
           "side": "harkonnen",
           "title": "Place Smuggler vehicles",
-          "instruction": "Place the Smuggler vehicles too.",
+          "instruction": "Place every available Smuggler Harvester and the Smuggler Carryall too.",
           "bullets": [
-            "Smugglers neutral: you must place every available Smuggler Harvester and the Smuggler Carryall, following the usual vehicle rules.",
-            "Smugglers allied with the Atreides: the Atreides places Smuggler Ornithopters first, before your Carryalls and Ornithopters (Smugglers rulebook, page 7)."
+            "This is mandatory while the Smugglers are neutral.",
+            "Usual vehicle rules, but each Smuggler Harvester collects only 1 spice, even in Deep Desert."
           ],
           "components": [
             "Smuggler Harvesters",
@@ -1593,8 +1695,8 @@
             },
             {
               "source": "smugglers",
-              "page": 3,
-              "excerpt": "The Atreides player places all available Smuggler Ornithopters on the board (before the Harkonnen player places theirs)."
+              "page": 4,
+              "excerpt": "except that each Smuggler Harvester always collects only 1 spice point even if it is in a Deep Desert Area."
             }
           ]
         },
@@ -1628,6 +1730,7 @@
     },
     {
       "id": "action-roll",
+      "part": "round",
       "title": "Action resolution",
       "steps": [
         {
@@ -1703,7 +1806,11 @@
           "additions": [
             {
               "expansion": "smugglers",
-              "text": "Once the Smugglers have allied with you, the Atreides also rolls the Smugglers Action die and puts it on the Smugglers board.",
+              "when": {
+                "state": "smugglersAllied",
+                "is": true
+              },
+              "text": "Also roll the Smugglers Action die and put it on the Smugglers board.",
               "images": [
                 "sm-action-die"
               ],
@@ -1721,6 +1828,7 @@
     },
     {
       "id": "action-turns",
+      "part": "round",
       "title": "Action turns",
       "loop": {
         "endLabel": "Harkonnen dice all used",
@@ -1806,6 +1914,11 @@
             },
             {
               "expansion": "smugglers",
+              "when": {
+                "state": "smugglersAllied",
+                "is": false
+              },
+              "sets": "smugglersAllied",
               "text": "Capture Smuggler Harvesters.",
               "bullets": [
                 "A Legion that ends its move in an Area with a Smuggler Harvester captures it: remove it from the game.",
@@ -1826,6 +1939,45 @@
                   "source": "smugglers",
                   "page": 5,
                   "excerpt": "The Smugglers faction allies with the Atreides when any Prescience marker reaches (or surpasses) the Staban Tuek figure on the Prescience track."
+                }
+              ]
+            },
+            {
+              "expansion": "smugglers",
+              "when": {
+                "state": "smugglersAllied",
+                "is": true
+              },
+              "text": "You may use the Smugglers Action die instead of an Atreides die.",
+              "bullets": [
+                "Leadership: move a Legion with a Leader, or attack with a Legion containing a Smuggler Unit.",
+                "Strategy: move a Legion, or move 2 Legions that each contain a Smuggler Unit.",
+                "Deployment: place 2 Smuggler Units in the Smugglers Base’s Area.",
+                "Mentat: play 1 Planning card, or draw 2 House Atreides cards and keep one.",
+                "House: use it as any other Smugglers result.",
+                "It can’t play Planning cards except through Mentat.",
+                "Smuggler Ornithopter: remove one from a connected Air Zone to move or attack with a Legion up to 2 Areas away."
+              ],
+              "images": [
+                "sm-action-die",
+                "sm-smugglers-board",
+                "sm-vehicles"
+              ],
+              "citations": [
+                {
+                  "source": "smugglers",
+                  "page": 6,
+                  "excerpt": "During their turn, the Atreides player may use the Smugglers Action die instead of an Atreides Action die, with one exception"
+                },
+                {
+                  "source": "smugglers",
+                  "page": 6,
+                  "excerpt": "Place 2 Smuggler Units in the Area containing the Smugglers Base."
+                },
+                {
+                  "source": "smugglers",
+                  "page": 7,
+                  "excerpt": "they can remove a Smuggler Ornithopter from a connected Air Zone to move or attack with the Legion up to 2 Areas away."
                 }
               ]
             },
@@ -2199,6 +2351,7 @@
     },
     {
       "id": "desert-hazards",
+      "part": "round",
       "title": "Desert hazards",
       "steps": [
         {
@@ -2246,6 +2399,10 @@
           "additions": [
             {
               "expansion": "smugglers",
+              "when": {
+                "state": "smugglersAllied",
+                "is": false
+              },
               "text": "Also put 1 Wormsign in each Desert Area with a Smuggler Harvester.",
               "images": [
                 "sm-vehicles"
@@ -2269,6 +2426,33 @@
                   "source": "desertWar",
                   "page": 7,
                   "excerpt": "No Wormsign tokens can be placed in an Area with Suspensor Troopers unless the Suspensor Troopers are in the same Area as a Harkonnen Legion or a Harvester."
+                }
+              ]
+            },
+            {
+              "expansion": "smugglers",
+              "when": {
+                "state": "smugglersAllied",
+                "is": true
+              },
+              "text": "Smuggler Units are now yours.",
+              "bullets": [
+                "No Wormsign goes in an Area with Smuggler Units; remove any already there.",
+                "Coriolis Storms don’t affect Smuggler Units."
+              ],
+              "images": [
+                "sm-smuggler-regulars"
+              ],
+              "citations": [
+                {
+                  "source": "smugglers",
+                  "page": 3,
+                  "excerpt": "No Wormsign tokens are placed in Areas containing Smuggler Units (if present, they are removed)."
+                },
+                {
+                  "source": "smugglers",
+                  "page": 3,
+                  "excerpt": "Coriolis Storms do not apply to Smuggler Units."
                 }
               ]
             }
@@ -2345,6 +2529,10 @@
           "additions": [
             {
               "expansion": "smugglers",
+              "when": {
+                "state": "smugglersAllied",
+                "is": false
+              },
               "text": "The Smuggler Carryall can save only Smuggler Harvesters, and Harkonnen Carryalls can’t save Smuggler Harvesters.",
               "images": [
                 "sm-vehicles"
@@ -2415,6 +2603,7 @@
     },
     {
       "id": "spice-harvesting",
+      "part": "round",
       "title": "Spice harvesting",
       "steps": [
         {
@@ -2450,6 +2639,10 @@
           "additions": [
             {
               "expansion": "smugglers",
+              "when": {
+                "state": "smugglersAllied",
+                "is": false
+              },
               "text": "Each Smuggler Harvester still on the board adds 1 spice, even in Deep Desert.",
               "images": [
                 "sm-vehicles"
@@ -2548,6 +2741,7 @@
     },
     {
       "id": "round-end",
+      "part": "round",
       "title": "End of the round",
       "steps": [
         {

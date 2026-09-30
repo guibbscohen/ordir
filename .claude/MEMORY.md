@@ -43,3 +43,6 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   Regeneration Tank figures, used dice, spent Leader cards, stacking limit), each cited to its source. It
   appears when the player taps Done, on their half of the screen, and "Pass the turn" moves on.
 - 2026-09-27: Split-screen middle bar: the phase name and progress are mirrored so both players can read them.
+- 2026-09-30: Guides run setup once, then repeat rounds until the players end the game from the Game menu
+  (who won). The app only tracks game state that changes which steps apply (e.g. Smugglers allied); scores
+  and positions stay on the physical board.

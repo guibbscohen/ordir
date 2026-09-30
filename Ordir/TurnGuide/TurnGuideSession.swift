@@ -2,7 +2,8 @@
 //  TurnGuideSession.swift
 //  Ordir
 //
-//  Walks a TurnScript one step at a time on a single phone (pass-and-play).
+//  Walks a TurnScript one step at a time on a single phone: setup once, then rounds that repeat
+//  until the players end the game. Steps can depend on game states (e.g. the Smugglers allying).
 //
 
 import Foundation
@@ -15,6 +16,8 @@ final class TurnGuideSession {
         var step = 0
         /// How many times a looping phase has come round; 1 outside loops.
         var pass = 1
+        /// Game round; setup counts as round 1.
+        var round = 1
     }
 
     let script: TurnScript
@@ -22,14 +25,20 @@ final class TurnGuideSession {
     let expansions: Set<String>
     /// The script's phases with steps for switched-off expansions left out.
     let phases: [TurnScript.Phase]
+    /// Whether moving between the two sides asks for the phone to be passed (pass-the-phone play).
+    let passesPhone: Bool
     private(set) var position = Position()
     private(set) var isFinished = false
+    /// Who won, once the players end the game.
+    private(set) var winner: TurnScript.Side?
     /// When the current step began; drives the running timer.
     private(set) var stepStartedAt = Date.now
     /// Pass-the-phone play: set when the next step belongs to the other player, until they take the phone.
     private(set) var handoffTo: TurnScript.Side?
-    /// Whether moving between the two sides asks for the phone to be passed (pass-the-phone play).
-    let passesPhone: Bool
+    /// Game states that have happened, e.g. "smugglersAllied".
+    private(set) var activeStates: Set<String> = []
+    /// A state that just happened: its one-off steps are shown until the players are done with them.
+    private(set) var pendingEvent: TurnScript.GameState?
     private var history: [Position] = []
 
     /// `startAt` jumps to a step by id (CI screenshots use it); unknown ids start at the beginning.
@@ -42,7 +51,7 @@ final class TurnGuideSession {
                 guard let expansion = step.expansion else { return true }
                 return expansions.contains(expansion)
             }
-            return steps.isEmpty ? nil : TurnScript.Phase(id: phase.id, title: phase.title, steps: steps, loop: phase.loop)
+            return steps.isEmpty ? nil : TurnScript.Phase(id: phase.id, part: phase.part, title: phase.title, steps: steps, loop: phase.loop)
         }
         for (phaseIndex, phase) in phases.enumerated() {
             if let stepIndex = phase.steps.firstIndex(where: { $0.id == stepID }) {
@@ -53,9 +62,12 @@ final class TurnGuideSession {
 
     var phase: TurnScript.Phase { phases[position.phase] }
     var step: TurnScript.Step { phase.steps[position.step] }
-    /// Expansion additions that apply to the current step.
+    var round: Int { position.round }
+    var isInSetup: Bool { phase.part == .setup }
+
+    /// Expansion additions that apply to the current step right now.
     var additions: [TurnScript.Addition] {
-        (step.additions ?? []).filter { expansions.contains($0.expansion) }
+        (step.additions ?? []).filter { expansions.contains($0.expansion) && applies($0.when) }
     }
     /// Turn-change reminders for the current step, without those of switched-off expansions.
     var reminders: [TurnScript.Reminder] {
@@ -64,18 +76,34 @@ final class TurnGuideSession {
             return expansions.contains(expansion)
         }
     }
+    /// States the players can mark or correct: those of switched-on expansions.
+    var availableStates: [TurnScript.GameState] {
+        (script.states ?? []).filter { expansions.contains($0.expansion) }
+    }
     var canGoBack: Bool { !history.isEmpty || isFinished }
 
     /// Turn number inside a looping phase, e.g. the 5th alternating Action turn.
     var turnNumber: Int { (position.pass - 1) * phase.steps.count + position.step + 1 }
 
-    /// "Done": next step, wrapping inside a looping phase.
+    /// The current phase's steps that apply now, for "3 of 5".
+    var applicableSteps: [TurnScript.Step] { phase.steps.filter { applies($0.when) } }
+    var stepNumber: Int { (applicableSteps.firstIndex { $0.id == step.id } ?? 0) + 1 }
+
+    func applies(_ condition: TurnScript.Condition?) -> Bool {
+        guard let condition else { return true }
+        return activeStates.contains(condition.state) == condition.`is`
+    }
+
+    // MARK: Moving through the game
+
+    /// "Done": next step that applies, wrapping inside a looping phase, and from the end of a
+    /// round to the start of the next.
     func advance() {
         var next = position
-        if next.step + 1 < phase.steps.count {
-            next.step += 1
-        } else if phase.loop != nil {
-            next.step = 0
+        if let index = firstApplicable(in: phase, after: position.step) {
+            next.step = index
+        } else if phase.loop != nil, let index = firstApplicable(in: phase, after: -1) {
+            next.step = index
             next.pass += 1
         } else {
             moveToNextPhase(from: next)
@@ -99,6 +127,7 @@ final class TurnGuideSession {
         handoffTo = nil
         if isFinished {
             isFinished = false
+            winner = nil
         } else if let previous = history.popLast() {
             position = previous
         }
@@ -108,17 +137,67 @@ final class TurnGuideSession {
     func restart() {
         handoffTo = nil
         history = []
+        activeStates = []
+        pendingEvent = nil
         position = Position()
         isFinished = false
+        winner = nil
         stepStartedAt = .now
     }
 
-    private func moveToNextPhase(from current: Position) {
-        guard current.phase + 1 < phases.count else {
-            isFinished = true
-            return
+    /// Someone won; the guide shows the result.
+    func endGame(winner: TurnScript.Side?) {
+        handoffTo = nil
+        pendingEvent = nil
+        self.winner = winner
+        isFinished = true
+    }
+
+    // MARK: Game states
+
+    /// Marks a state as happened (showing its one-off steps) or corrects it back.
+    func setState(_ id: String, _ isOn: Bool) {
+        guard let state = script.state(id) else { return }
+        if isOn {
+            guard !activeStates.contains(id) else { return }
+            activeStates.insert(id)
+            pendingEvent = state
+        } else {
+            activeStates.remove(id)
+            if pendingEvent?.id == id { pendingEvent = nil }
         }
-        move(to: Position(phase: current.phase + 1))
+    }
+
+    func dismissEvent() {
+        pendingEvent = nil
+    }
+
+    // MARK: Private
+
+    private func firstApplicable(in phase: TurnScript.Phase, after index: Int) -> Int? {
+        phase.steps.indices.first { $0 > index && applies(phase.steps[$0].when) }
+    }
+
+    /// Next phase with a step that applies; after the last phase of a round, the round's first phase.
+    private func moveToNextPhase(from current: Position) {
+        var index = current.phase
+        var round = current.round
+        for _ in 0...phases.count {
+            index += 1
+            if index >= phases.count {
+                guard let first = phases.firstIndex(where: { $0.part == .round }) else {
+                    isFinished = true
+                    return
+                }
+                index = first
+                round += 1
+            }
+            if let step = firstApplicable(in: phases[index], after: -1) {
+                move(to: Position(phase: index, step: step, pass: 1, round: round))
+                return
+            }
+        }
+        isFinished = true
     }
 
     private func move(to next: Position) {

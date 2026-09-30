@@ -77,8 +77,36 @@ def validate(path):
     for e in expansions - set(sources):
         errors.append(f"expansion {e}: needs a source with the same id")
 
+    states = {}
+    for state in script.get("states", []):
+        where = f"state {state.get('id')}"
+        states[state.get("id")] = state
+        if state.get("expansion") not in expansions:
+            errors.append(f"{where}: unknown expansion {state.get('expansion')!r}")
+        if not state.get("title") or not state.get("trigger"):
+            errors.append(f"{where}: needs title and trigger")
+        check_citations(state.get("citations", []), where, sources, pages, errors)
+        event = state.get("event", {})
+        if not event.get("title") or not event.get("bullets") or event.get("side") not in SIDES:
+            errors.append(f"{where}: event needs title, side and bullets")
+        for image_id in event.get("images", []):
+            if image_id not in images:
+                errors.append(f"{where}: unknown image {image_id!r}")
+        check_citations(event.get("citations", []), f"{where} event", sources, pages, errors)
+
+    def check_when(item, at):
+        when = item.get("when")
+        if when is not None and (when.get("state") not in states or not isinstance(when.get("is"), bool)):
+            errors.append(f"{at}: 'when' needs a known state and a true/false 'is'")
+        if "sets" in item and item["sets"] not in states:
+            errors.append(f"{at}: 'sets' names an unknown state {item['sets']!r}")
+
+    if not any(phase.get("part") == "round" for phase in script["phases"]):
+        errors.append("no phase has part 'round'; rounds can't repeat")
     ids = set()
     for phase in script["phases"]:
+        if phase.get("part") not in ("setup", "round"):
+            errors.append(f"{phase['id']}: part must be 'setup' or 'round'")
         if not phase.get("steps"):
             errors.append(f"{phase['id']}: phase has no steps")
         if "loop" in phase:
@@ -106,6 +134,7 @@ def validate(path):
             if "expansion" in step and step["expansion"] not in expansions:
                 errors.append(f"{where}: unknown expansion {step['expansion']!r}")
             check_citations(step.get("citations", []), where, sources, pages, errors)
+            check_when(step, where)
             if not all(isinstance(b, str) and b.strip() for b in step.get("bullets", [])):
                 errors.append(f"{where}: bullets must be non-empty strings")
             for n, reminder in enumerate(step.get("reminders", []), 1):
@@ -127,6 +156,7 @@ def validate(path):
                     if image_id not in images:
                         errors.append(f"{at}: unknown image {image_id!r}")
                 check_citations(addition.get("citations", []), at, sources, pages, errors)
+                check_when(addition, at)
     return errors
 
 

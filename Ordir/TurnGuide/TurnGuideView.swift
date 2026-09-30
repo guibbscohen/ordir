@@ -173,6 +173,7 @@ private struct TurnGuideRunner: View {
     /// Which faction sits at the bottom edge of the phone; the other half faces the far player.
     @State private var nearSeat: TurnScript.Side = .atreides
     @State private var enlarged: EnlargedImage?
+    @State private var showsGameMenu = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dismiss) private var dismiss
 
@@ -190,6 +191,19 @@ private struct TurnGuideRunner: View {
         .task(id: stepKey) { await speak() }
         .sheet(item: $enlarged) { item in
             EnlargedImageView(script: session.script, item: item)
+        }
+        .sheet(isPresented: $showsGameMenu) {
+            GameMenu(
+                session: session,
+                endGame: { winner in
+                    showsGameMenu = false
+                    withAnimation(stepAnimation) { session.endGame(winner: winner) }
+                },
+                leave: {
+                    showsGameMenu = false
+                    dismiss()
+                }
+            )
         }
     }
 
@@ -221,7 +235,10 @@ private struct TurnGuideRunner: View {
             stepTransition: stepTransition,
             done: { withAnimation(stepAnimation) { session.advance() } },
             endLoop: { withAnimation(stepAnimation) { session.endLoop() } },
-            enlarge: { enlarged = EnlargedImage(image: $0, isFar: isFar) }
+            enlarge: { enlarged = EnlargedImage(image: $0, isFar: isFar) },
+            event: session.pendingEvent,
+            dismissEvent: { withAnimation(stepAnimation) { session.dismissEvent() } },
+            markState: { id in withAnimation(stepAnimation) { session.setState(id, true) } }
         )
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -245,7 +262,7 @@ private struct TurnGuideRunner: View {
     /// Top bar for pass-the-phone play: nothing needs mirroring, so it shows the step timer instead.
     private var passBar: some View {
         HStack(spacing: 4) {
-            barButton("Close guide", systemImage: "xmark") { dismiss() }
+            barButton("Game menu", systemImage: "flag.checkered") { showsGameMenu = true }
             Spacer(minLength: 8)
             phaseLabel
                 .accessibilityIdentifier("guide-progress")
@@ -268,7 +285,7 @@ private struct TurnGuideRunner: View {
     /// Shared controls between the two halves, read from the near side.
     private var centerBar: some View {
         HStack(spacing: 4) {
-            barButton("Close guide", systemImage: "xmark") { dismiss() }
+            barButton("Game menu", systemImage: "flag.checkered") { showsGameMenu = true }
             Spacer(minLength: 8)
             // The phase reads both ways: the upper copy is turned to face the far player.
             VStack(spacing: 2) {
@@ -317,10 +334,10 @@ private struct TurnGuideRunner: View {
     }
 
     private var progressText: String {
-        if session.phase.loop != nil {
-            return "Turn \(session.turnNumber)"
-        }
-        return "\(session.position.step + 1) of \(session.phase.steps.count)"
+        let inPhase = session.phase.loop != nil
+            ? "Turn \(session.turnNumber)"
+            : "\(session.stepNumber) of \(session.applicableSteps.count)"
+        return session.isInSetup ? inPhase : "Round \(session.round) · \(inPhase)"
     }
 
     // MARK: Finished
@@ -329,9 +346,13 @@ private struct TurnGuideRunner: View {
         VStack(spacing: 20) {
             OrdirMascotView()
                 .frame(height: 96)
-            Text("Round complete")
+            Text("Game over")
                 .font(.title2.weight(.semibold))
-            Text("Setup and one full round are done. Every new round starts the same way (rulebook, page 16).")
+            if let winner = session.winner {
+                Text("The \(Text(winner.displayName).foregroundColor(winner.color)) win")
+                    .font(.title3.weight(.semibold))
+            }
+            Text(session.round == 1 ? "Played in 1 round." : "Played in \(session.round) rounds.")
                 .font(.body)
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
@@ -361,7 +382,7 @@ private struct TurnGuideRunner: View {
 
     private var stepKey: String {
         let p = session.position
-        return "\(p.phase)-\(p.step)-\(p.pass)-\(session.isFinished)-\(session.handoffTo == nil)"
+        return "\(p.round)-\(p.phase)-\(p.step)-\(p.pass)-\(session.isFinished)-\(session.handoffTo == nil)"
     }
 
     private var stepAnimation: Animation {
@@ -389,6 +410,64 @@ private struct TurnGuideRunner: View {
         try? await Task.sleep(for: .seconds(seconds))
         guard !Task.isCancelled else { return }
         isSpeaking = false
+    }
+}
+
+// MARK: - Game menu
+
+/// Round, game states (to mark or correct) and ending the game.
+private struct GameMenu: View {
+    let session: TurnGuideSession
+    let endGame: (TurnScript.Side?) -> Void
+    let leave: () -> Void
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            List {
+                Section {
+                    Text(session.isInSetup ? "Setup" : "Round \(session.round)")
+                }
+                if !session.availableStates.isEmpty {
+                    Section("Happened this game") {
+                        ForEach(session.availableStates) { state in
+                            Toggle(isOn: Binding(
+                                get: { session.activeStates.contains(state.id) },
+                                set: { session.setState(state.id, $0) }
+                            )) {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(state.title)
+                                    Text(state.trigger)
+                                        .font(.footnote)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                        }
+                    }
+                }
+                Section {
+                    Button("The Atreides won") { endGame(.atreides) }
+                        .foregroundStyle(TurnScript.Side.atreides.color)
+                    Button("The Harkonnen won") { endGame(.harkonnen) }
+                        .foregroundStyle(TurnScript.Side.harkonnen.color)
+                } header: {
+                    Text("End the game")
+                } footer: {
+                    Text("The Harkonnen win at 10 Supremacy points; the Atreides when every Prescience marker reaches their Secret Objective (rulebook, pages 7 and 27).")
+                }
+                Section {
+                    Button("Leave the guide", action: leave)
+                }
+            }
+            .navigationTitle("Game")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Close") { dismiss() }
+                }
+            }
+        }
+        .presentationDetents([.medium, .large])
     }
 }
 
@@ -445,6 +524,10 @@ private struct SeatPanel: View {
     let done: () -> Void
     let endLoop: () -> Void
     let enlarge: (TurnScript.SourceImage) -> Void
+    /// A game state that just happened; its one-off steps cover the half of the side it belongs to.
+    let event: TurnScript.GameState?
+    let dismissEvent: () -> Void
+    let markState: (String) -> Void
 
     /// Set while the turn-change checklist is up; holds what "Pass the turn" will do.
     @State private var pendingPass: (() -> Void)?
@@ -465,7 +548,8 @@ private struct SeatPanel: View {
                         // In pass-the-phone play the seat label already says "Both players".
                         showsBothPlayers: seat != .both,
                         isSpeaking: isSpeaking,
-                        enlarge: enlarge
+                        enlarge: enlarge,
+                        markState: markState
                     )
                     .padding(.horizontal, 20)
                     .padding(.bottom, 16)
@@ -481,7 +565,10 @@ private struct SeatPanel: View {
             }
         }
         .overlay {
-            if let pass = pendingPass {
+            if let event, seat == event.event.side || seat == .both {
+                EventChecklist(script: script, state: event, enlarge: enlarge, done: dismissEvent)
+                    .transition(stepTransition)
+            } else if let pass = pendingPass {
                 PassTurnChecklist(
                     script: script,
                     reminders: reminders,
@@ -553,6 +640,7 @@ private struct StepCard: View {
     let showsBothPlayers: Bool
     let isSpeaking: Bool
     let enlarge: (TurnScript.SourceImage) -> Void
+    let markState: (String) -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
@@ -587,6 +675,11 @@ private struct StepCard: View {
                     BulletList(items: addition.bullets ?? [])
                     PictureStrip(script: script, pictures: script.pictures(addition.images), enlarge: enlarge)
                     CitationList(script: script, citations: addition.citations)
+                    if let id = addition.sets, let state = script.state(id) {
+                        Button(state.markLabel) { markState(id) }
+                            .font(.subheadline.weight(.semibold))
+                            .frame(minHeight: 44)
+                    }
                 }
             }
 
@@ -649,6 +742,46 @@ private struct BulletList: View {
                 .font(.body)
             }
         }
+    }
+}
+
+/// Covers a half when a game state happens, e.g. the Smugglers allying: its one-off steps.
+private struct EventChecklist: View {
+    let script: TurnScript
+    let state: TurnScript.GameState
+    let enlarge: (TurnScript.SourceImage) -> Void
+    let done: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 12) {
+                OrdirMascotView(isSpeaking: true)
+                    .frame(width: 40, height: 40)
+                Text(state.event.title)
+                    .font(.title3.weight(.semibold))
+                    .accessibilityAddTraits(.isHeader)
+            }
+            ScrollView {
+                VStack(alignment: .leading, spacing: 12) {
+                    ReminderChecklist(reminders: state.event.bullets.map {
+                        TurnScript.Reminder(expansion: nil, text: $0, citations: [])
+                    })
+                    PictureStrip(script: script, pictures: script.pictures(state.event.images), enlarge: enlarge)
+                    CitationList(script: script, citations: state.event.citations)
+                }
+            }
+            .scrollIndicators(.hidden)
+            Button(action: done) {
+                Text("Done")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity, minHeight: 50)
+            }
+            .buttonStyle(PrimaryButtonStyle())
+        }
+        .padding(.horizontal, 20)
+        .padding(.vertical, 12)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .background(.background)
     }
 }
 

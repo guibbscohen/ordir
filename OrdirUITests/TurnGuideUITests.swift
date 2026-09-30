@@ -55,7 +55,8 @@ final class TurnGuideUITests: XCTestCase {
         var turnsInLoop = 0
         var handoffs = 0
         let handoff = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "I’m the")).firstMatch
-        while !app.staticTexts["Round complete"].exists {
+        // Play setup and round 1; the guide then starts round 2 on its own.
+        while !progress.label.contains("Round 2") {
             // Pass-the-phone play: the next player takes the phone before seeing their step.
             if handoff.exists {
                 handoffs += 1
@@ -99,6 +100,13 @@ final class TurnGuideUITests: XCTestCase {
             waitForStepChange(progress, from: before, app: app)
         }
         XCTAssertGreaterThan(steps, 20, "too few steps for setup plus a round")
+
+        // End the game from the Game menu.
+        app.buttons["Game menu"].tap()
+        let atreidesWon = app.buttons["The Atreides won"]
+        XCTAssertTrue(atreidesWon.waitForExistence(timeout: 5), "Game menu did not open")
+        atreidesWon.tap()
+        XCTAssertTrue(app.staticTexts["Game over"].waitForExistence(timeout: 5), "game did not end")
         if passThePhone {
             XCTAssertGreaterThan(handoffs, 5, "pass-the-phone play never asked to pass the phone")
         }
@@ -114,12 +122,12 @@ final class TurnGuideUITests: XCTestCase {
     private func waitForStepChange(_ progress: XCUIElement, from before: String, app: XCUIApplication) {
         let deadline = Date().addingTimeInterval(8)
         while Date() < deadline {
-            if app.staticTexts["Round complete"].exists { return }
+            if app.staticTexts["Game over"].exists { return }
             if progress.exists, progress.label != before { break }
             Thread.sleep(forTimeInterval: 0.1)
         }
         XCTAssertTrue(
-            app.staticTexts["Round complete"].exists || progress.label != before,
+            app.staticTexts["Game over"].exists || progress.label != before,
             "Done did not advance past \(before)"
         )
         Thread.sleep(forTimeInterval: 0.6)

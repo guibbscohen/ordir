@@ -16,6 +16,8 @@ struct TurnScript: Decodable {
     let sources: [Source]
     /// Optional modules players can switch on before starting; steps and additions name one by id.
     let expansions: [Expansion]
+    /// Things that happen mid-game and change which steps apply, e.g. the Smugglers allying.
+    let states: [GameState]?
     /// Component pictures cropped from the sources by tools/crop_source_images.py.
     let images: [SourceImage]
     let phases: [Phase]
@@ -42,10 +44,42 @@ struct TurnScript: Decodable {
 
     struct Phase: Decodable {
         let id: String
+        /// Setup phases run once; round phases repeat until the players end the game.
+        let part: Part
         let title: String
         let steps: [Step]
         /// Set when the phase's steps repeat (e.g. alternating Action turns) until the players end it.
         let loop: Loop?
+    }
+
+    enum Part: String, Decodable {
+        case setup, round
+    }
+
+    struct GameState: Decodable, Identifiable {
+        let id: String
+        let expansion: String
+        let title: String
+        /// Button label for marking that it happened, e.g. "The Smugglers have joined us".
+        let markLabel: String
+        let trigger: String
+        let citations: [Citation]
+        /// What to do at the moment it happens.
+        let event: StateEvent
+    }
+
+    struct StateEvent: Decodable {
+        let title: String
+        let side: Side
+        let bullets: [String]
+        let images: [String]
+        let citations: [Citation]
+    }
+
+    /// Shows a step or addition only while a state is on (or off).
+    struct Condition: Decodable {
+        let state: String
+        let `is`: Bool
     }
 
     struct Loop: Decodable {
@@ -58,6 +92,7 @@ struct TurnScript: Decodable {
         let id: String
         /// Set when the whole step only applies with that expansion.
         let expansion: String?
+        let when: Condition?
         let side: Side
         let title: String
         /// Lead line; options and sub-steps go in `bullets` rather than a long paragraph.
@@ -74,6 +109,9 @@ struct TurnScript: Decodable {
 
     struct Addition: Decodable {
         let expansion: String
+        let when: Condition?
+        /// A state this addition lets the players mark as happened.
+        let sets: String?
         let text: String
         let bullets: [String]?
         let images: [String]
@@ -105,6 +143,10 @@ struct TurnScript: Decodable {
 
     func pictures(_ ids: [String]) -> [SourceImage] {
         ids.compactMap { id in images.first { $0.id == id } }
+    }
+
+    func state(_ id: String) -> GameState? {
+        states?.first { $0.id == id }
     }
 
     func expansionTitle(_ id: String) -> String {
