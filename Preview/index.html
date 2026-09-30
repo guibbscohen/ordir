@@ -1,0 +1,590 @@
+<title>Ordir Dune Guide</title>
+<style>
+/* Layout: one phone-shaped column split in two halves; the far half is turned 180° to face the
+   player across the table, with a shared bar between them. Always dark, like the app. */
+:root {
+  --bg: #000000;
+  --surface: #141414;
+  --surface-2: #1f1f1f;
+  --line: #2b2b2b;
+  --fg: #f5f5f7;
+  --muted: #9a9aa0;
+  --sparkle: #9ec7ff;
+  --atreides: #4cc38a;
+  --harkonnen: #ff6b5e;
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 16px;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  padding-inline: 16px; padding-block: 12px; box-sizing: border-box;
+}
+* { box-sizing: border-box; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+button:focus-visible, a:focus-visible, input:focus-visible + .switch { outline: 2px solid var(--sparkle); outline-offset: 2px; border-radius: 8px; }
+button:disabled { opacity: .35; cursor: default; }
+
+.phone {
+  width: 100%; max-width: 430px; flex: 1; min-height: 0; max-height: 920px;
+  border: 1px solid var(--line); border-radius: 28px; overflow: hidden;
+  display: grid; grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr); grid-template-columns: minmax(0, 1fr); background: var(--bg);
+  position: relative;
+}
+.phone.single { grid-template-rows: minmax(0, 1fr); }
+.note { color: var(--muted); font-size: 12px; text-align: center; max-width: 430px; line-height: 1.4; }
+.note a { color: var(--sparkle); }
+
+/* Halves */
+.half { position: relative; display: flex; flex-direction: column; min-height: 0; min-width: 0; overflow: hidden; }
+.half.far { transform: rotate(180deg); }
+.seat { display: flex; align-items: center; gap: 8px; padding: 12px 20px 8px; font-size: 14px; font-weight: 600; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex: none; }
+.seat.atreides, .side-atreides { color: var(--atreides); }
+.seat.harkonnen, .side-harkonnen { color: var(--harkonnen); }
+.seat.both { color: var(--muted); }
+.scroll { flex: 1; min-height: 0; overflow-y: auto; padding: 0 20px 16px; scrollbar-width: none; }
+.scroll::-webkit-scrollbar { display: none; }
+.actions { display: flex; gap: 12px; align-items: center; padding: 10px 20px; }
+.primary {
+  flex: 1; min-height: 50px; border-radius: 16px; background: var(--fg); color: var(--bg);
+  font-weight: 600; font-size: 17px;
+}
+.primary:active { opacity: .7; }
+.textbtn { color: var(--sparkle); font-weight: 600; font-size: 15px; min-height: 44px; padding: 0 4px; }
+
+/* Middle bar */
+.bar {
+  display: flex; align-items: center; gap: 4px; padding: 0 8px; height: 60px;
+  background: var(--surface); border-block: 1px solid var(--line);
+}
+.bar .iconbtn { width: 44px; height: 44px; display: grid; place-items: center; color: var(--sparkle); border-radius: 10px; }
+.bar .iconbtn svg { width: 20px; height: 20px; }
+.bar .labels { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.phase-label { display: flex; gap: 6px; font-size: 13px; white-space: nowrap; overflow: hidden; }
+.phase-label b { font-weight: 600; }
+.phase-label span { color: var(--muted); font-variant-numeric: tabular-nums; }
+.phase-label.mirror { transform: rotate(180deg); }
+
+/* Step card */
+.card { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.card.enter { animation: rise .4s ease both; }
+@keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+.head { display: flex; align-items: center; gap: 14px; }
+.head .mascot { width: 48px; height: 48px; flex: none; }
+.context { font-size: 13px; font-weight: 600; color: var(--muted); }
+.title { font-size: 20px; font-weight: 600; margin: 0; text-wrap: balance; }
+.lead { font-weight: 500; line-height: 1.4; margin: 0; }
+ul.bullets { margin: 8px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+ul.bullets li { display: flex; gap: 10px; line-height: 1.4; }
+ul.bullets li::before { content: "\2022"; color: var(--muted); }
+.section { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.section h3 { margin: 0; font-size: 13px; font-weight: 600; color: var(--muted); }
+.section p { margin: 0; line-height: 1.4; }
+.comps { color: var(--muted); font-size: 15px; line-height: 1.4; }
+
+.pics { display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+.pics::-webkit-scrollbar { display: none; }
+.pic { flex: none; width: 176px; text-align: left; display: flex; flex-direction: column; gap: 6px; }
+.pic .frame { width: 176px; height: 112px; border-radius: 10px; background: var(--surface-2); display: grid; place-items: center; overflow: hidden; }
+.pic img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+.pic .cap { font-size: 12px; line-height: 1.3; }
+.pic .src { font-size: 11px; color: var(--muted); }
+
+.cites { display: flex; flex-direction: column; }
+.cite { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; min-height: 44px; padding-block: 10px; color: var(--sparkle); text-decoration: none; font-size: 15px; }
+.cite small { display: block; color: var(--muted); font-size: 14px; margin-top: 2px; }
+.cite .arrow { color: var(--muted); font-size: 12px; }
+
+/* Waiting */
+.waiting { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 0 24px; text-align: center; }
+.waiting .mascot { height: 64px; width: 64px; }
+.waiting p { margin: 0; font-size: 20px; line-height: 1.3; }
+.waiting b { font-weight: 600; }
+.timer { font-size: 24px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* Game menu covers the whole phone */
+.overlay.menu { z-index: 3; }
+.overlay.menu .option { justify-content: flex-start; }
+
+/* Overlays inside a half */
+.overlay { position: absolute; inset: 0; background: var(--bg); display: flex; flex-direction: column; gap: 12px; padding: 12px 20px; z-index: 2; }
+.overlay.enter { animation: rise .3s ease both; }
+.overlay .head .mascot { width: 40px; height: 40px; }
+.overlay h2 { margin: 0; font-size: 20px; font-weight: 600; }
+.check { display: flex; gap: 12px; align-items: baseline; text-align: left; min-height: 44px; padding-block: 8px; line-height: 1.35; width: 100%; }
+.check .box { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--muted); flex: none; transform: translateY(4px); display: grid; place-items: center; }
+.check.on .box { background: var(--fg); border-color: var(--fg); }
+.check.on .box::after { content: ""; width: 5px; height: 10px; border: solid var(--bg); border-width: 0 2px 2px 0; transform: translateY(-1px) rotate(45deg); }
+.check.on .txt { color: var(--muted); }
+.enlarged img { width: 100%; max-height: 60%; object-fit: contain; border-radius: 12px; background: var(--surface-2); }
+
+/* Pass the phone */
+.phone.pass { grid-template-rows: auto minmax(0, 1fr); }
+.bar .timer-sm { min-width: 44px; text-align: center; color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+.handoff { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 0 24px; text-align: center; }
+.handoff .mascot { width: 80px; height: 80px; }
+.handoff h2 { margin: 0; font-size: 24px; font-weight: 600; text-wrap: balance; }
+.handoff p { margin: 0; color: var(--muted); }
+.handoff-actions { padding: 12px 24px 16px; display: flex; }
+.option { display: flex; align-items: center; gap: 12px; text-align: left; width: 100%; background: var(--surface-2); border-radius: 14px; padding: 16px; }
+.option div { flex: 1; min-width: 0; }
+.option strong { display: block; font-size: 17px; }
+.option span { color: var(--muted); font-size: 15px; line-height: 1.35; }
+.option .radio { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--muted); flex: none; display: grid; place-items: center; }
+.option[aria-checked="true"] .radio { border-color: var(--fg); }
+.option[aria-checked="true"] .radio::after { content: ""; width: 12px; height: 12px; border-radius: 50%; background: var(--fg); }
+
+/* Picker and finished */
+.pane { display: flex; flex-direction: column; min-height: 0; min-width: 0; }
+.pane .scroll { padding-top: 24px; display: flex; flex-direction: column; gap: 24px; }
+.pane h1 { margin: 0; font-size: 20px; font-weight: 600; text-wrap: balance; }
+.toggle { display: flex; align-items: center; gap: 12px; background: var(--surface-2); border-radius: 14px; padding: 16px; cursor: pointer; }
+.toggle div { flex: 1; min-width: 0; }
+.toggle strong { display: block; font-size: 17px; }
+.toggle span { color: var(--muted); font-size: 15px; line-height: 1.35; }
+.toggle input { position: absolute; opacity: 0; pointer-events: none; }
+.switch { width: 51px; height: 31px; border-radius: 16px; background: #39393d; position: relative; flex: none; transition: background .2s; }
+.switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 27px; height: 27px; border-radius: 50%; background: #fff; transition: transform .2s; }
+.toggle input:checked + .switch { background: var(--atreides); }
+.toggle input:checked + .switch::after { transform: translateX(20px); }
+.hint { color: var(--muted); font-size: 13px; margin: 0; }
+.done-pane { justify-content: center; align-items: center; text-align: center; gap: 20px; padding: 32px; }
+.done-pane .mascot { height: 96px; width: 96px; }
+.done-pane p { margin: 0; color: var(--muted); line-height: 1.4; }
+.done-pane .primary { width: 100%; flex: none; }
+
+/* Mascot */
+.mascot .orb { fill: var(--fg); }
+.mascot .sp { fill: var(--sparkle); transform-box: fill-box; transform-origin: center; }
+.mascot.idle .sp { animation: twinkle 3.2s ease-in-out infinite; }
+.mascot.idle .sp2 { animation-delay: .8s; }
+.mascot.idle .sp3 { animation-delay: 1.6s; }
+.mascot.speaking .sp { animation: speak .5s ease-in-out infinite alternate; }
+.mascot.speaking .sp2 { animation-delay: .17s; }
+.mascot.speaking .sp3 { animation-delay: .34s; }
+.mascot.thinking .sp { animation: think 1.4s ease-in-out infinite; }
+.mascot.thinking .sp2 { animation-delay: .45s; }
+.mascot.thinking .sp3 { animation-delay: .9s; }
+@keyframes twinkle { 0%, 100% { opacity: .7; transform: scale(.92); } 50% { opacity: 1; transform: scale(1.05); } }
+@keyframes speak { from { opacity: .55; transform: scale(.85); } to { opacity: 1; transform: scale(1.15); } }
+@keyframes think { 0%, 100% { opacity: .35; transform: scale(.8) rotate(0); } 50% { opacity: 1; transform: scale(1.1) rotate(45deg); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .card.enter, .overlay.enter { animation: fade .2s ease both; }
+  .mascot .sp { animation: none !important; }
+  .switch, .switch::after { transition: none; }
+}
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+</style>
+
+<div class="phone" id="phone" aria-live="polite"></div>
+<p class="note">A browser preview of the Ordir guide, built from the same turn script and rulebook pictures as the app.
+  Play with one phone on the table (split screen) or pass the phone between players.
+  Logo: “Magic Ball” by Ziyad Aljunaidi, Noun Project (CC BY 3.0). Rules © CMON / Gale Force Nine.</p>
+
+<script>
+"use strict";
+const $ = (sel, root = document) => root.querySelector(sel);
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+// Crystal-ball mascot, from Assets/ordir-logo.svg (three sparkles and the orb).
+const MASCOT_PATHS = `<path class="sp sp1" d="M290.228 82.5405 270.757 75.6223C266.801 74.207 263.838 71.2439 262.291 67.4343L254.394 46.971C252 40.8995 246.629 37.9365 241.272 37.9365 235.915 37.9365 230.412 40.8995 228.15 46.971L220.254 67.4343C218.706 71.2439 215.743 74.2069 211.788 75.6223L192.317 82.5405C179.764 86.9189 179.764 104.697 192.317 109.207L211.788 116.126C215.743 117.541 218.706 120.504 220.254 124.314L228.15 144.777C230.545 150.848 235.915 153.811 241.272 153.811 246.629 153.811 252.132 150.848 254.394 144.777L262.291 124.314C263.838 120.504 266.801 117.541 270.757 116.126L290.228 109.207C302.781 104.829 302.781 87.051 290.228 82.5405ZM263.561 96.0856C253.825 99.4719 246.206 106.945 242.396 116.549L240.981 120.081 239.566 116.549C235.902 106.959 228.137 99.4719 218.402 96.0856L217.7 95.8078 218.402 95.53C228.137 92.1438 235.756 84.6703 239.566 75.0668L240.981 71.5349 242.396 75.0668C246.06 84.6567 253.825 92.1438 263.561 95.53L264.262 95.8078Z"/><path class="sp sp2" d="M172.7 183.56C169.168 184.83 169.168 189.632 172.7 190.901L178.057 192.74C179.182 193.163 180.028 194.01 180.451 195.002L182.713 200.65C183.414 202.343 184.83 203.19 186.377 203.19 187.925 203.19 189.34 202.343 190.041 200.65L192.303 195.002C192.726 193.878 193.573 193.163 194.697 192.74L200.054 190.901C203.586 189.632 203.586 184.83 200.054 183.56L194.697 181.721C193.573 181.298 192.726 180.451 192.303 179.459L190.041 173.811C189.34 172.118 187.925 171.271 186.377 171.271 184.83 171.271 183.414 172.118 182.713 173.811L180.451 179.459C180.028 180.584 179.182 181.298 178.057 181.721Z"/><path class="sp sp3" d="M147.157 132.634C145.187 131.933 143.493 130.372 142.779 128.401L138.692 117.819C137.422 114.71 134.737 113.163 131.919 113.163 129.102 113.163 126.271 114.71 125.147 117.819L121.059 128.401C120.358 130.372 118.665 131.933 116.681 132.634L106.522 136.166C100.027 138.428 100.027 147.594 106.522 149.988L116.681 153.52C118.652 154.221 120.345 155.782 121.059 157.753L125.147 168.335C126.416 171.444 129.102 172.991 131.919 172.991 134.737 172.991 137.567 171.444 138.692 168.335L142.779 157.753C143.48 155.782 145.173 154.221 147.157 153.52L157.316 149.988C163.811 147.726 163.811 138.56 157.316 136.166Z"/><path class="orb" d="M284.871 154.221C285.148 148.441 280.638 143.493 274.857 143.216 269.077 142.938 264.13 147.449 263.852 153.229 261.59 203.745 220.108 243.389 169.459 243.389 118.811 243.389 74.9214 200.915 74.9214 148.851 74.9214 96.7866 117.395 54.3125 169.459 54.3125 176.801 54.3125 183.997 55.1591 191.047 56.7067 196.695 57.9765 202.476 54.4448 203.745 48.8099 205.015 43.1616 201.484 37.3812 195.849 36.1114 187.237 34.1404 178.348 33.1484 169.459 33.1484 105.543 33.0161 53.6115 84.9347 53.6115 148.851 53.6115 183.706 69.1274 215.029 93.678 236.193L86.3365 258.627C82.1037 271.603 87.8841 285.717 99.8816 291.366 122.885 302.371 146.297 307.728 169.869 307.728 193.428 307.728 216.007 302.503 239.288 292.066 252.687 285.995 259.182 270.757 254.103 257.357L245.783 235.624C268.64 215.584 283.601 186.801 285.003 154.076ZM106.39 265.254 111.747 249.023C121.059 254.381 131.218 258.481 141.8 261.153L139.115 283.164C129.102 280.77 119.075 277.092 109.062 272.304 106.668 271.18 105.53 268.071 106.522 265.254Z"/>`;
+const mascot = (mode) => `<svg class="mascot ${mode}" viewBox="-6 0 300 340" aria-hidden="true"><g transform="translate(-15.285 8.465) scale(1 1.00101)">${MASCOT_PATHS}</g></svg>`;
+
+const ICONS = {
+  close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  back: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 010 11H11"/></svg>',
+  flag: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V4M5 4h11l-2 4 2 4H5"/></svg>',
+  swap: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20V4M3 8l4-4 4 4M17 4v16M13 16l4 4 4-4"/></svg>',
+};
+
+const SIDE_NAME = { atreides: "Atreides", harkonnen: "Harkonnen", both: "Both players" };
+
+const state = {
+  script: null,
+  chosen: new Set(),
+  mode: "table",      // "table" (split screen) or "pass" (pass the phone)
+  session: null,      // null → setup picker
+  battle: null,       // a battle walkthrough opened from an Action turn
+  nearSeat: "atreides",
+  pending: null,      // { seat, action: "done" | "endLoop", checked: Set }
+  enlarged: null,     // { seat, id }
+  menu: false,        // Game menu open
+  speaking: false,
+  lastKey: null,
+};
+
+// ---- Session: a port of TurnGuideSession.swift ----
+function makeSession(script, expansions, passesPhone) {
+  const phases = script.phases
+    .map((p) => ({ ...p, steps: p.steps.filter((s) => !s.expansion || expansions.has(s.expansion)) }))
+    .filter((p) => p.steps.length);
+  return { expansions, phases, passesPhone, handoffTo: null, states: new Set(), pendingEvent: null, winner: null,
+    pos: { phase: 0, step: 0, pass: 1, round: 1 }, history: [], finished: false, startedAt: Date.now() };
+}
+const cur = () => state.battle || state.session;
+const applies = (s, when) => !when || s.states.has(when.state) === when.is;
+const phaseOf = (s) => s.phases[s.pos.phase];
+const stepOf = (s) => phaseOf(s).steps[s.pos.step];
+const additionsOf = (s) => (stepOf(s).additions || []).filter((a) => s.expansions.has(a.expansion) && applies(s, a.when));
+const remindersOf = (s) => (stepOf(s).reminders || []).filter((r) => !r.expansion || s.expansions.has(r.expansion));
+const statesOf = (s) => (state.script.states || []).filter((x) => s.expansions.has(x.expansion));
+const applicableSteps = (s) => phaseOf(s).steps.filter((st) => applies(s, st.when));
+const turnNumber = (s) => (s.pos.pass - 1) * phaseOf(s).steps.length + s.pos.step + 1;
+const firstApplicable = (s, phase, after) => phase.steps.findIndex((st, i) => i > after && applies(s, st.when));
+function moveTo(s, next) {
+  const previousSide = stepOf(s).side;
+  s.history.push({ ...s.pos }); s.pos = next; s.startedAt = Date.now();
+  // Steps for both players need no handoff; a switch to the other single side does.
+  const side = stepOf(s).side;
+  s.handoffTo = s.passesPhone && side !== "both" && side !== previousSide ? side : null;
+}
+// Next phase with a step that applies; after the round's last phase, the next round's first.
+function nextPhase(s) {
+  let index = s.pos.phase, round = s.pos.round;
+  for (let guard = 0; guard <= s.phases.length; guard++) {
+    index += 1;
+    if (index >= s.phases.length) {
+      const first = s.phases.findIndex((p) => p.part === "round");
+      if (first < 0) { s.finished = true; return; }
+      index = first; round += 1;
+    }
+    const step = firstApplicable(s, s.phases[index], -1);
+    if (step >= 0) { moveTo(s, { phase: index, step, pass: 1, round }); return; }
+  }
+  s.finished = true;
+}
+function advance(s) {
+  const phase = phaseOf(s);
+  const next = firstApplicable(s, phase, s.pos.step);
+  if (next >= 0) moveTo(s, { ...s.pos, step: next });
+  else if (phase.loop && firstApplicable(s, phase, -1) >= 0) moveTo(s, { ...s.pos, step: firstApplicable(s, phase, -1), pass: s.pos.pass + 1 });
+  else nextPhase(s);
+}
+function goBack(s) {
+  s.handoffTo = null;
+  if (s.finished) { s.finished = false; s.winner = null; }
+  else if (s.history.length) s.pos = s.history.pop();
+  s.startedAt = Date.now();
+}
+// A battle for the current Action turn: the acting side attacks; attacker/defender resolve to factions.
+function makeBattle(s) {
+  const b = state.script.battle, side = stepOf(s).side;
+  if (!b || (side !== "atreides" && side !== "harkonnen")) return null;
+  const other = side === "atreides" ? "harkonnen" : "atreides";
+  const resolve = (x) => (x === "attacker" ? side : x === "defender" ? other : x);
+  const phases = b.phases.map((p) => ({ ...p, part: "setup", steps: p.steps.map((st) => ({ ...st, side: resolve(st.side) })) }));
+  const battle = makeSession({ ...state.script, phases }, s.expansions, s.passesPhone);
+  battle.isBattle = true;
+  battle.states = new Set(s.states);
+  return battle;
+}
+function setGameState(s, id, on) {
+  const def = (state.script.states || []).find((x) => x.id === id);
+  if (!def) return;
+  if (on && !s.states.has(id)) { s.states.add(id); s.pendingEvent = def; }
+  if (!on) { s.states.delete(id); if (s.pendingEvent && s.pendingEvent.id === id) s.pendingEvent = null; }
+}
+
+// ---- Helpers ----
+const sourceOf = (id) => state.script.sources.find((x) => x.id === id);
+const imageOf = (id) => state.script.images.find((x) => x.id === id);
+const expansionTitle = (id) => (state.script.expansions.find((e) => e.id === id) || { title: id }).title;
+const imgUrl = (id) => `img/${id}.jpg`;
+const imgLabel = (img) => `${sourceOf(img.source).shortTitle}, page ${img.page}`;
+const farSeat = () => (state.nearSeat === "atreides" ? "harkonnen" : "atreides");
+const fmt = (ms) => { const t = Math.max(0, Math.floor(ms / 1000)); return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, "0")}`; };
+// Inside a loop, number each side's turns ("Action turn 2"); battles show the round in the bar instead.
+function stepTitle(s) { const st = stepOf(s); return phaseOf(s).loop && !s.isBattle ? `${st.title} ${s.pos.pass}` : st.title; }
+function stepKey(s) { return `${s.pos.round}-${s.pos.phase}-${s.pos.step}-${s.pos.pass}-${s.finished}`; }
+function progressText(s) {
+  const list = applicableSteps(s);
+  const inPhase = phaseOf(s).loop ? `Turn ${turnNumber(s)}` : `${list.findIndex((st) => st === stepOf(s)) + 1} of ${list.length}`;
+  if (s.isBattle) { const n = `${list.findIndex((st) => st === stepOf(s)) + 1} of ${list.length}`; return phaseOf(s).loop ? `Round ${s.pos.pass} · ${n}` : n; }
+  return phaseOf(s).part === "setup" ? inPhase : `Round ${s.pos.round} · ${inPhase}`;
+}
+
+function citations(list) {
+  const seen = new Set();
+  return `<div class="cites">${list.map((c) => {
+    const key = `${c.source}-${c.page}-${c.entry || ""}`;
+    if (seen.has(key)) return "";
+    seen.add(key);
+    const src = sourceOf(c.source);
+    return `<a class="cite" href="${esc(src.url)}#page=${c.page}" target="_blank" rel="noopener">
+      <span>${esc(src.shortTitle)}, page ${c.page}${c.entry ? `<small>${esc(c.entry)}</small>` : ""}</span><span class="arrow" aria-hidden="true">↗</span></a>`;
+  }).join("")}</div>`;
+}
+function pictures(ids, seat) {
+  return `<div class="pics">${ids.map((id) => {
+    const img = imageOf(id);
+    if (!img) return "";
+    return `<button class="pic" data-enlarge="${esc(id)}" data-seat="${seat}" aria-label="${esc(img.caption)}, ${esc(imgLabel(img))}. Show larger">
+      <span class="frame"><img src="${imgUrl(id)}" alt="" loading="lazy"></span>
+      <span class="cap">${esc(img.caption)}</span><span class="src">${esc(imgLabel(img))}</span></button>`;
+  }).join("")}</div>`;
+}
+function markButton(a) {
+  const def = a.sets && (state.script.states || []).find((x) => x.id === a.sets);
+  return def ? `<button class="textbtn" style="align-self:flex-start" data-mark="${esc(def.id)}">${esc(def.markLabel)}</button>` : "";
+}
+const bullets = (items) => (items && items.length ? `<ul class="bullets">${items.map((b) => `<li>${esc(b)}</li>`).join("")}</ul>` : "");
+const section = (title, body) => `<div class="section"><h3>${esc(title)}</h3>${body}</div>`;
+
+// ---- Views ----
+function stepCard(s, seat, animate) {
+  const st = stepOf(s);
+  // The seat label already says "Both players" when the whole screen belongs to both.
+  const context = [st.side === "both" && seat !== "both" ? "Both players" : null, st.expansion ? expansionTitle(st.expansion) : null].filter(Boolean).join(" · ");
+  const loop = phaseOf(s).loop;
+  return `<div class="card${animate ? " enter" : ""}">
+    <div class="head">${mascot(state.speaking ? "speaking" : "idle")}
+      <div>${context ? `<div class="context">${esc(context)}</div>` : ""}<h2 class="title">${esc(stepTitle(s))}</h2></div></div>
+    <div><p class="lead">${esc(st.instruction)}</p>${bullets(st.bullets)}
+      ${st.opensBattle && state.script.battle && !s.isBattle ? `<button class="textbtn" data-act="battle">Start a battle</button>` : ""}</div>
+    ${additionsOf(s).map((a) => section(expansionTitle(a.expansion),
+      `<p>${esc(a.text)}</p>${bullets(a.bullets)}${pictures(a.images, seat)}${citations(a.citations)}${markButton(a)}`)).join("")}
+    ${section("You’ll need", `${pictures(st.images, seat)}<div class="comps">${esc(st.components.join(", "))}</div>`)}
+    ${section("Source", citations(st.citations))}
+    ${loop ? section("When to stop", `<p>${esc(loop.note)}</p>${citations(loop.citations)}`) : ""}
+  </div>`;
+}
+
+function waiting(s) {
+  const st = stepOf(s);
+  const who = st.side === "both" ? "Both players are" : `The ${SIDE_NAME[st.side]} is`;
+  return `<div class="waiting">${mascot("thinking")}
+    <p>${who} on <b>${esc(stepTitle(s))}</b></p>
+    <div class="timer" data-timer>${fmt(Date.now() - s.startedAt)}</div></div>`;
+}
+
+function overlayFor(seat, animate) {
+  const s = cur();
+  if (s.pendingEvent && (seat === s.pendingEvent.event.side || seat === "both")) {
+    const ev = s.pendingEvent.event;
+    return `<div class="overlay${animate ? " enter" : ""}" role="dialog" aria-label="${esc(ev.title)}">
+      <div class="head">${mascot("speaking")}<h2>${esc(ev.title)}</h2></div>
+      <div class="scroll" style="padding:0">
+        ${ev.bullets.map((b, i) => `<button class="check" data-evcheck="${i}" aria-pressed="false"><span class="box" aria-hidden="true"></span><span class="txt">${esc(b)}</span></button>`).join("")}
+        ${pictures(ev.images, seat)}${citations(ev.citations)}
+      </div>
+      <div class="actions" style="padding:0"><button class="primary" data-act="event-done">Done</button></div></div>`;
+  }
+  if (state.enlarged && state.enlarged.seat === seat) {
+    const img = imageOf(state.enlarged.id);
+    return `<div class="overlay enlarged${animate ? " enter" : ""}" role="dialog" aria-label="${esc(img.caption)}">
+      <img src="${imgUrl(img.id)}" alt="${esc(img.caption)}">
+      <h2>${esc(img.caption)}</h2><div class="comps">${esc(imgLabel(img))}</div>
+      <div class="actions" style="padding:0;margin-top:auto"><button class="primary" data-act="close-enlarged">Close</button></div></div>`;
+  }
+  if (state.pending && state.pending.seat === seat) {
+    const reminders = remindersOf(s);
+    return `<div class="overlay${animate ? " enter" : ""}" role="dialog" aria-label="Before you pass the turn">
+      <div class="head">${mascot("speaking")}<h2>Before you pass the turn</h2></div>
+      <div class="scroll" style="padding:0">
+        ${reminders.map((r, i) => `<button class="check${state.pending.checked.has(i) ? " on" : ""}" data-check="${i}" aria-pressed="${state.pending.checked.has(i)}">
+          <span class="box" aria-hidden="true"></span><span class="txt">${esc(r.text)}</span></button>`).join("")}
+        ${citations(reminders.flatMap((r) => r.citations))}
+      </div>
+      <div class="actions" style="padding:0"><button class="textbtn" data-act="not-yet">Not yet</button>
+        <button class="primary" data-act="pass">Pass the turn</button></div></div>`;
+  }
+  return "";
+}
+
+function half(seat, isFar, animate) {
+  const s = cur();
+  const st = stepOf(s);
+  const acting = st.side === seat || st.side === "both";
+  const loop = phaseOf(s).loop;
+  const body = acting
+    ? `<div class="scroll">${stepCard(s, seat, animate)}</div>
+       <div class="actions">${loop ? `<button class="textbtn" data-act="end-loop" data-seat="${seat}">${esc(loop.endLabel)}</button>` : ""}
+         <button class="primary" data-act="done" data-seat="${seat}">Done</button></div>`
+    : waiting(s);
+  return `<section class="half ${isFar ? "far" : "near"}" aria-label="${SIDE_NAME[seat]} side">
+    <div class="seat ${seat}"><span class="dot"></span>${SIDE_NAME[seat]}</div>${body}${overlayFor(seat, animate || !!state.pending || !!state.enlarged)}</section>`;
+}
+
+function bar(s) {
+  const label = `<b>${esc(phaseOf(s).title)}</b><span>${esc(progressText(s))}</span>`;
+  const canBack = s.history.length > 0 || s.finished;
+  return `<div class="bar">
+    ${s.isBattle ? `<button class="iconbtn" data-act="leave-battle" aria-label="Leave battle">${ICONS.close}</button>` : `<button class="iconbtn" data-act="menu" aria-label="Game menu">${ICONS.flag}</button>`}
+    <div class="labels"><div class="phase-label mirror" aria-hidden="true">${label}</div><div class="phase-label">${label}</div></div>
+    <button class="iconbtn" data-act="back" aria-label="Previous step" ${canBack ? "" : "disabled"}>${ICONS.back}</button>
+    <button class="iconbtn" data-act="swap" aria-label="Swap seats">${ICONS.swap}</button></div>`;
+}
+
+function passBar(s) {
+  const canBack = s.history.length > 0 || s.finished;
+  return `<div class="bar" style="border-top:0">
+    ${s.isBattle ? `<button class="iconbtn" data-act="leave-battle" aria-label="Leave battle">${ICONS.close}</button>` : `<button class="iconbtn" data-act="menu" aria-label="Game menu">${ICONS.flag}</button>`}
+    <div class="labels"><div class="phase-label"><b>${esc(phaseOf(s).title)}</b><span>${esc(progressText(s))}</span></div></div>
+    <button class="iconbtn" data-act="back" aria-label="Previous step" ${canBack ? "" : "disabled"}>${ICONS.back}</button>
+    <span class="timer-sm" data-timer>${fmt(Date.now() - s.startedAt)}</span></div>`;
+}
+
+function handoff(s, animate) {
+  const side = s.handoffTo;
+  return `<section class="half" aria-label="Pass the phone">
+    <div class="handoff${animate ? " card enter" : ""}">${mascot("thinking")}
+      <h2>Pass the phone to the <span class="side-${side}">${SIDE_NAME[side]}</span></h2>
+      <p>Next: ${esc(stepTitle(s))}</p></div>
+    <div class="handoff-actions"><button class="primary" data-act="handoff-ready">I’m the ${SIDE_NAME[side]}</button></div></section>`;
+}
+
+function picker() {
+  return `<div class="pane"><div class="scroll">
+    <div class="head">${mascot("idle")}<h1>How are you playing?</h1></div>
+    <div role="radiogroup" aria-label="How are you playing?" style="display:flex;flex-direction:column;gap:12px">
+      ${[["table", "One phone on the table", "Split screen: the top half faces the player across the table."],
+         ["pass", "Pass the phone", "Full screen: hand the phone to whoever acts next."]].map(([id, title, detail]) =>
+        `<button class="option" role="radio" aria-checked="${state.mode === id}" data-mode="${id}">
+          <div><strong>${title}</strong><span>${detail}</span></div><span class="radio" aria-hidden="true"></span></button>`).join("")}
+    </div>
+    <h1>Which expansions are you playing with?</h1>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      ${state.script.expansions.map((e) => `<label class="toggle" for="exp-${e.id}">
+        <div><strong>${esc(e.title)}</strong><span>${esc(e.summary)}</span></div>
+        <input type="checkbox" id="exp-${e.id}" data-exp="${e.id}" ${state.chosen.has(e.id) ? "checked" : ""}><span class="switch" aria-hidden="true"></span></label>`).join("")}
+    </div>
+    <p class="hint">Leave them all off to play the base game.</p></div>
+    <div class="actions"><button class="primary" data-act="start">Start guide</button></div></div>`;
+}
+
+function battleOver() {
+  return `<div class="pane done-pane">${mascot("idle")}<h1>Battle over</h1>
+    <p>Back to the turn: finish your Action, then tap Done.</p>
+    <button class="primary" data-act="leave-battle">Back to the turn</button></div>`;
+}
+
+function finished() {
+  const s = cur();
+  return `<div class="pane done-pane">${mascot("idle")}<h1>Game over</h1>
+    ${s.winner ? `<h2 style="margin:0;font-size:20px">The <span class="side-${s.winner}">${SIDE_NAME[s.winner]}</span> win</h2>` : ""}
+    <p>Played in ${s.pos.round} round${s.pos.round === 1 ? "" : "s"}.</p>
+    <button class="primary" data-act="restart">Start over</button>
+    <button class="textbtn" data-act="close">Back to expansions</button></div>`;
+}
+
+function gameMenu(s) {
+  const toggles = statesOf(s).map((x) => `<label class="toggle" for="state-${x.id}">
+      <div><strong>${esc(x.title)}</strong><span>${esc(x.trigger)}</span></div>
+      <input type="checkbox" id="state-${x.id}" data-state="${x.id}" ${s.states.has(x.id) ? "checked" : ""}><span class="switch" aria-hidden="true"></span></label>`).join("");
+  return `<div class="overlay enter menu" role="dialog" aria-label="Game" style="padding-top:20px">
+    <div class="head"><h2 style="flex:1">Game</h2><button class="textbtn" data-act="menu-close">Close</button></div>
+    <div class="scroll" style="padding:0;display:flex;flex-direction:column;gap:16px">
+      <p class="hint" style="font-size:15px">${phaseOf(s).part === "setup" ? "Setup" : `Round ${s.pos.round}`}</p>
+      ${toggles ? `<div class="section"><h3>Happened this game</h3>${toggles}</div>` : ""}
+      <div class="section"><h3>End the game</h3>
+        <button class="option" data-winner="atreides"><div><strong class="side-atreides">The Atreides won</strong></div></button>
+        <button class="option" data-winner="harkonnen"><div><strong class="side-harkonnen">The Harkonnen won</strong></div></button>
+        <p class="hint">The Harkonnen win at 10 Supremacy points; the Atreides when every Prescience marker reaches their Secret Objective (rulebook, pages 7 and 27).</p>
+      </div>
+      <button class="textbtn" style="align-self:flex-start" data-act="close">Leave the guide</button></div></div>`;
+}
+
+function render() {
+  const phone = $("#phone");
+  const s = cur();
+  if (!s) { phone.className = "phone single"; phone.innerHTML = picker(); state.lastKey = null; return; }
+  if (s.finished) { phone.className = "phone single"; phone.innerHTML = s.isBattle ? battleOver() : finished(); state.lastKey = stepKey(s); return; }
+  const key = `${stepKey(s)}-${s.handoffTo === null}`;
+  const animate = key !== state.lastKey;
+  state.lastKey = key;
+  if (state.mode === "pass") {
+    phone.className = "phone pass";
+    phone.innerHTML = passBar(s) + (s.handoffTo ? handoff(s, animate) : half(stepOf(s).side, false, animate)) + (state.menu ? gameMenu(s) : "");
+    return;
+  }
+  phone.className = "phone";
+  phone.innerHTML = half(farSeat(), true, animate) + bar(s) + half(state.nearSeat, false, animate) + (state.menu ? gameMenu(s) : "");
+}
+
+// ---- Behaviour ----
+let speakTimer = null;
+function onStepChanged() {
+  state.pending = null;
+  state.enlarged = null;
+  const s = cur();
+  clearTimeout(speakTimer);
+  if (s && !s.finished) {
+    state.speaking = true;
+    const seconds = Math.min(5, Math.max(1.5, stepOf(s).instruction.length / 18));
+    speakTimer = setTimeout(() => { state.speaking = false; document.querySelectorAll(".card .mascot").forEach((m) => m.setAttribute("class", "mascot idle")); }, seconds * 1000);
+  }
+  render();
+}
+
+function passTurn(seat, action) {
+  const s = cur();
+  if (remindersOf(s).length) {
+    state.pending = { seat, action, checked: new Set() };
+    render();
+  } else {
+    run(action);
+  }
+}
+function run(action) {
+  const s = cur();
+  if (action === "done") advance(s); else nextPhase(s);
+  onStepChanged();
+}
+
+document.addEventListener("click", (event) => {
+  const el = event.target.closest("[data-act], [data-enlarge], [data-check], [data-mode], [data-mark], [data-winner], [data-evcheck]");
+  if (!el) return;
+  const s = cur();
+  if (el.dataset.mode) { state.mode = el.dataset.mode; render(); return; }
+  if (el.dataset.mark) { setGameState(s, el.dataset.mark, true); render(); return; }
+  if (el.dataset.winner) { s.winner = el.dataset.winner; s.finished = true; s.handoffTo = null; s.pendingEvent = null; state.menu = false; onStepChanged(); return; }
+  if (el.dataset.evcheck !== undefined) { const on = !el.classList.contains("on"); el.classList.toggle("on", on); el.setAttribute("aria-pressed", on); return; }
+  if (el.dataset.enlarge) { state.enlarged = { seat: el.dataset.seat, id: el.dataset.enlarge }; render(); return; }
+  if (el.dataset.check !== undefined) {
+    const i = Number(el.dataset.check);
+    const set = state.pending.checked;
+    set.has(i) ? set.delete(i) : set.add(i);
+    el.classList.toggle("on", set.has(i));
+    el.setAttribute("aria-pressed", set.has(i));
+    return;
+  }
+  switch (el.dataset.act) {
+    case "start": state.session = makeSession(state.script, new Set(state.chosen), state.mode === "pass"); onStepChanged(); break;
+    case "battle": state.battle = makeBattle(state.session); state.lastKey = null; onStepChanged(); break;
+    case "leave-battle": state.battle = null; state.lastKey = null; onStepChanged(); break;
+    case "close": state.battle = null; state.session = null; state.pending = null; state.enlarged = null; state.menu = false; render(); break;
+    case "restart": state.session = makeSession(state.script, state.session.expansions, state.session.passesPhone); onStepChanged(); break;
+    case "handoff-ready": s.handoffTo = null; s.startedAt = Date.now(); onStepChanged(); break;
+    case "back": goBack(s); onStepChanged(); break;
+    case "swap": state.nearSeat = farSeat(); state.lastKey = null; render(); break;
+    case "done": passTurn(el.dataset.seat, "done"); break;
+    case "end-loop": passTurn(el.dataset.seat, "endLoop"); break;
+    case "not-yet": state.pending = null; render(); break;
+    case "pass": run(state.pending.action); break;
+    case "close-enlarged": state.enlarged = null; render(); break;
+    case "menu": state.menu = true; render(); break;
+    case "menu-close": state.menu = false; render(); break;
+    case "event-done": s.pendingEvent = null; render(); break;
+  }
+});
+document.addEventListener("change", (event) => {
+  const stateId = event.target.dataset && event.target.dataset.state;
+  if (stateId) { setGameState(cur(), stateId, event.target.checked); render(); return; }
+  const id = event.target.dataset && event.target.dataset.exp;
+  if (!id) return;
+  event.target.checked ? state.chosen.add(id) : state.chosen.delete(id);
+});
+setInterval(() => {
+  const s = cur();
+  if (!s || s.finished) return;
+  document.querySelectorAll("[data-timer]").forEach((t) => { t.textContent = fmt(Date.now() - s.startedAt); });
+}, 1000);
+
+fetch("turnscript.json")
+  .then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+  .then((script) => { state.script = script; render(); })
+  .catch((error) => { $("#phone").innerHTML = `<div class="pane done-pane"><h1>Couldn’t load the Dune guide</h1><p>${esc(error.message)}. Reload the page to try again.</p></div>`; });
+</script>
