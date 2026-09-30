@@ -22,4 +22,5 @@ jobs:
         run: |
           python3 -m venv .venv
           .venv/bin/pip install --quiet pypdf
+          .venv/bin/python tools/fetch_sources.py
           .venv/bin/python tools/validate_turn_scripts.py

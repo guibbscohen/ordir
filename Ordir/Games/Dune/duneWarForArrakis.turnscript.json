@@ -9,35 +9,40 @@
       "title": "Rulebook (work in progress)",
       "shortTitle": "Rulebook",
       "url": "https://resources.cmon.com/Dune-WIP-Rulebook.pdf",
-      "file": "Sources/dune/Dune-WIP-Rulebook.pdf"
+      "file": "Sources/dune/Dune-WIP-Rulebook.pdf",
+      "sha256": "25709ea97449e34db100eb11f1109250121b8898149dec5312fb7ecaa83f8f39"
     },
     {
       "id": "faq",
       "title": "FAQ 3.0 (June 2024)",
       "shortTitle": "FAQ 3.0",
       "url": "https://www.cmon.com/wp-content/uploads/2024/01/Dune-FAQ-3_0.pdf",
-      "file": "Sources/dune/Dune-FAQ-3_0.pdf"
+      "file": "Sources/dune/Dune-FAQ-3_0.pdf",
+      "sha256": "68c0b69d8de89c046e02ab8b009e7228eb0ba05127dd29492f3c2f46fe66619b"
     },
     {
       "id": "desertWar",
       "title": "Desert War expansion rulebook",
       "shortTitle": "Desert War",
       "url": "https://resources.cmon.com/Dune_Desert_War_Rulebook_web.pdf",
-      "file": "Sources/dune/expansions/Dune_Desert_War_Rulebook_web.pdf"
+      "file": "Sources/dune/expansions/Dune_Desert_War_Rulebook_web.pdf",
+      "sha256": "476e89fb05294877ca0f7bd3b24a0eccc6f561fe78e8fcecbe8e30fc1767ca47"
     },
     {
       "id": "smugglers",
       "title": "Smugglers expansion rulebook",
       "shortTitle": "Smugglers",
       "url": "https://resources.cmon.com/Smugglers_Rulebook_web.pdf",
-      "file": "Sources/dune/expansions/Smugglers_Rulebook_web.pdf"
+      "file": "Sources/dune/expansions/Smugglers_Rulebook_web.pdf",
+      "sha256": "0a33f4e8c6c7efe884a1a2c25edb7b02696c4ebaf48bd7941811f043bcf49692"
     },
     {
       "id": "spacingGuild",
       "title": "The Spacing Guild expansion rulebook",
       "shortTitle": "Spacing Guild",
       "url": "https://resources.cmon.com/Spacing_Guild_Rulebook_web.pdf",
-      "file": "Sources/dune/expansions/Spacing_Guild_Rulebook_web.pdf"
+      "file": "Sources/dune/expansions/Spacing_Guild_Rulebook_web.pdf",
+      "sha256": "8f65342afe5b62d398da08cfb36109a0b4da70015fd6445b77a567a49f0438d3"
     }
   ],
   "expansions": [

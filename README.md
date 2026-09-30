@@ -24,7 +24,7 @@ Any file added under `Ordir/` joins the app target automatically, with no projec
 | `Ordir/Mascot/` | `OrdirMascotView` (animated logo), `OrdirThinkingIndicator` + spinner verbs |
 | `Ordir/Games/` | `OrdirGame`, the launch games, and each game's turn script (`<game>.turnscript.json`) |
 | `Ordir/TurnGuide/` | `TurnScript` model, `TurnGuideSession` (step state machine), `TurnGuideView` (pass-and-play screen) |
-| `Sources/<game>/` | Official rulebook and FAQ PDFs the turn scripts cite |
+| `Sources/<game>/` | Where `tools/fetch_sources.py` downloads the official rulebook and FAQ PDFs (not stored in the repo) |
 | `tools/validate_turn_scripts.py` | Checks every citation's excerpt appears on the cited PDF page, and every picture has its asset (runs in CI) |
 | `OrdirTests/` | Unit tests: walks the Dune script for every expansion combination; checks filters, the turn loop, Back, and picture assets |
 | `OrdirUITests/` | UI tap-through of the whole guide in the simulator; with all expansions on, screenshots every step before and after scrolling |
@@ -65,6 +65,12 @@ everyone's app updates live. This keeps the step order exact and auditable.
 **Rules Q&A uses retrieval with mandatory citations.** A Supabase Edge Function retrieves the relevant
 rulebook/errata chunks, sends them to Claude, and returns an answer that must cite page or errata ID.
 If nothing relevant is retrieved, it says so instead of guessing. The API key never ships in the app.
+
+## Credits
+
+- Logo: "Magic Ball" by Ziyad Aljunaidi, from [Noun Project](https://thenounproject.com) (CC BY 3.0).
+- Dune: War for Arrakis and its expansions are © CMON / Gale Force Nine / Legendary. Ordir cites their
+  official rulebooks and FAQ by page and links to the publisher's PDFs; it is not affiliated with them.
 
 ## Open risks
 

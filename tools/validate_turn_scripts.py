@@ -7,7 +7,7 @@ page and have its generated asset (tools/crop_source_images.py). Run from the re
 
     python3 tools/validate_turn_scripts.py
 
-Needs pypdf (`pip install pypdf`). Exits non-zero on the first file with problems.
+Needs pypdf (`pip install pypdf`) and the PDFs from tools/fetch_sources.py. Exits non-zero on the first file with problems.
 """
 import json
 import pathlib
@@ -51,6 +51,9 @@ def validate(path):
     script = json.loads(path.read_text())
     errors = []
     sources = {s["id"]: s for s in script["sources"]}
+    missing = [s["file"] for s in sources.values() if not (ROOT / s["file"]).exists()]
+    if missing:
+        return [f"source PDF missing, run tools/fetch_sources.py: {f}" for f in missing]
     pages = {
         sid: [normalise(p.extract_text() or "") for p in PdfReader(ROOT / s["file"]).pages]
         for sid, s in sources.items()
