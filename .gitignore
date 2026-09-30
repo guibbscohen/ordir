@@ -12,3 +12,6 @@ __pycache__/
 
 # Publisher PDFs: downloaded by tools/fetch_sources.py, not redistributed here
 Sources/**/*.pdf
+
+# Browser preview, built by tools/build_preview.py
+Preview/dist/

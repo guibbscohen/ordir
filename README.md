@@ -16,6 +16,8 @@ Requires Xcode 16 or later (the project uses folder-synced groups).
 
 Any file added under `Ordir/` joins the app target automatically, with no project-file edits.
 
+To ship builds to testers, see [TestFlight via Xcode Cloud](docs/testflight.md).
+
 ## Layout
 
 | Path | What it is |
@@ -28,7 +30,8 @@ Any file added under `Ordir/` joins the app target automatically, with no projec
 | `tools/validate_turn_scripts.py` | Checks every citation's excerpt appears on the cited PDF page, and every picture has its asset (runs in CI) |
 | `OrdirTests/` | Unit tests: walks the Dune script for every expansion combination; checks filters, the turn loop, Back, and picture assets |
 | `OrdirUITests/` | UI tap-through of the whole guide in the simulator; with all expansions on, screenshots every step before and after scrolling |
-| `.github/workflows/` | `turn-scripts.yml` (Linux, every push), `ios-build.yml` (macOS build + unit tests, pull requests), `ios-walkthrough.yml` (UI tap-through with screenshots, run by hand) |
+| `.github/workflows/` | `turn-scripts.yml` (Linux, every push: turn-script check and browser preview), `ios-build.yml` (macOS build + unit tests, pull requests), `ios-walkthrough.yml` (UI tap-through with screenshots, run by hand) |
+| `Preview/index.html` | Browser preview of the guide (both play modes, rounds, battles); `tools/build_preview.py` builds it into `Preview/dist/` with the app's turn script and pictures, and `tools/test_preview.py` plays it in Chromium (runs in CI) |
 | `tools/crop_source_images.py` | Crops component pictures from the source PDFs into `Assets.xcassets/<game>/` |
 | `Ordir/Assets.xcassets` | App icon, `AccentColor`, `Sparkle` (light/dark) |
 | `Assets/ordir-logo.svg` | Source logo; `tools/svg_to_swift.py` regenerates the mascot paths from it |

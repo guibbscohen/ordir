@@ -1,7 +1,8 @@
 name: Turn scripts
 
-# Cheap Linux check on every push: every citation's excerpt is on its cited PDF page and every
-# picture has its asset. The macOS jobs cost 10x the minutes, so they run less often.
+# Cheap Linux checks on every push: every citation's excerpt is on its cited PDF page and every
+# picture has its asset, and the browser preview, built from the same data, plays through in
+# Chromium. The macOS jobs cost 10x the minutes, so they run less often.
 on:
   push:
   pull_request:
@@ -24,3 +25,17 @@ jobs:
           .venv/bin/pip install --quiet pypdf
           .venv/bin/python tools/fetch_sources.py
           .venv/bin/python tools/validate_turn_scripts.py
+
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Build the browser preview and play it in Chromium
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install --quiet playwright==1.63.0
+          .venv/bin/python -m playwright install --with-deps chromium
+          .venv/bin/python tools/build_preview.py
+          .venv/bin/python tools/test_preview.py
