@@ -25,6 +25,9 @@ jobs:
           print(next(d["udid"] for runtime, ds in sorted(devices.items(), reverse=True)
                      if "iOS" in runtime for d in ds if d["name"].startswith("iPhone")))')
           echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+          # Boot now so the first test's app launch doesn't time out on a cold simulator.
+          xcrun simctl boot "$UDID" || true
+          xcrun simctl bootstatus "$UDID" -b
 
       - name: Run the UI tap-through with screenshots
         timeout-minutes: 35

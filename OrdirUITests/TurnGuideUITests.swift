@@ -133,7 +133,8 @@ final class TurnGuideUITests: XCTestCase {
                 XCTAssertTrue(app.buttons["Harkonnen dice all used"].waitForExistence(timeout: 5), "not back on the turn")
                 return
             }
-            let battleOver = app.buttons["Battle over"]
+            // Combat steps for both players show this button on both halves.
+            let battleOver = app.buttons["Battle over"].firstMatch
             if battleOver.exists {
                 combatTaps += 1
                 // Six steps per combat round: play two rounds, then end the battle.
