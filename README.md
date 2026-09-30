@@ -39,7 +39,7 @@ Any file added under `Ordir/` joins the app target automatically, with no projec
 | --- | --- |
 | Xcode project, home screen, app icon | Done; first build pending on a Mac |
 | Mascot (idle / speaking / thinking) and spinner verbs | Done; first build pending |
-| Dune turn guide: setup + one full round, one phone, 180° split screen | Done; every step cites a rulebook page or FAQ entry and shows component pictures |
+| Dune turn guide: setup + one full round, one phone (split screen or pass the phone) | Done; every step cites a rulebook page or FAQ entry and shows component pictures |
 | Dune expansions: Desert War, Smugglers, The Spacing Guild | Done as optional modules picked before the guide starts |
 | Auth, multiplayer sessions, rules Q&A | Not started |
 

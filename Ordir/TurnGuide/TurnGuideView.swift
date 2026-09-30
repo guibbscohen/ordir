@@ -2,46 +2,72 @@
 //  TurnGuideView.swift
 //  Ordir
 //
-//  Pass-and-play turn guide on one phone lying flat between two players. The screen splits in two:
-//  the far half is turned 180° to face the player across the table. The acting side's half shows
-//  the step (instruction, component pictures, sources, "Done"); the other half shows who is acting,
-//  on which step, and for how long. Steps for both players show on both halves; either "Done"
-//  advances. The mascot speaks each new instruction.
+//  Turn guide on one phone, played two ways:
+//  - On the table: the screen splits in two and the far half is turned 180° to face the player
+//    across the table. The acting side's half shows the step (instruction, component pictures,
+//    sources, "Done"); the other half shows who is acting, on which step, and for how long. Steps
+//    for both players show on both halves; either "Done" advances.
+//  - Pass the phone: one full-screen step at a time; when the turn moves to the other player, a
+//    handoff screen asks for the phone to be passed first.
+//  The mascot speaks each new instruction.
 //
 
 import SwiftUI
 
+/// How the players share the phone.
+enum PlayMode {
+    /// Lying flat between the players, split in two halves.
+    case table
+    /// Handed to whoever acts next, one full-screen step at a time.
+    case pass
+}
+
 struct TurnGuideView: View {
     let script: TurnScript
     @State private var session: TurnGuideSession?
+    @State private var mode: PlayMode
 
-    /// `startAt` and `expansions` skip the expansion picker (CI screenshots use them).
-    init(script: TurnScript, startAt stepID: String? = nil, expansions: Set<String>? = nil) {
+    /// `startAt` and `expansions` skip the setup picker (CI screenshots use them).
+    init(script: TurnScript, mode: PlayMode = .table, startAt stepID: String? = nil, expansions: Set<String>? = nil) {
         self.script = script
-        if stepID != nil || script.expansions.isEmpty {
-            let session = TurnGuideSession(script: script, expansions: expansions ?? [], startAt: stepID)
+        _mode = State(initialValue: mode)
+        if stepID != nil {
+            let session = TurnGuideSession(
+                script: script,
+                expansions: expansions ?? [],
+                passesPhone: mode == .pass,
+                startAt: stepID
+            )
             _session = State(initialValue: session)
         }
     }
 
     var body: some View {
         if let session {
-            TurnGuideRunner(session: session)
+            TurnGuideRunner(session: session, mode: mode)
         } else {
-            ExpansionPicker(script: script) { chosen in
-                session = TurnGuideSession(script: script, expansions: chosen)
+            SetupPicker(script: script, mode: mode) { chosenMode, chosen in
+                mode = chosenMode
+                session = TurnGuideSession(script: script, expansions: chosen, passesPhone: chosenMode == .pass)
             }
         }
     }
 }
 
-// MARK: - Expansion picker
+// MARK: - Setup picker
 
-/// Asked once before the guide starts: which expansions are on the table.
-private struct ExpansionPicker: View {
+/// Asked once before the guide starts: how the phone is shared, and which expansions are on the table.
+private struct SetupPicker: View {
     let script: TurnScript
-    let start: (Set<String>) -> Void
+    let start: (PlayMode, Set<String>) -> Void
+    @State private var mode: PlayMode
     @State private var chosen: Set<String> = []
+
+    init(script: TurnScript, mode: PlayMode, start: @escaping (PlayMode, Set<String>) -> Void) {
+        self.script = script
+        self.start = start
+        _mode = State(initialValue: mode)
+    }
 
     var body: some View {
         ScrollView {
@@ -49,10 +75,17 @@ private struct ExpansionPicker: View {
                 HStack(spacing: 14) {
                     OrdirMascotView()
                         .frame(width: 48, height: 48)
-                    Text("Which expansions are you playing with?")
+                    Text("How are you playing?")
                         .font(.title3.weight(.semibold))
                         .fixedSize(horizontal: false, vertical: true)
                 }
+                VStack(spacing: 12) {
+                    modeRow(.table, title: "One phone on the table", detail: "Split screen: the top half faces the player across the table.")
+                    modeRow(.pass, title: "Pass the phone", detail: "Full screen: hand the phone to whoever acts next.")
+                }
+                Text("Which expansions are you playing with?")
+                    .font(.title3.weight(.semibold))
+                    .fixedSize(horizontal: false, vertical: true)
                 VStack(spacing: 12) {
                     ForEach(script.expansions) { expansion in
                         Toggle(isOn: binding(for: expansion.id)) {
@@ -78,7 +111,7 @@ private struct ExpansionPicker: View {
         }
         .safeAreaInset(edge: .bottom) {
             Button {
-                start(chosen)
+                start(mode, chosen)
             } label: {
                 Text("Start guide")
                     .font(.headline)
@@ -90,6 +123,35 @@ private struct ExpansionPicker: View {
         }
         .navigationTitle(script.title)
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func modeRow(_ option: PlayMode, title: String, detail: String) -> some View {
+        let isSelected = mode == option
+        return Button {
+            mode = option
+        } label: {
+            HStack(spacing: 12) {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(title)
+                        .font(.headline)
+                    Text(detail)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer(minLength: 8)
+                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                    .font(.title3)
+                    .foregroundStyle(isSelected ? Color.primary : Color.secondary)
+            }
+            .padding(16)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color(white: 0.11), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier(option == .table ? "mode-table" : "mode-pass")
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 
     private func binding(for id: String) -> Binding<Bool> {
@@ -106,6 +168,7 @@ private struct ExpansionPicker: View {
 
 private struct TurnGuideRunner: View {
     let session: TurnGuideSession
+    let mode: PlayMode
     @State private var isSpeaking = false
     /// Which faction sits at the bottom edge of the phone; the other half faces the far player.
     @State private var nearSeat: TurnScript.Side = .atreides
@@ -117,6 +180,8 @@ private struct TurnGuideRunner: View {
         Group {
             if session.isFinished {
                 finished
+            } else if mode == .pass {
+                passScreen
             } else {
                 splitScreen
             }
@@ -159,6 +224,45 @@ private struct TurnGuideRunner: View {
             enlarge: { enlarged = EnlargedImage(image: $0, isFar: isFar) }
         )
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    // MARK: Pass the phone
+
+    private var passScreen: some View {
+        VStack(spacing: 0) {
+            passBar
+            if let side = session.handoffTo {
+                HandoffView(side: side, stepTitle: stepTitle) {
+                    withAnimation(stepAnimation) { session.confirmHandoff() }
+                }
+                .transition(stepTransition)
+            } else {
+                panel(for: session.step.side, isFar: false)
+            }
+        }
+    }
+
+    /// Top bar for pass-the-phone play: nothing needs mirroring, so it shows the step timer instead.
+    private var passBar: some View {
+        HStack(spacing: 4) {
+            barButton("Close guide", systemImage: "xmark") { dismiss() }
+            Spacer(minLength: 8)
+            phaseLabel
+                .accessibilityIdentifier("guide-progress")
+            Spacer(minLength: 8)
+            barButton("Previous step", systemImage: "arrow.uturn.backward") {
+                withAnimation(stepAnimation) { session.goBack() }
+            }
+            .disabled(!session.canGoBack)
+            Text(session.stepStartedAt, style: .timer)
+                .font(.footnote.monospacedDigit())
+                .foregroundStyle(.secondary)
+                .frame(minWidth: 44)
+        }
+        .padding(.horizontal, 8)
+        .frame(height: 52)
+        .background(.bar)
+        .overlay(alignment: .bottom) { Divider() }
     }
 
     /// Shared controls between the two halves, read from the near side.
@@ -257,7 +361,7 @@ private struct TurnGuideRunner: View {
 
     private var stepKey: String {
         let p = session.position
-        return "\(p.phase)-\(p.step)-\(p.pass)-\(session.isFinished)"
+        return "\(p.phase)-\(p.step)-\(p.pass)-\(session.isFinished)-\(session.handoffTo == nil)"
     }
 
     private var stepAnimation: Animation {
@@ -273,7 +377,7 @@ private struct TurnGuideRunner: View {
 
     /// The mascot "speaks" for roughly as long as the instruction takes to read aloud.
     private func speak() async {
-        guard !session.isFinished else {
+        guard !session.isFinished, session.handoffTo == nil else {
             isSpeaking = false
             return
         }
@@ -285,6 +389,41 @@ private struct TurnGuideRunner: View {
         try? await Task.sleep(for: .seconds(seconds))
         guard !Task.isCancelled else { return }
         isSpeaking = false
+    }
+}
+
+// MARK: - Handoff
+
+/// Pass-the-phone play: shown when the next step belongs to the other player.
+private struct HandoffView: View {
+    let side: TurnScript.Side
+    let stepTitle: String
+    let ready: () -> Void
+
+    var body: some View {
+        VStack(spacing: 18) {
+            Spacer(minLength: 0)
+            OrdirMascotView(isThinking: true)
+                .frame(height: 80)
+            VStack(spacing: 6) {
+                Text("Pass the phone to the \(Text(side.displayName).foregroundColor(side.color))")
+                    .font(.title2.weight(.semibold))
+                    .multilineTextAlignment(.center)
+                Text("Next: \(stepTitle)")
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer(minLength: 0)
+            Button(action: ready) {
+                Text("I’m the \(side.displayName)")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity, minHeight: 54)
+            }
+            .buttonStyle(PrimaryButtonStyle())
+        }
+        .padding(.horizontal, 24)
+        .padding(.bottom, 12)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 
@@ -323,6 +462,8 @@ private struct SeatPanel: View {
                         step: step,
                         additions: additions,
                         title: stepTitle,
+                        // In pass-the-phone play the seat label already says "Both players".
+                        showsBothPlayers: seat != .both,
                         isSpeaking: isSpeaking,
                         enlarge: enlarge
                     )
@@ -409,6 +550,7 @@ private struct StepCard: View {
     let step: TurnScript.Step
     let additions: [TurnScript.Addition]
     let title: String
+    let showsBothPlayers: Bool
     let isSpeaking: Bool
     let enlarge: (TurnScript.SourceImage) -> Void
 
@@ -474,7 +616,7 @@ private struct StepCard: View {
 
     /// "Both players" and/or the expansion a step belongs to.
     private var context: String? {
-        let parts = [step.side == .both ? "Both players" : nil, step.expansion.map(script.expansionTitle)]
+        let parts = [step.side == .both && showsBothPlayers ? "Both players" : nil, step.expansion.map(script.expansionTitle)]
             .compactMap { $0 }
         return parts.isEmpty ? nil : parts.joined(separator: " · ")
     }

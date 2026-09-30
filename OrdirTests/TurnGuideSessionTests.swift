@@ -116,6 +116,46 @@ final class TurnGuideSessionTests: XCTestCase {
         XCTAssertEqual(session.step.id, visited.first)
     }
 
+    func testTablePlayNeverAsksForAHandoff() {
+        _ = walk(TurnGuideSession(script: script, expansions: allExpansions)) { session in
+            XCTAssertNil(session.handoffTo, "\(session.step.id)")
+        }
+    }
+
+    func testPassingThePhoneAsksForAHandoffWhenTheSideChanges() {
+        for expansions in expansionSets {
+            let session = TurnGuideSession(script: script, expansions: expansions, passesPhone: true)
+            var previousSide = session.step.side
+            var handoffs = 0
+            while !session.isFinished {
+                let side = session.step.side
+                let expected: TurnScript.Side? = side != .both && side != previousSide ? side : nil
+                XCTAssertEqual(session.handoffTo, expected, "\(session.step.id), expansions \(expansions.sorted())")
+                if session.handoffTo != nil {
+                    handoffs += 1
+                    session.confirmHandoff()
+                    XCTAssertNil(session.handoffTo)
+                }
+                previousSide = side
+                if session.phase.loop != nil, session.position.step == session.phase.steps.count - 1 {
+                    session.endLoop()
+                } else {
+                    session.advance()
+                }
+            }
+            XCTAssertGreaterThan(handoffs, 5, "expansions \(expansions.sorted())")
+        }
+    }
+
+    func testGoingBackClearsAHandoff() {
+        let session = TurnGuideSession(script: script, expansions: [], passesPhone: true, startAt: "turn-atreides")
+        session.advance()
+        XCTAssertEqual(session.handoffTo, .harkonnen)
+        session.goBack()
+        XCTAssertNil(session.handoffTo)
+        XCTAssertEqual(session.step.id, "turn-atreides")
+    }
+
     func testUnknownStartStepStartsAtTheBeginning() {
         let session = TurnGuideSession(script: script, expansions: [], startAt: "no-such-step")
         XCTAssertEqual(session.step.id, expectedSteps(with: []).first)

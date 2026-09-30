@@ -23,12 +23,19 @@ final class TurnGuideUITests: XCTestCase {
         tapThrough(expansionIDs: ["desertWar", "smugglers", "spacingGuild"], screenshots: true)
     }
 
-    private func tapThrough(expansionIDs: [String], screenshots: Bool) {
+    func testPassThePhoneTapThrough() {
+        tapThrough(expansionIDs: [], screenshots: false, passThePhone: true)
+    }
+
+    private func tapThrough(expansionIDs: [String], screenshots: Bool, passThePhone: Bool = false) {
         let app = XCUIApplication()
         app.launchArguments = ["-OrdirOpenGame", "duneWarForArrakis"]
         app.launch()
 
-        XCTAssertTrue(app.buttons["Start guide"].waitForExistence(timeout: 20), "expansion picker not shown")
+        XCTAssertTrue(app.buttons["Start guide"].waitForExistence(timeout: 20), "setup picker not shown")
+        if passThePhone {
+            app.buttons["mode-pass"].tap()
+        }
         for id in expansionIDs {
             let toggle = app.switches["expansion-\(id)"]
             XCTAssertTrue(toggle.waitForExistence(timeout: 5), "no switch for \(id)")
@@ -46,7 +53,17 @@ final class TurnGuideUITests: XCTestCase {
 
         var steps = 0
         var turnsInLoop = 0
+        var handoffs = 0
+        let handoff = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "I’m the")).firstMatch
         while !app.staticTexts["Round complete"].exists {
+            // Pass-the-phone play: the next player takes the phone before seeing their step.
+            if handoff.exists {
+                handoffs += 1
+                XCTAssertLessThan(handoffs, 100, "handoff screen keeps coming back")
+                handoff.tap()
+                Thread.sleep(forTimeInterval: 0.6)
+                continue
+            }
             steps += 1
             XCTAssertLessThan(steps, 150, "guide never finished")
             let before = progress.label
@@ -82,6 +99,9 @@ final class TurnGuideUITests: XCTestCase {
             waitForStepChange(progress, from: before, app: app)
         }
         XCTAssertGreaterThan(steps, 20, "too few steps for setup plus a round")
+        if passThePhone {
+            XCTAssertGreaterThan(handoffs, 5, "pass-the-phone play never asked to pass the phone")
+        }
         if screenshots { capture(app, name: "999-finished") }
     }
 

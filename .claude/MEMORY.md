@@ -29,6 +29,9 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
 - 2026-09-27: Ordir is always dark, even when the phone is in light mode.
 - 2026-09-27: One-phone play uses a 180° split screen: the far half faces the player across the table.
   Steps for both players show on both halves, and either player's "Done" advances the step for both.
+- 2026-09-30: One-phone play has two modes, chosen before the guide starts: "One phone on the table" (the
+  split screen) and "Pass the phone" (full screen; a handoff screen asks to pass the phone whenever the next
+  step belongs to the other player). Keep both working, in the app and the HTML preview.
 - 2026-09-27: Every guide step shows pictures of the components/cards involved (cropped from the official
   sources, each labelled with its page), not text alone.
 - 2026-09-27: Before building a game's guide, ask the user which expansions to include. Expansions are

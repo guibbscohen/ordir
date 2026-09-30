@@ -26,12 +26,17 @@ final class TurnGuideSession {
     private(set) var isFinished = false
     /// When the current step began; drives the running timer.
     private(set) var stepStartedAt = Date.now
+    /// Pass-the-phone play: set when the next step belongs to the other player, until they take the phone.
+    private(set) var handoffTo: TurnScript.Side?
+    /// Whether moving between the two sides asks for the phone to be passed (pass-the-phone play).
+    let passesPhone: Bool
     private var history: [Position] = []
 
     /// `startAt` jumps to a step by id (CI screenshots use it); unknown ids start at the beginning.
-    init(script: TurnScript, expansions: Set<String>, startAt stepID: String? = nil) {
+    init(script: TurnScript, expansions: Set<String>, passesPhone: Bool = false, startAt stepID: String? = nil) {
         self.script = script
         self.expansions = expansions
+        self.passesPhone = passesPhone
         self.phases = script.phases.compactMap { phase in
             let steps = phase.steps.filter { step in
                 guard let expansion = step.expansion else { return true }
@@ -84,7 +89,14 @@ final class TurnGuideSession {
         moveToNextPhase(from: position)
     }
 
+    /// The player the phone was passed to has it now.
+    func confirmHandoff() {
+        handoffTo = nil
+        stepStartedAt = .now
+    }
+
     func goBack() {
+        handoffTo = nil
         if isFinished {
             isFinished = false
         } else if let previous = history.popLast() {
@@ -94,6 +106,7 @@ final class TurnGuideSession {
     }
 
     func restart() {
+        handoffTo = nil
         history = []
         position = Position()
         isFinished = false
@@ -109,8 +122,11 @@ final class TurnGuideSession {
     }
 
     private func move(to next: Position) {
+        let previousSide = step.side
         history.append(position)
         position = next
         stepStartedAt = .now
+        // Steps for both players need no handoff; a switch to the other single side does.
+        handoffTo = passesPhone && step.side != .both && step.side != previousSide ? step.side : nil
     }
 }

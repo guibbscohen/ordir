@@ -9,7 +9,8 @@ import SwiftUI
 
 struct HomeView: View {
     // `-OrdirOpenGame <game>` at launch opens that game directly; `-OrdirStartStep <step id>` and
-    // `-OrdirExpansions <id,id>` also skip the expansion picker. Used by CI screenshots.
+    // `-OrdirExpansions <id,id>` also skip the setup picker, and `-OrdirPlayMode pass` picks
+    // pass-the-phone play. Used by CI screenshots.
     @State private var path: [OrdirGame] = UserDefaults.standard.string(forKey: "OrdirOpenGame")
         .flatMap(OrdirGame.init(rawValue:))
         .map { [$0] } ?? []
@@ -28,6 +29,7 @@ struct HomeView: View {
                 if let script = TurnScript.bundled(for: game) {
                     TurnGuideView(
                         script: script,
+                        mode: UserDefaults.standard.string(forKey: "OrdirPlayMode") == "pass" ? .pass : .table,
                         startAt: UserDefaults.standard.string(forKey: "OrdirStartStep"),
                         expansions: UserDefaults.standard.string(forKey: "OrdirExpansions")
                             .map { Set($0.split(separator: ",").map(String.init)) }
