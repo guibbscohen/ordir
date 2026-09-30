@@ -16,7 +16,7 @@ final class TurnGuideUITests: XCTestCase {
     }
 
     func testBaseGameTapThrough() {
-        tapThrough(expansionIDs: [], screenshots: false)
+        tapThrough(expansionIDs: [], screenshots: false, fightsABattle: true)
     }
 
     func testAllExpansionsTapThroughWithScreenshots() {
@@ -27,7 +27,7 @@ final class TurnGuideUITests: XCTestCase {
         tapThrough(expansionIDs: [], screenshots: false, passThePhone: true)
     }
 
-    private func tapThrough(expansionIDs: [String], screenshots: Bool, passThePhone: Bool = false) {
+    private func tapThrough(expansionIDs: [String], screenshots: Bool, passThePhone: Bool = false, fightsABattle: Bool = false) {
         let app = XCUIApplication()
         app.launchArguments = ["-OrdirOpenGame", "duneWarForArrakis"]
         app.launch()
@@ -54,6 +54,7 @@ final class TurnGuideUITests: XCTestCase {
         var steps = 0
         var turnsInLoop = 0
         var handoffs = 0
+        var foughtBattle = false
         let handoff = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", "I’m the")).firstMatch
         // Play setup and round 1; the guide then starts round 2 on its own.
         while !progress.label.contains("Round 2") {
@@ -81,6 +82,11 @@ final class TurnGuideUITests: XCTestCase {
             let endLoop = app.buttons["Harkonnen dice all used"]
             // Read before tapping: Done on the last step before the loop makes this button appear.
             let isActionTurn = endLoop.exists
+            if fightsABattle, !foughtBattle, isActionTurn, app.buttons["Start a battle"].exists {
+                foughtBattle = true
+                fightBattle(app)
+                continue
+            }
             if isActionTurn, turnsInLoop >= 2 {
                 endLoop.tap()
                 turnsInLoop = 0
@@ -107,10 +113,42 @@ final class TurnGuideUITests: XCTestCase {
         XCTAssertTrue(atreidesWon.waitForExistence(timeout: 5), "Game menu did not open")
         atreidesWon.tap()
         XCTAssertTrue(app.staticTexts["Game over"].waitForExistence(timeout: 5), "game did not end")
+        if fightsABattle {
+            XCTAssertTrue(foughtBattle, "never offered to start a battle")
+        }
         if passThePhone {
             XCTAssertGreaterThan(handoffs, 5, "pass-the-phone play never asked to pass the phone")
         }
         if screenshots { capture(app, name: "999-finished") }
+    }
+
+    /// Starts a battle from the current Action turn, plays two combat rounds, and returns to the turn.
+    private func fightBattle(_ app: XCUIApplication) {
+        app.buttons["Start a battle"].firstMatch.tap()
+        XCTAssertTrue(app.buttons["Leave battle"].waitForExistence(timeout: 5), "battle did not open")
+        var combatTaps = 0
+        for _ in 0..<60 {
+            if app.buttons["Back to the turn"].exists {
+                app.buttons["Back to the turn"].tap()
+                XCTAssertTrue(app.buttons["Harkonnen dice all used"].waitForExistence(timeout: 5), "not back on the turn")
+                return
+            }
+            let battleOver = app.buttons["Battle over"]
+            if battleOver.exists {
+                combatTaps += 1
+                // Six steps per combat round: play two rounds, then end the battle.
+                if combatTaps > 12 {
+                    battleOver.tap()
+                    Thread.sleep(forTimeInterval: 0.8)
+                    continue
+                }
+            }
+            let done = app.buttons["Done"].firstMatch
+            XCTAssertTrue(done.waitForExistence(timeout: 5), "no Done button in the battle")
+            done.tap()
+            Thread.sleep(forTimeInterval: 0.8)
+        }
+        XCTFail("battle never finished")
     }
 
     private func isOn(_ toggle: XCUIElement) -> Bool {

@@ -227,6 +227,56 @@ final class TurnGuideSessionTests: XCTestCase {
         XCTAssertEqual(session.step.id, "turn-atreides")
     }
 
+    func testBattleResolvesAttackerAndDefender() throws {
+        let session = TurnGuideSession(script: script, expansions: [], startAt: "turn-harkonnen")
+        let battle = try XCTUnwrap(session.makeBattle())
+        XCTAssertEqual(battle.step.id, "battle-attack")
+        XCTAssertEqual(battle.step.side, .harkonnen, "the acting side attacks")
+        let steps = battle.phases.flatMap(\.steps)
+        XCTAssertEqual(steps.first { $0.id == "battle-retreat" }?.side, .atreides, "the other side defends")
+        XCTAssertFalse(steps.contains { $0.side == .attacker || $0.side == .defender })
+    }
+
+    func testBattleRunsItsRoundsThenFinishes() throws {
+        let session = TurnGuideSession(script: script, expansions: [], passesPhone: true, startAt: "turn-atreides")
+        let battle = try XCTUnwrap(session.makeBattle())
+        var visited: [String] = []
+        var combatRounds = 0
+        while !battle.isFinished, visited.count < 100 {
+            visited.append(battle.step.id)
+            if battle.handoffTo != nil { battle.confirmHandoff() }
+            if battle.phase.loop != nil, battle.position.step == battle.phase.steps.count - 1 {
+                combatRounds += 1
+                if combatRounds == 2 { battle.endLoop() } else { battle.advance() }
+            } else {
+                battle.advance()
+            }
+        }
+        XCTAssertTrue(battle.isFinished)
+        XCTAssertEqual(visited.first, "battle-attack")
+        XCTAssertEqual(visited.last, "battle-advance")
+        XCTAssertEqual(visited.filter { $0 == "battle-roll" }.count, 2, "two combat rounds")
+        XCTAssertEqual(session.step.id, "turn-atreides", "the turn waits while the battle runs")
+    }
+
+    func testNoBattleFromAStepForBothPlayers() {
+        let session = TurnGuideSession(script: script, expansions: [])
+        XCTAssertEqual(session.step.side, .both)
+        XCTAssertNil(session.makeBattle())
+    }
+
+    func testBattleKnowsTheSmugglersAlliance() throws {
+        let session = TurnGuideSession(script: script, expansions: ["smugglers"], startAt: "turn-harkonnen")
+        session.setState("smugglersAllied", true)
+        session.dismissEvent()
+        let battle = try XCTUnwrap(session.makeBattle())
+        battle.advance()
+        battle.advance()
+        battle.advance()
+        XCTAssertEqual(battle.step.id, "battle-roll")
+        XCTAssertTrue(battle.additions.contains { $0.expansion == "smugglers" }, "Smugglers Base counts as a Settlement")
+    }
+
     func testUnknownStartStepStartsAtTheBeginning() {
         let session = TurnGuideSession(script: script, expansions: [], startAt: "no-such-step")
         XCTAssertEqual(session.step.id, expectedSteps(with: []).first)

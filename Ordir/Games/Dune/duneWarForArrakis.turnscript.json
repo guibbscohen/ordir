@@ -1,7 +1,7 @@
 {
   "game": "duneWarForArrakis",
   "title": "Dune: War for Arrakis",
-  "version": 5,
+  "version": 6,
   "scope": "Setup, then rounds until someone wins; 2 players (Atreides vs Harkonnen) on one phone; optional Desert War, Smugglers and Spacing Guild expansions",
   "sources": [
     {
@@ -2153,7 +2153,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "opensBattle": true
         },
         {
           "id": "turn-harkonnen",
@@ -2345,7 +2346,8 @@
                 }
               ]
             }
-          ]
+          ],
+          "opensBattle": true
         }
       ]
     },
@@ -2984,5 +2986,540 @@
         }
       ]
     }
-  ]
+  ],
+  "battle": {
+    "title": "Battle",
+    "phases": [
+      {
+        "id": "battle-start",
+        "part": "setup",
+        "title": "Before the battle",
+        "steps": [
+          {
+            "id": "battle-attack",
+            "side": "attacker",
+            "title": "Choose the attack",
+            "instruction": "Attack an enemy Legion in an adjacent Area.",
+            "bullets": [
+              "Areas across an impassable border aren’t adjacent.",
+              "Attack with all or part of your Legion; it stays in its own Area during the battle.",
+              "Attacking with a Leadership Action: at least 1 Leader must take part.",
+              "Atreides may also attack an Area they can reach by Sandriding; Harkonnen, by Troop-transport.",
+              "No Legion can attack an Area with a Sandworm."
+            ],
+            "components": [
+              "Your Legion",
+              "The enemy Legion"
+            ],
+            "images": [
+              "atreides-units",
+              "harkonnen-units"
+            ],
+            "citations": [
+              {
+                "source": "rulebook",
+                "page": 24,
+                "excerpt": "An attacking Legion can target an enemy Legion inside an adjacent Area"
+              },
+              {
+                "source": "rulebook",
+                "page": 24,
+                "excerpt": "If the attack is initiated by performing a LEADERSHIP Action, at least 1 Leader must participate in the attack."
+              },
+              {
+                "source": "rulebook",
+                "page": 24,
+                "excerpt": "The Atreides player can also attack an enemy Legion in an Area they can reach by Sandriding."
+              },
+              {
+                "source": "rulebook",
+                "page": 31,
+                "excerpt": "Neither Harkonnen nor Atreides Legions can ever enter or attack Areas containing a Sandworm."
+              }
+            ]
+          },
+          {
+            "id": "battle-reveal",
+            "side": "both",
+            "title": "Reveal hidden pieces",
+            "instruction": "Before the first combat round:",
+            "bullets": [
+              "Defender in an Area with an unrevealed Sietch: flip it to show its rank.",
+              "Flip every Deployment token in the battle and swap it for its Units."
+            ],
+            "components": [
+              "Sietch token",
+              "Deployment tokens"
+            ],
+            "images": [
+              "settlement-tokens",
+              "atreides-deployment-tokens"
+            ],
+            "citations": [
+              {
+                "source": "rulebook",
+                "page": 24,
+                "excerpt": "if the defending Legion is in an Area containing an unrevealed Sietch token, flip the token faceup to reveal its rank."
+              },
+              {
+                "source": "rulebook",
+                "page": 24,
+                "excerpt": "flip any Deployment tokens involved in the battle, replacing them with the corresponding Units."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "battle-rounds",
+        "part": "setup",
+        "title": "Combat round",
+        "loop": {
+          "endLabel": "Battle over",
+          "note": "The battle ends when the attacker ceases, the defender retreats, or a Legion is destroyed.",
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 26,
+              "excerpt": "A battle ends if the attacker chooses to cease the attack, the defender chooses to retreat, or one or both Legions are completely destroyed."
+            }
+          ]
+        },
+        "steps": [
+          {
+            "id": "battle-cards",
+            "side": "both",
+            "title": "Add dice with Planning cards",
+            "instruction": "Attacker first, then defender: you may discard Planning cards for extra Combat dice.",
+            "bullets": [
+              "+1 Combat die for each card discarded.",
+              "6 Combat dice at most, in total.",
+              "Surprise attack: in the first round only the attacker may discard cards."
+            ],
+            "components": [
+              "Planning cards"
+            ],
+            "images": [
+              "atreides-planning-decks",
+              "harkonnen-planning-decks"
+            ],
+            "citations": [
+              {
+                "source": "rulebook",
+                "page": 24,
+                "excerpt": "both players can now discard Planning cards from their hand to add 1 Combat die to their Combat roll for each discarded card (up to a maximum of 6 dice total)."
+              },
+              {
+                "source": "rulebook",
+                "page": 24,
+                "excerpt": "during the first round of the battle only the attacking player can discard Planning cards for bonus dice."
+              }
+            ]
+          },
+          {
+            "id": "battle-roll",
+            "side": "both",
+            "title": "Roll Combat dice",
+            "instruction": "Each player rolls 1 Combat die per Unit in their Legion.",
+            "bullets": [
+              "Leaders don’t add dice.",
+              "Defender in an Area with a Settlement: add dice equal to its rank, every round.",
+              "6 dice at most."
+            ],
+            "components": [
+              "Combat dice"
+            ],
+            "images": [
+              "combat-dice"
+            ],
+            "citations": [
+              {
+                "source": "rulebook",
+                "page": 24,
+                "excerpt": "Both players roll a number of their Combat dice equal to the number of Units composing their Legion (up to a maximum of 6 dice)."
+              },
+              {
+                "source": "rulebook",
+                "page": 24,
+                "excerpt": "the defending player rolls a number of additional Combat dice equal to the rank of the Settlement, each combat round"
+              }
+            ],
+            "additions": [
+              {
+                "expansion": "desertWar",
+                "text": "Desert Troopers in the Area don’t take part in the battle.",
+                "bullets": [],
+                "images": [
+                  "dw-suspensor-troopers",
+                  "dw-rocket-launchers"
+                ],
+                "citations": [
+                  {
+                    "source": "desertWar",
+                    "page": 5,
+                    "excerpt": "they do not participate in battles involving a Legion in the same Area"
+                  }
+                ]
+              },
+              {
+                "expansion": "smugglers",
+                "when": {
+                  "state": "smugglersAllied",
+                  "is": true
+                },
+                "text": "Defending at the Smugglers Base: it counts as a Settlement of rank 3.",
+                "bullets": [],
+                "images": [
+                  "sm-smugglers-base"
+                ],
+                "citations": [
+                  {
+                    "source": "smugglers",
+                    "page": 6,
+                    "excerpt": "The Smugglers Base has a rank of 3. In case of battle, they follow the same rules as a Settlement."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "battle-hits",
+            "side": "both",
+            "title": "Count hits",
+            "instruction": "Read each roll:",
+            "bullets": [
+              "Hit: 1 hit on the enemy Legion.",
+              "Shield: cancels 1 of the opponent’s Hits.",
+              "Special: counts only through Leaders. Each Generic Leader turns 1 Special into 1 Hit; each Named Leader uses 1 Special as its Leader card shows.",
+              "More Leaders than Specials: choose which Leaders use them, attacker first.",
+              "Each Sardaukar or Fedaykin cancels 1 opposing Shield, including Shields that come from Specials."
+            ],
+            "components": [
+              "Combat dice",
+              "Leader cards"
+            ],
+            "images": [
+              "combat-dice",
+              "atreides-leader-cards",
+              "harkonnen-leader-cards"
+            ],
+            "citations": [
+              {
+                "source": "rulebook",
+                "page": 24,
+                "excerpt": "Each Shield cancels 1 opponent’s Hit"
+              },
+              {
+                "source": "rulebook",
+                "page": 25,
+                "excerpt": "the corresponding player considers 1 as a specific number of"
+              },
+              {
+                "source": "rulebook",
+                "page": 25,
+                "excerpt": "A player whose Legion includes more Leaders than the number of rolled"
+              },
+              {
+                "source": "rulebook",
+                "page": 25,
+                "excerpt": "Each Sardaukar or Fedaykin Unit immediately cancels 1"
+              },
+              {
+                "source": "faq",
+                "page": 2,
+                "entry": "Can Shields from Specials be cancelled by Special Elites?",
+                "excerpt": "results be cancelled by Special Elites?"
+              }
+            ],
+            "additions": [
+              {
+                "expansion": "spacingGuild",
+                "text": "Houses Major Troops also count as Generic Leaders: each turns 1 Special into 1 Hit.",
+                "bullets": [],
+                "images": [
+                  "sg-houses-major-troop"
+                ],
+                "citations": [
+                  {
+                    "source": "spacingGuild",
+                    "page": 6,
+                    "excerpt": "It is also considered a Generic Leader for movement and combat purposes, with a Combat ability of 1 Hit."
+                  }
+                ]
+              },
+              {
+                "expansion": "desertWar",
+                "text": "An Escort Ornithopter in the Legion counts as a Generic Leader.",
+                "bullets": [],
+                "images": [
+                  "dw-escort-ornithopter"
+                ],
+                "citations": [
+                  {
+                    "source": "desertWar",
+                    "page": 4,
+                    "excerpt": "When inside a Legion, an Escort Ornithopter is no longer considered an Ornithopter and is in all respects equivalent to a Generic Leader"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "battle-casualties",
+            "side": "both",
+            "title": "Remove casualties",
+            "instruction": "For each hit you took, choose one:",
+            "bullets": [
+              "Remove 1 Regular Unit.",
+              "Replace 1 Elite Unit (Special or not) with 1 Regular. No Regular left in your supply: remove the Elite instead.",
+              "Remove 1 Leader.",
+              "No Units left in the Legion: remove its Leaders too.",
+              "Removed Units and Generic Leaders go back to your supply; Named Leaders go to the leftmost slot of your Regeneration Tank."
+            ],
+            "components": [
+              "Units",
+              "Leaders",
+              "Regeneration Tank"
+            ],
+            "images": [
+              "atreides-units",
+              "harkonnen-units",
+              "atreides-dashboard"
+            ],
+            "citations": [
+              {
+                "source": "rulebook",
+                "page": 26,
+                "excerpt": "For each Hit scored by the opponent, the player must choose one of the following possibilities"
+              },
+              {
+                "source": "rulebook",
+                "page": 26,
+                "excerpt": "If all Units in a Legion are eliminated, also remove any surviving Leaders."
+              },
+              {
+                "source": "rulebook",
+                "page": 27,
+                "excerpt": "their figures are placed on the leftmost slot of the Regeneration Tank of the player’s dashboard."
+              },
+              {
+                "source": "faq",
+                "page": 2,
+                "entry": "Casualties when all your Regular Units are on the board",
+                "excerpt": "The Elite or Special Elite is simply removed as a casualty instead of being replaced."
+              }
+            ],
+            "additions": [
+              {
+                "expansion": "desertWar",
+                "text": "An Escort Ornithopter can take 2 hits before it is removed (1 hit also removes it).",
+                "bullets": [],
+                "images": [
+                  "dw-escort-ornithopter"
+                ],
+                "citations": [
+                  {
+                    "source": "desertWar",
+                    "page": 4,
+                    "excerpt": "it can be assigned 2 Hits to be removed instead of 1 (if it’s assigned only 1 Hit it is also removed)."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "battle-cease",
+            "side": "attacker",
+            "title": "Cease or continue",
+            "instruction": "If both Legions still have Units, choose:",
+            "bullets": [
+              "Cease the attack: the battle ends and your Legion stays where it started.",
+              "Continue: the defender may retreat, or another combat round starts.",
+              "A leftover Shield can’t cancel the hit taken to continue the battle (FAQ 3.0)."
+            ],
+            "components": [
+              "Your Legion"
+            ],
+            "images": [
+              "combat-dice"
+            ],
+            "citations": [
+              {
+                "source": "rulebook",
+                "page": 26,
+                "excerpt": "At the end of each Combat round, the attacking player has the option to cease the attack."
+              },
+              {
+                "source": "faq",
+                "page": 2,
+                "entry": "Can a leftover Shield cancel the hit taken to continue?",
+                "excerpt": "Since this happens after adjudicating results and resolving casualties from dice, the Shield result cannot be used."
+              }
+            ]
+          },
+          {
+            "id": "battle-retreat",
+            "side": "defender",
+            "title": "Retreat or stand",
+            "instruction": "If the attacker continues, choose:",
+            "bullets": [
+              "Retreat: the attacker moves your Legion to an adjacent Area that is free for you, and the battle ends.",
+              "No such Area: you can’t retreat.",
+              "Stand: another combat round starts."
+            ],
+            "components": [
+              "Your Legion"
+            ],
+            "images": [
+              "game-board"
+            ],
+            "citations": [
+              {
+                "source": "rulebook",
+                "page": 26,
+                "excerpt": "the attacking player moves the defending Legion to any adjacent Area of their choice."
+              },
+              {
+                "source": "rulebook",
+                "page": 26,
+                "excerpt": "If such an Area is not available, the defender cannot choose to retreat."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "battle-end",
+        "part": "setup",
+        "title": "After the battle",
+        "steps": [
+          {
+            "id": "battle-result",
+            "side": "both",
+            "title": "Who won the battle",
+            "instruction": "Check how it ended:",
+            "bullets": [
+              "Defender retreated or was destroyed, attacker still standing: the attacker wins.",
+              "Attacker ceased or was destroyed, defender still standing: the defender wins.",
+              "Both Legions destroyed: nobody wins."
+            ],
+            "components": [
+              "Both Legions"
+            ],
+            "images": [
+              "atreides-units",
+              "harkonnen-units"
+            ],
+            "citations": [
+              {
+                "source": "rulebook",
+                "page": 26,
+                "excerpt": "If the defending Legion retreats or is eliminated (and the attacking Legion is not also destroyed), the battle ends in a victory for the attacking player."
+              },
+              {
+                "source": "rulebook",
+                "page": 26,
+                "excerpt": "If both Legions are completely destroyed, no player wins the battle."
+              }
+            ]
+          },
+          {
+            "id": "battle-advance",
+            "side": "attacker",
+            "title": "Advance if you won",
+            "instruction": "You may move into the attacked Area, now empty of enemy Units.",
+            "bullets": [
+              "Move any number of the attacking figures, or none: you never have to advance (FAQ 3.0).",
+              "Moving at least 1 Unit into an enemy Settlement’s Area destroys it; an undefended Settlement falls without a roll.",
+              "Sietch destroyed: the Harkonnen gain Supremacy points equal to its rank.",
+              "Harkonnen Settlement destroyed: every Prescience marker advances by its rank. Arrakeen: check the Secret Objective at once.",
+              "Atreides advancing where a Harvester stood: remove the Harvester."
+            ],
+            "components": [
+              "Settlement tokens",
+              "Supremacy and Prescience tracks",
+              "Harvesters"
+            ],
+            "images": [
+              "settlement-tokens",
+              "prescience-markers",
+              "vehicles"
+            ],
+            "citations": [
+              {
+                "source": "rulebook",
+                "page": 26,
+                "excerpt": "If the attack comes from an adjacent Area, the attacking player may move any number of attacking figures (even none) into the attacked Area."
+              },
+              {
+                "source": "faq",
+                "page": 1,
+                "entry": "Modified rule 3: victorious Legions are not forced to advance",
+                "excerpt": "CAN be moved into the attacked Area or remain"
+              },
+              {
+                "source": "rulebook",
+                "page": 27,
+                "excerpt": "it is necessary to attack it with a Legion, win the battle, and move at least 1 Unit into its Area."
+              },
+              {
+                "source": "rulebook",
+                "page": 27,
+                "excerpt": "If a Settlement is undefended the battle is automatically won by the attacker (no combat roll is required)."
+              },
+              {
+                "source": "rulebook",
+                "page": 27,
+                "excerpt": "When a Sietch is destroyed, the Harkonnen player immediately gains a number of Supremacy points equal to the Sietch rank."
+              },
+              {
+                "source": "rulebook",
+                "page": 27,
+                "excerpt": "When a Harkonnen Settlement is destroyed, the Atreides player immediately advances each Prescience marker a number of steps equal to the Settlement’s rank."
+              },
+              {
+                "source": "faq",
+                "page": 1,
+                "entry": "Modified rule 2: immediate Atreides victory when taking Arrakeen",
+                "excerpt": "If they did, they win immediately (instead of at the End of the Round)."
+              },
+              {
+                "source": "rulebook",
+                "page": 32,
+                "excerpt": "the vehicle is removed if the Atreides player wins and advances after the battle."
+              }
+            ],
+            "additions": [
+              {
+                "expansion": "smugglers",
+                "when": {
+                  "state": "smugglersAllied",
+                  "is": true
+                },
+                "text": "Destroying the Smugglers Base gives no Supremacy points, but knocks the Smugglers out of the game.",
+                "bullets": [
+                  "Remove the Base, discard the Smugglers die, and remove every Smuggler Unit and Vehicle and Staban Tuek."
+                ],
+                "images": [
+                  "sm-smugglers-base"
+                ],
+                "citations": [
+                  {
+                    "source": "smugglers",
+                    "page": 6,
+                    "excerpt": "The Harkonnen player does not gain Supremacy points by destroying the Smugglers Base, though that eliminates the Smugglers from the game"
+                  },
+                  {
+                    "source": "smugglers",
+                    "page": 8,
+                    "excerpt": "Permanently remove all Smuggler Units, Vehicles, and Staban Tuek from the game"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
 }

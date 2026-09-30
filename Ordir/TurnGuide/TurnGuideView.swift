@@ -169,9 +169,19 @@ private struct SetupPicker: View {
 private struct TurnGuideRunner: View {
     let session: TurnGuideSession
     let mode: PlayMode
+    /// A battle walkthrough runs in its own runner, opened over the turn it started from.
+    let isBattle: Bool
     @State private var isSpeaking = false
     /// Which faction sits at the bottom edge of the phone; the other half faces the far player.
-    @State private var nearSeat: TurnScript.Side = .atreides
+    @State private var nearSeat: TurnScript.Side
+    @State private var battle: TurnGuideSession?
+
+    init(session: TurnGuideSession, mode: PlayMode, isBattle: Bool = false, nearSeat: TurnScript.Side = .atreides) {
+        self.session = session
+        self.mode = mode
+        self.isBattle = isBattle
+        _nearSeat = State(initialValue: nearSeat)
+    }
     @State private var enlarged: EnlargedImage?
     @State private var showsGameMenu = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -191,6 +201,9 @@ private struct TurnGuideRunner: View {
         .task(id: stepKey) { await speak() }
         .sheet(item: $enlarged) { item in
             EnlargedImageView(script: session.script, item: item)
+        }
+        .fullScreenCover(item: $battle) { battle in
+            TurnGuideRunner(session: battle, mode: mode, isBattle: true, nearSeat: nearSeat)
         }
         .sheet(isPresented: $showsGameMenu) {
             GameMenu(
@@ -238,7 +251,8 @@ private struct TurnGuideRunner: View {
             enlarge: { enlarged = EnlargedImage(image: $0, isFar: isFar) },
             event: session.pendingEvent,
             dismissEvent: { withAnimation(stepAnimation) { session.dismissEvent() } },
-            markState: { id in withAnimation(stepAnimation) { session.setState(id, true) } }
+            markState: { id in withAnimation(stepAnimation) { session.setState(id, true) } },
+            startBattle: { battle = session.makeBattle() }
         )
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -262,7 +276,7 @@ private struct TurnGuideRunner: View {
     /// Top bar for pass-the-phone play: nothing needs mirroring, so it shows the step timer instead.
     private var passBar: some View {
         HStack(spacing: 4) {
-            barButton("Game menu", systemImage: "flag.checkered") { showsGameMenu = true }
+            menuOrLeaveButton
             Spacer(minLength: 8)
             phaseLabel
                 .accessibilityIdentifier("guide-progress")
@@ -285,7 +299,7 @@ private struct TurnGuideRunner: View {
     /// Shared controls between the two halves, read from the near side.
     private var centerBar: some View {
         HStack(spacing: 4) {
-            barButton("Game menu", systemImage: "flag.checkered") { showsGameMenu = true }
+            menuOrLeaveButton
             Spacer(minLength: 8)
             // The phase reads both ways: the upper copy is turned to face the far player.
             VStack(spacing: 2) {
@@ -311,6 +325,15 @@ private struct TurnGuideRunner: View {
         .overlay(alignment: .bottom) { Divider() }
     }
 
+    /// The game's menu; in a battle, a way back to the turn instead.
+    @ViewBuilder private var menuOrLeaveButton: some View {
+        if isBattle {
+            barButton("Leave battle", systemImage: "xmark") { dismiss() }
+        } else {
+            barButton("Game menu", systemImage: "flag.checkered") { showsGameMenu = true }
+        }
+    }
+
     private func barButton(_ title: String, systemImage: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Image(systemName: systemImage)
@@ -334,15 +357,50 @@ private struct TurnGuideRunner: View {
     }
 
     private var progressText: String {
-        let inPhase = session.phase.loop != nil
-            ? "Turn \(session.turnNumber)"
-            : "\(session.stepNumber) of \(session.applicableSteps.count)"
+        let steps = "\(session.stepNumber) of \(session.applicableSteps.count)"
+        if isBattle {
+            // Combat rounds repeat: "Round 2 · 3 of 6".
+            return session.phase.loop != nil ? "Round \(session.position.pass) · \(steps)" : steps
+        }
+        let inPhase = session.phase.loop != nil ? "Turn \(session.turnNumber)" : steps
         return session.isInSetup ? inPhase : "Round \(session.round) · \(inPhase)"
     }
 
     // MARK: Finished
 
-    private var finished: some View {
+    @ViewBuilder private var finished: some View {
+        if isBattle {
+            battleOver
+        } else {
+            gameOver
+        }
+    }
+
+    private var battleOver: some View {
+        VStack(spacing: 20) {
+            OrdirMascotView()
+                .frame(height: 96)
+            Text("Battle over")
+                .font(.title2.weight(.semibold))
+            Text("Back to the turn: finish your Action, then tap Done.")
+                .font(.body)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+            Button {
+                dismiss()
+            } label: {
+                Text("Back to the turn")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity, minHeight: 54)
+            }
+            .buttonStyle(PrimaryButtonStyle())
+            .padding(.top, 12)
+        }
+        .padding(32)
+        .transition(stepTransition)
+    }
+
+    private var gameOver: some View {
         VStack(spacing: 20) {
             OrdirMascotView()
                 .frame(height: 96)
@@ -375,9 +433,9 @@ private struct TurnGuideRunner: View {
 
     // MARK: Behaviour
 
-    /// Inside a loop, number each side's turns: "Action turn 2".
+    /// Inside a loop, number each side's turns: "Action turn 2". Battles show the round in the bar instead.
     private var stepTitle: String {
-        session.phase.loop == nil ? session.step.title : "\(session.step.title) \(session.position.pass)"
+        session.phase.loop == nil || isBattle ? session.step.title : "\(session.step.title) \(session.position.pass)"
     }
 
     private var stepKey: String {
@@ -528,6 +586,7 @@ private struct SeatPanel: View {
     let event: TurnScript.GameState?
     let dismissEvent: () -> Void
     let markState: (String) -> Void
+    let startBattle: () -> Void
 
     /// Set while the turn-change checklist is up; holds what "Pass the turn" will do.
     @State private var pendingPass: (() -> Void)?
@@ -549,7 +608,8 @@ private struct SeatPanel: View {
                         showsBothPlayers: seat != .both,
                         isSpeaking: isSpeaking,
                         enlarge: enlarge,
-                        markState: markState
+                        markState: markState,
+                        startBattle: startBattle
                     )
                     .padding(.horizontal, 20)
                     .padding(.bottom, 16)
@@ -641,6 +701,7 @@ private struct StepCard: View {
     let isSpeaking: Bool
     let enlarge: (TurnScript.SourceImage) -> Void
     let markState: (String) -> Void
+    let startBattle: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
@@ -665,6 +726,14 @@ private struct StepCard: View {
                     .font(.body.weight(.medium))
                     .fixedSize(horizontal: false, vertical: true)
                 BulletList(items: step.bullets ?? [])
+                if step.opensBattle == true, script.battle != nil {
+                    Button(action: startBattle) {
+                        Label("Start a battle", systemImage: "shield.lefthalf.filled")
+                            .font(.subheadline.weight(.semibold))
+                            .frame(minHeight: 44)
+                    }
+                    .accessibilityHint("Walks both players through the battle, then returns to this turn")
+                }
             }
 
             ForEach(Array(additions.enumerated()), id: \.offset) { _, addition in
@@ -1046,6 +1115,8 @@ extension TurnScript.Side {
         case .atreides: "Atreides"
         case .harkonnen: "Harkonnen"
         case .both: "Both players"
+        case .attacker: "Attacker"
+        case .defender: "Defender"
         }
     }
 
@@ -1053,7 +1124,7 @@ extension TurnScript.Side {
         switch self {
         case .atreides: Color("SideAtreides")
         case .harkonnen: Color("SideHarkonnen")
-        case .both: .secondary
+        case .both, .attacker, .defender: .secondary
         }
     }
 }

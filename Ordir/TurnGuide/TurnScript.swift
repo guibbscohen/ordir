@@ -21,6 +21,8 @@ struct TurnScript: Decodable {
     /// Component pictures cropped from the sources by tools/crop_source_images.py.
     let images: [SourceImage]
     let phases: [Phase]
+    /// Battle walkthrough opened from an Action turn; its steps name the attacker and defender.
+    let battle: Battle?
 
     struct Source: Decodable {
         let id: String
@@ -50,6 +52,11 @@ struct TurnScript: Decodable {
         let steps: [Step]
         /// Set when the phase's steps repeat (e.g. alternating Action turns) until the players end it.
         let loop: Loop?
+    }
+
+    struct Battle: Decodable {
+        let title: String
+        let phases: [Phase]
     }
 
     enum Part: String, Decodable {
@@ -105,6 +112,17 @@ struct TurnScript: Decodable {
         let additions: [Addition]?
         /// Checklist for the moment the turn passes, e.g. moving the Regeneration Tank.
         let reminders: [Reminder]?
+        /// Offers "Start a battle" on this step.
+        let opensBattle: Bool?
+
+        /// The same step for another side, e.g. a battle's "attacker" resolved to the Atreides.
+        func with(side newSide: Side) -> Step {
+            Step(
+                id: id, expansion: expansion, when: when, side: newSide, title: title,
+                instruction: instruction, bullets: bullets, components: components, images: images,
+                citations: citations, additions: additions, reminders: reminders, opensBattle: opensBattle
+            )
+        }
     }
 
     struct Addition: Decodable {
@@ -135,6 +153,8 @@ struct TurnScript: Decodable {
 
     enum Side: String, Decodable {
         case atreides, harkonnen, both
+        /// Only in the battle script; resolved to a faction when a battle starts.
+        case attacker, defender
     }
 
     func source(for citation: Citation) -> Source? {

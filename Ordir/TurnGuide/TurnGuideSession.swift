@@ -172,6 +172,40 @@ final class TurnGuideSession {
         pendingEvent = nil
     }
 
+    // MARK: Battles
+
+    /// A battle walkthrough for the current turn: the acting side attacks. It shares this game's
+    /// expansions, states and way of passing the phone, and finishes when the battle is over.
+    func makeBattle() -> TurnGuideSession? {
+        guard let battle = script.battle, step.side == .atreides || step.side == .harkonnen else { return nil }
+        let attacker = step.side
+        let defender: TurnScript.Side = attacker == .atreides ? .harkonnen : .atreides
+        func resolve(_ side: TurnScript.Side) -> TurnScript.Side {
+            switch side {
+            case .attacker: attacker
+            case .defender: defender
+            default: side
+            }
+        }
+        let phases = battle.phases.map { phase in
+            TurnScript.Phase(
+                id: phase.id,
+                part: .setup,
+                title: phase.title,
+                steps: phase.steps.map { $0.with(side: resolve($0.side)) },
+                loop: phase.loop
+            )
+        }
+        let battleScript = TurnScript(
+            game: script.game, title: battle.title, version: script.version, sources: script.sources,
+            expansions: script.expansions, states: script.states, images: script.images,
+            phases: phases, battle: nil
+        )
+        let session = TurnGuideSession(script: battleScript, expansions: expansions, passesPhone: passesPhone)
+        session.activeStates = activeStates
+        return session
+    }
+
     // MARK: Private
 
     private func firstApplicable(in phase: TurnScript.Phase, after index: Int) -> Int? {
@@ -209,3 +243,6 @@ final class TurnGuideSession {
         handoffTo = passesPhone && step.side != .both && step.side != previousSide ? step.side : nil
     }
 }
+
+/// Lets a battle walkthrough be presented with `.fullScreenCover(item:)`.
+extension TurnGuideSession: Identifiable {}

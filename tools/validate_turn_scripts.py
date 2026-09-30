@@ -104,59 +104,75 @@ def validate(path):
     if not any(phase.get("part") == "round" for phase in script["phases"]):
         errors.append("no phase has part 'round'; rounds can't repeat")
     ids = set()
-    for phase in script["phases"]:
-        if phase.get("part") not in ("setup", "round"):
-            errors.append(f"{phase['id']}: part must be 'setup' or 'round'")
-        if not phase.get("steps"):
-            errors.append(f"{phase['id']}: phase has no steps")
-        if "loop" in phase:
-            loop = phase["loop"]
-            if not loop.get("endLabel") or not loop.get("note"):
-                errors.append(f"{phase['id']}: loop needs endLabel and note")
-            check_citations(loop.get("citations", []), f"{phase['id']} loop", sources, pages, errors)
-        for step in phase["steps"]:
-            where = step.get("id", "?")
-            if where in ids:
-                errors.append(f"{where}: duplicate step id")
-            ids.add(where)
-            if step.get("side") not in SIDES:
-                errors.append(f"{where}: side must be one of {sorted(SIDES)}")
-            for field in ("title", "instruction"):
-                if not step.get(field, "").strip():
-                    errors.append(f"{where}: missing {field}")
-            if not step.get("components"):
-                errors.append(f"{where}: no components")
-            if not step.get("images"):
-                errors.append(f"{where}: no images")
-            for image_id in step.get("images", []):
-                if image_id not in images:
-                    errors.append(f"{where}: unknown image {image_id!r}")
-            if "expansion" in step and step["expansion"] not in expansions:
-                errors.append(f"{where}: unknown expansion {step['expansion']!r}")
-            check_citations(step.get("citations", []), where, sources, pages, errors)
-            check_when(step, where)
-            if not all(isinstance(b, str) and b.strip() for b in step.get("bullets", [])):
-                errors.append(f"{where}: bullets must be non-empty strings")
-            for n, reminder in enumerate(step.get("reminders", []), 1):
-                at = f"{where} reminder {n}"
-                if not reminder.get("text", "").strip():
-                    errors.append(f"{at}: missing text")
-                if "expansion" in reminder and reminder["expansion"] not in expansions:
-                    errors.append(f"{at}: unknown expansion {reminder['expansion']!r}")
-                check_citations(reminder.get("citations", []), at, sources, pages, errors)
-            for n, addition in enumerate(step.get("additions", []), 1):
-                at = f"{where} addition {n}"
-                if addition.get("expansion") not in expansions:
-                    errors.append(f"{at}: unknown expansion {addition.get('expansion')!r}")
-                if not addition.get("text", "").strip():
-                    errors.append(f"{at}: missing text")
-                if not addition.get("images"):
-                    errors.append(f"{at}: no images")
-                for image_id in addition.get("images", []):
+
+    def check_phases(phases, sides):
+        for phase in phases:
+            if phase.get("part") not in ("setup", "round"):
+                errors.append(f"{phase['id']}: part must be 'setup' or 'round'")
+            if not phase.get("steps"):
+                errors.append(f"{phase['id']}: phase has no steps")
+            if "loop" in phase:
+                loop = phase["loop"]
+                if not loop.get("endLabel") or not loop.get("note"):
+                    errors.append(f"{phase['id']}: loop needs endLabel and note")
+                check_citations(loop.get("citations", []), f"{phase['id']} loop", sources, pages, errors)
+            for step in phase["steps"]:
+                where = step.get("id", "?")
+                if where in ids:
+                    errors.append(f"{where}: duplicate step id")
+                ids.add(where)
+                if step.get("side") not in sides:
+                    errors.append(f"{where}: side must be one of {sorted(sides)}")
+                for field in ("title", "instruction"):
+                    if not step.get(field, "").strip():
+                        errors.append(f"{where}: missing {field}")
+                if not step.get("components"):
+                    errors.append(f"{where}: no components")
+                if not step.get("images"):
+                    errors.append(f"{where}: no images")
+                for image_id in step.get("images", []):
                     if image_id not in images:
-                        errors.append(f"{at}: unknown image {image_id!r}")
-                check_citations(addition.get("citations", []), at, sources, pages, errors)
-                check_when(addition, at)
+                        errors.append(f"{where}: unknown image {image_id!r}")
+                if "expansion" in step and step["expansion"] not in expansions:
+                    errors.append(f"{where}: unknown expansion {step['expansion']!r}")
+                check_citations(step.get("citations", []), where, sources, pages, errors)
+                check_when(step, where)
+                if not all(isinstance(b, str) and b.strip() for b in step.get("bullets", [])):
+                    errors.append(f"{where}: bullets must be non-empty strings")
+                for n, reminder in enumerate(step.get("reminders", []), 1):
+                    at = f"{where} reminder {n}"
+                    if not reminder.get("text", "").strip():
+                        errors.append(f"{at}: missing text")
+                    if "expansion" in reminder and reminder["expansion"] not in expansions:
+                        errors.append(f"{at}: unknown expansion {reminder['expansion']!r}")
+                    check_citations(reminder.get("citations", []), at, sources, pages, errors)
+                for n, addition in enumerate(step.get("additions", []), 1):
+                    at = f"{where} addition {n}"
+                    if addition.get("expansion") not in expansions:
+                        errors.append(f"{at}: unknown expansion {addition.get('expansion')!r}")
+                    if not addition.get("text", "").strip():
+                        errors.append(f"{at}: missing text")
+                    if not addition.get("images"):
+                        errors.append(f"{at}: no images")
+                    for image_id in addition.get("images", []):
+                        if image_id not in images:
+                            errors.append(f"{at}: unknown image {image_id!r}")
+                    check_citations(addition.get("citations", []), at, sources, pages, errors)
+                    check_when(addition, at)
+
+    check_phases(script["phases"], SIDES)
+    battle = script.get("battle")
+    if battle is not None:
+        if not battle.get("title") or not battle.get("phases"):
+            errors.append("battle needs a title and phases")
+        check_phases(battle.get("phases", []), SIDES | {"attacker", "defender"})
+        for phase in battle.get("phases", []):
+            if phase.get("part") != "setup":
+                errors.append(f"{phase['id']}: battle phases run once; part must be 'setup'")
+    for phase in script["phases"]:
+        for step in phase["steps"]:
+            if step.get("opensBattle") and battle is None:
+                errors.append(f"{step['id']}: opensBattle but the script has no battle")
     return errors
 
 
