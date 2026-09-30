@@ -39,11 +39,3 @@ jobs:
           .venv/bin/python -m playwright install --with-deps chromium
           .venv/bin/python tools/build_preview.py
           .venv/bin/python tools/test_preview.py
-
-      - name: Upload the built preview
-        if: always()
-        uses: actions/upload-artifact@v5
-        with:
-          name: ordir-preview
-          path: Preview/dist/
-          if-no-files-found: ignore
