@@ -1,0 +1,55 @@
+name: iOS build
+
+# macOS minutes count 10x, so this runs on pull requests (not every push) and skips
+# docs-only changes. Build + unit tests only; the UI walkthrough is ios-walkthrough.yml.
+on:
+  pull_request:
+    paths-ignore:
+      - "**/*.md"
+      - ".claude/**"
+  workflow_dispatch:
+
+concurrency:
+  group: ios-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Pick an iPhone simulator
+        id: sim
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c '
+          import json, sys
+          devices = json.load(sys.stdin)["devices"]
+          print(next(d["udid"] for runtime, ds in sorted(devices.items(), reverse=True)
+                     if "iOS" in runtime for d in ds if d["name"].startswith("iPhone")))')
+          echo "udid=$UDID" >> "$GITHUB_OUTPUT"
+
+      - name: Build and run unit tests
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project Ordir.xcodeproj \
+            -scheme Ordir \
+            -destination "id=${{ steps.sim.outputs.udid }}" \
+            -derivedDataPath build \
+            -only-testing:OrdirTests \
+            CODE_SIGNING_ALLOWED=NO \
+            2>&1 | tee test.log | grep -E "Test Case .*(passed|failed)|error:|Executed|\*\* TEST" || true
+          grep -q "\*\* TEST SUCCEEDED \*\*" test.log
+
+      - name: Upload test log
+        if: failure()
+        uses: actions/upload-artifact@v5
+        with:
+          name: ordir-test-log
+          path: test.log
+          if-no-files-found: ignore

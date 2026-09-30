@@ -1,0 +1,26 @@
+name: Turn scripts
+
+# Cheap Linux check on every push: every citation's excerpt is on its cited PDF page and every
+# picture has its asset. The macOS jobs cost 10x the minutes, so they run less often.
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: turn-scripts-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Validate turn scripts against the official PDFs
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install --quiet pypdf
+          .venv/bin/python tools/fetch_sources.py
+          .venv/bin/python tools/validate_turn_scripts.py

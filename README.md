@@ -5,13 +5,43 @@ rules questions with citations to the official rulebook and errata.
 
 Launch games: Dune: War for Arrakis, Star Wars: Rebellion, War of the Ring (2nd Edition).
 
+## Getting started
+
+Requires Xcode 16 or later (the project uses folder-synced groups).
+
+1. Open `Ordir.xcodeproj`.
+2. Select the **Ordir** target → Signing & Capabilities → choose your Team. Change the bundle ID
+   (`com.guibbscohen.ordir`) if you want a different one.
+3. Run on an iPhone simulator or device (iOS 17+).
+
+Any file added under `Ordir/` joins the app target automatically, with no project-file edits.
+
+## Layout
+
+| Path | What it is |
+| --- | --- |
+| `Ordir/App/` | App entry point and home screen (mascot + game list) |
+| `Ordir/Mascot/` | `OrdirMascotView` (animated logo), `OrdirThinkingIndicator` + spinner verbs |
+| `Ordir/Games/` | `OrdirGame`, the launch games, and each game's turn script (`<game>.turnscript.json`) |
+| `Ordir/TurnGuide/` | `TurnScript` model, `TurnGuideSession` (step state machine), `TurnGuideView` (pass-and-play screen) |
+| `Sources/<game>/` | Where `tools/fetch_sources.py` downloads the official rulebook and FAQ PDFs (not stored in the repo) |
+| `tools/validate_turn_scripts.py` | Checks every citation's excerpt appears on the cited PDF page, and every picture has its asset (runs in CI) |
+| `OrdirTests/` | Unit tests: walks the Dune script for every expansion combination; checks filters, the turn loop, Back, and picture assets |
+| `OrdirUITests/` | UI tap-through of the whole guide in the simulator; with all expansions on, screenshots every step before and after scrolling |
+| `.github/workflows/` | `turn-scripts.yml` (Linux, every push), `ios-build.yml` (macOS build + unit tests, pull requests), `ios-walkthrough.yml` (UI tap-through with screenshots, run by hand) |
+| `tools/crop_source_images.py` | Crops component pictures from the source PDFs into `Assets.xcassets/<game>/` |
+| `Ordir/Assets.xcassets` | App icon, `AccentColor`, `Sparkle` (light/dark) |
+| `Assets/ordir-logo.svg` | Source logo; `tools/svg_to_swift.py` regenerates the mascot paths from it |
+
 ## Status
 
 | Piece | State |
 | --- | --- |
-| `Ordir/Mascot/OrdirMascotView.swift` | Written, not yet compiled. Geometry generated from `Assets/ordir-logo.svg` via `tools/svg_to_swift.py`. |
-| `Ordir/Mascot/OrdirThinkingIndicator.swift` | Thinking mascot with rotating board game / nerd-culture spinner verbs (`OrdirSpinnerVerbs.swift`), themed per game. Not yet compiled. |
-| Xcode project, auth, sessions, game data, rules Q&A | Not started |
+| Xcode project, home screen, app icon | Done; first build pending on a Mac |
+| Mascot (idle / speaking / thinking) and spinner verbs | Done; first build pending |
+| Dune turn guide: setup, then rounds until someone wins, with a battle walkthrough; one phone (split screen or pass the phone) | Done; every step cites a rulebook page or FAQ entry and shows component pictures |
+| Dune expansions: Desert War, Smugglers, The Spacing Guild | Done as optional modules picked before the guide starts |
+| Auth, multiplayer sessions, rules Q&A | Not started |
 
 ## Proposed architecture
 
@@ -35,6 +65,12 @@ everyone's app updates live. This keeps the step order exact and auditable.
 **Rules Q&A uses retrieval with mandatory citations.** A Supabase Edge Function retrieves the relevant
 rulebook/errata chunks, sends them to Claude, and returns an answer that must cite page or errata ID.
 If nothing relevant is retrieved, it says so instead of guessing. The API key never ships in the app.
+
+## Credits
+
+- Logo: "Magic Ball" by Ziyad Aljunaidi, from [Noun Project](https://thenounproject.com) (CC BY 3.0).
+- Dune: War for Arrakis and its expansions are © CMON / Gale Force Nine / Legendary. Ordir cites their
+  official rulebooks and FAQ by page and links to the publisher's PDFs; it is not affiliated with them.
 
 ## Open risks
 

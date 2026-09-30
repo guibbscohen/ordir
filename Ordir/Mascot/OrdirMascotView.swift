@@ -68,8 +68,8 @@ struct OrdirMascotView: View {
 }
 
 extension Color {
-    /// Default sparkle tint. Swap for the brand token once the palette is final.
-    static let ordirSparkle = Color(red: 0.62, green: 0.78, blue: 1.0)
+    /// Sparkle tint from the asset catalog, with light and dark variants for contrast.
+    static let ordirSparkle = Color("Sparkle")
 }
 
 // MARK: - State

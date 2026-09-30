@@ -9,3 +9,6 @@ xcuserdata/
 .swiftpm/
 .DS_Store
 __pycache__/
+
+# Publisher PDFs: downloaded by tools/fetch_sources.py, not redistributed here
+Sources/**/*.pdf
