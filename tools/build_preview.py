@@ -10,14 +10,24 @@ into Preview/dist/, so the preview can't drift from the app's data. Run from the
 Then serve Preview/dist (e.g. `python3 -m http.server -d Preview/dist`) and open index.html.
 Needs no PDFs. Exits non-zero if a picture is missing.
 """
+import datetime
 import json
 import pathlib
 import shutil
+import subprocess
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SCRIPT = ROOT / "Ordir" / "Games" / "Dune" / "duneWarForArrakis.turnscript.json"
 DIST = ROOT / "Preview" / "dist"
+
+
+def build_stamp():
+    try:
+        commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=ROOT, capture_output=True, text=True, check=True).stdout.strip()
+    except (OSError, subprocess.CalledProcessError):
+        commit = "dev"
+    return f"{commit} · {datetime.datetime.now(datetime.timezone.utc):%Y-%m-%d %H:%M} UTC"
 
 
 def main():
@@ -26,7 +36,8 @@ def main():
     assets = ROOT / "Ordir" / "Assets.xcassets" / game
     shutil.rmtree(DIST, ignore_errors=True)
     (DIST / "img").mkdir(parents=True)
-    shutil.copy(ROOT / "Preview" / "index.html", DIST / "index.html")
+    # Stamp the version (commit and date) that the Account tab shows, so a phone can tell which build it runs.
+    (DIST / "index.html").write_text((ROOT / "Preview" / "index.html").read_text().replace("__BUILD__", build_stamp()))
     shutil.copytree(ROOT / "Preview" / "fonts", DIST / "fonts")
     shutil.copytree(ROOT / "Preview" / "email", DIST / "email")  # images for the sign-in email (docs/email)
     shutil.copytree(ROOT / "Preview" / "icons", DIST / "icons")  # Home Screen and tab icons (rendered from icons/icon.svg)
