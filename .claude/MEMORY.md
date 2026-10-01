@@ -73,8 +73,10 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   preview); layout motion stays SwiftUI/CSS; the orb stays procedural.
 - 2026-10-01: Give the UI breathing room: on a phone the preview fills the screen edge to edge (no
   phone frame), with a restrained type scale and generous spacing; nothing should feel zoomed in or squished.
-- 2026-10-01: The orb mascot has a minimalist face: two dot eyes and a small one-line smile (blinks; the
-  smile follows idle/thinking/speaking; still with Reduce Motion). The app icon keeps its original art.
-- 2026-10-01: The opening is a short story that ends on Home, inspired by Ripplix's "Happier" splash: a
-  black/deep-blue/violet gradient, a glowing line drawn from the orb, the gradient settling to black and the
-  orb (kept small and elegant) gliding into Home's header. Tap to skip; crossfade with Reduce Motion.
+- 2026-10-01: The orb mascot has a minimalist face: two dot eyes and a small one-line smile, turned slightly
+  up and to the right as if seen from the side (far eye smaller). It blinks; the smile follows
+  idle/thinking/speaking; still with Reduce Motion. The app icon keeps its original art.
+- 2026-10-01: The opening is one continuous camera move down to Home (never a cut or fade), inspired by
+  Ripplix's "Happier" splash: the small orb and name on black above a deep blue/violet glow, a calm glowing
+  line drawn from the orb down the screen, the view gliding down through the colours to Home waiting one
+  screen below, and the line ending at Home's orb. Tap to skip; a short fade with Reduce Motion.

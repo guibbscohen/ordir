@@ -111,19 +111,22 @@ enum OrdirMascotGeometry {
     }
 
     // In animation order: main outer, medium inner, tiny inner. The medium and tiny sparkles sit
-    // (+4, -46) and (+28, +28) from the logo's positions, clear of the face; the preview matches.
+    // (+4, -46) and (-70, +20) from the logo's positions, clear of the face; the preview matches.
     static let sparkles: [Sparkle] = [
         Sparkle(center: CGPoint(x: 225.988, y: 104.436), size: 123.0, path: outerSparkle),
         Sparkle(center: CGPoint(x: 120.634, y: 105.687), size: 63.8, path: mediumSparkle),
-        Sparkle(center: CGPoint(x: 199.092, y: 223.885), size: 34.4, path: tinySparkle),
+        Sparkle(center: CGPoint(x: 101.092, y: 215.885), size: 34.4, path: tinySparkle),
     ]
 
     /// The face: two dot eyes and a one-line smile (a quadratic curve), drawn in the foreground colour.
-    static let eyes = [CGPoint(x: 128.715, y: 164.465), CGPoint(x: 179.715, y: 164.465)]
-    static let eyeRadius: CGFloat = 10
-    static let mouthStart = CGPoint(x: 135.715, y: 193.465)
-    static let mouthControl = CGPoint(x: 154.215, y: 208.465)
-    static let mouthEnd = CGPoint(x: 172.715, y: 193.465)
+    /// It's turned slightly up and to the right, so the far eye is smaller.
+    static let eyes: [(center: CGPoint, radius: CGFloat)] = [
+        (CGPoint(x: 148.715, y: 146.465), 10.5),
+        (CGPoint(x: 189.715, y: 143.465), 8.5),
+    ]
+    static let mouthStart = CGPoint(x: 156.715, y: 173.465)
+    static let mouthControl = CGPoint(x: 175.715, y: 186.465)
+    static let mouthEnd = CGPoint(x: 192.715, y: 168.465)
     static let mouthWidth: CGFloat = 8
 
     // outerSparkle: centre (225.988, 104.436), size 123.0×116.0
@@ -400,12 +403,12 @@ private enum OrdirMascotRenderer {
 
         // Face: eyes squash to blink and drift up-right to glance; the smile's depth follows the mode.
         let gaze = CGSize(width: 4 * frame.glance * unit, height: -5 * frame.glance * unit)
-        let eyeHeight = G.eyeRadius * unit * (1 - 0.9 * frame.blink)
         for eye in G.eyes {
-            let c = point(eye)
+            let c = point(eye.center)
+            let width = eye.radius * unit, height = width * (1 - 0.9 * frame.blink)
             context.fill(
-                Path(ellipseIn: CGRect(x: c.x - G.eyeRadius * unit + gaze.width, y: c.y - eyeHeight + gaze.height,
-                                       width: G.eyeRadius * unit * 2, height: eyeHeight * 2)),
+                Path(ellipseIn: CGRect(x: c.x - width + gaze.width, y: c.y - height + gaze.height,
+                                       width: width * 2, height: height * 2)),
                 with: .foreground
             )
         }

@@ -186,45 +186,39 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 .done-pane p { margin: 0; color: var(--muted); line-height: 1.4; }
 .done-pane .primary { width: 100%; flex: none; }
 
-/* Opening (~3 s): on black, a deep blue and violet glow rises; a glowing ribbon travels out of the orb,
-   loops across the screen and leaves toward the top-left; the glow settles to black and the orb glides into
-   Home's header while Home rises in underneath. Tap to skip; Reduce Motion gets a short crossfade. */
-.intro { position: absolute; inset: 0; z-index: 5; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 6px; padding: 24px; text-align: center; cursor: pointer; background: #000; overflow: hidden; transition: background .6s ease; }
-.intro-glow { position: absolute; inset: -20% -30%; pointer-events: none;
-  background: radial-gradient(45% 30% at 30% 62%, rgba(124, 92, 255, .55), transparent 70%),
-              radial-gradient(50% 32% at 72% 70%, rgba(37, 84, 214, .6), transparent 70%),
-              radial-gradient(40% 26% at 50% 82%, rgba(158, 199, 255, .32), transparent 70%);
-  animation: glow 2.7s cubic-bezier(.45, 0, .25, 1) both; }
-.intro-ribbon { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible;
+/* Opening (~3 s), a camera move inspired by Ripplix's "Happier" splash:
+   - The orb and name sit on black, above a deep blue and violet glow.
+   - A glowing line draws itself from the orb down the screen.
+   - The view glides down through the glow to Home, which waits one screen below; the line ends at Home's orb.
+   Tap to skip; Reduce Motion gets a short fade. Positions and timing are set from script (startIntro). */
+.intro { position: absolute; inset: 0; z-index: 5; overflow: hidden; cursor: pointer; }
+.intro-track { position: absolute; left: 0; top: 0; width: 100%; height: 200%; }
+.intro-scene { height: 50%; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 6px; padding: 24px; text-align: center; }
+.intro-glow { position: absolute; left: -30%; right: -30%; top: 22%; height: 42%; pointer-events: none;
+  background: radial-gradient(40% 34% at 32% 48%, rgba(124, 92, 255, .5), transparent 70%),
+              radial-gradient(44% 36% at 70% 56%, rgba(37, 84, 214, .55), transparent 70%),
+              radial-gradient(34% 26% at 50% 66%, rgba(158, 199, 255, .28), transparent 70%);
+  animation: fade 1.2s ease both; }
+.intro-line { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none;
   filter: drop-shadow(0 0 3px rgba(158, 199, 255, .9)) drop-shadow(0 0 10px rgba(124, 92, 255, .7)); }
-.intro-ribbon path { fill: none; stroke: var(--sparkle); stroke-width: 2.5; stroke-linecap: round; vector-effect: non-scaling-stroke;
-  stroke-dasharray: .32 1.4; stroke-dashoffset: .32; animation: ribbon 1.75s .55s cubic-bezier(.55, 0, .3, 1) both; }
-.intro-orb { position: relative; width: 88px; height: 88px; margin-bottom: 18px; transition: transform .7s cubic-bezier(.65, 0, .35, 1); }
+.intro-line path { fill: none; stroke: var(--sparkle); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.intro-home { position: absolute; inset: 0; display: flex; flex-direction: column; transform: translateY(100%); }
+.intro-home > .pane { flex: 1; }
+.intro-orb { width: 88px; height: 88px; margin-bottom: 18px; }
 .intro-orb .mascot { width: 88px; height: 88px; animation: orb-in .8s cubic-bezier(.2, .8, .2, 1) both; }
 .intro-orb .mascot .sp { animation: sparkle-in .5s cubic-bezier(.2, .8, .2, 1) both, twinkle 3.2s ease-in-out infinite; }
 .intro-orb .mascot .sp1 { animation-delay: .35s, .85s; }
 .intro-orb .mascot .sp2 { animation-delay: .5s, 1s; }
 .intro-orb .mascot .sp3 { animation-delay: .65s, 1.15s; }
-.intro h1 { position: relative; margin: 0; font-size: 30px; font-weight: 600; letter-spacing: -.01em; animation: rise .6s .4s cubic-bezier(.2, .8, .2, 1) both; }
-.intro p { position: relative; margin: 0; color: var(--muted); font-size: 15px; animation: rise .6s .55s cubic-bezier(.2, .8, .2, 1) both; }
-.intro .skip { position: absolute; bottom: calc(12px + env(safe-area-inset-bottom)); color: var(--muted); }
-.intro h1, .intro p, .intro .skip, .intro-glow, .intro-ribbon { transition: opacity .18s ease; }
-/* Landing: the backdrop clears and the orb flies to Home's header (its offset is set from script). */
-.landing .intro { background: transparent; }
-.landing .intro .skip, .landing .intro-glow, .landing .intro-ribbon { opacity: 0; }
-.landing .intro h1, .landing .intro p { animation: fade-out .18s ease both; }  /* replaces their entrance, which holds opacity */
-.intro-on > .home, .intro-on > .tabbar { opacity: 0; transition: opacity .45s ease .2s; }
-.intro-on .home .brand .orb-btn { visibility: hidden; }
-.intro-on.landing > .home, .intro-on.landing > .tabbar { opacity: 1; }
-.intro-on.landing .home .scroll > * { animation: rise .55s .2s cubic-bezier(.2, .8, .2, 1) both; }
-.intro-on.landing .home .scroll > :nth-child(2) { animation-delay: .28s; }
-.intro-on.landing .home .scroll > :nth-child(3) { animation-delay: .36s; }
+.intro h1 { margin: 0; font-size: 30px; font-weight: 600; letter-spacing: -.01em; animation: rise .6s .4s cubic-bezier(.2, .8, .2, 1) both; }
+.intro p { margin: 0; color: var(--muted); font-size: 15px; animation: rise .6s .55s cubic-bezier(.2, .8, .2, 1) both; }
+.intro .skip { position: absolute; left: 50%; translate: -50% 0; bottom: calc(12px + env(safe-area-inset-bottom)); color: var(--muted); }
+/* Home's orb lights up as the line reaches it. */
+.orb-btn.lit .mascot { animation: lit .5s ease both; }
+@keyframes lit { 0%, 100% { filter: none; } 35% { filter: drop-shadow(0 0 10px rgba(158, 199, 255, .95)) drop-shadow(0 0 22px rgba(124, 92, 255, .6)); } }
 @keyframes orb-in { from { opacity: 0; transform: scale(.8) translateY(10px); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
 @keyframes sparkle-in { from { opacity: 0; transform: scale(0) rotate(-60deg); } to { opacity: 1; transform: none; } }
-@keyframes glow { 0% { opacity: 0; transform: translateY(35%); } 30% { opacity: 1; transform: translateY(8%); } 100% { opacity: 0; transform: translateY(-75%); } }
-@keyframes fade-out { from { opacity: 1; } to { opacity: 0; } }
-@keyframes ribbon { from { stroke-dashoffset: .32; } to { stroke-dashoffset: -1.05; } }
 
 /* Home */
 .pane.enter { animation: rise .4s ease both; }
@@ -310,8 +304,8 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
   .card.enter, .overlay.enter, .pane.enter { animation: fade .2s ease both; }
   .tabbar button { transition: none; }
   .intro-orb .mascot, .intro h1, .intro p { animation: fade .3s ease both !important; }
-  .intro-ribbon { display: none; }
-  .intro-glow { animation: fade .3s ease both; opacity: .5; }
+  .intro-line { display: none; }
+  .intro-glow { animation: fade .3s ease both; }
   .mascot .sp { animation: none !important; }
   .mascot .face * { animation: none !important; transition: none; }
   .switch, .switch::after { transition: none; }
@@ -341,8 +335,9 @@ const $ = (sel, root = document) => root.querySelector(sel);
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
 // Crystal-ball mascot, from Assets/ordir-logo.svg (three sparkles and the orb), with a face: two dot eyes
-// and a one-line smile. The two small sparkles sit clear of the face.
-const MASCOT_PATHS = `<path class="sp sp1" d="M290.228 82.5405 270.757 75.6223C266.801 74.207 263.838 71.2439 262.291 67.4343L254.394 46.971C252 40.8995 246.629 37.9365 241.272 37.9365 235.915 37.9365 230.412 40.8995 228.15 46.971L220.254 67.4343C218.706 71.2439 215.743 74.2069 211.788 75.6223L192.317 82.5405C179.764 86.9189 179.764 104.697 192.317 109.207L211.788 116.126C215.743 117.541 218.706 120.504 220.254 124.314L228.15 144.777C230.545 150.848 235.915 153.811 241.272 153.811 246.629 153.811 252.132 150.848 254.394 144.777L262.291 124.314C263.838 120.504 266.801 117.541 270.757 116.126L290.228 109.207C302.781 104.829 302.781 87.051 290.228 82.5405ZM263.561 96.0856C253.825 99.4719 246.206 106.945 242.396 116.549L240.981 120.081 239.566 116.549C235.902 106.959 228.137 99.4719 218.402 96.0856L217.7 95.8078 218.402 95.53C228.137 92.1438 235.756 84.6703 239.566 75.0668L240.981 71.5349 242.396 75.0668C246.06 84.6567 253.825 92.1438 263.561 95.53L264.262 95.8078Z"/><g transform="translate(28 28)"><path class="sp sp2" d="M172.7 183.56C169.168 184.83 169.168 189.632 172.7 190.901L178.057 192.74C179.182 193.163 180.028 194.01 180.451 195.002L182.713 200.65C183.414 202.343 184.83 203.19 186.377 203.19 187.925 203.19 189.34 202.343 190.041 200.65L192.303 195.002C192.726 193.878 193.573 193.163 194.697 192.74L200.054 190.901C203.586 189.632 203.586 184.83 200.054 183.56L194.697 181.721C193.573 181.298 192.726 180.451 192.303 179.459L190.041 173.811C189.34 172.118 187.925 171.271 186.377 171.271 184.83 171.271 183.414 172.118 182.713 173.811L180.451 179.459C180.028 180.584 179.182 181.298 178.057 181.721Z"/></g><g transform="translate(4 -46)"><path class="sp sp3" d="M147.157 132.634C145.187 131.933 143.493 130.372 142.779 128.401L138.692 117.819C137.422 114.71 134.737 113.163 131.919 113.163 129.102 113.163 126.271 114.71 125.147 117.819L121.059 128.401C120.358 130.372 118.665 131.933 116.681 132.634L106.522 136.166C100.027 138.428 100.027 147.594 106.522 149.988L116.681 153.52C118.652 154.221 120.345 155.782 121.059 157.753L125.147 168.335C126.416 171.444 129.102 172.991 131.919 172.991 134.737 172.991 137.567 171.444 138.692 168.335L142.779 157.753C143.48 155.782 145.173 154.221 147.157 153.52L157.316 149.988C163.811 147.726 163.811 138.56 157.316 136.166Z"/></g><path class="orb" d="M284.871 154.221C285.148 148.441 280.638 143.493 274.857 143.216 269.077 142.938 264.13 147.449 263.852 153.229 261.59 203.745 220.108 243.389 169.459 243.389 118.811 243.389 74.9214 200.915 74.9214 148.851 74.9214 96.7866 117.395 54.3125 169.459 54.3125 176.801 54.3125 183.997 55.1591 191.047 56.7067 196.695 57.9765 202.476 54.4448 203.745 48.8099 205.015 43.1616 201.484 37.3812 195.849 36.1114 187.237 34.1404 178.348 33.1484 169.459 33.1484 105.543 33.0161 53.6115 84.9347 53.6115 148.851 53.6115 183.706 69.1274 215.029 93.678 236.193L86.3365 258.627C82.1037 271.603 87.8841 285.717 99.8816 291.366 122.885 302.371 146.297 307.728 169.869 307.728 193.428 307.728 216.007 302.503 239.288 292.066 252.687 285.995 259.182 270.757 254.103 257.357L245.783 235.624C268.64 215.584 283.601 186.801 285.003 154.076ZM106.39 265.254 111.747 249.023C121.059 254.381 131.218 258.481 141.8 261.153L139.115 283.164C129.102 280.77 119.075 277.092 109.062 272.304 106.668 271.18 105.53 268.071 106.522 265.254Z"/><g class="face"><circle class="eye" cx="144" cy="156" r="10"/><circle class="eye" cx="195" cy="156" r="10"/><path class="mouth" d="M151 185Q169.5 200 188 185"/></g>`;
+// and a one-line smile, turned slightly up and to the right (the far eye is smaller). The two small
+// sparkles sit clear of the face.
+const MASCOT_PATHS = `<path class="sp sp1" d="M290.228 82.5405 270.757 75.6223C266.801 74.207 263.838 71.2439 262.291 67.4343L254.394 46.971C252 40.8995 246.629 37.9365 241.272 37.9365 235.915 37.9365 230.412 40.8995 228.15 46.971L220.254 67.4343C218.706 71.2439 215.743 74.2069 211.788 75.6223L192.317 82.5405C179.764 86.9189 179.764 104.697 192.317 109.207L211.788 116.126C215.743 117.541 218.706 120.504 220.254 124.314L228.15 144.777C230.545 150.848 235.915 153.811 241.272 153.811 246.629 153.811 252.132 150.848 254.394 144.777L262.291 124.314C263.838 120.504 266.801 117.541 270.757 116.126L290.228 109.207C302.781 104.829 302.781 87.051 290.228 82.5405ZM263.561 96.0856C253.825 99.4719 246.206 106.945 242.396 116.549L240.981 120.081 239.566 116.549C235.902 106.959 228.137 99.4719 218.402 96.0856L217.7 95.8078 218.402 95.53C228.137 92.1438 235.756 84.6703 239.566 75.0668L240.981 71.5349 242.396 75.0668C246.06 84.6567 253.825 92.1438 263.561 95.53L264.262 95.8078Z"/><g transform="translate(-70 20)"><path class="sp sp2" d="M172.7 183.56C169.168 184.83 169.168 189.632 172.7 190.901L178.057 192.74C179.182 193.163 180.028 194.01 180.451 195.002L182.713 200.65C183.414 202.343 184.83 203.19 186.377 203.19 187.925 203.19 189.34 202.343 190.041 200.65L192.303 195.002C192.726 193.878 193.573 193.163 194.697 192.74L200.054 190.901C203.586 189.632 203.586 184.83 200.054 183.56L194.697 181.721C193.573 181.298 192.726 180.451 192.303 179.459L190.041 173.811C189.34 172.118 187.925 171.271 186.377 171.271 184.83 171.271 183.414 172.118 182.713 173.811L180.451 179.459C180.028 180.584 179.182 181.298 178.057 181.721Z"/></g><g transform="translate(4 -46)"><path class="sp sp3" d="M147.157 132.634C145.187 131.933 143.493 130.372 142.779 128.401L138.692 117.819C137.422 114.71 134.737 113.163 131.919 113.163 129.102 113.163 126.271 114.71 125.147 117.819L121.059 128.401C120.358 130.372 118.665 131.933 116.681 132.634L106.522 136.166C100.027 138.428 100.027 147.594 106.522 149.988L116.681 153.52C118.652 154.221 120.345 155.782 121.059 157.753L125.147 168.335C126.416 171.444 129.102 172.991 131.919 172.991 134.737 172.991 137.567 171.444 138.692 168.335L142.779 157.753C143.48 155.782 145.173 154.221 147.157 153.52L157.316 149.988C163.811 147.726 163.811 138.56 157.316 136.166Z"/></g><path class="orb" d="M284.871 154.221C285.148 148.441 280.638 143.493 274.857 143.216 269.077 142.938 264.13 147.449 263.852 153.229 261.59 203.745 220.108 243.389 169.459 243.389 118.811 243.389 74.9214 200.915 74.9214 148.851 74.9214 96.7866 117.395 54.3125 169.459 54.3125 176.801 54.3125 183.997 55.1591 191.047 56.7067 196.695 57.9765 202.476 54.4448 203.745 48.8099 205.015 43.1616 201.484 37.3812 195.849 36.1114 187.237 34.1404 178.348 33.1484 169.459 33.1484 105.543 33.0161 53.6115 84.9347 53.6115 148.851 53.6115 183.706 69.1274 215.029 93.678 236.193L86.3365 258.627C82.1037 271.603 87.8841 285.717 99.8816 291.366 122.885 302.371 146.297 307.728 169.869 307.728 193.428 307.728 216.007 302.503 239.288 292.066 252.687 285.995 259.182 270.757 254.103 257.357L245.783 235.624C268.64 215.584 283.601 186.801 285.003 154.076ZM106.39 265.254 111.747 249.023C121.059 254.381 131.218 258.481 141.8 261.153L139.115 283.164C129.102 280.77 119.075 277.092 109.062 272.304 106.668 271.18 105.53 268.071 106.522 265.254Z"/><g class="face"><circle class="eye" cx="164" cy="138" r="10.5"/><circle class="eye" cx="205" cy="135" r="8.5"/><path class="mouth" d="M172 165Q191 178 208 160"/></g>`;
 const mascot = (mode) => `<svg class="mascot ${mode}" viewBox="-6 0 300 340" aria-hidden="true"><g transform="translate(-15.285 8.465) scale(1 1.00101)">${MASCOT_PATHS}</g></svg>`;
 
 const ICONS = {
@@ -605,16 +600,13 @@ const TAB_ICONS = {
 };
 const TABS = [["games", "Games"], ["ask", "Ask"], ["join", "Join"], ["account", "Account"]];
 
-// The ribbon's route, in a 100 × 200 box stretched over the screen: out of the orb, three loops, then away
-// toward the top-left corner, where the orb lands in Home's header.
-const RIBBON = "M50 84C62 78 80 72 84 58C89 40 70 26 52 32C30 40 22 68 30 98C38 130 70 138 78 116C86 94 60 84 40 102C22 120 14 150 30 170C46 190 80 172 74 140C68 108 24 72 18 42C14 22 12 10 10 -6";
-
 function intro() {
   return `<div class="intro" data-act="skip-intro">
-    <div class="intro-glow" aria-hidden="true"></div>
-    <svg class="intro-ribbon" viewBox="0 0 100 200" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="${RIBBON}"/></svg>
-    <div class="intro-orb">${mascot("idle")}</div>
-    <h1>Ordir</h1><p>Learn any turn, step by step.</p>
+    <div class="intro-track">
+      <div class="intro-scene"><div class="intro-orb">${mascot("idle")}</div><h1>Ordir</h1><p>Learn any turn, step by step.</p></div>
+      <div class="intro-glow" aria-hidden="true"></div>
+      <svg class="intro-line" aria-hidden="true"><path pathLength="1"/></svg>
+    </div>
     <button class="textbtn skip" data-act="skip-intro">Skip</button></div>`;
 }
 
@@ -999,13 +991,10 @@ function render() {
   if (state.screen === "intro") {
     const opening = phone.querySelector(":scope > .intro");
     phone.classList.add("phone", "single", "intro-on");
-    if (opening) {
-      phone.querySelectorAll(":scope > :not(.intro)").forEach((node) => node.remove());
-      opening.insertAdjacentHTML("beforebegin", home(false));
-    } else {
-      phone.innerHTML = home(false) + intro();
-    }
-    phone.querySelectorAll(":scope > :not(.intro)").forEach((node) => { node.inert = true; });
+    // A redraw mid-opening (the turn script arriving) refreshes Home's layer only, so the camera keeps moving.
+    if (opening) phone.querySelector(".intro-home").innerHTML = home(false);
+    else phone.innerHTML = `<div class="intro-home">${home(false)}</div>` + intro();
+    phone.querySelector(".intro-home").inert = true;
   } else if (state.screen === "home") {
     phone.className = "phone single"; phone.innerHTML = home(animate);
   } else if (!s) {
@@ -1079,14 +1068,27 @@ function showHome(landed) {
   // Someone signed in before: load their session so Home shows it (no network otherwise).
   try { if (Object.keys(localStorage).some((k) => k.startsWith("sb-") && k.endsWith("-auth-token"))) connect(); } catch {}
 }
-// The orb flies from the middle of the opening to its place in Home's header.
-function landIntro() {
-  const phone = $("#phone"), orb = $(".intro-orb"), target = $(".home .brand .orb-btn");
-  if (state.screen !== "intro" || !orb || !target) return showHome();
-  const a = orb.getBoundingClientRect(), b = target.getBoundingClientRect();
-  orb.style.transform = `translate(${b.left + b.width / 2 - (a.left + a.width / 2)}px, ${b.top + b.height / 2 - (a.top + a.height / 2)}px) scale(${b.width / a.width})`;
-  phone.classList.add("landing");
-  introTimer = setTimeout(() => showHome(true), 750);
+// The camera move: the line draws from the orb down to Home's orb while the view glides one screen down.
+function startIntro() {
+  const phone = $("#phone"), path = $(".intro-line path"), from = $(".intro-orb"), to = $(".intro-home .brand .orb-btn");
+  if (state.screen !== "intro" || !path || !from || !to) return;
+  const box = phone.getBoundingClientRect(), W = box.width, H = box.height;
+  const a = from.getBoundingClientRect(), b = to.getBoundingClientRect();  // Home's orb is already one screen down
+  const sx = a.right - box.left - 4, sy = a.top - box.top + a.height * 0.62;
+  const ex = b.right - box.left + 2, ey = b.top - box.top + b.height * 0.55;
+  const r = (n) => Math.round(n);
+  $(".intro-line").setAttribute("viewBox", `0 0 ${r(W)} ${r(2 * H)}`);
+  path.setAttribute("d", `M${r(sx)} ${r(sy)}C${r(W * 0.95)} ${r(sy + H * 0.14)} ${r(W * 0.98)} ${r(H * 0.72)} ${r(W * 0.62)} ${r(H * 0.9)}`
+    + `S${r(ex + W * 0.35)} ${r(ey + H * 0.02)} ${r(ex)} ${r(ey)}`);
+  const camera = { duration: 1600, delay: 1300, easing: "cubic-bezier(.65, 0, .35, 1)", fill: "both" };
+  path.animate([{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { duration: 2000, delay: 600, easing: "cubic-bezier(.4, 0, .2, 1)", fill: "both" });
+  $(".intro-track").animate([{ transform: "translateY(0)" }, { transform: `translateY(${-H}px)` }], camera);
+  $(".intro-home").animate([{ transform: `translateY(${H}px)` }, { transform: "translateY(0)" }], camera);
+  $(".intro .skip").animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, delay: 1300, fill: "forwards" });
+  $(".intro-glow").animate([{ opacity: 1 }, { opacity: 0 }], { duration: 500, delay: 2500, fill: "forwards" });
+  $(".intro-line").animate([{ opacity: 1 }, { opacity: 0 }], { duration: 350, delay: 2750, fill: "forwards" });
+  setTimeout(() => { if (state.screen === "intro") $(".intro-home .brand .orb-btn")?.classList.add("lit"); }, 2600);
+  introTimer = setTimeout(() => showHome(true), 3150);
 }
 document.addEventListener("keydown", (event) => {
   if (state.screen === "intro" && ["Enter", " ", "Escape"].includes(event.key)) { event.preventDefault(); showHome(); }
@@ -1180,7 +1182,7 @@ setInterval(() => {
 }, 1000);
 
 render();
-introTimer = reducedMotion() ? setTimeout(showHome, 900) : setTimeout(landIntro, 2300);
+if (reducedMotion()) introTimer = setTimeout(showHome, 900); else requestAnimationFrame(startIntro);
 fetch("turnscript.json")
   .then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
   .then((script) => { state.script = script; render(); })

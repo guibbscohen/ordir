@@ -40,8 +40,8 @@ Status key:
 
 | Moment | Animation | Reduce Motion | Engine | Status |
 | --- | --- | --- | --- | --- |
-| App launch | On black, a deep blue and violet glow rises. The orb (88 pt, with its face) comes out of a blur, sparkles popping. "Ordir" and the tagline rise. A glowing ribbon travels out of the orb, loops across the screen and leaves toward the top-left. Inspired by Ripplix's "Happier" splash. | Orb and name, short fade, Home after 0.9 s | SwiftUI / CSS | Built |
-| Opening → Home | At 2.3 s the glow settles to black and the orb glides into Home's header while Home rises in underneath, sections staggered | Crossfade | SwiftUI (Home reports its orb's frame) / CSS | Built |
+| App launch | On black, the orb (88 pt, with its face) comes out of a blur, sparkles popping; "Ordir" and the tagline rise; a deep blue and violet glow sits below. A glowing line draws itself from the orb down the screen. Inspired by Ripplix's "Happier" splash. | Orb and name, short fade, Home after 0.9 s | SwiftUI / CSS | Built |
+| Opening → Home | One continuous camera move: the view glides down through the glow to Home, waiting one screen below; the line ends at Home's orb, which lights up. No cut or fade. | Crossfade | SwiftUI (Home slides with the same clock) / CSS (Web Animations) | Built |
 | Richer opening (optional) | "Orb awakening": sparkles swirl in from the edges and ignite the orb with a soft glow pulse | Marker: orb already lit | Lottie | New (needs art) |
 
 ### Home

@@ -15,9 +15,7 @@ struct HomeView: View {
         .flatMap(OrdirGame.init(rawValue:))
         .map { [$0] } ?? []
 
-    /// While the opening plays, its orb flies to this header's orb, so Home hides its own until it lands.
-    var hidesOrb = false
-    /// Reports where the header's orb is on screen (global coordinates), as the opening's landing spot.
+    /// Reports where the header's orb is on screen (global coordinates): the opening's line ends there.
     var onOrbFrame: (CGRect) -> Void = { _ in }
 
     var body: some View {
@@ -50,7 +48,6 @@ struct HomeView: View {
         VStack(spacing: 12) {
             OrdirMascotView()
                 .frame(height: 72)
-                .opacity(hidesOrb ? 0 : 1)
                 .background {
                     GeometryReader { proxy in
                         Color.clear
