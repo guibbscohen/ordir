@@ -110,7 +110,7 @@ Status key:
 
 | Moment | Animation | Reduce Motion | Engine | Status |
 | --- | --- | --- | --- | --- |
-| Code sent | The email field slides away and the 6-digit code field slides in | Crossfade | SwiftUI / CSS | New (instant) |
+| Code sent | The email field slides away and the code field slides in | Crossfade | SwiftUI / CSS | New (instant) |
 | Typing the code | Each digit box pops as it fills | Instant | SwiftUI / CSS | New |
 | Signed in | Orb flashes a sparkle check | Static check | Lottie | New (needs art) |
 | Wrong code | Code boxes shake | Message only | SwiftUI / CSS | New |

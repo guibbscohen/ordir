@@ -16,7 +16,7 @@ The database, the `rules-answer` Edge Function and the table functions are alrea
 ## Sign-in emails
 
 3. **Show the code in the email.** Supabase → Authentication → Emails → Templates. Both show
-   `{{ .Token }}`, the 6-digit code; their orb image is served with the preview on GitHub Pages.
+   `{{ .Token }}`, the sign-in code (8 digits, set under Email OTP Length); their orb image is served with the preview on GitHub Pages.
    - **Confirm signup** (someone's first code): `docs/email/welcome-code.html`, subject
      `Welcome to Ordir: here's your code`.
    - **Magic Link** (every sign-in after that): `docs/email/sign-in-code.html`, subject

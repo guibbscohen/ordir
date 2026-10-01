@@ -995,8 +995,8 @@ function signInPane(reason) {
   if (!online.ready) return `<p class="hint" style="font-size:15px">Connecting…</p>`;
   return `<div class="section" style="gap:12px"><p style="margin:0">${esc(reason)}</p>
     ${f.sent
-      ? `<div class="field"><label for="signin-code">The 6-digit code we emailed to ${esc(f.email)}</label>
-           <input id="signin-code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" value="${esc(f.code)}"></div>
+      ? `<div class="field"><label for="signin-code">The code we emailed to ${esc(f.email)}</label>
+           <input id="signin-code" inputmode="numeric" autocomplete="one-time-code" maxlength="10" value="${esc(f.code)}"></div>
          <button class="primary" data-act="verify-code" ${f.busy ? "disabled" : ""}>${f.busy ? "Checking…" : "Sign in"}</button>
          <button class="textbtn" style="align-self:flex-start" data-act="change-email">Use a different email</button>`
       : `<div class="field"><label for="signin-email">Email</label>
@@ -1219,7 +1219,7 @@ async function onlineAction(act, el) {
     f.busy = false; f.sent = !error; f.error = error ? errorText(error, "Couldn't send the code. Try again.") : "";
     render(); $("#signin-code")?.focus();
   } else if (act === "verify-code") {
-    f.code = ($("#signin-code")?.value || f.code).trim();
+    f.code = ($("#signin-code")?.value || f.code).replace(/\s+/g, "");  // pasted codes may carry spaces
     f.busy = true; f.error = ""; render();
     const { error } = await client.auth.verifyOtp({ email: f.email, token: f.code, type: "email" });
     f.busy = false; f.error = error ? "That code didn't work. Check it, or send a new one." : "";
