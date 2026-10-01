@@ -320,6 +320,7 @@ private struct TurnGuideRunner: View {
                 phaseLabel
                     .accessibilityIdentifier("guide-progress")
             }
+            .layoutPriority(1)
             Spacer(minLength: 8)
             barButton("Previous step", systemImage: "arrow.uturn.backward") {
                 withAnimation(stepAnimation) { session.goBack() }
@@ -354,16 +355,18 @@ private struct TurnGuideRunner: View {
         .accessibilityLabel(title)
     }
 
+    /// Phase over progress, wrapping rather than clipping at large text sizes. The progress uses the
+    /// primary colour: secondary text falls below 4.5:1 on the bar's translucent background.
     private var phaseLabel: some View {
-        HStack(spacing: 6) {
+        VStack(spacing: 1) {
             Text(session.phase.title)
                 .font(.footnote.weight(.semibold))
             Text(progressText)
                 .font(.caption.monospacedDigit())
-                .foregroundStyle(.secondary)
         }
-        .lineLimit(2)
         .multilineTextAlignment(.center)
+        .fixedSize(horizontal: false, vertical: true)
+        .layoutPriority(1)
         .accessibilityElement(children: .combine)
     }
 
@@ -1065,23 +1068,30 @@ private struct WaitingView: View {
     let stepTitle: String
     let startedAt: Date
 
+    /// Centred in the half, and scrollable when large text makes it taller than the half.
     var body: some View {
-        VStack(spacing: 14) {
-            Spacer(minLength: 0)
-            OrdirMascotView(isThinking: true)
-                .frame(height: 64)
-                .accessibilityHidden(true)
-            line
-                .font(.title3)
-                .multilineTextAlignment(.center)
-            Text(startedAt, style: .timer)
-                .font(.title2.monospacedDigit())
-                .foregroundStyle(.secondary)
-            Spacer(minLength: 0)
+        GeometryReader { geometry in
+            ScrollView {
+                VStack(spacing: 14) {
+                    OrdirMascotView(isThinking: true)
+                        .frame(height: 64)
+                        .accessibilityHidden(true)
+                    line
+                        .font(.title3)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Text(startedAt, style: .timer)
+                        .font(.title2.monospacedDigit())
+                        .foregroundStyle(.secondary)
+                }
+                .padding(.horizontal, 24)
+                .padding(.vertical, 16)
+                .frame(maxWidth: .infinity, minHeight: geometry.size.height)
+                .accessibilityElement(children: .combine)
+            }
+            .scrollBounceBehavior(.basedOnSize)
+            .scrollIndicators(.hidden)
         }
-        .padding(.horizontal, 24)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .accessibilityElement(children: .combine)
     }
 
     private var line: Text {
