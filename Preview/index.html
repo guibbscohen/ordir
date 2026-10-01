@@ -202,6 +202,67 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 @keyframes chip-in { from { opacity: 0; transform: translateY(4px) scale(.9); } to { opacity: 1; transform: none; } }
 .answer p { margin: 0; }
 .answer ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 4px; }
+/* Ask: the game search bar and its list of games */
+.search-box { position: relative; display: flex; align-items: center; }
+.search-box .lens { position: absolute; left: 14px; width: 18px; height: 18px; color: var(--muted); pointer-events: none; }
+.field .search-box input { padding-left: 42px; }
+.game-list { display: flex; flex-direction: column; gap: 2px; padding: 6px; border-radius: 16px; background: var(--surface); border: 1px solid var(--line);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .5); animation: drop .2s ease both; }
+.game-list[hidden], .game-opt[hidden], .search .none[hidden] { display: none; }
+@keyframes drop { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+.game-opt { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 56px; padding: 6px 8px; border-radius: 12px; text-align: left; }
+.game-opt:hover, .game-opt:focus-visible, .game-opt[aria-selected="true"] { background: var(--surface-2); }
+.game-opt > span:last-child { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.game-opt strong { font-size: 16px; }
+.game-opt .sub { color: var(--muted); font-size: 13px; }
+.game-opt.soon { cursor: default; }
+.game-opt.soon strong { color: var(--muted); font-weight: 600; }
+.search .none { margin: 0; padding: 10px 8px; }
+.thumb { flex: none; width: 44px; height: 44px; border-radius: 10px; overflow: hidden; display: grid; place-items: center;
+  background: radial-gradient(120% 90% at 30% 20%, #2a2a2e 0%, #121214 60%, #0a0a0b 100%); }
+.thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.thumb .mascot { width: 60%; height: 60%; opacity: .4; }
+/* Ask: the expansions in play, as small toggles under the search bar */
+.pills { display: flex; flex-wrap: wrap; gap: 8px; margin: -4px 0 0; padding: 0; border: 0; min-width: 0; }
+.pills legend { padding: 0; margin-bottom: 8px; font-size: 13px; font-weight: 600; color: var(--muted); }
+.pill { position: relative; display: inline-flex; align-items: center; min-height: 36px; padding: 0 14px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--line);
+  font-size: 14px; font-weight: 600; cursor: pointer; transition: background .15s, color .15s; }
+.pill input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.pill:has(input:checked) { background: var(--fg); color: #000; border-color: var(--fg); }
+.pill:has(input:checked)::before { content: "✓"; margin-right: 6px; }
+.pill:has(input:focus-visible) { outline: 2px solid var(--sparkle); outline-offset: 2px; }
+/* Ask: earlier chats, one per game */
+.chat-row { display: flex; align-items: center; gap: 12px; width: 100%; padding: 10px 12px; border-radius: 14px; text-align: left; background: var(--surface); border: 1px solid var(--line); }
+.chat-row > div { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.chat-row strong { font-size: 15px; }
+.chat-row .last { color: var(--muted); font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chat-row time { flex: none; align-self: flex-start; margin-top: 2px; color: var(--muted); font-size: 12px; }
+.chat-row { transition: transform .25s cubic-bezier(.3, 1.4, .5, 1); }
+.chat-row:active { transform: scale(.98); transition-duration: .1s; }
+/* A game's rules chat: it takes over the screen (or fills the in-game sheet), newest message at the bottom. */
+.overlay.chat { padding: 0; gap: 0; }
+.chat-head { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+.chat-head .thumb { width: 36px; height: 36px; border-radius: 9px; }
+.chat-head > div { flex: 1; min-width: 0; }
+.chat-head h2 { font-size: 17px; }
+.chat-head p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+.thread { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding: 16px; }
+.msg { align-self: flex-end; max-width: 85%; margin: 0; padding: 10px 14px; border-radius: 18px 18px 4px 18px; background: #1d2a3d; line-height: 1.4; overflow-wrap: anywhere; }
+.thread .answer { align-self: flex-start; max-width: 94%; border-radius: 18px 18px 18px 4px; }
+.answer.checking .answer-by .mascot { width: 28px; height: 28px; }
+.chat-empty { margin: auto 0; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; color: var(--muted); }
+.chat-empty .mascot { width: 64px; height: 64px; }
+.chat-empty p { margin: 0; line-height: 1.45; }
+.composer { display: flex; align-items: flex-end; gap: 8px; padding: 10px 12px calc(10px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); }
+.composer textarea { flex: 1; font: inherit; color: var(--fg); background: var(--surface-2); border: 1px solid var(--line); border-radius: 22px;
+  padding: 11px 16px; min-height: 46px; max-height: 120px; resize: none; }
+.composer textarea:focus-visible { outline: 2px solid var(--sparkle); outline-offset: 1px; }
+.composer .send { flex: none; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: var(--fg); color: #000; }
+.composer .send:disabled { background: var(--surface-2); color: var(--muted); }
+.composer .send svg { width: 20px; height: 20px; }
+.sheet .thread { padding: 4px 0; }
+.sheet .answer { background: var(--surface-2); }
+.sheet .composer { padding: 8px 0 0; border: 0; }
 .chip { display: inline-block; margin-left: 4px; padding: 0 8px; border-radius: 999px; background: var(--surface-2); color: var(--sparkle); font-size: 13px; font-weight: 600; line-height: 22px; text-decoration: none; white-space: nowrap; }
 .strip { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 20px; font-size: 13px; color: var(--muted); border-bottom: 1px solid var(--line); }
 .strip b { color: var(--fg); letter-spacing: .08em; }
@@ -338,11 +399,11 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 .waiting .orb-btn { width: 64px; height: 64px; }
 .overlay.sheet { top: 30%; padding: 16px 20px 12px; border-radius: 20px 20px 0 0; background: var(--surface); border-top: 1px solid var(--line);
   box-shadow: 0 0 0 100vmax rgba(0, 0, 0, .55); z-index: 3; }
-.overlay.sheet .field textarea { min-height: 72px; }
 .overlay.sheet.enter { animation: sheet-up .45s cubic-bezier(.2, 1.15, .35, 1) both; }
 @keyframes sheet-up { from { transform: translateY(100%); } to { transform: none; } }
 /* On the split screen a half is already small, so the sheet covers that player's whole half. */
 .phone:not(.pass):not(.single) .overlay.sheet { top: 0; }
+.overlay.sheet { gap: 8px; }
 
 /* Mascot */
 .mascot .orb { fill: var(--fg); }
@@ -372,7 +433,8 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 @media (prefers-reduced-motion: reduce) {
   .card.enter, .overlay.enter, .pane.enter, .card.enter.back, .overlay.sheet.enter, .answer.fresh { animation: fade .2s ease both; }
   .scroll.ghost { display: none; }
-  .check.on.ticked .box path, .primary.ready, .phase-label b.roll, .tabbar.slide::before, .answer.fresh .chip { animation: none; }
+  .check.on.ticked .box path, .primary.ready, .phase-label b.roll, .tabbar.slide::before, .answer.fresh .chip, .game-list { animation: none; }
+  .chat-row, .pill { transition: none; }
   .game:not(.soon), .option { transition: none; }
   .tabbar button { transition: none; }
   .intro-orb .mascot, .intro h1, .intro p { animation: fade .3s ease both !important; }
@@ -735,19 +797,78 @@ function gamesPage() {
     </div>`;
 }
 
-// From Home, a question isn't about any game yet: pick the game (and the expansions you play with) first.
+// From Home, a question isn't about any game yet: find the game in the search bar (and pick the expansions
+// you play with) first. Asking opens that game's chat full screen; earlier chats are listed underneath.
 function askPage() {
   const a = online.ask, game = gameOf(a.game);
-  const games = PLAYABLE.map((g) => `<button class="option" role="radio" aria-checked="${a.game === g.script}" data-askgame="${g.script}">
-      <div><strong>${esc(g.title)}</strong></div><span class="radio" aria-hidden="true"></span></button>`).join("");
   const script = state.script && state.script.game === a.game ? state.script : null;
-  const expansions = script && script.expansions.length ? `<div class="section"><h3>Expansions you play with</h3>
-      ${script.expansions.map((e) => `<label class="toggle" for="askexp-${e.id}"><div><strong>${esc(e.title)}</strong></div>
-        <input type="checkbox" id="askexp-${e.id}" data-askexp="${e.id}" ${a.expansions.has(e.id) ? "checked" : ""}><span class="switch" aria-hidden="true"></span></label>`).join("")}</div>` : "";
+  const expansions = script && script.expansions.length ? `<fieldset class="pills"><legend>Expansions you play with</legend>
+      ${script.expansions.map((e) => `<label class="pill"><input type="checkbox" data-askexp="${e.id}" ${a.expansions.has(e.id) ? "checked" : ""}>${esc(e.title)}</label>`).join("")}</fieldset>` : "";
+  const body = !signedIn() ? signInPane("Sign in with your email to ask questions. Answers come only from the official rulebook, FAQ and the expansions you play with.")
+    : `<div class="field"><label for="ask-first">Your question</label>
+        <textarea id="ask-first" maxlength="500" placeholder="${esc(game?.askExample || "Ask about any rule")}">${esc(a.question)}</textarea></div>
+      <button class="primary" style="flex:none" data-act="ask-start" ${a.busy ? "disabled" : ""}>Ask</button>
+      ${a.error && !a.open ? `<p class="error" role="alert">${esc(a.error)}</p>` : ""}
+      ${chatList()}`;
   return `<h1 tabindex="-1">Ask a rules question</h1>
     <p class="hint" style="font-size:15px;margin-top:-12px">Answers come only from the official rulebook and FAQ, with the page.</p>
-    <div role="radiogroup" aria-label="Which game?" class="group"><h2>Which game?</h2>${games}</div>
-    ${expansions}${askBody()}`;
+    ${gameSearch()}${expansions}${body}`;
+}
+
+// A game's cover (or the house art until it has one), small.
+const thumb = (g) => `<span class="thumb" aria-hidden="true">${g && g.cover && state.script && imageOf(g.cover) ? `<img src="${imgUrl(g.cover)}" alt="">` : mascot("")}</span>`;
+const norm = (text) => text.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+const LENS = '<svg class="lens" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>';
+const SEND = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5.5 11.5L12 5l6.5 6.5"/></svg>';
+
+// The search bar: tap or type to open the list of games (cover and name); typing filters it.
+function gameSearch() {
+  const a = online.ask, chosen = gameOf(a.game), query = norm(a.picking ? a.query : "");
+  const options = GAMES.map((g) => `<button class="game-opt${g.soon ? " soon" : ""}" role="option" aria-selected="${!!g.script && g.script === a.game}"
+      ${g.soon ? 'aria-disabled="true"' : `data-askgame="${g.script}"`} data-title="${esc(norm(g.title))}" ${norm(g.title).includes(query) ? "" : "hidden"}>${thumb(g)}
+      <span><strong>${esc(g.title)}</strong><span class="sub">${g.soon ? "Coming soon" : esc(g.detail)}</span></span></button>`).join("");
+  return `<div class="field search"><label for="ask-game">Game</label>
+    <div class="search-box">${LENS}<input id="ask-game" role="combobox" aria-autocomplete="list" aria-controls="ask-games" aria-expanded="${!!a.picking}"
+      autocomplete="off" spellcheck="false" placeholder="Search games" value="${esc(a.picking ? a.query : chosen?.title || "")}"></div>
+    <div id="ask-games" class="game-list" role="listbox" aria-label="Games" ${a.picking ? "" : "hidden"}>${options}</div>
+    <p class="hint none" ${a.picking && !GAMES.some((g) => norm(g.title).includes(query)) ? "" : "hidden"}>No games match.</p></div>`;
+}
+const visibleGames = () => [...document.querySelectorAll(".game-opt:not([hidden])")];
+function setPicking(open) {
+  const a = online.ask, input = $("#ask-game"), list = $("#ask-games");
+  a.picking = open; a.query = "";
+  if (!input || !list) return;
+  input.value = open ? "" : gameOf(a.game)?.title || "";
+  input.setAttribute("aria-expanded", open);
+  list.hidden = !open;
+  filterGames("");
+}
+function filterGames(query) {
+  const q = norm(query);
+  document.querySelectorAll(".game-opt").forEach((o) => { o.hidden = !o.dataset.title.includes(q); });
+  const none = $(".search .none");
+  if (none) none.hidden = !online.ask.picking || visibleGames().length > 0;
+}
+
+// Earlier chats, one per game, the latest first.
+function chatList() {
+  const chats = Object.entries(online.ask.threads).filter(([id, t]) => t.length && gameOf(id))
+    .sort(([, x], [, y]) => Date.parse(y.at(-1).at) - Date.parse(x.at(-1).at));
+  if (!chats.length) return "";
+  return `<div class="group"><h2>Your chats</h2>${chats.map(([id, t]) => {
+    const g = gameOf(id), last = t.at(-1);
+    return `<button class="chat-row" data-chat="${id}">${thumb(g)}<div><strong>${esc(g.title)}</strong><span class="last">${esc(last.question)}</span></div>
+      <time datetime="${esc(last.at)}">${ago(last.at)}</time></button>`;
+  }).join("")}</div>`;
+}
+function ago(iso) {
+  const minutes = Math.round((Date.now() - Date.parse(iso)) / 60000), hours = Math.round(minutes / 60), days = Math.round(hours / 24);
+  if (minutes < 1) return "Just now";
+  if (minutes < 60) return `${minutes} min ago`;
+  if (hours < 24) return `${hours} h ago`;
+  if (days === 1) return "Yesterday";
+  if (days < 7) return `${days} days ago`;
+  return new Date(iso).toLocaleDateString(undefined, { day: "numeric", month: "short" });
 }
 // What a question is about: the game being played, or the one picked on Home's Ask tab.
 const inGame = () => state.screen === "game" && !!state.session;
@@ -827,8 +948,11 @@ const online = {
   session: null,
   ready: false,
   signIn: { email: "", code: "", sent: false, busy: false, error: "" },
-  ask: { open: false, seat: null, question: "", busy: false, error: "", answers: [],
-    game: PLAYABLE[0].script, expansions: new Set() },  // from Home: the game (and expansions) a question is about  // seat: the side whose sheet is open
+  ask: { open: false, seat: null,  // open: the chat (full screen, or the sheet over seat's side in a game)
+    question: "", busy: null, error: "",  // busy: { question } while the rules are checked
+    game: PLAYABLE[0].script, expansions: new Set(),  // from Home: the game (and expansions) a question is about
+    picking: false, query: "",  // Home's game search list
+    threads: {}, loadedFor: null, loading: null, toBottom: false },  // per game: [{ question, answer, expansions, at }], oldest first
   lobby: { open: false, code: "", side: "atreides", busy: false, error: "",
     found: null,     // the table a code points to, before joining: { code, game, expansions, taken }
     joinSide: null },
@@ -893,35 +1017,66 @@ function answerHtml(answer) {
   return out + (list ? "</ul>" : "");
 }
 
-function askBody(compact) {
-  const a = online.ask;
+// A game's rules chat: the player's questions on the right, Ordir's answers (with page chips) on the left.
+function chatThread() {
+  const a = online.ask, game = gameOf(askGame()), thread = a.threads[askGame()] || [];
   if (!signedIn()) return signInPane("Sign in with your email to ask questions. Answers come only from the official rulebook, FAQ and the expansions you play with.");
-  return `<div class="field"><label for="ask-question">Your question</label>
-      <textarea id="ask-question" maxlength="500" placeholder="${esc(gameOf(askGame())?.askExample || "Ask about any rule")}">${esc(a.question)}</textarea></div>
-    <button class="primary" style="flex:none" data-act="ask-send" ${a.busy ? "disabled" : ""}>${a.busy ? "Checking the rules…" : "Ask"}</button>
-    ${a.busy ? `<div class="waiting" style="padding:0">${mascot("thinking")}</div>` : ""}
-    ${a.error ? `<p class="error" role="alert">${esc(a.error)}</p>` : ""}
-    ${a.answers.map((x, i) => {
-      const fresh = i === 0 && a.freshUntil > Date.now();
-      return `<article class="answer${fresh ? " fresh" : ""}"><div class="answer-by">${mascot(fresh ? "speaking" : "idle")}<span>Ordir</span></div>
-        <p class="q">${esc(x.question)}</p>${answerHtml(x.answer)}</article>`;
-    }).join("")}
-    ${compact ? "" : `<p class="hint">Answers cite the official sources; tap a page to open it. Signed in as ${esc(online.session.user.email || "")}.</p>`}`;
+  const turns = thread.map((x, i) => {
+    const fresh = !a.busy && i === thread.length - 1 && a.freshUntil > Date.now();
+    return `<p class="msg"><span class="sr-only">You asked: </span>${esc(x.question)}</p>
+      <article class="answer${fresh ? " fresh" : ""}"><div class="answer-by">${mascot(fresh ? "speaking" : "idle")}<span>Ordir</span></div>${answerHtml(x.answer)}</article>`;
+  }).join("");
+  const pending = a.busy ? `<p class="msg"><span class="sr-only">You asked: </span>${esc(a.busy.question)}</p>
+      <div class="answer checking" role="status"><div class="answer-by">${mascot("thinking")}<span>Checking the rules…</span></div></div>` : "";
+  const empty = thread.length || a.busy ? "" : `<div class="chat-empty">${mascot("idle")}<p>Ask anything about ${esc(game?.title || "this game")}.<br>Answers cite the rulebook and FAQ pages.</p></div>`;
+  return empty + turns + pending + (a.error ? `<p class="error" role="alert">${esc(a.error)}</p>` : "");
+}
+function composer() {
+  const a = online.ask, thread = a.threads[askGame()] || [];
+  const placeholder = thread.length ? "Ask a follow-up" : gameOf(askGame())?.askExample || "Ask about any rule";
+  return `<div class="composer"><label class="sr-only" for="ask-question">Your question</label>
+    <textarea id="ask-question" rows="1" maxlength="500" placeholder="${esc(placeholder)}">${esc(a.question)}</textarea>
+    <button class="send" data-act="ask-send" aria-label="Ask" ${a.busy ? "disabled" : ""}>${SEND}</button></div>`;
 }
 
-// From the Game menu: the whole phone.
-function askPanel() {
-  return `<div class="overlay enter menu" role="dialog" aria-modal="true" aria-label="Rules question" style="padding-top:20px">
-    <div class="head"><h2 style="flex:1" tabindex="-1">Ask a rules question</h2><button class="textbtn" data-act="ask-close">Close</button></div>
-    <div class="scroll" style="padding:0;display:flex;flex-direction:column;gap:16px">${askBody()}</div></div>`;
+// Full screen: from Home's Ask page (after asking, or an earlier chat) and from the Game menu.
+function chatPanel() {
+  const game = gameOf(askGame());
+  const titles = askExpansions().map((id) => state.script?.expansions.find((e) => e.id === id)?.title).filter(Boolean);
+  return `<div class="overlay${askEnter ? " enter" : ""} menu chat" role="dialog" aria-modal="true" aria-labelledby="chat-title">
+    <div class="chat-head">${thumb(game)}<div><h2 id="chat-title" tabindex="-1">${esc(game?.title || "Rules question")}</h2>
+      <p>Rules chat · ${esc(titles.length ? `With ${titles.join(", ")}` : "Base game")}</p></div>
+      <button class="textbtn" data-act="ask-close">Close</button></div>
+    <div class="scroll thread">${chatThread()}</div>${signedIn() ? composer() : ""}</div>`;
 }
 
 // From the step's orb: a short sheet over that player's side, so the other side keeps playing.
 function askSheet() {
-  return `<div class="overlay sheet enter" role="dialog" aria-label="Rules question">
+  return `<div class="overlay sheet${askEnter ? " enter" : ""}" role="dialog" aria-label="Rules question">
     <div class="head"><h2 style="flex:1;font-size:17px" tabindex="-1">Ask a rules question</h2><button class="textbtn" data-act="ask-close">Close</button></div>
     <p class="hint" style="margin-top:-8px">About ${esc(gameOf(askGame())?.title || "this game")}</p>
-    <div class="scroll" style="padding:0;display:flex;flex-direction:column;gap:12px">${askBody(true)}</div></div>`;
+    <div class="scroll thread">${chatThread()}</div>${signedIn() ? composer() : ""}</div>`;
+}
+// The chat slides in when it opens, not on every redraw while it's open.
+let askEnter = true;
+
+// Each game's chat is the player's questions on it, loaded once per sign-in (the table only lets players
+// read their own rows). The newest answers count as context for a follow-up (rules-answer's followUp).
+function loadThreads() {
+  const a = online.ask, user = online.session.user.id;
+  a.loadedFor = user;
+  a.loading = (async () => {
+    const { data, error } = await online.client.from("rules_questions").select("game, question, answer, expansions, created_at")
+      .not("answer", "is", null).order("created_at", { ascending: false }).limit(100);
+    if (error || online.session?.user.id !== user) return;
+    const threads = {};
+    for (const row of (data || []).reverse()) {
+      (threads[row.game] ||= []).push({ question: row.question, answer: row.answer, expansions: row.expansions || [], at: row.created_at });
+    }
+    a.threads = threads;
+    a.toBottom = true;
+    render();
+  })().catch(() => {});
 }
 
 // Joining by code: the code first, then the table's game and its free sides, then join.
@@ -1063,32 +1218,37 @@ async function onlineAction(act, el) {
   } else if (act === "change-email") {
     f.sent = false; f.code = ""; f.error = ""; render(); $("#signin-email")?.focus();
   } else if (act === "sign-out") {
-    leaveTable(); await client.auth.signOut(); render();
-  } else if (act === "ask-send") {
-    a.question = ($("#ask-question")?.value || a.question).trim();
-    if (a.question.length < 3) { a.error = "Type a question first."; return render(); }
-    a.busy = true; a.error = ""; render();
+    leaveTable(); await client.auth.signOut();
+    Object.assign(a, { threads: {}, loadedFor: null, loading: null, open: false, seat: null }); render();
+  } else if (act === "ask-send" || act === "ask-start") {
+    const field = el.closest(".chat, .sheet, .pane")?.querySelector("textarea");
+    const question = (field ? field.value : a.question).trim();
+    if (question.length < 3) { a.error = "Type a question first."; render(); if (field) $(`#${field.id}`)?.focus(); return; }
+    await a.loading;  // earlier chats first, so this question isn't lost when they arrive
+    const game = askGame(), expansions = askExpansions(), thread = (a.threads[game] ||= []);
+    // From Home's Ask page the game's chat takes over the screen; closing it lands on that chat in the list.
+    if (act === "ask-start") { a.open = true; a.seat = null; state.returnTo = `[data-chat="${game}"]`; }
+    a.busy = { question }; a.question = ""; a.error = ""; a.toBottom = true; render();
     try {
       const token = (await client.auth.getSession()).data.session?.access_token;
-      const expansions = askExpansions();
       const response = await fetch(`${BACKEND.url}/functions/v1/rules-answer`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}`, apikey: BACKEND.key, "Content-Type": "application/json" },
-        body: JSON.stringify({ game: askGame(), expansions, question: a.question }),
+        body: JSON.stringify({ game, expansions, question, followUp: thread.length > 0 }),
       });
       const body = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(body.error || "Couldn't get an answer. Try again.");
-      a.answers.unshift({ question: a.question, answer: body.answer });
+      thread.push({ question, answer: body.answer, expansions, at: new Date().toISOString() });
       // The orb "speaks" the new answer for a moment, then rests.
       a.freshUntil = Date.now() + 1500;
       setTimeout(() => document.querySelectorAll(".answer.fresh .answer-by .mascot").forEach((m) => m.setAttribute("class", "mascot idle")), 3000);
-      a.question = "";
     } catch (error) {
       a.error = errorText(error, "Couldn't get an answer. Try again.");
+      a.question ||= question;
     }
-    a.busy = false; render();
-    document.querySelector(".answer")?.setAttribute("tabindex", "-1");
-    document.querySelector(".answer")?.focus();
+    a.busy = null; a.toBottom = true; render();
+    const answer = [...document.querySelectorAll(".thread .answer")].pop();
+    if (!a.error && answer) { answer.setAttribute("tabindex", "-1"); answer.focus(); } else $("#ask-question")?.focus();
   } else if (act === "table-find") {
     l.code = ($("#table-code")?.value || l.code).trim().toUpperCase();
     if (l.code.length !== 6) { l.error = "Enter the 6-character code from the other phone."; return render(); }
@@ -1123,7 +1283,7 @@ async function onlineAction(act, el) {
 // a checklist, picture or menu that just opened; the new step's title; or the control they used.
 // Whatever an overlay covers is made inert so Tab can't reach it.
 const focusKey = (el) => {
-  for (const name of ["act", "mode", "enlarge", "winner", "mark", "side", "joinside", "askgame"]) {
+  for (const name of ["act", "mode", "enlarge", "winner", "mark", "side", "joinside", "askgame", "chat"]) {
     if (el.dataset[name] !== undefined) return `[data-${name}="${el.dataset[name]}"]${el.dataset.seat ? `[data-seat="${el.dataset.seat}"]` : ""}`;
   }
   return null;
@@ -1160,7 +1320,10 @@ function render() {
   const active = document.activeElement;
   const kept = active && phone.contains(active) ? (active.id ? `#${active.id}` : focusKey(active) || "[data-none]") : null;
   const menu = s && state.menu ? gameMenu(s) : "";
-  const ask = online.ask.open && online.ask.seat === null ? askPanel() : "";
+  askEnter = !phone.querySelector(".chat, .sheet");
+  const ask = online.ask.open && online.ask.seat === null ? chatPanel() : "";
+  if (signedIn() && online.client && online.ask.loadedFor !== online.session.user.id && (state.tab === "ask" || online.ask.open)) loadThreads();
+  const threadTop = phone.querySelector(".thread")?.scrollTop;
   // The step that's leaving: copy each half's step so it can lift away over the new one.
   const ghosts = animate && state.screen === "game" && s && !reducedMotion()
     ? [...phone.querySelectorAll(":scope > .half")].map((h) => {
@@ -1177,7 +1340,7 @@ function render() {
       + `<div class="intro-home">${home(false)}</div>` + intro();
     phone.querySelector(".intro-home").inert = true;
   } else if (state.screen === "home") {
-    phone.className = "phone single home-bg"; phone.innerHTML = home(animate);
+    phone.className = "phone single home-bg"; phone.innerHTML = home(animate) + ask;
   } else if (!s) {
     phone.className = "phone single"; phone.innerHTML = (online.lobby.open ? lobby() : picker()) + ask;
   } else if (s.finished) {
@@ -1207,6 +1370,10 @@ function render() {
     ghost.scrollTop = g.scrollTop;
     ghost.addEventListener("animationend", () => ghost.remove());
   });
+  // A chat opens (and moves on) at its newest message; any other redraw keeps the reader's place.
+  const thread = phone.querySelector(".thread");
+  if (thread) thread.scrollTop = online.ask.toBottom || threadTop == null ? thread.scrollHeight : threadTop;
+  online.ask.toBottom = false;
   if (s) state.prevPhase = phaseOf(s).title;
   state.navBack = false;
   state.tabFrom = null;
@@ -1245,7 +1412,7 @@ function run(action) {
 
 // At an own-phone table, any tap that changes the shared position is saved for the other phone.
 document.addEventListener("click", (event) => {
-  const el = event.target.closest("[data-act], [data-enlarge], [data-check], [data-mode], [data-mark], [data-winner], [data-evcheck], [data-side], [data-joinside], [data-askgame]");
+  const el = event.target.closest("[data-act], [data-enlarge], [data-check], [data-mode], [data-mark], [data-winner], [data-evcheck], [data-side], [data-joinside], [data-askgame], [data-chat]");
   if (!el) return;
   const atTable = () => state.mode === "own" && online.table && state.session;
   const before = atTable() ? JSON.stringify(shared()) : null;
@@ -1328,7 +1495,7 @@ function startIntro() {
 document.addEventListener("keydown", (event) => {
   if (state.screen === "intro" && ["Enter", " ", "Escape"].includes(event.key)) { event.preventDefault(); showHome(); }
 });
-const ONLINE_ACTIONS = ["send-code", "verify-code", "change-email", "sign-out", "ask-send", "table-create", "table-join", "table-find"];
+const ONLINE_ACTIONS = ["send-code", "verify-code", "change-email", "sign-out", "ask-send", "ask-start", "table-create", "table-join", "table-find"];
 function connect() {
   backend().then(render, () => { online.ready = true; online.signIn.error = "Can't reach Ordir right now. Check your connection and try again."; render(); });
 }
@@ -1340,8 +1507,15 @@ function handleClick(el) {
   if (el.dataset.side) { online.lobby.side = el.dataset.side; render(); return; }
   if (el.dataset.joinside) { online.lobby.joinSide = el.dataset.joinside; online.lobby.error = ""; render(); return; }
   if (el.dataset.askgame) {
-    if (online.ask.game !== el.dataset.askgame) { online.ask.game = el.dataset.askgame; online.ask.expansions = new Set(); }
-    render(); return;
+    const a = online.ask;
+    if (a.game !== el.dataset.askgame) { a.game = el.dataset.askgame; a.expansions = new Set(); a.error = ""; }
+    a.picking = false; a.query = ""; render(); ($("#ask-first") || $("#ask-game"))?.focus(); return;
+  }
+  if (el.dataset.chat) {
+    // An earlier chat: reopen it with the expansions of its last question.
+    const a = online.ask, last = (a.threads[el.dataset.chat] || []).at(-1);
+    Object.assign(a, { game: el.dataset.chat, expansions: new Set(last ? last.expansions : []), picking: false, open: true, seat: null, error: "", toBottom: true });
+    state.returnTo = state.usedKey; render(); return;
   }
   if (ONLINE_ACTIONS.includes(el.dataset.act)) {
     onlineAction(el.dataset.act, el).catch((error) => { online.signIn.busy = online.ask.busy = online.lobby.busy = false; online.ask.error = online.lobby.error = errorText(error, "Something went wrong. Try again."); render(); });
@@ -1375,9 +1549,9 @@ function handleClick(el) {
       state.tabFrom = TABS.findIndex(([id]) => id === state.tab);
       state.tab = el.dataset.act === "orb-ask" ? "ask" : el.dataset.act.slice(4); online.lobby.error = "";
       render(); if (state.tab !== "games") connect(); break;
-    case "ask-open": state.menu = false; online.ask.open = true; online.ask.seat = null; render(); connect(); break;
-    case "ask-here": online.ask.open = true; online.ask.seat = el.dataset.seat; render(); connect(); break;
-    case "ask-close": online.ask.open = false; online.ask.seat = null; render(); break;
+    case "ask-open": state.menu = false; Object.assign(online.ask, { open: true, seat: null, error: "", toBottom: true }); render(); connect(); break;
+    case "ask-here": Object.assign(online.ask, { open: true, seat: el.dataset.seat, error: "", toBottom: true }); render(); connect(); break;
+    case "ask-close": Object.assign(online.ask, { open: false, seat: null, error: "" }); render(); break;
     case "table-reset": Object.assign(online.lobby, { found: null, joinSide: null, error: "" }); render(); $("#table-code")?.focus(); break;
     case "battle": state.battle = makeBattle(state.session); state.lastKey = null; onStepChanged(); break;
     case "leave-battle": state.battle = null; state.lastKey = null; onStepChanged(); break;
@@ -1396,21 +1570,43 @@ function handleClick(el) {
     case "event-done": s.pendingEvent = null; render(); break;
   }
 }
-// Enter in a sign-in or table field submits it.
-const SUBMITS = { "signin-email": "send-code", "signin-code": "verify-code", "table-code": "table-find" };
+// Enter in a sign-in or table field submits it; in a question, Enter asks (Shift-Enter starts a new line).
+const SUBMITS = { "signin-email": "send-code", "signin-code": "verify-code", "table-code": "table-find", "ask-first": "ask-start", "ask-question": "ask-send" };
 document.addEventListener("keydown", (event) => {
-  const act = event.key === "Enter" && SUBMITS[event.target.id];
-  if (act) { event.preventDefault(); document.querySelector(`[data-act="${act}"]`)?.click(); }
+  const act = event.key === "Enter" && !event.shiftKey && SUBMITS[event.target.id];
+  if (act) { event.preventDefault(); document.querySelector(`[data-act="${act}"]:not([disabled])`)?.click(); }
+});
+// The game search: Down opens the list and moves through it, Enter picks the first match.
+document.addEventListener("keydown", (event) => {
+  const t = event.target, games = visibleGames();
+  if (t.id === "ask-game" && event.key === "ArrowDown") { event.preventDefault(); if (!online.ask.picking) setPicking(true); visibleGames()[0]?.focus(); }
+  else if (t.id === "ask-game" && event.key === "Enter" && online.ask.picking) { event.preventDefault(); games.find((o) => o.dataset.askgame)?.click(); }
+  else if (t.classList && t.classList.contains("game-opt") && ["ArrowDown", "ArrowUp"].includes(event.key)) {
+    event.preventDefault();
+    (games[games.indexOf(t) + (event.key === "ArrowDown" ? 1 : -1)] || $("#ask-game")).focus();
+  }
+});
+document.addEventListener("click", (event) => {
+  if (event.target.id === "ask-game") { if (!online.ask.picking) setPicking(true); }
+  else if (online.ask.picking && !event.target.closest(".search")) setPicking(false);
+});
+document.addEventListener("focusout", (event) => {
+  if (online.ask.picking && event.relatedTarget && !event.relatedTarget.closest(".search")) setPicking(false);
 });
 // Typed text survives re-renders.
 document.addEventListener("input", (event) => {
-  const fields = { "signin-email": [online.signIn, "email"], "signin-code": [online.signIn, "code"], "ask-question": [online.ask, "question"], "table-code": [online.lobby, "code"] };
+  if (event.target.id === "ask-game") {
+    if (!online.ask.picking) { online.ask.picking = true; $("#ask-games").hidden = false; event.target.setAttribute("aria-expanded", "true"); }
+    online.ask.query = event.target.value; filterGames(event.target.value); return;
+  }
+  const fields = { "signin-email": [online.signIn, "email"], "signin-code": [online.signIn, "code"], "ask-question": [online.ask, "question"], "ask-first": [online.ask, "question"], "table-code": [online.lobby, "code"] };
   const field = fields[event.target.id];
   if (field) field[0][field[1]] = event.target.value;
 });
-// Escape closes the rules question, the picture, the Game menu, or the turn-change checklist (in that order).
+// Escape closes the game list, the rules chat, the picture, the Game menu, or the turn-change checklist (in that order).
 document.addEventListener("keydown", (event) => {
   if (event.key !== "Escape") return;
+  if (online.ask.picking) { event.preventDefault(); setPicking(false); $("#ask-game")?.focus(); return; }
   const act = online.ask.open ? "ask-close" : state.enlarged ? "close-enlarged" : state.menu ? "menu-close" : state.pending ? "not-yet" : null;
   const button = act && document.querySelector(`[data-act="${act}"]`);
   if (button) { event.preventDefault(); button.click(); }

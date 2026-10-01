@@ -93,3 +93,6 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
 - 2026-10-01: Home's Ask and Join are game-agnostic. Ask from Home picks the game (and expansions) first; inside
   a game it's scoped to that game. Join takes only the code, then shows the table's game, expansions and free
   sides (peek_table), and asks for a side last. Game-specific UI appears only once the game is known.
+- 2026-10-01: Ask picks the game with a search bar that opens a list of games (cover and name; typing filters).
+  Asking opens that game's rules chat full screen (question bubbles, Ordir's cited answers, a composer at the
+  bottom; follow-ups keep context). Each game has one chat; the Ask tab lists them under "Your chats" to reopen.
