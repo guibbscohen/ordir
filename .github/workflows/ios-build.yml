@@ -1,7 +1,7 @@
 name: iOS build
 
 # macOS minutes count 10x, so this runs on pull requests (not every push) and skips
-# docs-only and browser-preview-only changes. Build + unit tests only; the UI walkthrough is
+# docs-, browser-preview- and backend-only changes. Build + unit tests only; the UI walkthrough is
 # ios-walkthrough.yml.
 on:
   pull_request:
@@ -9,6 +9,7 @@ on:
       - "**/*.md"
       - ".claude/**"
       - "Preview/**"
+      - "supabase/**"
   workflow_dispatch:
 
 concurrency:
