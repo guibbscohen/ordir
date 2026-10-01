@@ -28,6 +28,7 @@ def main():
     (DIST / "img").mkdir(parents=True)
     shutil.copy(ROOT / "Preview" / "index.html", DIST / "index.html")
     shutil.copytree(ROOT / "Preview" / "fonts", DIST / "fonts")
+    shutil.copytree(ROOT / "Preview" / "email", DIST / "email")  # images for the sign-in email (docs/email)
     shutil.copy(SCRIPT, DIST / "turnscript.json")
     missing = []
     for image in script["images"]:

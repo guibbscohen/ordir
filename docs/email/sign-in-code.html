@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="supported-color-schemes" content="dark">
+<title>Your Ordir code</title>
+<!--
+  Ordir's sign-in code email, for Supabase → Authentication → Emails → Templates (Magic Link, and Confirm
+  signup). Supabase replaces {{ .Token }} with the 6-digit code. Built for email clients: tables and inline
+  styles; the orb is a PNG served with the preview on GitHub Pages; Google Sans Flex loads where the client
+  allows web fonts (Apple Mail, iOS Mail) and falls back to the system font elsewhere; the violet and blue
+  glow falls back to near-black where gradients aren't supported (Gmail).
+-->
+<style>
+  @font-face { font-family: "Google Sans Flex"; src: url("https://guibbscohen.github.io/ordir/fonts/GoogleSansFlex.woff2") format("woff2"); font-weight: 1 1000; }
+  :root { color-scheme: dark; supported-color-schemes: dark; }
+  body { margin: 0; padding: 0; background: #000000; }
+  @media (max-width: 520px) { .card { padding: 32px 22px !important; } .code { font-size: 34px !important; letter-spacing: 8px !important; } }
+</style>
+</head>
+<body style="margin:0; padding:0; background:#000000;">
+  <!-- Preheader: the line most inboxes show next to the subject. -->
+  <div style="display:none; max-height:0; overflow:hidden; opacity:0; color:#000000;">Your Ordir sign-in code is {{ .Token }}.</div>
+
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#000000;">
+    <tr>
+      <td align="center" style="padding:32px 16px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:480px;">
+          <tr>
+            <td class="card" align="center" style="padding:40px 32px; border-radius:24px; border:1px solid #1f1f22;
+                background-color:#07060d;
+                background-image:radial-gradient(70% 45% at 18% 0%, rgba(124,92,255,0.34), rgba(124,92,255,0) 70%), radial-gradient(70% 45% at 88% 4%, rgba(37,84,214,0.36), rgba(37,84,214,0) 70%);
+                font-family:'Google Sans Flex','Google Sans',-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+
+              <img src="https://guibbscohen.github.io/ordir/email/orb.png" width="56" height="63" alt="" style="display:block; width:56px; height:63px; border:0; margin:0 auto 14px;">
+              <div style="font-size:24px; line-height:30px; font-weight:700; color:#f5f5f7; letter-spacing:-0.2px;">Ordir</div>
+
+              <div style="height:28px; line-height:28px;">&nbsp;</div>
+
+              <div style="font-size:19px; line-height:26px; font-weight:600; color:#f5f5f7;">Here's your sign-in code</div>
+              <div style="font-size:15px; line-height:22px; color:#9a9aa0; padding-top:6px;">Enter it in Ordir to sign in. It works for the next hour.</div>
+
+              <div style="height:24px; line-height:24px;">&nbsp;</div>
+
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center">
+                <tr>
+                  <td align="center" style="padding:20px 28px; background:#141414; border:1px solid #2b2b2b; border-radius:18px;">
+                    <div style="font-size:12px; line-height:16px; font-weight:600; color:#9ec7ff; letter-spacing:0.6px; padding-bottom:6px;">&#10022;&nbsp; YOUR CODE</div>
+                    <div class="code" style="font-size:38px; line-height:44px; font-weight:700; color:#f5f5f7; letter-spacing:10px; font-variant-numeric:tabular-nums; padding-left:10px;">{{ .Token }}</div>
+                  </td>
+                </tr>
+              </table>
+
+              <div style="height:28px; line-height:28px;">&nbsp;</div>
+
+              <div style="font-size:13px; line-height:20px; color:#9a9aa0;">Didn't ask for this? You can ignore this email.<br>Nobody can sign in without the code.</div>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="padding:20px 16px 0; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; font-size:12px; line-height:18px; color:#6e6e73;">
+              Ordir · Learn any turn, step by step.
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
