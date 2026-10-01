@@ -75,7 +75,8 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   phone frame), with a restrained type scale and generous spacing; nothing should feel zoomed in or squished.
 - 2026-10-01: The orb mascot has a minimalist face: two dot eyes and a small one-line smile, turned slightly
   up and to the right as if seen from the side (far eye smaller). It blinks; the smile follows
-  idle/thinking/speaking; still with Reduce Motion. The app icon keeps its original art.
+  idle/thinking/speaking; still with Reduce Motion. The preview's Home Screen icon is the orb with its face on the
+  navy background (Preview/icons/icon.svg); the native app icon keeps its original art until the user decides.
 - 2026-10-01: The opening is one continuous camera move down to Home (never a cut or fade), inspired by
   Ripplix's "Happier" splash: the small orb and name on black above a deep blue/violet glow, a calm glowing
   line drawn from the orb down the screen, the view gliding down through the colours to Home waiting one
@@ -97,4 +98,4 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   Asking opens that game's rules chat full screen (question bubbles, Ordir's cited answers, a composer at the
   bottom; follow-ups keep context). Each game has one chat; the Ask tab lists them under "Your chats" to reopen.
 - 2026-10-01: Until TestFlight (needs the paid Apple Developer account), the phone test build is the online
-  preview added to the Home Screen: full screen, black, with the app's own icon (resized into Preview/icons).
+  preview added to the Home Screen: full screen, black, with the orb icon (Preview/icons).

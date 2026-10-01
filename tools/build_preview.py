@@ -29,7 +29,7 @@ def main():
     shutil.copy(ROOT / "Preview" / "index.html", DIST / "index.html")
     shutil.copytree(ROOT / "Preview" / "fonts", DIST / "fonts")
     shutil.copytree(ROOT / "Preview" / "email", DIST / "email")  # images for the sign-in email (docs/email)
-    shutil.copytree(ROOT / "Preview" / "icons", DIST / "icons")  # Home Screen and tab icons (from the app icon)
+    shutil.copytree(ROOT / "Preview" / "icons", DIST / "icons")  # Home Screen and tab icons (rendered from icons/icon.svg)
     shutil.copy(ROOT / "Preview" / "manifest.webmanifest", DIST / "manifest.webmanifest")
     shutil.copy(SCRIPT, DIST / "turnscript.json")
     missing = []
