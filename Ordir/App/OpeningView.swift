@@ -4,7 +4,7 @@
 //
 //  The launch animation (~3 s), the same camera move as the browser preview's, inspired by Ripplix's
 //  "Happier" splash:
-//  - The orb and name sit on black, above a deep blue and violet glow.
+//  - The orb and name sit on black, above a deep blue and violet glow that flows on into Home's own.
 //  - A glowing line draws itself from the orb down the screen.
 //  - The view glides down through the glow to Home, which waits one screen below (OrdirApp slides it up
 //    with `camera(at:)`), and the line ends at Home's orb (`target`), which it then builds (`buildDelay`).
@@ -62,11 +62,9 @@ struct OpeningView: View {
         let orb = CGPoint(x: size.width / 2, y: size.height * 0.45)
         let appear = Self.smooth(t / 0.8)
         return ZStack(alignment: .topLeading) {
-            Color.black.frame(width: size.width, height: size.height)
+            backdrop(size: size)
 
             if !reduceMotion {
-                glow(size: size)
-                    .opacity(Self.smooth(t / 1.2) * (1 - Self.smooth((t - 2.5) / 0.5)))
                 line(from: CGPoint(x: orb.x + 40, y: orb.y + 10), size: size)
                     .trim(from: 0, to: Self.smooth((t - 0.6) / 2.3))
                     .stroke(Color.ordirSparkle, style: StrokeStyle(lineWidth: 2.5, lineCap: .round))
@@ -98,18 +96,23 @@ struct OpeningView: View {
         .frame(width: size.width, height: size.height * 2, alignment: .topLeading)
     }
 
-    /// Violet and blue light around the boundary between the opening and Home.
-    private func glow(size: CGSize) -> some View {
-        ZStack {
-            RadialGradient(colors: [Self.violet.opacity(0.5), .clear], center: UnitPoint(x: 0.32, y: 0.48),
-                           startRadius: 0, endRadius: size.width * 0.65)
-            RadialGradient(colors: [Self.deepBlue.opacity(0.55), .clear], center: UnitPoint(x: 0.7, y: 0.56),
-                           startRadius: 0, endRadius: size.width * 0.7)
-            RadialGradient(colors: [Color.ordirSparkle.opacity(0.28), .clear], center: UnitPoint(x: 0.5, y: 0.66),
-                           startRadius: 0, endRadius: size.width * 0.5)
+    /// The opening's screen of the two-screen world: black, with Home's light centred on the boundary below
+    /// (so it continues into Home's own background with no edge; same centres and radii as HomeView's
+    /// ambience), and the opening's violet and blue light lower down, which fades out above the boundary.
+    private func backdrop(size: CGSize) -> some View {
+        let w = size.width
+        return ZStack {
+            Color.black
+            RadialGradient(colors: [Self.violet.opacity(0.30), .clear], center: UnitPoint(x: 0.18, y: 1),
+                           startRadius: 0, endRadius: w * 0.75)
+            RadialGradient(colors: [Self.deepBlue.opacity(0.32), .clear], center: UnitPoint(x: 0.88, y: 1.06),
+                           startRadius: 0, endRadius: w * 0.72)
+            RadialGradient(colors: [Self.violet.opacity(0.42), .clear], center: UnitPoint(x: 0.3, y: 0.74),
+                           startRadius: 0, endRadius: w * 0.45)
+            RadialGradient(colors: [Self.deepBlue.opacity(0.48), .clear], center: UnitPoint(x: 0.72, y: 0.72),
+                           startRadius: 0, endRadius: w * 0.45)
         }
-        .frame(width: size.width * 1.6, height: size.height * 0.84)
-        .position(x: size.width / 2, y: size.height * 0.86)
+        .frame(width: size.width, height: size.height)
         .allowsHitTesting(false)
     }
 
