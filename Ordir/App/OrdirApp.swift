@@ -12,7 +12,7 @@ struct OrdirApp: App {
     // `-OrdirOpenGame`, so they skip it.
     @State private var showsOpening = UserDefaults.standard.string(forKey: "OrdirOpenGame") == nil
     @State private var openingStart = Date()
-    /// When the opening's line reaches Home's orb and builds it (nil: no opening, or Reduce Motion).
+    /// When Home's orb is built, as the opening's line closes round its rim (nil: no opening, or Reduce Motion).
     @State private var orbBuildStart: Date?
     /// Home's header orb while Home waits one screen down: where the opening's line ends.
     @State private var homeOrb: CGRect?

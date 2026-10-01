@@ -7,7 +7,8 @@
 //  - The orb and name sit on black, above a deep blue and violet glow that flows on into Home's own.
 //  - A glowing line draws itself from the orb down the screen.
 //  - The view glides down through the glow to Home, which waits one screen below (OrdirApp slides it up
-//    with `camera(at:)`), and the line ends at Home's orb (`target`), which it then builds (`buildDelay`).
+//    with `camera(at:)`). The line drops into Home's orb (`target`) from above, runs round its rim, the orb
+//    is built under it (`buildDelay`), and the line fades.
 //  A tap skips it; Reduce Motion shows the orb and name, then fades to Home.
 //
 
@@ -22,9 +23,9 @@ struct OpeningView: View {
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    static let length = 2.95
+    static let length = 3.95
     /// When Home's orb starts being built: as the line reaches it.
-    static let buildDelay = 2.9
+    static let buildDelay = 3.3
     private static let orbHeight: CGFloat = 88
     private static let violet = Color(red: 0.49, green: 0.36, blue: 1)
     private static let deepBlue = Color(red: 0.15, green: 0.33, blue: 0.84)
@@ -65,11 +66,20 @@ struct OpeningView: View {
             backdrop(size: size)
 
             if !reduceMotion {
-                line(from: CGPoint(x: orb.x + 40, y: orb.y + 10), size: size)
-                    .trim(from: 0, to: Self.smooth((t - 0.6) / 2.3))
-                    .stroke(Color.ordirSparkle, style: StrokeStyle(lineWidth: 2.5, lineCap: .round))
-                    .shadow(color: Color.ordirSparkle.opacity(0.9), radius: 3)
-                    .shadow(color: Self.violet.opacity(0.7), radius: 10)
+                let rimLine = rim()
+                ZStack(alignment: .topLeading) {
+                    approach(from: CGPoint(x: orb.x + 40, y: orb.y + 10), to: rimLine?.start, size: size)
+                        .trim(from: 0, to: Self.smooth((t - 0.6) / 2.3))
+                        .stroke(Color.ordirSparkle, style: StrokeStyle(lineWidth: 2.5, lineCap: .round))
+                    if let rimLine {
+                        rimLine.path
+                            .trim(from: 0, to: Self.smooth((t - 2.9) / 0.55))
+                            .stroke(Color.ordirSparkle, style: StrokeStyle(lineWidth: 2.5, lineCap: .round))
+                    }
+                }
+                .shadow(color: Color.ordirSparkle.opacity(0.9), radius: 3)
+                .shadow(color: Self.violet.opacity(0.7), radius: 10)
+                .opacity(1 - Self.smooth((t - 3.5) / 0.45))
             }
 
             OrdirMascotView()
@@ -116,20 +126,33 @@ struct OpeningView: View {
         .allowsHitTesting(false)
     }
 
-    /// From the orb, out to the right and down across the boundary, then into Home's orb from the right.
-    private func line(from start: CGPoint, size: CGSize) -> Path {
+    /// From the opening's orb, out to the right and down across the boundary, then over Home's header, dropping
+    /// into Home's orb from above so it arrives heading down its right side, clear of "Ordir".
+    private func approach(from start: CGPoint, to end: CGPoint?, size: CGSize) -> Path {
         let w = size.width, h = size.height
-        // Where the orb's outline starts (its right side), so the line carries on into tracing it.
-        let end = target.map { CGPoint(x: $0.minX + $0.width * 0.876, y: $0.minY + $0.height * 0.46) } ?? CGPoint(x: w * 0.2, y: h * 1.08)
-        let middle = CGPoint(x: w * 0.62, y: h * 0.9)
-        let bend = CGPoint(x: w * 0.98, y: h * 0.72)
+        let end = end ?? CGPoint(x: w * 0.2, y: h * 1.08)
         var path = Path()
         path.move(to: start)
-        path.addCurve(to: middle, control1: CGPoint(x: w * 0.95, y: start.y + h * 0.14), control2: bend)
-        // Mirror the last control point so the two curves join smoothly.
-        path.addCurve(to: end, control1: CGPoint(x: 2 * middle.x - bend.x, y: 2 * middle.y - bend.y),
-                      control2: CGPoint(x: end.x + w * 0.35, y: end.y + h * 0.02))
+        path.addCurve(to: CGPoint(x: w * 0.6, y: h * 0.9),
+                      control1: CGPoint(x: w * 0.95, y: start.y + h * 0.15), control2: CGPoint(x: w * 0.95, y: h * 0.75))
+        path.addCurve(to: end, control1: CGPoint(x: w * 0.35, y: h * 1.0), control2: CGPoint(x: end.x, y: end.y - h * 0.14))
         return path
+    }
+
+    /// Home's orb rim, which the line carries on round: clockwise from the rim's right side to the gap under
+    /// the big sparkle, along the middle of the rim (OrdirMascotGeometry coordinates, as the preview's ORB_RIM).
+    private func rim() -> (path: Path, start: CGPoint)? {
+        guard let target else { return nil }
+        let box = OrdirMascotGeometry.viewBox
+        let unit = target.height / box.height
+        let center = CGPoint(x: target.minX + (OrdirMascotGeometry.orbCenter.x - box.minX) * unit,
+                             y: target.minY + (OrdirMascotGeometry.orbCenter.y - box.minY) * unit)
+        let radius = 105 * unit
+        let start = CGPoint(x: center.x + radius * cos(3 * .pi / 180), y: center.y + radius * sin(3 * .pi / 180))
+        var path = Path()
+        // Angles grow clockwise on screen (y points down); `clockwise: false` means growing angles.
+        path.addArc(center: center, radius: radius, startAngle: .degrees(3), endAngle: .degrees(286), clockwise: false)
+        return (path, start)
     }
 
     /// Smoothstep on 0...1, clamped.
