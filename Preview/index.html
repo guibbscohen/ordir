@@ -2,7 +2,7 @@
 <html lang="en">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ordir Dune Guide</title>
+<title>Ordir</title>
 <style>
 /* Layout: one phone-shaped column split in two halves; the far half is turned 180° to face the
    player across the table, with a shared bar between them. Always dark, like the app. */
@@ -180,6 +180,32 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 .done-pane p { margin: 0; color: var(--muted); line-height: 1.4; }
 .done-pane .primary { width: 100%; flex: none; }
 
+/* Opening: the orb rises in, sparkles pop and twinkle, then the name and tagline */
+.intro { position: relative; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 24px; text-align: center; cursor: pointer; }
+.intro .mascot { width: 128px; height: 128px; margin-bottom: 16px; animation: orb-in .8s cubic-bezier(.2, .8, .2, 1) both; }
+.intro .mascot .sp { animation: sparkle-in .5s cubic-bezier(.2, .8, .2, 1) both, twinkle 3.2s ease-in-out infinite; }
+.intro .mascot .sp1 { animation-delay: .35s, .85s; }
+.intro .mascot .sp2 { animation-delay: .5s, 1s; }
+.intro .mascot .sp3 { animation-delay: .65s, 1.15s; }
+.intro h1 { margin: 0; font-size: 40px; font-weight: 700; letter-spacing: -.02em; animation: rise .6s .45s cubic-bezier(.2, .8, .2, 1) both; }
+.intro p { margin: 0; color: var(--muted); font-size: 17px; animation: rise .6s .6s cubic-bezier(.2, .8, .2, 1) both; }
+.intro .skip { position: absolute; bottom: 12px; color: var(--muted); }
+@keyframes orb-in { from { opacity: 0; transform: scale(.8) translateY(10px); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes sparkle-in { from { opacity: 0; transform: scale(0) rotate(-60deg); } to { opacity: 1; transform: none; } }
+
+/* Home */
+.pane.enter { animation: rise .4s ease both; }
+.brand { display: flex; align-items: center; gap: 14px; }
+.brand .mascot { width: 56px; height: 56px; flex: none; }
+.pane .brand h1 { font-size: 28px; font-weight: 700; letter-spacing: -.01em; }
+.brand p { margin: 2px 0 0; color: var(--muted); }
+.group { display: flex; flex-direction: column; gap: 12px; }
+.group h2 { margin: 0; font-size: 13px; font-weight: 600; color: var(--muted); }
+.option.soon { background: var(--surface); cursor: default; }
+.option.soon strong { color: var(--muted); font-weight: 600; }
+.badge { flex: none; padding: 2px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); font-size: 13px; font-weight: 600; }
+.chev { color: var(--muted); flex: none; }
+
 /* Mascot */
 .mascot .orb { fill: var(--fg); }
 .mascot .sp { fill: var(--sparkle); transform-box: fill-box; transform-origin: center; }
@@ -197,7 +223,8 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 @keyframes think { 0%, 100% { opacity: .35; transform: scale(.8) rotate(0); } 50% { opacity: 1; transform: scale(1.1) rotate(45deg); } }
 
 @media (prefers-reduced-motion: reduce) {
-  .card.enter, .overlay.enter { animation: fade .2s ease both; }
+  .card.enter, .overlay.enter, .pane.enter { animation: fade .2s ease both; }
+  .intro .mascot, .intro h1, .intro p { animation: fade .3s ease both !important; }
   .mascot .sp { animation: none !important; }
   .switch, .switch::after { transition: none; }
 }
@@ -205,7 +232,7 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 </style>
 
 <main>
-  <h1 class="sr-only">Ordir: Dune: War for Arrakis guide</h1>
+  <h1 class="sr-only">Ordir</h1>
   <div class="phone" id="phone"></div>
 </main>
 <footer><p class="note">A browser preview of the Ordir guide, built from the same turn script and rulebook pictures as the app.
@@ -231,6 +258,7 @@ const ICONS = {
 const SIDE_NAME = { atreides: "Atreides", harkonnen: "Harkonnen", both: "Both players" };
 
 const state = {
+  screen: "intro",    // "intro" → "home" → "game" (picker, lobby and guide)
   script: null,
   chosen: new Set(),
   mode: "table",      // "table" (split screen) or "pass" (pass the phone)
@@ -464,8 +492,48 @@ function handoff(s, animate) {
     <div class="handoff-actions"><button class="primary" data-act="handoff-ready">I’m the ${SIDE_NAME[side]}</button></div></section>`;
 }
 
+// Coming-soon games show on Home so players see what's next.
+const GAMES = [
+  { id: "dune", title: "Dune: War for Arrakis", detail: "2 players · turn guide and rules questions" },
+  { id: "starWarsRebellion", title: "Star Wars: Rebellion", soon: true },
+  { id: "warOfTheRing2E", title: "War of the Ring (2nd Edition)", soon: true },
+];
+const CHEVRON = '<svg class="chev" width="10" height="16" viewBox="0 0 10 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 2l6 6-6 6"/></svg>';
+
+function intro() {
+  return `<div class="pane intro" data-act="skip-intro">${mascot("idle")}
+    <h1>Ordir</h1><p>Learn any turn, step by step.</p>
+    <button class="textbtn skip" data-act="skip-intro">Skip</button></div>`;
+}
+
+function home(animate) {
+  const games = GAMES.map((g) => g.soon
+    ? `<div class="option soon"><div><strong>${esc(g.title)}</strong></div><span class="badge">Coming soon</span></div>`
+    : `<button class="option" data-act="game-${g.id}" ${state.script ? "" : "disabled"}><div><strong>${esc(g.title)}</strong><span>${esc(g.detail)}</span></div>${CHEVRON}</button>`).join("");
+  const account = signedIn() ? `Signed in as ${esc(online.session.user.email || "")}` : "Sign in to ask rules questions and play on your own phones.";
+  return `<div class="pane${animate ? " enter" : ""}"><div class="scroll">
+    <div class="brand">${mascot("idle")}<div><h1 tabindex="-1">Ordir</h1><p>Learn any turn, step by step.</p></div></div>
+    <div class="group"><h2>Choose a game</h2>${games}</div>
+    <div class="group"><h2>More</h2>
+      <button class="option" data-act="ask-open"><div><strong>Ask a rules question</strong><span>Dune: War for Arrakis · answers cite the rulebook and FAQ pages.</span></div>${CHEVRON}</button>
+      <button class="option" data-act="join-open"><div><strong>Join a table</strong><span>Enter the code from another player's phone.</span></div>${CHEVRON}</button>
+      <button class="option" data-act="account-open"><div><strong>Account</strong><span>${account}</span></div>${CHEVRON}</button>
+    </div></div></div>`;
+}
+
+function accountPanel() {
+  return `<div class="overlay enter menu" role="dialog" aria-modal="true" aria-label="Account" style="padding-top:20px">
+    <div class="head"><h2 style="flex:1" tabindex="-1">Account</h2><button class="textbtn" data-act="account-close">Close</button></div>
+    <div class="scroll" style="padding:0;display:flex;flex-direction:column;gap:16px">
+      ${!signedIn() ? signInPane("Sign in with your email to ask rules questions and to play at a table, each on your own phone.") : `
+        <p style="margin:0">Signed in as <b>${esc(online.session.user.email || "")}</b></p>
+        <button class="primary" style="flex:none" data-act="sign-out">Sign out</button>`}
+    </div></div>`;
+}
+
 function picker() {
   return `<div class="pane"><div class="scroll">
+    <button class="textbtn" style="align-self:flex-start;margin:-16px 0 -12px" data-act="home">‹ Games</button>
     <div class="head">${mascot("idle")}<h1 tabindex="-1">How are you playing?</h1></div>
     <div role="radiogroup" aria-label="How are you playing?" style="display:flex;flex-direction:column;gap:12px">
       ${[["table", "One phone on the table", "Split screen: the top half faces the player across the table."],
@@ -528,7 +596,8 @@ const online = {
   ready: false,
   signIn: { email: "", code: "", sent: false, busy: false, error: "" },
   ask: { open: false, question: "", busy: false, error: "", answers: [] },
-  lobby: { open: false, code: "", side: "atreides", busy: false, error: "" },
+  lobby: { open: false, joinOnly: false, code: "", side: "atreides", busy: false, error: "" },
+  account: { open: false },
   table: null,      // the game_tables row this phone sits at
   mySide: null,
   version: 0,
@@ -610,16 +679,16 @@ function lobby() {
   const sides = ["atreides", "harkonnen"].map((side) => `<button class="option" role="radio" aria-checked="${l.side === side}" data-side="${side}">
       <div><strong class="side-${side}">${SIDE_NAME[side]}</strong></div><span class="radio" aria-hidden="true"></span></button>`).join("");
   return `<div class="pane"><div class="scroll">
-    <div class="head">${mascot("idle")}<h1 tabindex="-1">Each on our own phone</h1></div>
-    ${!signedIn() ? signInPane("Sign in with your email so the other player can join your table.") : `
+    <div class="head">${mascot("idle")}<h1 tabindex="-1">${l.joinOnly ? "Join a table" : "Each on our own phone"}</h1></div>
+    ${!signedIn() ? signInPane(l.joinOnly ? "Sign in with your email to join the other player's table." : "Sign in with your email so the other player can join your table.") : `
       <div role="radiogroup" aria-label="Your side" style="display:flex;flex-direction:column;gap:12px"><h2 style="margin:0;font-size:17px">Your side</h2>${sides}</div>
-      <button class="primary" data-act="table-create" ${l.busy ? "disabled" : ""}>Start a table</button>
-      <div class="field"><label for="table-code">Or join with the code from the other phone</label>
+      ${l.joinOnly ? "" : `<button class="primary" data-act="table-create" ${l.busy ? "disabled" : ""}>Start a table</button>`}
+      <div class="field"><label for="table-code">${l.joinOnly ? "The code from the other phone" : "Or join with the code from the other phone"}</label>
         <input id="table-code" autocomplete="off" autocapitalize="characters" maxlength="6" value="${esc(l.code)}"></div>
       <button class="primary" data-act="table-join" ${l.busy ? "disabled" : ""}>Join table</button>
       ${l.error ? `<p class="error" role="alert">${esc(l.error)}</p>` : ""}`}
     </div>
-    <div class="actions"><button class="textbtn" data-act="close">Back</button></div></div>`;
+    <div class="actions"><button class="textbtn" data-act="${l.joinOnly ? "home" : "close"}">Back</button></div></div>`;
 }
 
 function tableStrip() {
@@ -766,7 +835,7 @@ function settleFocus(phone, stepChanged, kept) {
     const overlay = half.querySelector(":scope > .overlay");
     if (overlay) for (const child of half.children) if (child !== overlay) child.inert = true;
   }
-  if (state.menu || online.ask.open) for (const child of phone.children) if (!child.classList.contains("menu")) child.inert = true;
+  if (state.menu || online.ask.open || online.account.open) for (const child of phone.children) if (!child.classList.contains("menu")) child.inert = true;
   const first = (...selectors) => selectors.map((sel) => sel && phone.querySelector(sel)).find(Boolean);
   const dialog = [...phone.querySelectorAll('[role="dialog"] [tabindex="-1"]')].find((h) => !h.closest("[inert]"));
   // A re-render nobody tapped for (an answer arriving, the other phone moving): keep focus where it was.
@@ -785,14 +854,18 @@ function settleFocus(phone, stepChanged, kept) {
 function render() {
   const phone = $("#phone");
   const s = cur();
-  const key = !s ? (online.lobby.open ? "lobby" : "picker") : s.finished ? `done-${s.isBattle}` : `${stepKey(s)}-${s.handoffTo === null}-${state.battle !== null}`;
+  const key = state.screen !== "game" ? state.screen : !s ? (online.lobby.open ? "lobby" : "picker") : s.finished ? `done-${s.isBattle}` : `${stepKey(s)}-${s.handoffTo === null}-${state.battle !== null}`;
   const animate = key !== state.lastKey;
   state.lastKey = key;
   const active = document.activeElement;
   const kept = active && phone.contains(active) ? (active.id ? `#${active.id}` : focusKey(active) || "[data-none]") : null;
   const menu = s && state.menu ? gameMenu(s) : "";
-  const ask = online.ask.open ? askPanel() : "";
-  if (!s) {
+  const ask = (online.ask.open ? askPanel() : "") + (online.account.open ? accountPanel() : "");
+  if (state.screen === "intro") {
+    phone.className = "phone single"; phone.innerHTML = intro();
+  } else if (state.screen === "home") {
+    phone.className = "phone single"; phone.innerHTML = home(animate) + ask;
+  } else if (!s) {
     phone.className = "phone single"; phone.innerHTML = (online.lobby.open ? lobby() : picker()) + ask;
   } else if (s.finished) {
     phone.className = "phone single"; phone.innerHTML = (s.isBattle ? battleOver() : finished()) + ask;
@@ -850,6 +923,20 @@ document.addEventListener("click", (event) => {
   handleClick(el);
   if (before !== null && atTable() && JSON.stringify(shared()) !== before) share(stepKey(cur()) !== stepBefore);
 });
+// The opening plays once, then Home. Any tap, Enter, Space or Escape skips it.
+let introTimer = null;
+function showHome() {
+  if (state.screen !== "intro") return;
+  clearTimeout(introTimer);
+  state.screen = "home";
+  state.usedKey = "[data-none]";  // move focus to Home's heading
+  render();
+  // Someone signed in before: load their session so Home shows it (no network otherwise).
+  try { if (Object.keys(localStorage).some((k) => k.startsWith("sb-") && k.endsWith("-auth-token"))) connect(); } catch {}
+}
+document.addEventListener("keydown", (event) => {
+  if (state.screen === "intro" && ["Enter", " ", "Escape"].includes(event.key)) { event.preventDefault(); showHome(); }
+});
 const ONLINE_ACTIONS = ["send-code", "verify-code", "change-email", "sign-out", "ask-send", "table-create", "table-join"];
 function connect() {
   backend().then(render, () => { online.ready = true; online.signIn.error = "Can't reach Ordir right now. Check your connection and try again."; render(); });
@@ -878,8 +965,14 @@ function handleClick(el) {
   }
   switch (el.dataset.act) {
     case "start":
-      if (state.mode === "own") { online.lobby.open = true; render(); connect(); break; }
+      if (state.mode === "own") { online.lobby.open = true; online.lobby.joinOnly = false; render(); connect(); break; }
       state.session = makeSession(state.script, new Set(state.chosen), state.mode === "pass"); onStepChanged(); break;
+    case "skip-intro": showHome(); break;
+    case "home": if (online.lobby.joinOnly) state.mode = "table"; leaveTable(); Object.assign(online.lobby, { open: false, joinOnly: false, error: "" }); state.session = null; state.battle = null; state.screen = "home"; render(); break;
+    case "game-dune": state.screen = "game"; render(); break;
+    case "join-open": state.mode = "own"; Object.assign(online.lobby, { open: true, joinOnly: true, error: "" }); state.screen = "game"; render(); connect(); break;
+    case "account-open": online.account.open = true; render(); connect(); break;
+    case "account-close": online.account.open = false; render(); break;
     case "ask-open": state.menu = false; online.ask.open = true; render(); connect(); break;
     case "ask-close": online.ask.open = false; render(); break;
     case "battle": state.battle = makeBattle(state.session); state.lastKey = null; onStepChanged(); break;
@@ -914,7 +1007,7 @@ document.addEventListener("input", (event) => {
 // Escape closes the rules question, the picture, the Game menu, or the turn-change checklist (in that order).
 document.addEventListener("keydown", (event) => {
   if (event.key !== "Escape") return;
-  const act = online.ask.open ? "ask-close" : state.enlarged ? "close-enlarged" : state.menu ? "menu-close" : state.pending ? "not-yet" : null;
+  const act = online.account.open ? "account-close" : online.ask.open ? "ask-close" : state.enlarged ? "close-enlarged" : state.menu ? "menu-close" : state.pending ? "not-yet" : null;
   const button = act && document.querySelector(`[data-act="${act}"]`);
   if (button) { event.preventDefault(); button.click(); }
 });
@@ -931,6 +1024,8 @@ setInterval(() => {
   document.querySelectorAll("[data-timer]").forEach((t) => { t.textContent = fmt(Date.now() - s.startedAt); });
 }, 1000);
 
+render();
+introTimer = setTimeout(showHome, matchMedia("(prefers-reduced-motion: reduce)").matches ? 900 : 1700);
 fetch("turnscript.json")
   .then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
   .then((script) => { state.script = script; render(); })

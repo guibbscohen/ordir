@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Play the built browser preview (Preview/dist) in headless Chromium, like the app's UI walkthrough.
 
-Three games, each played into round 2 and then ended from the Game menu:
+Three games, each opened from Home (after the opening animation, Skip, or Enter) and played into
+round 2, then ended from the Game menu:
 - one phone on the table, base game, with a two-round battle;
 - one phone on the table, every expansion, marking the Smugglers alliance;
 - pass the phone, base game.
@@ -63,11 +64,11 @@ class Accessibility:
     def __init__(self, page, problems):
         self.page, self.problems, self.seen = page, problems, set()
 
-    def scan(self, kind):
+    def scan(self, kind, settle=400):
         if kind in self.seen:
             return
         self.seen.add(kind)
-        self.page.wait_for_timeout(400)  # let the step's fade-in finish so colours are final
+        self.page.wait_for_timeout(settle)  # let the screen's fade-in finish so colours are final
         for violation in AXE.run(self.page, options=AXE_RULES).response["violations"]:
             targets = ", ".join(" ".join(map(str, node["target"])) for node in violation["nodes"][:3])
             self.problems.append(f"a11y on {kind}: {violation['id']} ({violation['help']}) at {targets}")
@@ -108,8 +109,24 @@ def fight_battle(page, a11y):
 def play(page, url, problems, mode="table", expansions=(), fights_battle=False):
     a11y = Accessibility(page, problems)
     page.goto(url)
+    page.wait_for_selector(".intro")
+    if mode == "pass":
+        page.keyboard.press("Enter")  # skip the opening from the keyboard
+    elif expansions:
+        page.click(".intro .skip")
+    else:
+        a11y.scan("opening", settle=1250)  # once its text has faded in; then let it play out
+    page.wait_for_selector("[data-act=game-dune]:not([disabled])")
+    check(focused(page, ".pane h1"), "focus did not move to Home's heading")
+    check(len(page.query_selector_all(".option.soon")) == 2, "Home does not list the two coming-soon games")
+    a11y.scan("home")
+    page.click("[data-act=game-dune]")
     page.wait_for_selector("[data-act=start]")
     a11y.scan("setup picker")
+    if mode == "pass":
+        page.click("[data-act=home]")
+        check(page.query_selector("[data-act=game-dune]"), "Games did not go back to Home")
+        page.click("[data-act=game-dune]")
     if mode == "pass":
         page.click("[data-mode=pass]")
     for expansion in expansions:
