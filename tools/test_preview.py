@@ -118,8 +118,17 @@ def play(page, url, problems, mode="table", expansions=(), fights_battle=False):
         a11y.scan("opening", settle=1250)  # once its text has faded in; then let it play out
     page.wait_for_selector("[data-act=game-dune]:not([disabled])")
     check(focused(page, ".pane h1"), "focus did not move to Home's heading")
-    check(len(page.query_selector_all(".option.soon")) == 2, "Home does not list the two coming-soon games")
+    check(len(page.query_selector_all(".game.soon")) == 2, "Home does not list the two coming-soon games")
+    check(page.query_selector(".game img[src='img/cover.jpg']"), "Dune's card has no cover art")
     a11y.scan("home")
+    if expansions:
+        # The orb opens Ask full screen; the glass bar switches tabs and keeps focus on the tab.
+        page.click("[data-act=orb-ask]")
+        check(focused(page, ".pane h1") and "Ask a rules question" in page.text_content(".pane h1"), "the orb did not open Ask")
+        page.click("[data-act=tab-join]")
+        check(focused(page, "[data-act=tab-join]") and page.query_selector("[data-act=tab-join][aria-current=page]"), "the Join tab did not open")
+        a11y.scan("join tab", settle=1500)
+        page.click("[data-act=tab-games]")
     page.click("[data-act=game-dune]")
     page.wait_for_selector("[data-act=start]")
     a11y.scan("setup picker")
@@ -134,6 +143,13 @@ def play(page, url, problems, mode="table", expansions=(), fights_battle=False):
         check(page.is_checked(f"#exp-{expansion}"), f"{expansion} did not switch on")
     page.click("[data-act=start]")
     check(focused(page, ".title"), "focus did not move to the first step's title")
+    if expansions:
+        # The step's orb opens a short ask sheet; Escape closes it and returns to the orb.
+        page.click(".near [data-act=ask-here], .half [data-act=ask-here] >> nth=0")
+        check(focused(page, ".sheet h2"), "the step's orb did not open the ask sheet")
+        a11y.scan("ask sheet", settle=1500)
+        page.keyboard.press("Escape")
+        check(not page.query_selector(".sheet") and focused(page, "[data-act=ask-here]"), "Escape did not close the ask sheet")
 
     steps = turns_in_loop = handoffs = 0
     fought = marked = False
@@ -204,8 +220,10 @@ def main():
     ]
     failed = False
     with sync_playwright() as p:
-        # CHROMIUM_PATH points at an installed Chromium when Playwright's own build isn't there.
-        browser = p.chromium.launch(executable_path=os.environ.get("CHROMIUM_PATH") or None)
+        # CHROMIUM_PATH points at an installed Chromium when Playwright's own build isn't there;
+        # CHROMIUM_ARGS adds flags (e.g. --ignore-certificate-errors behind a TLS-inspecting proxy).
+        browser = p.chromium.launch(executable_path=os.environ.get("CHROMIUM_PATH") or None,
+                                    args=os.environ.get("CHROMIUM_ARGS", "").split())
         for number, (name, options) in enumerate(games, 1):
             page = browser.new_page(viewport={"width": 430, "height": 900})
             problems = []

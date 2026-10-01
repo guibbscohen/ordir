@@ -60,3 +60,9 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   "Ordir" + tagline), tap to skip, a quick fade with Reduce Motion; then Home. Home shows the game list
   (unfinished games as greyed "Coming soon" cards), Ask a rules question, Account (sign in/out), and Join a
   table by code.
+- 2026-10-01: Home navigation is a floating "liquid glass" bar at the bottom (translucent blur, rounded pill,
+  like Apple Music's tab bar): Games, Ask, Join a table, Account.
+- 2026-10-01: Game cards show the game's cover/box art (cropped from the official rulebook cover), not just
+  the name. Games without official sources yet get house-style art until their sources are added.
+- 2026-10-01: The Ordir orb is the "Ask a rules question" button: on Home it opens Ask full screen; in a
+  game, tapping the step's orb opens a short ask sheet over that player's side.

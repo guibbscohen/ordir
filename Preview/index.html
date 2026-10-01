@@ -201,10 +201,52 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 .brand p { margin: 2px 0 0; color: var(--muted); }
 .group { display: flex; flex-direction: column; gap: 12px; }
 .group h2 { margin: 0; font-size: 13px; font-weight: 600; color: var(--muted); }
-.option.soon { background: var(--surface); cursor: default; }
-.option.soon strong { color: var(--muted); font-weight: 600; }
-.badge { flex: none; padding: 2px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); font-size: 13px; font-weight: 600; }
+.home .scroll { padding-bottom: 112px; }  /* room to scroll past the floating bar */
+.orb-btn { flex: none; border-radius: 50%; display: grid; place-items: center; }
+.brand .orb-btn { width: 64px; height: 64px; }
+.brand .orb-btn .mascot { width: 64px; height: 64px; }
+.ask-cta { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; min-height: 44px; padding: 0 16px; border-radius: 999px;
+  background: var(--surface-2); border: 1px solid var(--line); color: var(--sparkle); font-weight: 600; font-size: 15px; }
+.ask-cta svg { width: 16px; height: 16px; }
+.game { display: flex; flex-direction: column; text-align: left; width: 100%; padding: 0; border-radius: 18px; overflow: hidden; background: var(--surface); border: 1px solid var(--line); }
+.game .art { display: block; aspect-ratio: 5 / 4; width: 100%; background: var(--surface-2); overflow: hidden; }
+.game .art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.game .meta { display: flex; align-items: center; gap: 12px; padding: 12px 16px 14px; }
+.game .meta div { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.game strong { font-size: 17px; }
+.game .meta span { color: var(--muted); font-size: 15px; line-height: 1.35; }
+.game .meta .src { font-size: 12px; }
+.game:active { opacity: .8; }
+.soon-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.game.soon { cursor: default; }
+.game.soon .art { aspect-ratio: 1; position: relative; display: grid; place-items: center;
+  background: radial-gradient(120% 90% at 30% 20%, #2a2a2e 0%, #121214 60%, #0a0a0b 100%); }
+.game.soon .art .mascot { width: 44%; height: 44%; opacity: .35; }
+.game.soon .meta { padding: 10px 12px 12px; }
+.game.soon strong { font-size: 15px; color: var(--muted); font-weight: 600; }
+.badge { position: absolute; top: 10px; left: 10px; padding: 2px 10px; border-radius: 999px; background: rgba(0,0,0,.55); border: 1px solid rgba(255,255,255,.14); color: var(--fg); font-size: 12px; font-weight: 600; }
 .chev { color: var(--muted); flex: none; }
+
+/* Floating "liquid glass" tab bar on Home */
+.tabbar { position: absolute; left: 12px; right: 12px; bottom: 12px; z-index: 2; display: flex; gap: 2px; padding: 6px; border-radius: 999px;
+  background: rgba(30, 30, 32, .9); border: 1px solid rgba(255, 255, 255, .12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14), 0 10px 30px rgba(0, 0, 0, .55); }
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .tabbar { background: rgba(30, 30, 32, .55); -webkit-backdrop-filter: blur(22px) saturate(180%); backdrop-filter: blur(22px) saturate(180%); }
+}
+.tabbar button { flex: 1; min-width: 0; min-height: 54px; border-radius: 999px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  font-size: 11px; font-weight: 600; color: var(--fg); transition: background .2s, color .2s; }
+.tabbar button svg { width: 22px; height: 22px; }
+.tabbar button[aria-current="page"] { color: var(--sparkle); background: rgba(255, 255, 255, .12); }
+
+/* In a game: the step's orb opens a short ask sheet over that player's side */
+.card .head .orb-btn { width: 48px; height: 48px; }
+.waiting .orb-btn { width: 64px; height: 64px; }
+.overlay.sheet { top: 30%; padding: 16px 20px 12px; border-radius: 20px 20px 0 0; background: var(--surface); border-top: 1px solid var(--line);
+  box-shadow: 0 0 0 100vmax rgba(0, 0, 0, .55); z-index: 3; }
+.overlay.sheet .field textarea { min-height: 72px; }
+/* On the split screen a half is already small, so the sheet covers that player's whole half. */
+.phone:not(.pass):not(.single) .overlay.sheet { top: 0; }
 
 /* Mascot */
 .mascot .orb { fill: var(--fg); }
@@ -224,6 +266,7 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 
 @media (prefers-reduced-motion: reduce) {
   .card.enter, .overlay.enter, .pane.enter { animation: fade .2s ease both; }
+  .tabbar button { transition: none; }
   .intro .mascot, .intro h1, .intro p { animation: fade .3s ease both !important; }
   .mascot .sp { animation: none !important; }
   .switch, .switch::after { transition: none; }
@@ -259,6 +302,7 @@ const SIDE_NAME = { atreides: "Atreides", harkonnen: "Harkonnen", both: "Both pl
 
 const state = {
   screen: "intro",    // "intro" → "home" → "game" (picker, lobby and guide)
+  tab: "games",       // Home's tab: games, ask, join or account
   script: null,
   chosen: new Set(),
   mode: "table",      // "table" (split screen) or "pass" (pass the phone)
@@ -396,7 +440,7 @@ function stepCard(s, seat, animate) {
   const context = [st.side === "both" && seat !== "both" ? "Both players" : null, st.expansion ? expansionTitle(st.expansion) : null].filter(Boolean).join(" · ");
   const loop = phaseOf(s).loop;
   return `<div class="card${animate ? " enter" : ""}">
-    <div class="head">${mascot(state.speaking ? "speaking" : "idle")}
+    <div class="head"><button class="orb-btn" data-act="ask-here" data-seat="${seat}" aria-label="Ask Ordir a rules question">${mascot(state.speaking ? "speaking" : "idle")}</button>
       <div>${context ? `<div class="context">${esc(context)}</div>` : ""}<h2 class="title" tabindex="-1">${esc(stepTitle(s))}</h2></div></div>
     <div><p class="lead">${esc(st.instruction)}</p>${bullets(st.bullets)}
       ${st.opensBattle && state.script.battle && !s.isBattle ? `<button class="textbtn" data-act="battle">Start a battle</button>` : ""}</div>
@@ -408,10 +452,10 @@ function stepCard(s, seat, animate) {
   </div>`;
 }
 
-function waiting(s) {
+function waiting(s, seat) {
   const st = stepOf(s);
   const who = st.side === "both" ? "Both players are" : `The ${SIDE_NAME[st.side]} is`;
-  return `<div class="waiting">${mascot("thinking")}
+  return `<div class="waiting"><button class="orb-btn" data-act="ask-here" data-seat="${seat}" aria-label="Ask Ordir a rules question">${mascot("thinking")}</button>
     <p>${who} on <b>${esc(stepTitle(s))}</b></p>
     <div class="timer" data-timer>${fmt(Date.now() - s.startedAt)}</div></div>`;
 }
@@ -459,9 +503,9 @@ function half(seat, isFar, animate) {
     ? `<div class="scroll">${stepCard(s, seat, animate)}</div>
        <div class="actions">${loop ? `<button class="textbtn" data-act="end-loop" data-seat="${seat}">${esc(loop.endLabel)}</button>` : ""}
          <button class="primary" data-act="done" data-seat="${seat}">Done</button></div>`
-    : waiting(s);
+    : waiting(s, seat);
   return `<section class="half ${isFar ? "far" : "near"}" aria-label="${SIDE_NAME[seat]} side">
-    <div class="seat ${seat}"><span class="dot"></span>${SIDE_NAME[seat]}</div>${body}${overlayFor(seat, animate || !!state.pending || !!state.enlarged)}</section>`;
+    <div class="seat ${seat}"><span class="dot"></span>${SIDE_NAME[seat]}</div>${body}${overlayFor(seat, animate || !!state.pending || !!state.enlarged)}${online.ask.open && online.ask.seat === seat ? askSheet() : ""}</section>`;
 }
 
 function bar(s) {
@@ -494,11 +538,18 @@ function handoff(s, animate) {
 
 // Coming-soon games show on Home so players see what's next.
 const GAMES = [
-  { id: "dune", title: "Dune: War for Arrakis", detail: "2 players · turn guide and rules questions" },
+  { id: "dune", title: "Dune: War for Arrakis", detail: "2 players · turn guide and rules questions", cover: "cover" },
   { id: "starWarsRebellion", title: "Star Wars: Rebellion", soon: true },
   { id: "warOfTheRing2E", title: "War of the Ring (2nd Edition)", soon: true },
 ];
 const CHEVRON = '<svg class="chev" width="10" height="16" viewBox="0 0 10 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 2l6 6-6 6"/></svg>';
+const TAB_ICONS = {
+  games: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="2.2"/><rect x="13" y="3" width="8" height="8" rx="2.2"/><rect x="3" y="13" width="8" height="8" rx="2.2"/><rect x="13" y="13" width="8" height="8" rx="2.2"/></svg>',
+  ask: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l1.9 5.2a3 3 0 001.8 1.8l5.2 1.9-5.2 1.9a3 3 0 00-1.8 1.8L12 20.3l-1.9-5.2a3 3 0 00-1.8-1.8L3.1 11.4l5.2-1.9a3 3 0 001.8-1.8z"/></svg>',
+  join: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M17 8v6M14 11h6"/></svg>',
+  account: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><circle cx="12" cy="10" r="3.2"/><path d="M6.2 18.6c1.3-2.3 3.3-3.4 5.8-3.4s4.5 1.1 5.8 3.4"/></svg>',
+};
+const TABS = [["games", "Games"], ["ask", "Ask"], ["join", "Join"], ["account", "Account"]];
 
 function intro() {
   return `<div class="pane intro" data-act="skip-intro">${mascot("idle")}
@@ -507,28 +558,38 @@ function intro() {
 }
 
 function home(animate) {
-  const games = GAMES.map((g) => g.soon
-    ? `<div class="option soon"><div><strong>${esc(g.title)}</strong></div><span class="badge">Coming soon</span></div>`
-    : `<button class="option" data-act="game-${g.id}" ${state.script ? "" : "disabled"}><div><strong>${esc(g.title)}</strong><span>${esc(g.detail)}</span></div>${CHEVRON}</button>`).join("");
-  const account = signedIn() ? `Signed in as ${esc(online.session.user.email || "")}` : "Sign in to ask rules questions and play on your own phones.";
-  return `<div class="pane${animate ? " enter" : ""}"><div class="scroll">
-    <div class="brand">${mascot("idle")}<div><h1 tabindex="-1">Ordir</h1><p>Learn any turn, step by step.</p></div></div>
-    <div class="group"><h2>Choose a game</h2>${games}</div>
-    <div class="group"><h2>More</h2>
-      <button class="option" data-act="ask-open"><div><strong>Ask a rules question</strong><span>Dune: War for Arrakis · answers cite the rulebook and FAQ pages.</span></div>${CHEVRON}</button>
-      <button class="option" data-act="join-open"><div><strong>Join a table</strong><span>Enter the code from another player's phone.</span></div>${CHEVRON}</button>
-      <button class="option" data-act="account-open"><div><strong>Account</strong><span>${account}</span></div>${CHEVRON}</button>
-    </div></div></div>`;
+  const page = { games: gamesPage, ask: askPage, join: joinPage, account: accountPage }[state.tab]();
+  const bar = TABS.map(([id, label]) => `<button data-act="tab-${id}" ${state.tab === id ? 'aria-current="page"' : ""}>${TAB_ICONS[id]}<span>${label}</span></button>`).join("");
+  return `<div class="pane home${animate ? " enter" : ""}"><div class="scroll">${page}</div></div>
+    <nav class="tabbar" aria-label="Ordir">${bar}</nav>`;
 }
 
-function accountPanel() {
-  return `<div class="overlay enter menu" role="dialog" aria-modal="true" aria-label="Account" style="padding-top:20px">
-    <div class="head"><h2 style="flex:1" tabindex="-1">Account</h2><button class="textbtn" data-act="account-close">Close</button></div>
-    <div class="scroll" style="padding:0;display:flex;flex-direction:column;gap:16px">
-      ${!signedIn() ? signInPane("Sign in with your email to ask rules questions and to play at a table, each on your own phone.") : `
-        <p style="margin:0">Signed in as <b>${esc(online.session.user.email || "")}</b></p>
-        <button class="primary" style="flex:none" data-act="sign-out">Sign out</button>`}
-    </div></div>`;
+function gamesPage() {
+  const main = GAMES.filter((g) => !g.soon), soon = GAMES.filter((g) => g.soon);
+  const cover = (g) => state.script && imageOf(g.cover);
+  return `<div class="brand"><button class="orb-btn" data-act="orb-ask" aria-label="Ask Ordir a rules question">${mascot("idle")}</button>
+      <div><h1 tabindex="-1">Ordir</h1><p>Learn any turn, step by step.</p></div></div>
+    <button class="ask-cta" data-act="orb-ask">${TAB_ICONS.ask}Ask me a rules question</button>
+    <div class="group"><h2>Choose a game</h2>
+      ${main.map((g) => `<button class="game" data-act="game-${g.id}" ${state.script ? "" : "disabled"}>
+        <span class="art">${cover(g) ? `<img src="${imgUrl(g.cover)}" alt="">` : ""}</span>
+        <span class="meta"><div><strong>${esc(g.title)}</strong><span>${esc(g.detail)}</span>
+          ${cover(g) ? `<span class="src">Cover art: ${esc(imgLabel(cover(g)))}</span>` : ""}</div>${CHEVRON}</span></button>`).join("")}
+      <div class="soon-grid">${soon.map((g) => `<div class="game soon"><span class="art">${mascot("")}<span class="badge">Coming soon</span></span>
+        <span class="meta"><div><strong>${esc(g.title)}</strong></div></span></div>`).join("")}</div>
+    </div>`;
+}
+
+const askPage = () => `<h1 tabindex="-1">Ask a rules question</h1>
+  <p class="hint" style="font-size:15px;margin-top:-12px">Dune: War for Arrakis · answers cite the rulebook and FAQ pages.</p>${askBody()}`;
+
+const joinPage = () => `<h1 tabindex="-1">Join a table</h1>${lobbyBody(true)}`;
+
+function accountPage() {
+  return `<h1 tabindex="-1">Account</h1>
+    ${!signedIn() ? signInPane("Sign in with your email to ask rules questions and to play at a table, each on your own phone.") : `
+      <p style="margin:0">Signed in as <b>${esc(online.session.user.email || "")}</b></p>
+      <button class="primary" style="flex:none" data-act="sign-out">Sign out</button>`}`;
 }
 
 function picker() {
@@ -549,7 +610,7 @@ function picker() {
         <input type="checkbox" id="exp-${e.id}" data-exp="${e.id}" ${state.chosen.has(e.id) ? "checked" : ""}><span class="switch" aria-hidden="true"></span></label>`).join("")}
     </div>
     <p class="hint">Leave them all off to play the base game.</p>
-    <button class="textbtn" style="align-self:flex-start" data-act="ask-open">Ask a rules question</button></div>
+    </div>
     <div class="actions"><button class="primary" data-act="start">${state.mode === "own" ? "Continue" : "Start guide"}</button></div></div>`;
 }
 
@@ -595,9 +656,8 @@ const online = {
   session: null,
   ready: false,
   signIn: { email: "", code: "", sent: false, busy: false, error: "" },
-  ask: { open: false, question: "", busy: false, error: "", answers: [] },
-  lobby: { open: false, joinOnly: false, code: "", side: "atreides", busy: false, error: "" },
-  account: { open: false },
+  ask: { open: false, seat: null, question: "", busy: false, error: "", answers: [] },  // seat: the side whose sheet is open
+  lobby: { open: false, code: "", side: "atreides", busy: false, error: "" },
   table: null,      // the game_tables row this phone sits at
   mySide: null,
   version: 0,
@@ -658,37 +718,49 @@ function answerHtml(answer) {
   return out + (list ? "</ul>" : "");
 }
 
-function askPanel() {
+function askBody(compact) {
   const a = online.ask;
-  return `<div class="overlay enter menu" role="dialog" aria-modal="true" aria-label="Rules question" style="padding-top:20px">
-    <div class="head"><h2 style="flex:1" tabindex="-1">Ask a rules question</h2><button class="textbtn" data-act="ask-close">Close</button></div>
-    <div class="scroll" style="padding:0;display:flex;flex-direction:column;gap:16px">
-      ${!signedIn() ? signInPane("Sign in with your email to ask questions. Answers come only from the official rulebook, FAQ and the expansions you play with.") : `
-        <div class="field"><label for="ask-question">Your question</label>
-          <textarea id="ask-question" maxlength="500" placeholder="Can a Legion move and leave a Leader behind?">${esc(a.question)}</textarea></div>
-        <button class="primary" data-act="ask-send" ${a.busy ? "disabled" : ""}>${a.busy ? "Checking the rules…" : "Ask"}</button>
-        ${a.busy ? `<div class="waiting" style="padding:0">${mascot("thinking")}</div>` : ""}
-        ${a.error ? `<p class="error" role="alert">${esc(a.error)}</p>` : ""}
-        ${a.answers.map((x) => `<article class="answer"><p class="q">${esc(x.question)}</p>${answerHtml(x.answer)}</article>`).join("")}
-        <p class="hint">Answers cite the official sources; tap a page to open it. Signed in as ${esc(online.session.user.email || "")} · <button class="textbtn" data-act="sign-out" style="min-height:0;font-size:13px">Sign out</button></p>`}
-    </div></div>`;
+  if (!signedIn()) return signInPane("Sign in with your email to ask questions. Answers come only from the official rulebook, FAQ and the expansions you play with.");
+  return `<div class="field"><label for="ask-question">Your question</label>
+      <textarea id="ask-question" maxlength="500" placeholder="Can a Legion move and leave a Leader behind?">${esc(a.question)}</textarea></div>
+    <button class="primary" style="flex:none" data-act="ask-send" ${a.busy ? "disabled" : ""}>${a.busy ? "Checking the rules…" : "Ask"}</button>
+    ${a.busy ? `<div class="waiting" style="padding:0">${mascot("thinking")}</div>` : ""}
+    ${a.error ? `<p class="error" role="alert">${esc(a.error)}</p>` : ""}
+    ${a.answers.map((x) => `<article class="answer"><p class="q">${esc(x.question)}</p>${answerHtml(x.answer)}</article>`).join("")}
+    ${compact ? "" : `<p class="hint">Answers cite the official sources; tap a page to open it. Signed in as ${esc(online.session.user.email || "")}.</p>`}`;
 }
 
-function lobby() {
+// From the Game menu: the whole phone.
+function askPanel() {
+  return `<div class="overlay enter menu" role="dialog" aria-modal="true" aria-label="Rules question" style="padding-top:20px">
+    <div class="head"><h2 style="flex:1" tabindex="-1">Ask a rules question</h2><button class="textbtn" data-act="ask-close">Close</button></div>
+    <div class="scroll" style="padding:0;display:flex;flex-direction:column;gap:16px">${askBody()}</div></div>`;
+}
+
+// From the step's orb: a short sheet over that player's side, so the other side keeps playing.
+function askSheet() {
+  return `<div class="overlay sheet enter" role="dialog" aria-label="Rules question">
+    <div class="head"><h2 style="flex:1;font-size:17px" tabindex="-1">Ask a rules question</h2><button class="textbtn" data-act="ask-close">Close</button></div>
+    <div class="scroll" style="padding:0;display:flex;flex-direction:column;gap:12px">${askBody(true)}</div></div>`;
+}
+
+function lobbyBody(joinOnly) {
   const l = online.lobby;
   const sides = ["atreides", "harkonnen"].map((side) => `<button class="option" role="radio" aria-checked="${l.side === side}" data-side="${side}">
       <div><strong class="side-${side}">${SIDE_NAME[side]}</strong></div><span class="radio" aria-hidden="true"></span></button>`).join("");
-  return `<div class="pane"><div class="scroll">
-    <div class="head">${mascot("idle")}<h1 tabindex="-1">${l.joinOnly ? "Join a table" : "Each on our own phone"}</h1></div>
-    ${!signedIn() ? signInPane(l.joinOnly ? "Sign in with your email to join the other player's table." : "Sign in with your email so the other player can join your table.") : `
+  return !signedIn() ? signInPane(joinOnly ? "Sign in with your email to join the other player's table." : "Sign in with your email so the other player can join your table.") : `
       <div role="radiogroup" aria-label="Your side" style="display:flex;flex-direction:column;gap:12px"><h2 style="margin:0;font-size:17px">Your side</h2>${sides}</div>
-      ${l.joinOnly ? "" : `<button class="primary" data-act="table-create" ${l.busy ? "disabled" : ""}>Start a table</button>`}
-      <div class="field"><label for="table-code">${l.joinOnly ? "The code from the other phone" : "Or join with the code from the other phone"}</label>
+      ${joinOnly ? "" : `<button class="primary" style="flex:none" data-act="table-create" ${l.busy ? "disabled" : ""}>Start a table</button>`}
+      <div class="field"><label for="table-code">${joinOnly ? "The code from the other phone" : "Or join with the code from the other phone"}</label>
         <input id="table-code" autocomplete="off" autocapitalize="characters" maxlength="6" value="${esc(l.code)}"></div>
-      <button class="primary" data-act="table-join" ${l.busy ? "disabled" : ""}>Join table</button>
-      ${l.error ? `<p class="error" role="alert">${esc(l.error)}</p>` : ""}`}
-    </div>
-    <div class="actions"><button class="textbtn" data-act="${l.joinOnly ? "home" : "close"}">Back</button></div></div>`;
+      <button class="primary" style="flex:none" data-act="table-join" ${l.busy ? "disabled" : ""}>Join table</button>
+      ${l.error ? `<p class="error" role="alert">${esc(l.error)}</p>` : ""}`;
+}
+
+function lobby() {
+  return `<div class="pane"><div class="scroll">
+    <div class="head">${mascot("idle")}<h1 tabindex="-1">Each on our own phone</h1></div>${lobbyBody(false)}</div>
+    <div class="actions"><button class="textbtn" data-act="close">Back</button></div></div>`;
 }
 
 function tableStrip() {
@@ -736,6 +808,8 @@ function share(stepChanged) {
 
 async function sitAt(row, side) {
   online.mySide = side;
+  state.screen = "game";
+  state.mode = "own";
   state.session = makeSession(state.script, new Set(row.expansions), false);
   state.battle = null;
   online.lobby.open = false;
@@ -832,10 +906,10 @@ function settleFocus(phone, stepChanged, kept) {
   const usedKey = state.usedKey;
   state.usedKey = null;
   for (const half of phone.querySelectorAll(".half")) {
-    const overlay = half.querySelector(":scope > .overlay");
+    const overlay = [...half.querySelectorAll(":scope > .overlay")].pop();
     if (overlay) for (const child of half.children) if (child !== overlay) child.inert = true;
   }
-  if (state.menu || online.ask.open || online.account.open) for (const child of phone.children) if (!child.classList.contains("menu")) child.inert = true;
+  if (state.menu || (online.ask.open && online.ask.seat === null)) for (const child of phone.children) if (!child.classList.contains("menu")) child.inert = true;
   const first = (...selectors) => selectors.map((sel) => sel && phone.querySelector(sel)).find(Boolean);
   const dialog = [...phone.querySelectorAll('[role="dialog"] [tabindex="-1"]')].find((h) => !h.closest("[inert]"));
   // A re-render nobody tapped for (an answer arriving, the other phone moving): keep focus where it was.
@@ -845,7 +919,7 @@ function settleFocus(phone, stepChanged, kept) {
   }
   const heading = first(".near .title", ".title", ".handoff h2", ".pane h1");
   // Swapping seats or picking a play mode keeps focus on that control.
-  const stays = /data-act="swap"|data-mode|data-state/.test(usedKey);
+  const stays = /data-act="(swap|tab-)|data-mode|data-state/.test(usedKey);
   const target = dialog || (stepChanged && !stays ? heading : first(state.returnTo, usedKey) || heading);
   if (!dialog) state.returnTo = null;
   if (target) target.focus();
@@ -854,17 +928,17 @@ function settleFocus(phone, stepChanged, kept) {
 function render() {
   const phone = $("#phone");
   const s = cur();
-  const key = state.screen !== "game" ? state.screen : !s ? (online.lobby.open ? "lobby" : "picker") : s.finished ? `done-${s.isBattle}` : `${stepKey(s)}-${s.handoffTo === null}-${state.battle !== null}`;
+  const key = state.screen === "home" ? `home-${state.tab}` : state.screen !== "game" ? state.screen : !s ? (online.lobby.open ? "lobby" : "picker") : s.finished ? `done-${s.isBattle}` : `${stepKey(s)}-${s.handoffTo === null}-${state.battle !== null}`;
   const animate = key !== state.lastKey;
   state.lastKey = key;
   const active = document.activeElement;
   const kept = active && phone.contains(active) ? (active.id ? `#${active.id}` : focusKey(active) || "[data-none]") : null;
   const menu = s && state.menu ? gameMenu(s) : "";
-  const ask = (online.ask.open ? askPanel() : "") + (online.account.open ? accountPanel() : "");
+  const ask = online.ask.open && online.ask.seat === null ? askPanel() : "";
   if (state.screen === "intro") {
     phone.className = "phone single"; phone.innerHTML = intro();
   } else if (state.screen === "home") {
-    phone.className = "phone single"; phone.innerHTML = home(animate) + ask;
+    phone.className = "phone single"; phone.innerHTML = home(animate);
   } else if (!s) {
     phone.className = "phone single"; phone.innerHTML = (online.lobby.open ? lobby() : picker()) + ask;
   } else if (s.finished) {
@@ -944,7 +1018,7 @@ function connect() {
 function handleClick(el) {
   const s = cur();
   state.usedKey = focusKey(el);
-  if (el.dataset.enlarge || ["done", "end-loop", "menu"].includes(el.dataset.act)) state.returnTo = state.usedKey;
+  if (el.dataset.enlarge || ["done", "end-loop", "menu", "ask-here"].includes(el.dataset.act)) state.returnTo = state.usedKey;
   if (el.dataset.mode) { state.mode = el.dataset.mode; render(); return; }
   if (el.dataset.side) { online.lobby.side = el.dataset.side; render(); return; }
   if (ONLINE_ACTIONS.includes(el.dataset.act)) {
@@ -965,16 +1039,17 @@ function handleClick(el) {
   }
   switch (el.dataset.act) {
     case "start":
-      if (state.mode === "own") { online.lobby.open = true; online.lobby.joinOnly = false; render(); connect(); break; }
+      if (state.mode === "own") { online.lobby.open = true; render(); connect(); break; }
       state.session = makeSession(state.script, new Set(state.chosen), state.mode === "pass"); onStepChanged(); break;
     case "skip-intro": showHome(); break;
-    case "home": if (online.lobby.joinOnly) state.mode = "table"; leaveTable(); Object.assign(online.lobby, { open: false, joinOnly: false, error: "" }); state.session = null; state.battle = null; state.screen = "home"; render(); break;
+    case "home": leaveTable(); Object.assign(online.lobby, { open: false, error: "" }); state.session = null; state.battle = null; state.screen = "home"; state.tab = "games"; render(); break;
     case "game-dune": state.screen = "game"; render(); break;
-    case "join-open": state.mode = "own"; Object.assign(online.lobby, { open: true, joinOnly: true, error: "" }); state.screen = "game"; render(); connect(); break;
-    case "account-open": online.account.open = true; render(); connect(); break;
-    case "account-close": online.account.open = false; render(); break;
-    case "ask-open": state.menu = false; online.ask.open = true; render(); connect(); break;
-    case "ask-close": online.ask.open = false; render(); break;
+    case "tab-games": case "tab-ask": case "tab-join": case "tab-account": case "orb-ask":
+      state.tab = el.dataset.act === "orb-ask" ? "ask" : el.dataset.act.slice(4); online.lobby.error = "";
+      render(); if (state.tab !== "games") connect(); break;
+    case "ask-open": state.menu = false; online.ask.open = true; online.ask.seat = null; render(); connect(); break;
+    case "ask-here": online.ask.open = true; online.ask.seat = el.dataset.seat; render(); connect(); break;
+    case "ask-close": online.ask.open = false; online.ask.seat = null; render(); break;
     case "battle": state.battle = makeBattle(state.session); state.lastKey = null; onStepChanged(); break;
     case "leave-battle": state.battle = null; state.lastKey = null; onStepChanged(); break;
     case "close": leaveTable(); online.lobby.open = false; state.battle = null; state.session = null; state.pending = null; state.enlarged = null; state.menu = false; render(); break;
@@ -1007,7 +1082,7 @@ document.addEventListener("input", (event) => {
 // Escape closes the rules question, the picture, the Game menu, or the turn-change checklist (in that order).
 document.addEventListener("keydown", (event) => {
   if (event.key !== "Escape") return;
-  const act = online.account.open ? "account-close" : online.ask.open ? "ask-close" : state.enlarged ? "close-enlarged" : state.menu ? "menu-close" : state.pending ? "not-yet" : null;
+  const act = online.ask.open ? "ask-close" : state.enlarged ? "close-enlarged" : state.menu ? "menu-close" : state.pending ? "not-yet" : null;
   const button = act && document.querySelector(`[data-act="${act}"]`);
   if (button) { event.preventDefault(); button.click(); }
 });
