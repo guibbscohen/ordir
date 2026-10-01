@@ -417,6 +417,11 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 .phone:not(.pass):not(.single) .overlay.sheet { top: 0; }
 .overlay.sheet { gap: 8px; }
 
+/* Layout info (Account → Layout info): live layout numbers to screenshot when something looks wrong on a phone. */
+.layout-info { position: fixed; z-index: 99; top: calc(env(safe-area-inset-top) + 4px); left: 8px; right: 8px; pointer-events: none;
+  padding: 6px 10px; border-radius: 10px; background: rgba(0, 0, 0, .78); border: 1px solid var(--line);
+  color: var(--sparkle); font: 11px/1.45 ui-monospace, Menlo, monospace; white-space: pre-wrap; }
+
 /* Mascot */
 .mascot .orb { fill: var(--fg); }
 .mascot .sp { fill: var(--sparkle); transform-box: fill-box; transform-origin: center; }
@@ -897,7 +902,9 @@ function accountPage() {
       <p style="margin:0">Signed in as <b>${esc(online.session.user.email || "")}</b></p>
       <button class="primary" style="flex:none" data-act="sign-out">Sign out</button>`}
     <p class="hint">Logo: “Magic Ball” by Ziyad Aljunaidi, Noun Project (CC BY 3.0). Type: Google Sans Flex (SIL OFL 1.1).
-      Rules © CMON / Gale Force Nine; Ordir cites them by page and isn't affiliated with them.</p>`;
+      Rules © CMON / Gale Force Nine; Ordir cites them by page and isn't affiliated with them.</p>
+    <p class="hint" style="display:flex;align-items:center;gap:8px">Version ${esc(BUILD)}
+      <button class="textbtn" style="font-size:13px" data-act="layout-info" aria-pressed="${layoutInfo.on}">Layout info</button></p>`;
 }
 
 function picker() {
@@ -1438,10 +1445,59 @@ document.addEventListener("click", (event) => {
 });
 // The opening plays once, then Home. Any tap, Enter, Space or Escape skips it.
 let introTimer = null;
+// The build, stamped by tools/build_preview.py (commit and date), so a phone can show which version it runs.
+const BUILD = "__BUILD__";
+// Layout info: a small live readout of the screen, safe-area insets and the opening's measurements. It stays on
+// across launches (so it can watch the opening) until switched off on the Account tab.
+const introLog = [];
+const layoutInfo = { on: false, el: null, timer: null };
+try { layoutInfo.on = localStorage.getItem("ordir-layout-info") === "1"; } catch {}
+function insets() {
+  const probe = document.createElement("div");
+  probe.style.cssText = "position:fixed;visibility:hidden;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)";
+  document.body.append(probe);
+  const c = getComputedStyle(probe), v = [c.paddingTop, c.paddingRight, c.paddingBottom, c.paddingLeft].map((x) => Math.round(parseFloat(x)));
+  probe.remove();
+  return v;
+}
+function screenSize() {
+  const r = $("#phone").getBoundingClientRect(), [t, , b] = insets();
+  return `${Math.round(r.width)}×${Math.round(r.height)} inset t${t} b${b}`;
+}
+function showLayoutInfo(on) {
+  layoutInfo.on = on;
+  try { on ? localStorage.setItem("ordir-layout-info", "1") : localStorage.removeItem("ordir-layout-info"); } catch {}
+  clearInterval(layoutInfo.timer);
+  layoutInfo.el?.remove();
+  layoutInfo.el = null;
+  if (!on) return;
+  layoutInfo.el = document.createElement("div");
+  layoutInfo.el.className = "layout-info";
+  layoutInfo.el.setAttribute("aria-hidden", "true");
+  document.body.append(layoutInfo.el);
+  const update = () => {
+    const r = $("#phone").getBoundingClientRect(), vv = window.visualViewport, [t, rt, b, l] = insets();
+    const bar = $(".tabbar")?.getBoundingClientRect();
+    layoutInfo.el.textContent = [
+      `version ${BUILD} · ${navigator.standalone ? "Home Screen app" : "browser"} · ${state.screen}`,
+      `window ${innerWidth}×${innerHeight} · zoom ${vv ? vv.scale.toFixed(2) : "?"} · page scroll ${Math.round(scrollY)}/${document.documentElement.scrollHeight}`,
+      `insets t${t} r${rt} b${b} l${l} · phone ${Math.round(r.left)},${Math.round(r.top)} ${Math.round(r.width)}×${Math.round(r.height)}`,
+      bar ? `tab bar bottom ${Math.round(bar.bottom)} (screen ${innerHeight})` : "",
+      introLog.length ? `opening: ${introLog.join(" → ")}` : "",
+    ].filter(Boolean).join("\n");
+  };
+  update();
+  layoutInfo.timer = setInterval(update, 300);
+}
 const reducedMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 function showHome(landed) {
   if (state.screen !== "intro") return;
   clearTimeout(introTimer);
+  // For Layout info: how far the line's end (the rim's centre) landed from Home's orb.
+  const rim = $(".intro-line .rim")?.getBoundingClientRect(), orb = $(".intro-home .brand .orb-btn svg")?.getBoundingClientRect();
+  if (landed && rim && orb && rim.width) {
+    introLog.push(`landed: line vs orb ${Math.round(rim.x + rim.width / 2 - orb.x - orb.width / 2)},${Math.round(rim.y + rim.height / 2 - orb.y - orb.height / 2)}`);
+  } else introLog.push(landed ? "landed" : "skipped");
   state.screen = "home";
   state.usedKey = "[data-none]";  // move focus to Home's heading
   if (landed) state.lastKey = `home-${state.tab}`;  // Home already rose in under the opening
@@ -1489,7 +1545,12 @@ function startIntro() {
   if (H === null) return;
   document.fonts?.ready.then(layIntroLine);
   setTimeout(layIntroLine, 1200);  // before the camera moves, whatever has loaded by then
-  const resized = new ResizeObserver(() => (state.screen === "intro" ? layIntroLine() : resized.disconnect()));
+  introLog.push(`start ${screenSize()}`);
+  const resized = new ResizeObserver(() => {
+    if (state.screen !== "intro") return resized.disconnect();
+    introLog.push(`resize ${screenSize()}`);
+    layIntroLine();
+  });
   resized.observe($("#phone"));
   const camera = { duration: 1600, delay: 1300, easing: "cubic-bezier(.65, 0, .35, 1)", fill: "both" };
   // Hidden until it starts drawing: a not-yet-drawn line would still show its round cap as a dot.
@@ -1587,6 +1648,7 @@ function handleClick(el) {
     case "menu": state.menu = true; render(); break;
     case "menu-close": state.menu = false; render(); break;
     case "event-done": s.pendingEvent = null; render(); break;
+    case "layout-info": showLayoutInfo(!layoutInfo.on); render(); break;
   }
 }
 // Enter in a sign-in or table field submits it; in a question, Enter asks (Shift-Enter starts a new line).
@@ -1646,6 +1708,7 @@ setInterval(() => {
 }, 1000);
 
 render();
+if (layoutInfo.on) showLayoutInfo(true);
 if (reducedMotion()) introTimer = setTimeout(showHome, 900); else requestAnimationFrame(startIntro);
 fetch("turnscript.json")
   .then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
