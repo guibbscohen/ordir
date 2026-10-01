@@ -15,9 +15,12 @@ The database, the `rules-answer` Edge Function and the table functions are alrea
 
 ## Sign-in emails
 
-3. **Show the code in the email.** Supabase → Authentication → Emails → Templates: paste
-   `docs/email/sign-in-code.html` into **Magic Link** and **Confirm signup** (subject: `Your Ordir code`).
-   It shows `{{ .Token }}`, the 6-digit code; its orb image is served with the preview on GitHub Pages.
+3. **Show the code in the email.** Supabase → Authentication → Emails → Templates. Both show
+   `{{ .Token }}`, the 6-digit code; their orb image is served with the preview on GitHub Pages.
+   - **Confirm signup** (someone's first code): `docs/email/welcome-code.html`, subject
+     `Welcome to Ordir: here's your code`.
+   - **Magic Link** (every sign-in after that): `docs/email/sign-in-code.html`, subject
+     `Your Ordir code is here!`.
 4. **Let friends sign in.** Supabase's built-in email only reaches members of your Supabase
    organization, a few times an hour, so Ordir sends through Resend (domain `ordir.devocto.com`, verified).
    - Resend → API Keys: a key with sending access to that domain.
