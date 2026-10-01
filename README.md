@@ -29,9 +29,9 @@ To ship builds to testers, see [TestFlight via Xcode Cloud](docs/testflight.md).
 | `Sources/<game>/` | Where `tools/fetch_sources.py` downloads the official rulebook and FAQ PDFs (not stored in the repo) |
 | `tools/validate_turn_scripts.py` | Checks every citation's excerpt appears on the cited PDF page, and every picture has its asset (runs in CI) |
 | `OrdirTests/` | Unit tests: walks the Dune script for every expansion combination; checks filters, the turn loop, Back, and picture assets |
-| `OrdirUITests/` | UI tap-through of the whole guide in the simulator; with all expansions on, screenshots every step before and after scrolling |
-| `.github/workflows/` | `turn-scripts.yml` (Linux, every push: turn-script check and browser preview), `ios-build.yml` (macOS build + unit tests, pull requests), `ios-walkthrough.yml` (UI tap-through with screenshots, run by hand) |
-| `Preview/index.html` | Browser preview of the guide (both play modes, rounds, battles); `tools/build_preview.py` builds it into `Preview/dist/` with the app's turn script and pictures, and `tools/test_preview.py` plays it in Chromium (runs in CI) |
+| `OrdirUITests/` | UI tap-through of the whole guide in the simulator (with all expansions on, screenshots every step before and after scrolling), and Xcode's accessibility audit on each kind of guide screen at default and largest text |
+| `.github/workflows/` | `turn-scripts.yml` (Linux, every push: turn-script check and browser preview), `ios-build.yml` (macOS build + unit tests, pull requests), `ios-walkthrough.yml` (UI tests with screenshots, run by hand; its `tests` input picks e.g. `OrdirUITests/AccessibilityAuditTests`) |
+| `Preview/index.html` | Browser preview of the guide (both play modes, rounds, battles); `tools/build_preview.py` builds it into `Preview/dist/` with the app's turn script and pictures, and `tools/test_preview.py` plays it in Chromium with axe-core and keyboard-focus checks (runs in CI) |
 | `tools/crop_source_images.py` | Crops component pictures from the source PDFs into `Assets.xcassets/<game>/` |
 | `Ordir/Assets.xcassets` | App icon, `AccentColor`, `Sparkle` (light/dark) |
 | `Assets/ordir-logo.svg` | Source logo; `tools/svg_to_swift.py` regenerates the mascot paths from it |
@@ -44,6 +44,7 @@ To ship builds to testers, see [TestFlight via Xcode Cloud](docs/testflight.md).
 | Mascot (idle / speaking / thinking) and spinner verbs | Done; first build pending |
 | Dune turn guide: setup, then rounds until someone wins, with a battle walkthrough; one phone (split screen or pass the phone) | Done; every step cites a rulebook page or FAQ entry and shows component pictures |
 | Dune expansions: Desert War, Smugglers, The Spacing Guild | Done as optional modules picked before the guide starts |
+| Accessibility: VoiceOver order and labels, Dynamic Type, focus in checklists; keyboard and screen readers in the preview | Done; audited by Xcode's accessibility audit and axe-core |
 | Auth, multiplayer sessions, rules Q&A | Not started |
 
 ## Proposed architecture

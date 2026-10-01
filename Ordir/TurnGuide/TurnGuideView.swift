@@ -75,9 +75,11 @@ private struct SetupPicker: View {
                 HStack(spacing: 14) {
                     OrdirMascotView()
                         .frame(width: 48, height: 48)
+                        .accessibilityHidden(true)
                     Text("How are you playing?")
                         .font(.title3.weight(.semibold))
                         .fixedSize(horizontal: false, vertical: true)
+                        .accessibilityAddTraits(.isHeader)
                 }
                 VStack(spacing: 12) {
                     modeRow(.table, title: "One phone on the table", detail: "Split screen: the top half faces the player across the table.")
@@ -86,6 +88,7 @@ private struct SetupPicker: View {
                 Text("Which expansions are you playing with?")
                     .font(.title3.weight(.semibold))
                     .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityAddTraits(.isHeader)
                 VStack(spacing: 12) {
                     ForEach(script.expansions) { expansion in
                         Toggle(isOn: binding(for: expansion.id)) {
@@ -224,13 +227,20 @@ private struct TurnGuideRunner: View {
 
     private var farSeat: TurnScript.Side { nearSeat == .atreides ? .harkonnen : .atreides }
 
+    /// VoiceOver starts with the near half, then the bar, then the far half; when a step is for both
+    /// players, the far half's identical copy is skipped (unless it holds an event checklist).
     private var splitScreen: some View {
         VStack(spacing: 0) {
             panel(for: farSeat, isFar: true)
                 .rotationEffect(.degrees(180))
+                .accessibilityHidden(session.step.side == .both && session.pendingEvent == nil)
+                .accessibilitySortPriority(0)
             centerBar
+                .accessibilitySortPriority(1)
             panel(for: nearSeat, isFar: false)
+                .accessibilitySortPriority(2)
         }
+        .accessibilityElement(children: .contain)
     }
 
     private func panel(for seat: TurnScript.Side, isFar: Bool) -> some View {
@@ -289,9 +299,10 @@ private struct TurnGuideRunner: View {
                 .font(.footnote.monospacedDigit())
                 .foregroundStyle(.secondary)
                 .frame(minWidth: 44)
+                .accessibilityLabel(Text("Time on this step: ") + Text(session.stepStartedAt, style: .timer))
         }
         .padding(.horizontal, 8)
-        .frame(height: 52)
+        .frame(minHeight: 52)
         .background(.bar)
         .overlay(alignment: .bottom) { Divider() }
     }
@@ -319,7 +330,7 @@ private struct TurnGuideRunner: View {
             }
         }
         .padding(.horizontal, 8)
-        .frame(height: 60)
+        .frame(minHeight: 60)
         .background(.bar)
         .overlay(alignment: .top) { Divider() }
         .overlay(alignment: .bottom) { Divider() }
@@ -338,7 +349,7 @@ private struct TurnGuideRunner: View {
         Button(action: action) {
             Image(systemName: systemImage)
                 .font(.body.weight(.medium))
-                .frame(width: 44, height: 44)
+                .frame(minWidth: 44, minHeight: 44)
         }
         .accessibilityLabel(title)
     }
@@ -351,8 +362,8 @@ private struct TurnGuideRunner: View {
                 .font(.caption.monospacedDigit())
                 .foregroundStyle(.secondary)
         }
-        .lineLimit(1)
-        .minimumScaleFactor(0.8)
+        .lineLimit(2)
+        .multilineTextAlignment(.center)
         .accessibilityElement(children: .combine)
     }
 
@@ -380,8 +391,10 @@ private struct TurnGuideRunner: View {
         VStack(spacing: 20) {
             OrdirMascotView()
                 .frame(height: 96)
+                .accessibilityHidden(true)
             Text("Battle over")
                 .font(.title2.weight(.semibold))
+                .accessibilityAddTraits(.isHeader)
             Text("Back to the turn: finish your Action, then tap Done.")
                 .font(.body)
                 .foregroundStyle(.secondary)
@@ -404,8 +417,10 @@ private struct TurnGuideRunner: View {
         VStack(spacing: 20) {
             OrdirMascotView()
                 .frame(height: 96)
+                .accessibilityHidden(true)
             Text("Game over")
                 .font(.title2.weight(.semibold))
+                .accessibilityAddTraits(.isHeader)
             if let winner = session.winner {
                 Text("The \(Text(winner.displayName).foregroundColor(winner.color)) win")
                     .font(.title3.weight(.semibold))
@@ -542,10 +557,12 @@ private struct HandoffView: View {
             Spacer(minLength: 0)
             OrdirMascotView(isThinking: true)
                 .frame(height: 80)
+                .accessibilityHidden(true)
             VStack(spacing: 6) {
                 Text("Pass the phone to the \(Text(side.displayName).foregroundColor(side.color))")
                     .font(.title2.weight(.semibold))
                     .multilineTextAlignment(.center)
+                    .accessibilityAddTraits(.isHeader)
                 Text("Next: \(stepTitle)")
                     .font(.body)
                     .foregroundStyle(.secondary)
@@ -667,6 +684,7 @@ private struct SeatPanel: View {
         .padding(.bottom, 8)
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(seat.displayName) side")
+        .accessibilityAddTraits(.isHeader)
     }
 
     private var actions: some View {
@@ -708,6 +726,7 @@ private struct StepCard: View {
             HStack(spacing: 14) {
                 OrdirMascotView(isSpeaking: isSpeaking)
                     .frame(width: 48, height: 48)
+                    .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 2) {
                     if let context {
                         Text(context)
@@ -820,15 +839,18 @@ private struct EventChecklist: View {
     let state: TurnScript.GameState
     let enlarge: (TurnScript.SourceImage) -> Void
     let done: () -> Void
+    @AccessibilityFocusState private var headingFocused: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 12) {
                 OrdirMascotView(isSpeaking: true)
                     .frame(width: 40, height: 40)
+                    .accessibilityHidden(true)
                 Text(state.event.title)
                     .font(.title3.weight(.semibold))
                     .accessibilityAddTraits(.isHeader)
+                    .accessibilityFocused($headingFocused)
             }
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
@@ -851,6 +873,11 @@ private struct EventChecklist: View {
         .padding(.vertical, 12)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background(.background)
+        .task {
+            // Let the overlay settle before VoiceOver focus moves onto it.
+            try? await Task.sleep(for: .milliseconds(300))
+            headingFocused = true
+        }
     }
 }
 
@@ -860,15 +887,18 @@ private struct PassTurnChecklist: View {
     let reminders: [TurnScript.Reminder]
     let pass: () -> Void
     let cancel: () -> Void
+    @AccessibilityFocusState private var headingFocused: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 12) {
                 OrdirMascotView(isSpeaking: true)
                     .frame(width: 40, height: 40)
+                    .accessibilityHidden(true)
                 Text("Before you pass the turn")
                     .font(.title3.weight(.semibold))
                     .accessibilityAddTraits(.isHeader)
+                    .accessibilityFocused($headingFocused)
             }
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
@@ -893,6 +923,11 @@ private struct PassTurnChecklist: View {
         .padding(.vertical, 12)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background(.background)
+        .task {
+            // Let the overlay settle before VoiceOver focus moves onto it.
+            try? await Task.sleep(for: .milliseconds(300))
+            headingFocused = true
+        }
     }
 }
 
@@ -921,7 +956,7 @@ private struct ReminderChecklist: View {
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                .accessibilityAddTraits(isChecked ? .isSelected : [])
+                .accessibilityAddTraits(isChecked ? [.isToggle, .isSelected] : [.isToggle])
             }
         }
     }
@@ -945,10 +980,11 @@ private struct PictureStrip: View {
                                 .frame(width: 176, height: 112)
                                 .background(Color(white: 0.12))
                                 .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                                .accessibilityHidden(true)
                             Text(picture.caption)
                                 .font(.caption)
                                 .foregroundStyle(.primary)
-                                .lineLimit(2)
+                                .fixedSize(horizontal: false, vertical: true)
                             Text(script.label(for: picture))
                                 .font(.caption2)
                                 .foregroundStyle(.secondary)
@@ -1034,6 +1070,7 @@ private struct WaitingView: View {
             Spacer(minLength: 0)
             OrdirMascotView(isThinking: true)
                 .frame(height: 64)
+                .accessibilityHidden(true)
             line
                 .font(.title3)
                 .multilineTextAlignment(.center)

@@ -1,3 +1,7 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ordir Dune Guide</title>
 <style>
 /* Layout: one phone-shaped column split in two halves; the far half is turned 180° to face the
@@ -25,6 +29,9 @@ body {
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
 button:focus-visible, a:focus-visible, input:focus-visible + .switch { outline: 2px solid var(--sparkle); outline-offset: 2px; border-radius: 8px; }
 button:disabled { opacity: .35; cursor: default; }
+/* Headings take focus after each action (so screen readers start there) without a focus ring. */
+[tabindex="-1"]:focus { outline: none; }
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
 .phone {
   width: 100%; max-width: 430px; flex: 1; min-height: 0; max-height: 920px;
@@ -179,10 +186,13 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 </style>
 
-<div class="phone" id="phone" aria-live="polite"></div>
-<p class="note">A browser preview of the Ordir guide, built from the same turn script and rulebook pictures as the app.
+<main>
+  <h1 class="sr-only">Ordir: Dune: War for Arrakis guide</h1>
+  <div class="phone" id="phone"></div>
+</main>
+<footer><p class="note">A browser preview of the Ordir guide, built from the same turn script and rulebook pictures as the app.
   Play with one phone on the table (split screen) or pass the phone between players.
-  Logo: “Magic Ball” by Ziyad Aljunaidi, Noun Project (CC BY 3.0). Rules © CMON / Gale Force Nine.</p>
+  Logo: “Magic Ball” by Ziyad Aljunaidi, Noun Project (CC BY 3.0). Rules © CMON / Gale Force Nine.</p></footer>
 
 <script>
 "use strict";
@@ -341,7 +351,7 @@ function stepCard(s, seat, animate) {
   const loop = phaseOf(s).loop;
   return `<div class="card${animate ? " enter" : ""}">
     <div class="head">${mascot(state.speaking ? "speaking" : "idle")}
-      <div>${context ? `<div class="context">${esc(context)}</div>` : ""}<h2 class="title">${esc(stepTitle(s))}</h2></div></div>
+      <div>${context ? `<div class="context">${esc(context)}</div>` : ""}<h2 class="title" tabindex="-1">${esc(stepTitle(s))}</h2></div></div>
     <div><p class="lead">${esc(st.instruction)}</p>${bullets(st.bullets)}
       ${st.opensBattle && state.script.battle && !s.isBattle ? `<button class="textbtn" data-act="battle">Start a battle</button>` : ""}</div>
     ${additionsOf(s).map((a) => section(expansionTitle(a.expansion),
@@ -365,7 +375,7 @@ function overlayFor(seat, animate) {
   if (s.pendingEvent && (seat === s.pendingEvent.event.side || seat === "both")) {
     const ev = s.pendingEvent.event;
     return `<div class="overlay${animate ? " enter" : ""}" role="dialog" aria-label="${esc(ev.title)}">
-      <div class="head">${mascot("speaking")}<h2>${esc(ev.title)}</h2></div>
+      <div class="head">${mascot("speaking")}<h2 tabindex="-1">${esc(ev.title)}</h2></div>
       <div class="scroll" style="padding:0">
         ${ev.bullets.map((b, i) => `<button class="check" data-evcheck="${i}" aria-pressed="false"><span class="box" aria-hidden="true"></span><span class="txt">${esc(b)}</span></button>`).join("")}
         ${pictures(ev.images, seat)}${citations(ev.citations)}
@@ -376,13 +386,13 @@ function overlayFor(seat, animate) {
     const img = imageOf(state.enlarged.id);
     return `<div class="overlay enlarged${animate ? " enter" : ""}" role="dialog" aria-label="${esc(img.caption)}">
       <img src="${imgUrl(img.id)}" alt="${esc(img.caption)}">
-      <h2>${esc(img.caption)}</h2><div class="comps">${esc(imgLabel(img))}</div>
+      <h2 tabindex="-1">${esc(img.caption)}</h2><div class="comps">${esc(imgLabel(img))}</div>
       <div class="actions" style="padding:0;margin-top:auto"><button class="primary" data-act="close-enlarged">Close</button></div></div>`;
   }
   if (state.pending && state.pending.seat === seat) {
     const reminders = remindersOf(s);
     return `<div class="overlay${animate ? " enter" : ""}" role="dialog" aria-label="Before you pass the turn">
-      <div class="head">${mascot("speaking")}<h2>Before you pass the turn</h2></div>
+      <div class="head">${mascot("speaking")}<h2 tabindex="-1">Before you pass the turn</h2></div>
       <div class="scroll" style="padding:0">
         ${reminders.map((r, i) => `<button class="check${state.pending.checked.has(i) ? " on" : ""}" data-check="${i}" aria-pressed="${state.pending.checked.has(i)}">
           <span class="box" aria-hidden="true"></span><span class="txt">${esc(r.text)}</span></button>`).join("")}
@@ -431,14 +441,14 @@ function handoff(s, animate) {
   const side = s.handoffTo;
   return `<section class="half" aria-label="Pass the phone">
     <div class="handoff${animate ? " card enter" : ""}">${mascot("thinking")}
-      <h2>Pass the phone to the <span class="side-${side}">${SIDE_NAME[side]}</span></h2>
+      <h2 tabindex="-1">Pass the phone to the <span class="side-${side}">${SIDE_NAME[side]}</span></h2>
       <p>Next: ${esc(stepTitle(s))}</p></div>
     <div class="handoff-actions"><button class="primary" data-act="handoff-ready">I’m the ${SIDE_NAME[side]}</button></div></section>`;
 }
 
 function picker() {
   return `<div class="pane"><div class="scroll">
-    <div class="head">${mascot("idle")}<h1>How are you playing?</h1></div>
+    <div class="head">${mascot("idle")}<h1 tabindex="-1">How are you playing?</h1></div>
     <div role="radiogroup" aria-label="How are you playing?" style="display:flex;flex-direction:column;gap:12px">
       ${[["table", "One phone on the table", "Split screen: the top half faces the player across the table."],
          ["pass", "Pass the phone", "Full screen: hand the phone to whoever acts next."]].map(([id, title, detail]) =>
@@ -456,14 +466,14 @@ function picker() {
 }
 
 function battleOver() {
-  return `<div class="pane done-pane">${mascot("idle")}<h1>Battle over</h1>
+  return `<div class="pane done-pane">${mascot("idle")}<h1 tabindex="-1">Battle over</h1>
     <p>Back to the turn: finish your Action, then tap Done.</p>
     <button class="primary" data-act="leave-battle">Back to the turn</button></div>`;
 }
 
 function finished() {
   const s = cur();
-  return `<div class="pane done-pane">${mascot("idle")}<h1>Game over</h1>
+  return `<div class="pane done-pane">${mascot("idle")}<h1 tabindex="-1">Game over</h1>
     ${s.winner ? `<h2 style="margin:0;font-size:20px">The <span class="side-${s.winner}">${SIDE_NAME[s.winner]}</span> win</h2>` : ""}
     <p>Played in ${s.pos.round} round${s.pos.round === 1 ? "" : "s"}.</p>
     <button class="primary" data-act="restart">Start over</button>
@@ -474,8 +484,8 @@ function gameMenu(s) {
   const toggles = statesOf(s).map((x) => `<label class="toggle" for="state-${x.id}">
       <div><strong>${esc(x.title)}</strong><span>${esc(x.trigger)}</span></div>
       <input type="checkbox" id="state-${x.id}" data-state="${x.id}" ${s.states.has(x.id) ? "checked" : ""}><span class="switch" aria-hidden="true"></span></label>`).join("");
-  return `<div class="overlay enter menu" role="dialog" aria-label="Game" style="padding-top:20px">
-    <div class="head"><h2 style="flex:1">Game</h2><button class="textbtn" data-act="menu-close">Close</button></div>
+  return `<div class="overlay enter menu" role="dialog" aria-modal="true" aria-label="Game" style="padding-top:20px">
+    <div class="head"><h2 style="flex:1" tabindex="-1">Game</h2><button class="textbtn" data-act="menu-close">Close</button></div>
     <div class="scroll" style="padding:0;display:flex;flex-direction:column;gap:16px">
       <p class="hint" style="font-size:15px">${phaseOf(s).part === "setup" ? "Setup" : `Round ${s.pos.round}`}</p>
       ${toggles ? `<div class="section"><h3>Happened this game</h3>${toggles}</div>` : ""}
@@ -487,21 +497,53 @@ function gameMenu(s) {
       <button class="textbtn" style="align-self:flex-start" data-act="close">Leave the guide</button></div></div>`;
 }
 
+// ---- Focus ----
+// Re-rendering replaces the screen, so after each action focus moves to where the player carries on:
+// a checklist, picture or menu that just opened; the new step's title; or the control they used.
+// Whatever an overlay covers is made inert so Tab can't reach it.
+const focusKey = (el) => {
+  for (const name of ["act", "mode", "enlarge", "winner", "mark"]) {
+    if (el.dataset[name] !== undefined) return `[data-${name}="${el.dataset[name]}"]${el.dataset.seat ? `[data-seat="${el.dataset.seat}"]` : ""}`;
+  }
+  return null;
+};
+function settleFocus(phone, stepChanged) {
+  const usedKey = state.usedKey;
+  state.usedKey = null;
+  for (const half of phone.querySelectorAll(".half")) {
+    const overlay = half.querySelector(":scope > .overlay");
+    if (overlay) for (const child of half.children) if (child !== overlay) child.inert = true;
+  }
+  if (state.menu) for (const child of phone.children) if (!child.classList.contains("menu")) child.inert = true;
+  if (!usedKey) return;
+  const first = (...selectors) => selectors.map((sel) => sel && phone.querySelector(sel)).find(Boolean);
+  const dialog = [...phone.querySelectorAll('[role="dialog"] [tabindex="-1"]')].find((h) => !h.closest("[inert]"));
+  const heading = first(".near .title", ".title", ".handoff h2", ".pane h1");
+  // Swapping seats or picking a play mode keeps focus on that control.
+  const stays = /data-act="swap"|data-mode|data-state/.test(usedKey);
+  const target = dialog || (stepChanged && !stays ? heading : first(state.returnTo, usedKey) || heading);
+  if (!dialog) state.returnTo = null;
+  if (target) target.focus();
+}
+
 function render() {
   const phone = $("#phone");
   const s = cur();
-  if (!s) { phone.className = "phone single"; phone.innerHTML = picker(); state.lastKey = null; return; }
-  if (s.finished) { phone.className = "phone single"; phone.innerHTML = s.isBattle ? battleOver() : finished(); state.lastKey = stepKey(s); return; }
-  const key = `${stepKey(s)}-${s.handoffTo === null}`;
+  const key = !s ? "picker" : s.finished ? `done-${s.isBattle}` : `${stepKey(s)}-${s.handoffTo === null}-${state.battle !== null}`;
   const animate = key !== state.lastKey;
   state.lastKey = key;
-  if (state.mode === "pass") {
+  if (!s) {
+    phone.className = "phone single"; phone.innerHTML = picker();
+  } else if (s.finished) {
+    phone.className = "phone single"; phone.innerHTML = s.isBattle ? battleOver() : finished();
+  } else if (state.mode === "pass") {
     phone.className = "phone pass";
     phone.innerHTML = passBar(s) + (s.handoffTo ? handoff(s, animate) : half(stepOf(s).side, false, animate)) + (state.menu ? gameMenu(s) : "");
-    return;
+  } else {
+    phone.className = "phone";
+    phone.innerHTML = half(farSeat(), true, animate) + bar(s) + half(state.nearSeat, false, animate) + (state.menu ? gameMenu(s) : "");
   }
-  phone.className = "phone";
-  phone.innerHTML = half(farSeat(), true, animate) + bar(s) + half(state.nearSeat, false, animate) + (state.menu ? gameMenu(s) : "");
+  settleFocus(phone, animate);
 }
 
 // ---- Behaviour ----
@@ -538,6 +580,8 @@ document.addEventListener("click", (event) => {
   const el = event.target.closest("[data-act], [data-enlarge], [data-check], [data-mode], [data-mark], [data-winner], [data-evcheck]");
   if (!el) return;
   const s = cur();
+  state.usedKey = focusKey(el);
+  if (el.dataset.enlarge || ["done", "end-loop", "menu"].includes(el.dataset.act)) state.returnTo = state.usedKey;
   if (el.dataset.mode) { state.mode = el.dataset.mode; render(); return; }
   if (el.dataset.mark) { setGameState(s, el.dataset.mark, true); render(); return; }
   if (el.dataset.winner) { s.winner = el.dataset.winner; s.finished = true; s.handoffTo = null; s.pendingEvent = null; state.menu = false; onStepChanged(); return; }
@@ -570,9 +614,16 @@ document.addEventListener("click", (event) => {
     case "event-done": s.pendingEvent = null; render(); break;
   }
 });
+// Escape closes the picture, the Game menu, or the turn-change checklist (in that order).
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape") return;
+  const act = state.enlarged ? "close-enlarged" : state.menu ? "menu-close" : state.pending ? "not-yet" : null;
+  const button = act && document.querySelector(`[data-act="${act}"]`);
+  if (button) { event.preventDefault(); button.click(); }
+});
 document.addEventListener("change", (event) => {
   const stateId = event.target.dataset && event.target.dataset.state;
-  if (stateId) { setGameState(cur(), stateId, event.target.checked); render(); return; }
+  if (stateId) { state.usedKey = `[data-state="${stateId}"]`; setGameState(cur(), stateId, event.target.checked); render(); return; }
   const id = event.target.dataset && event.target.dataset.exp;
   if (!id) return;
   event.target.checked ? state.chosen.add(id) : state.chosen.delete(id);
