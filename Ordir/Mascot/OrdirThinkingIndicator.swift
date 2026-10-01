@@ -29,7 +29,7 @@ struct OrdirThinkingIndicator: View {
                 .frame(height: 40)
 
             Text(verb + "…")
-                .font(.subheadline)
+                .font(.ordir(.subheadline))
                 .foregroundStyle(.secondary)
                 .lineLimit(1)
                 .id(verb)

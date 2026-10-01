@@ -77,7 +77,7 @@ private struct SetupPicker: View {
                         .frame(width: 48, height: 48)
                         .accessibilityHidden(true)
                     Text("How are you playing?")
-                        .font(.title3.weight(.semibold))
+                        .font(.ordir(.title3).weight(.semibold))
                         .fixedSize(horizontal: false, vertical: true)
                         .accessibilityAddTraits(.isHeader)
                 }
@@ -86,7 +86,7 @@ private struct SetupPicker: View {
                     modeRow(.pass, title: "Pass the phone", detail: "Full screen: hand the phone to whoever acts next.")
                 }
                 Text("Which expansions are you playing with?")
-                    .font(.title3.weight(.semibold))
+                    .font(.ordir(.title3).weight(.semibold))
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityAddTraits(.isHeader)
                 VStack(spacing: 12) {
@@ -94,9 +94,9 @@ private struct SetupPicker: View {
                         Toggle(isOn: binding(for: expansion.id)) {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(expansion.title)
-                                    .font(.headline)
+                                    .font(.ordir(.headline))
                                 Text(expansion.summary)
-                                    .font(.subheadline)
+                                    .font(.ordir(.subheadline))
                                     .foregroundStyle(.secondary)
                                     .fixedSize(horizontal: false, vertical: true)
                             }
@@ -107,7 +107,7 @@ private struct SetupPicker: View {
                     }
                 }
                 Text("Leave them all off to play the base game.")
-                    .font(.footnote)
+                    .font(.ordir(.footnote))
                     .foregroundStyle(.secondary)
             }
             .padding(20)
@@ -117,7 +117,7 @@ private struct SetupPicker: View {
                 start(mode, chosen)
             } label: {
                 Text("Start guide")
-                    .font(.headline)
+                    .font(.ordir(.headline))
                     .frame(maxWidth: .infinity, minHeight: 54)
             }
             .buttonStyle(PrimaryButtonStyle())
@@ -136,15 +136,15 @@ private struct SetupPicker: View {
             HStack(spacing: 12) {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(title)
-                        .font(.headline)
+                        .font(.ordir(.headline))
                     Text(detail)
-                        .font(.subheadline)
+                        .font(.ordir(.subheadline))
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 Spacer(minLength: 8)
                 Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
-                    .font(.title3)
+                    .font(.ordir(.title3))
                     .foregroundStyle(isSelected ? Color.primary : Color.secondary)
             }
             .padding(16)
@@ -296,7 +296,7 @@ private struct TurnGuideRunner: View {
             }
             .disabled(!session.canGoBack)
             Text(session.stepStartedAt, style: .timer)
-                .font(.footnote.monospacedDigit())
+                .font(.ordir(.footnote).monospacedDigit())
                 .foregroundStyle(.secondary)
                 .frame(minWidth: 44)
                 .accessibilityLabel(Text("Time on this step: ") + Text(session.stepStartedAt, style: .timer))
@@ -349,7 +349,7 @@ private struct TurnGuideRunner: View {
     private func barButton(_ title: String, systemImage: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Image(systemName: systemImage)
-                .font(.body.weight(.medium))
+                .font(.ordir(.body).weight(.medium))
                 .frame(minWidth: 44, minHeight: 44)
         }
         .accessibilityLabel(title)
@@ -360,9 +360,9 @@ private struct TurnGuideRunner: View {
     private var phaseLabel: some View {
         VStack(spacing: 1) {
             Text(session.phase.title)
-                .font(.footnote.weight(.semibold))
+                .font(.ordir(.footnote).weight(.semibold))
             Text(progressText)
-                .font(.caption.monospacedDigit())
+                .font(.ordir(.caption).monospacedDigit())
         }
         .multilineTextAlignment(.center)
         .fixedSize(horizontal: false, vertical: true)
@@ -396,17 +396,17 @@ private struct TurnGuideRunner: View {
                 .frame(height: 96)
                 .accessibilityHidden(true)
             Text("Battle over")
-                .font(.title2.weight(.semibold))
+                .font(.ordir(.title2).weight(.semibold))
                 .accessibilityAddTraits(.isHeader)
             Text("Back to the turn: finish your Action, then tap Done.")
-                .font(.body)
+                .font(.ordir(.body))
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
             Button {
                 dismiss()
             } label: {
                 Text("Back to the turn")
-                    .font(.headline)
+                    .font(.ordir(.headline))
                     .frame(maxWidth: .infinity, minHeight: 54)
             }
             .buttonStyle(PrimaryButtonStyle())
@@ -422,21 +422,21 @@ private struct TurnGuideRunner: View {
                 .frame(height: 96)
                 .accessibilityHidden(true)
             Text("Game over")
-                .font(.title2.weight(.semibold))
+                .font(.ordir(.title2).weight(.semibold))
                 .accessibilityAddTraits(.isHeader)
             if let winner = session.winner {
                 Text("The \(Text(winner.displayName).foregroundColor(winner.color)) win")
-                    .font(.title3.weight(.semibold))
+                    .font(.ordir(.title3).weight(.semibold))
             }
             Text(session.round == 1 ? "Played in 1 round." : "Played in \(session.round) rounds.")
-                .font(.body)
+                .font(.ordir(.body))
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
             Button {
                 withAnimation(stepAnimation) { session.restart() }
             } label: {
                 Text("Start over")
-                    .font(.headline)
+                    .font(.ordir(.headline))
                     .frame(maxWidth: .infinity, minHeight: 54)
             }
             .buttonStyle(PrimaryButtonStyle())
@@ -513,7 +513,7 @@ private struct GameMenu: View {
                                 VStack(alignment: .leading, spacing: 4) {
                                     Text(state.title)
                                     Text(state.trigger)
-                                        .font(.footnote)
+                                        .font(.ordir(.footnote))
                                         .foregroundStyle(.secondary)
                                 }
                             }
@@ -562,12 +562,12 @@ private struct HandoffView: View {
                 .accessibilityHidden(true)
             VStack(spacing: 6) {
                 Text("Pass the phone to the \(Text(side.displayName).foregroundColor(side.color))")
-                    .font(.title2.weight(.semibold))
+                    .font(.ordir(.title2).weight(.semibold))
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityAddTraits(.isHeader)
                 Text("Next: \(stepTitle)")
-                    .font(.body)
+                    .font(.ordir(.body))
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
@@ -575,7 +575,7 @@ private struct HandoffView: View {
             Spacer(minLength: 0)
             Button(action: ready) {
                 Text("I’m the \(side.displayName)")
-                    .font(.headline)
+                    .font(.ordir(.headline))
                     .frame(maxWidth: .infinity, minHeight: 54)
             }
             .buttonStyle(PrimaryButtonStyle())
@@ -680,7 +680,7 @@ private struct SeatPanel: View {
                 .fill(seat.color)
                 .frame(width: 8, height: 8)
             Text(seat.displayName)
-                .font(.subheadline.weight(.semibold))
+                .font(.ordir(.subheadline).weight(.semibold))
                 .foregroundStyle(seat.color)
             Spacer()
         }
@@ -701,7 +701,7 @@ private struct SeatPanel: View {
         } primary: {
             Button { passTurn(then: done) } label: {
                 Text("Done")
-                    .font(.headline)
+                    .font(.ordir(.headline))
                     .frame(maxWidth: .infinity, minHeight: 50)
             }
             .buttonStyle(PrimaryButtonStyle())
@@ -734,12 +734,12 @@ private struct StepCard: View {
                 VStack(alignment: .leading, spacing: 2) {
                     if let context {
                         Text(context)
-                            .font(.footnote.weight(.semibold))
+                            .font(.ordir(.footnote).weight(.semibold))
                             .foregroundStyle(.secondary)
                             .fixedSize(horizontal: false, vertical: true)
                     }
                     Text(title)
-                        .font(.title3.weight(.semibold))
+                        .font(.ordir(.title3).weight(.semibold))
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 .accessibilityElement(children: .combine)
@@ -748,13 +748,13 @@ private struct StepCard: View {
 
             VStack(alignment: .leading, spacing: 10) {
                 Text(step.instruction)
-                    .font(.body.weight(.medium))
+                    .font(.ordir(.body).weight(.medium))
                     .fixedSize(horizontal: false, vertical: true)
                 BulletList(items: step.bullets ?? [])
                 if step.opensBattle == true, script.battle != nil {
                     Button(action: startBattle) {
                         Label("Start a battle", systemImage: "shield.lefthalf.filled")
-                            .font(.subheadline.weight(.semibold))
+                            .font(.ordir(.subheadline).weight(.semibold))
                             .fixedSize(horizontal: false, vertical: true)
                             .frame(minHeight: 44)
                             .contentShape(Rectangle())
@@ -766,7 +766,7 @@ private struct StepCard: View {
             ForEach(Array(additions.enumerated()), id: \.offset) { _, addition in
                 section(script.expansionTitle(addition.expansion)) {
                     Text(addition.text)
-                        .font(.body)
+                        .font(.ordir(.body))
                         .fixedSize(horizontal: false, vertical: true)
                     BulletList(items: addition.bullets ?? [])
                     PictureStrip(script: script, pictures: script.pictures(addition.images), enlarge: enlarge)
@@ -781,7 +781,7 @@ private struct StepCard: View {
             section("You’ll need") {
                 PictureStrip(script: script, pictures: script.pictures(step.images), enlarge: enlarge)
                 Text(step.components.joined(separator: ", "))
-                    .font(.subheadline)
+                    .font(.ordir(.subheadline))
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             }
@@ -793,7 +793,7 @@ private struct StepCard: View {
             if let loop = phase.loop {
                 section("When to stop") {
                     Text(loop.note)
-                        .font(.subheadline)
+                        .font(.ordir(.subheadline))
                         .fixedSize(horizontal: false, vertical: true)
                     CitationList(script: script, citations: loop.citations)
                 }
@@ -812,7 +812,7 @@ private struct StepCard: View {
     private func section<Content: View>(_ title: String, @ViewBuilder content: () -> Content) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title)
-                .font(.footnote.weight(.semibold))
+                .font(.ordir(.footnote).weight(.semibold))
                 .foregroundStyle(.secondary)
                 .accessibilityAddTraits(.isHeader)
             content()
@@ -834,7 +834,7 @@ private struct BulletList: View {
                     Text(item)
                         .fixedSize(horizontal: false, vertical: true)
                 }
-                .font(.body)
+                .font(.ordir(.body))
             }
         }
     }
@@ -855,7 +855,7 @@ private struct EventChecklist: View {
                     .frame(width: 40, height: 40)
                     .accessibilityHidden(true)
                 Text(state.event.title)
-                    .font(.title3.weight(.semibold))
+                    .font(.ordir(.title3).weight(.semibold))
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityAddTraits(.isHeader)
                     .accessibilityFocused($headingFocused)
@@ -872,7 +872,7 @@ private struct EventChecklist: View {
             .scrollIndicators(.hidden)
             Button(action: done) {
                 Text("Done")
-                    .font(.headline)
+                    .font(.ordir(.headline))
                     .frame(maxWidth: .infinity, minHeight: 50)
             }
             .buttonStyle(PrimaryButtonStyle())
@@ -904,7 +904,7 @@ private struct PassTurnChecklist: View {
                     .frame(width: 40, height: 40)
                     .accessibilityHidden(true)
                 Text("Before you pass the turn")
-                    .font(.title3.weight(.semibold))
+                    .font(.ordir(.title3).weight(.semibold))
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityAddTraits(.isHeader)
                     .accessibilityFocused($headingFocused)
@@ -922,7 +922,7 @@ private struct PassTurnChecklist: View {
             } primary: {
                 Button(action: pass) {
                     Text("Pass the turn")
-                        .font(.headline)
+                        .font(.ordir(.headline))
                         .frame(maxWidth: .infinity, minHeight: 50)
                 }
                 .buttonStyle(PrimaryButtonStyle())
@@ -960,7 +960,7 @@ private struct ReminderChecklist: View {
                             .fixedSize(horizontal: false, vertical: true)
                         Spacer(minLength: 0)
                     }
-                    .font(.body)
+                    .font(.ordir(.body))
                     .frame(minHeight: 44)
                     .contentShape(Rectangle())
                 }
@@ -991,11 +991,11 @@ private struct PictureStrip: View {
                                 .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                                 .accessibilityHidden(true)
                             Text(picture.caption)
-                                .font(.caption)
+                                .font(.ordir(.caption))
                                 .foregroundStyle(.primary)
                                 .fixedSize(horizontal: false, vertical: true)
                             Text(script.label(for: picture))
-                                .font(.caption2)
+                                .font(.ordir(.caption2))
                                 .foregroundStyle(.secondary)
                         }
                         .frame(width: 176, alignment: .leading)
@@ -1052,11 +1052,11 @@ private struct CitationList: View {
                         }
                         Spacer(minLength: 8)
                         Image(systemName: "arrow.up.right")
-                            .font(.caption)
+                            .font(.ordir(.caption))
                             .foregroundStyle(.tertiary)
                             .accessibilityHidden(true)
                     }
-                    .font(.subheadline)
+                    .font(.ordir(.subheadline))
                     .frame(minHeight: 44)
                     .contentShape(Rectangle())
                 }
@@ -1083,11 +1083,11 @@ private struct WaitingView: View {
                         .frame(height: 64)
                         .accessibilityHidden(true)
                     line
-                        .font(.title3)
+                        .font(.ordir(.title3))
                         .multilineTextAlignment(.center)
                         .fixedSize(horizontal: false, vertical: true)
                     Text(startedAt, style: .timer)
-                        .font(.title2.monospacedDigit())
+                        .font(.ordir(.title2).monospacedDigit())
                         .foregroundStyle(.secondary)
                 }
                 .padding(.horizontal, 24)
@@ -1128,15 +1128,15 @@ private struct EnlargedImageView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                 .accessibilityLabel(item.image.caption)
             Text(item.image.caption)
-                .font(.headline)
+                .font(.ordir(.headline))
             Text(script.label(for: item.image))
-                .font(.subheadline)
+                .font(.ordir(.subheadline))
                 .foregroundStyle(.secondary)
             Button {
                 dismiss()
             } label: {
                 Text("Close")
-                    .font(.headline)
+                    .font(.ordir(.headline))
                     .frame(maxWidth: .infinity, minHeight: 50)
             }
             .buttonStyle(PrimaryButtonStyle())
@@ -1155,7 +1155,7 @@ private struct EnlargedImageView: View {
 private struct TextButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .font(.subheadline.weight(.semibold))
+            .font(.ordir(.subheadline).weight(.semibold))
             .foregroundStyle(Color.accentColor)
             .multilineTextAlignment(.center)
             .fixedSize(horizontal: false, vertical: true)

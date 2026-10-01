@@ -66,3 +66,8 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   the name. Games without official sources yet get house-style art until their sources are added.
 - 2026-10-01: The Ordir orb is the "Ask a rules question" button: on Home it opens Ask full screen; in a
   game, tapping the step's orb opens a short ask sheet over that player's side.
+- 2026-10-01: Typeface is Google Sans Flex (SIL OFL 1.1; the open release of Google Sans), in the app
+  (`Font.ordir(_:)`, Dynamic Type kept) and the preview (self-hosted woff2). Never imply Google affiliation.
+- 2026-10-01: Animations follow `docs/animations.md` (every interaction's motion and its Reduce Motion
+  version). Illustrated one-off moments use Lottie (airbnb/lottie-ios, via lottie-spm; lottie-web in the
+  preview); layout motion stays SwiftUI/CSS; the orb stays procedural.

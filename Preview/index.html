@@ -4,6 +4,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ordir</title>
 <style>
+/* Google Sans Flex (SIL OFL 1.1, fonts/OFL.txt): weight and optical size are variable. */
+@font-face {
+  font-family: "Google Sans Flex"; src: url("fonts/GoogleSansFlex.woff2") format("woff2");
+  font-weight: 1 1000; font-style: normal; font-display: swap;
+}
 /* Layout: one phone-shaped column split in two halves; the far half is turned 180° to face the
    player across the table, with a shared bar between them. Always dark, like the app. */
 :root {
@@ -16,7 +21,7 @@
   --sparkle: #9ec7ff;
   --atreides: #4cc38a;
   --harkonnen: #ff6b5e;
-  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font: "Google Sans Flex", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
   color-scheme: dark;
 }
 html, body { height: 100%; }
@@ -26,6 +31,7 @@ body {
   padding-inline: 16px; padding-block: 12px; box-sizing: border-box;
 }
 * { box-sizing: border-box; }
+body { font-optical-sizing: auto; }
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
 button:focus-visible, a:focus-visible, input:focus-visible + .switch { outline: 2px solid var(--sparkle); outline-offset: 2px; border-radius: 8px; }
 button:disabled { opacity: .35; cursor: default; }
@@ -280,7 +286,7 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 </main>
 <footer><p class="note">A browser preview of the Ordir guide, built from the same turn script and rulebook pictures as the app.
   Play with one phone on the table (split screen) or pass the phone between players.
-  Logo: “Magic Ball” by Ziyad Aljunaidi, Noun Project (CC BY 3.0). Rules © CMON / Gale Force Nine.</p></footer>
+  Logo: “Magic Ball” by Ziyad Aljunaidi, Noun Project (CC BY 3.0). Type: Google Sans Flex (SIL OFL 1.1). Rules © CMON / Gale Force Nine.</p></footer>
 
 <script>
 "use strict";

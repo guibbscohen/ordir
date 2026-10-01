@@ -47,10 +47,10 @@ struct HomeView: View {
                 .frame(height: 120)
                 .padding(.top, 48)
             Text("Ordir")
-                .font(.largeTitle.weight(.semibold))
+                .font(.ordir(.largeTitle).weight(.semibold))
                 .accessibilityAddTraits(.isHeader)
             Text("Learn any turn, step by step.")
-                .font(.subheadline)
+                .font(.ordir(.subheadline))
                 .foregroundStyle(.secondary)
         }
     }
@@ -58,7 +58,7 @@ struct HomeView: View {
     private var gameList: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Choose a game")
-                .font(.headline)
+                .font(.ordir(.headline))
                 .accessibilityAddTraits(.isHeader)
             ForEach(OrdirGame.allCases.filter { Self.scripts[$0] != nil }) { game in
                 NavigationLink(value: game) {
@@ -103,19 +103,19 @@ private struct GameCard: View {
             HStack(spacing: 12) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(game.displayName)
-                        .font(.headline)
+                        .font(.ordir(.headline))
                     Text("Turn guide, step by step")
-                        .font(.subheadline)
+                        .font(.ordir(.subheadline))
                         .foregroundStyle(.secondary)
                     if let cover {
                         Text("Cover art: \(script.label(for: cover))")
-                            .font(.caption)
+                            .font(.ordir(.caption))
                             .foregroundStyle(.secondary)
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 Image(systemName: "chevron.right")
-                    .font(.footnote.weight(.semibold))
+                    .font(.ordir(.footnote).weight(.semibold))
                     .foregroundStyle(.tertiary)
                     .accessibilityHidden(true)
             }
@@ -146,7 +146,7 @@ private struct ComingSoonTile: View {
                 }
                 .overlay(alignment: .topLeading) {
                     Text("Coming soon")
-                        .font(.caption.weight(.semibold))
+                        .font(.ordir(.caption).weight(.semibold))
                         .padding(.horizontal, 10)
                         .padding(.vertical, 3)
                         .background(.black.opacity(0.55), in: Capsule())
@@ -155,7 +155,7 @@ private struct ComingSoonTile: View {
                 }
                 .clipped()
             Text(game.displayName)
-                .font(.subheadline.weight(.semibold))
+                .font(.ordir(.subheadline).weight(.semibold))
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 12)
@@ -176,7 +176,7 @@ private struct GamePlaceholderView: View {
         VStack(spacing: 24) {
             OrdirThinkingIndicator(game: game)
             Text("Turn guides for \(game.displayName) are on the way.")
-                .font(.footnote)
+                .font(.ordir(.footnote))
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
         }

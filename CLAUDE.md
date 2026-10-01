@@ -21,6 +21,10 @@ SessionStart hook in `.claude/settings.json` (it runs `scripts/sync-external-ski
 
 `.claude/external-skills/INDEX.md` lists every skill with its description and SKILL.md path.
 
+Reference library (cloned by the same script, not a skill): `airbnb/lottie-ios` in
+`.claude/external-skills/airbnb__lottie-ios/` — Lottie's API, docs and sample animations, for any
+animation work (see `docs/animations.md`).
+
 ### Required workflow on every task
 
 1. **Check the index.** Before starting work, read `.claude/external-skills/INDEX.md` and pick every
