@@ -2,7 +2,7 @@
 //  HomeView.swift
 //  Ordir
 //
-//  First screen: the mascot and the list of supported games.
+//  First screen after the opening: the mascot and the games, unfinished ones marked "Coming soon".
 //
 
 import SwiftUI
@@ -61,10 +61,14 @@ struct HomeView: View {
                 .font(.headline)
                 .accessibilityAddTraits(.isHeader)
             ForEach(OrdirGame.allCases) { game in
-                NavigationLink(value: game) {
-                    GameRow(game: game)
+                if game.hasTurnGuide {
+                    NavigationLink(value: game) {
+                        GameRow(game: game)
+                    }
+                    .buttonStyle(.plain)
+                } else {
+                    ComingSoonRow(game: game)
                 }
-                .buttonStyle(.plain)
             }
         }
     }
@@ -90,6 +94,36 @@ private struct GameRow: View {
     }
 }
 
+/// A game whose turn guide isn't written yet: greyed, with a "Coming soon" badge, not tappable.
+private struct ComingSoonRow: View {
+    let game: OrdirGame
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
+    var body: some View {
+        // At accessibility text sizes the badge goes under the name instead of squeezing it.
+        let layout = dynamicTypeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8))
+            : AnyLayout(HStackLayout(spacing: 12))
+        layout {
+            Text(game.displayName)
+                .font(.body)
+                .foregroundStyle(.secondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            Text("Coming soon")
+                .font(.footnote.weight(.semibold))
+                .foregroundStyle(.secondary)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 3)
+                .overlay(Capsule().strokeBorder(.quaternary))
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .frame(minHeight: 56)
+        .background(.quaternary.opacity(0.25), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .accessibilityElement(children: .combine)
+    }
+}
+
 /// Stand-in until turn guides exist; shows the game's thinking indicator.
 private struct GamePlaceholderView: View {
     let game: OrdirGame
@@ -105,6 +139,13 @@ private struct GamePlaceholderView: View {
         .padding(32)
         .navigationTitle(game.displayName)
         .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+private extension OrdirGame {
+    /// Whether the app bundles this game's turn script.
+    var hasTurnGuide: Bool {
+        Bundle.main.url(forResource: "\(rawValue).turnscript", withExtension: "json") != nil
     }
 }
 

@@ -56,3 +56,7 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   the browser preview and the app, on the same backend.
 - 2026-10-01: The online preview (sign-in, rules questions, own-phone tables) is hosted on GitHub Pages,
   built from main by a Linux job; the private claude.ai artifact link stays for the offline guide.
+- 2026-10-01: Launch flow (preview and app): a ~1.5 s animated opening (mascot fades in, sparkles twinkle,
+  "Ordir" + tagline), tap to skip, a quick fade with Reduce Motion; then Home. Home shows the game list
+  (unfinished games as greyed "Coming soon" cards), Ask a rules question, Account (sign in/out), and Join a
+  table by code.

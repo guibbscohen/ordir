@@ -14,6 +14,16 @@ final class AccessibilityAuditTests: XCTestCase {
         continueAfterFailure = true
     }
 
+    func testHome() throws {
+        let app = XCUIApplication()
+        app.launch()
+        // The opening plays first, then Home.
+        XCTAssertTrue(app.staticTexts["Choose a game"].waitForExistence(timeout: 20))
+        let comingSoon = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS %@", "Coming soon"))
+        XCTAssertEqual(comingSoon.count, 2, "Home should list two coming-soon games")
+        try audit(app)
+    }
+
     func testSetupPicker() throws {
         let app = launch()
         XCTAssertTrue(app.buttons["Start guide"].waitForExistence(timeout: 20))
