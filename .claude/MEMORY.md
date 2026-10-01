@@ -96,3 +96,5 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
 - 2026-10-01: Ask picks the game with a search bar that opens a list of games (cover and name; typing filters).
   Asking opens that game's rules chat full screen (question bubbles, Ordir's cited answers, a composer at the
   bottom; follow-ups keep context). Each game has one chat; the Ask tab lists them under "Your chats" to reopen.
+- 2026-10-01: Until TestFlight (needs the paid Apple Developer account), the phone test build is the online
+  preview added to the Home Screen: full screen, black, with the app's own icon (resized into Preview/icons).
