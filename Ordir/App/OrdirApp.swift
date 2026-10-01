@@ -10,6 +10,8 @@ struct OrdirApp: App {
     // The opening plays once per launch. CI and the UI tests open a game directly with
     // `-OrdirOpenGame`, so they skip it.
     @State private var showsOpening = UserDefaults.standard.string(forKey: "OrdirOpenGame") == nil
+    /// Home's header orb on screen, where the opening's orb lands.
+    @State private var homeOrb: CGRect?
 
     init() {
         OrdirFont.register()
@@ -17,18 +19,21 @@ struct OrdirApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ZStack {
-                HomeView()
-                    .accessibilityHidden(showsOpening)
-                if showsOpening {
-                    OpeningView {
-                        withAnimation(.easeOut(duration: 0.35)) { showsOpening = false }
+            HomeView(hidesOrb: showsOpening) { homeOrb = $0 }
+                .accessibilityHidden(showsOpening)
+                .overlay {
+                    if showsOpening {
+                        GeometryReader { proxy in
+                            let origin = proxy.frame(in: .global).origin
+                            OpeningView(target: homeOrb?.offsetBy(dx: -origin.x, dy: -origin.y)) {
+                                withAnimation(.easeOut(duration: 0.25)) { showsOpening = false }
+                            }
+                        }
+                        .ignoresSafeArea()
+                        .transition(.opacity)
                     }
-                    .transition(.opacity)
-                    .zIndex(1)
                 }
-            }
-            .font(.ordir(.body))
+                .font(.ordir(.body))
         }
     }
 }

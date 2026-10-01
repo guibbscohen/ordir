@@ -13,7 +13,7 @@ instead, which engine draws it, and whether it exists yet.
   - Springs for anything the player touches. Nothing blocks input.
 - **Reduce Motion:** always a fade (≤ 200 ms), a static frame, or Lottie's "reduced motion" marker.
   Never a slide, zoom or bounce.
-- **The orb is Ordir's voice.** It idles, thinks, speaks and reacts. The orb itself stays procedural
+- **The orb is Ordir's voice.** It has a face (two dot eyes, a one-line smile), idles, thinks, speaks and reacts. The orb itself stays procedural
   (`OrdirMascotView` Canvas; CSS in the preview), so it can change mode mid-animation.
 - **Engines:**
   - SwiftUI and CSS for layout motion: transitions, presses, sheets, tabs.
@@ -40,8 +40,8 @@ Status key:
 
 | Moment | Animation | Reduce Motion | Engine | Status |
 | --- | --- | --- | --- | --- |
-| App launch | Orb rises out of a blur. Sparkles pop one by one, then twinkle. "Ordir" and the tagline rise. Hands over to Home after ~1.5 s. | 0.3 s fade, 0.9 s hold | SwiftUI / CSS | Built |
-| Opening → Home | The orb shrinks and glides into its place in Home's header (shared element); the rest of Home fades in under it | Crossfade | SwiftUI `matchedGeometryEffect` / CSS view transition | New |
+| App launch | On black, a deep blue and violet glow rises. The orb (88 pt, with its face) comes out of a blur, sparkles popping. "Ordir" and the tagline rise. A glowing ribbon travels out of the orb, loops across the screen and leaves toward the top-left. Inspired by Ripplix's "Happier" splash. | Orb and name, short fade, Home after 0.9 s | SwiftUI / CSS | Built |
+| Opening → Home | At 2.3 s the glow settles to black and the orb glides into Home's header while Home rises in underneath, sections staggered | Crossfade | SwiftUI (Home reports its orb's frame) / CSS | Built |
 | Richer opening (optional) | "Orb awakening": sparkles swirl in from the edges and ignite the orb with a soft glow pulse | Marker: orb already lit | Lottie | New (needs art) |
 
 ### Home
@@ -53,7 +53,7 @@ Status key:
 | Game card press | Scales to 0.97 with a highlight, then springs back | Highlight only | SwiftUI / CSS | New |
 | Open a game | Cover art zooms into the setup screen's header | Crossfade | iOS 18 zoom transition / CSS view transition | New |
 | Coming-soon tile tap | Gentle shake and an "On the way" toast | Toast only | SwiftUI / CSS | New |
-| Orb, idle | Sparkles twinkle | Static | Canvas / CSS | Built |
+| Orb, idle | Sparkles twinkle; the face blinks every ~4.6 s | Static | Canvas / CSS | Built |
 | Orb tap → Ask | The orb pulses, then Ask grows out from it | Crossfade | SwiftUI / CSS | New |
 
 ### Setup
@@ -99,7 +99,7 @@ Status key:
 | Moment | Animation | Reduce Motion | Engine | Status |
 | --- | --- | --- | --- | --- |
 | Ask sheet in a game | Slides up over that player's side with a spring; the backdrop dims | Fade | SwiftUI / CSS | Partial (rise) |
-| Checking the rules | Orb "thinking" | Static | Canvas / CSS | Built |
+| Checking the rules | Orb "thinking": eyes glance up, mouth goes flat | Static | Canvas / CSS | Built |
 | Answer arrives | Orb switches to "speaking"; the answer rises; page chips stagger in (40 ms apart) | Fade | SwiftUI / CSS | Partial (no speaking, no stagger) |
 | Error | Field shakes once; message fades in | Message only | SwiftUI / CSS | New |
 
