@@ -121,7 +121,7 @@ struct HomeView: View {
                 NavigationLink(value: game) {
                     GameCard(game: game, script: Self.scripts[game]!)
                 }
-                .buttonStyle(.plain)
+                .buttonStyle(PressableCardStyle())
             }
             LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
                 ForEach(OrdirGame.allCases.filter { Self.scripts[$0] == nil }) { game in
@@ -135,6 +135,15 @@ struct HomeView: View {
     private static let scripts: [OrdirGame: TurnScript] = Dictionary(
         uniqueKeysWithValues: OrdirGame.allCases.compactMap { game in TurnScript.bundled(for: game).map { (game, $0) } }
     )
+}
+
+/// Cards shrink a little under the finger and spring back.
+private struct PressableCardStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .scaleEffect(configuration.isPressed ? 0.97 : 1)
+            .animation(.spring(duration: 0.25, bounce: 0.3), value: configuration.isPressed)
+    }
 }
 
 /// The little triangle on top of the phrase bubble.

@@ -49,9 +49,9 @@ Status key:
 
 | Moment | Animation | Reduce Motion | Engine | Status |
 | --- | --- | --- | --- | --- |
-| Tab switch (glass bar) | The selection pill slides to the new tab (spring); the icon gives a small bounce; the page crossfades in 150 ms | Instant pill, crossfade | SwiftUI / CSS | Partial (instant highlight) |
+| Tab switch (glass bar) | The selection pill slides to the new tab (spring); the icon gives a small bounce; the page crossfades in 150 ms | Instant pill, crossfade | SwiftUI / CSS | Built (preview) |
 | Scrolling Home | The glass bar shrinks to a compact pill while scrolling down and comes back on scroll up, like Apple Music | Stays full size | SwiftUI / CSS | New |
-| Game card press | Scales to 0.97 with a highlight, then springs back | Highlight only | SwiftUI / CSS | New |
+| Game card press | Scales to 0.97 with a highlight, then springs back | Highlight only | SwiftUI / CSS | Built |
 | Open a game | Cover art zooms into the setup screen's header | Crossfade | iOS 18 zoom transition / CSS view transition | New |
 | Coming-soon tile tap | Gentle shake and an "On the way" toast | Toast only | SwiftUI / CSS | New |
 | Orb, idle | Sparkles twinkle; the face blinks every ~4.6 s | Static | Canvas / CSS | Built |
@@ -70,14 +70,14 @@ Status key:
 | Moment | Animation | Reduce Motion | Engine | Status |
 | --- | --- | --- | --- | --- |
 | New step | Card rises 16 pt and fades in; the orb "speaks" for the length of the instruction | Fade | SwiftUI / CSS | Built |
-| Leaving a step | The old card fades and lifts out before the new one rises (no hard cut) | Crossfade | SwiftUI / CSS | New |
-| Previous step | Card enters from above (the reverse direction), so going back feels different | Crossfade | SwiftUI / CSS | New |
-| Done press | Press scale, plus haptic | Haptic only | SwiftUI / CSS | Partial (opacity) |
-| Turn-change checklist | Sheet rises; each tick draws its checkmark; when all are ticked, "Pass the turn" glows once | Instant ticks | SwiftUI / CSS (stroke) | Partial (sheet rise) |
+| Leaving a step | The old card fades and lifts out before the new one rises (no hard cut) | Crossfade | SwiftUI / CSS | Built |
+| Previous step | Card enters from above (the reverse direction), so going back feels different | Crossfade | SwiftUI / CSS | Built |
+| Done press | Press scale, plus haptic | Haptic only | SwiftUI / CSS | Built (app haptic) |
+| Turn-change checklist | Sheet rises; each tick draws its checkmark; when all are ticked, "Pass the turn" glows once | Instant ticks | SwiftUI / CSS (stroke) | Built |
 | Pass the turn (split screen) | A spotlight sweeps from this half to the other; the waiting half's orb wakes and speaks | Fade | SwiftUI / CSS | New |
 | Pass the phone (handoff) | A phone slides across a table toward the next player's side colour | Marker: still frame | Lottie | New (needs art) |
 | Waiting | Orb "thinking"; the timer ticks | Static orb | Canvas / CSS | Built |
-| Phase change (bar) | Phase name rolls up like a counter; progress dots fill | Instant | SwiftUI / CSS | New |
+| Phase change (bar) | Phase name rolls up like a counter; progress dots fill | Instant | SwiftUI / CSS | Built (name roll) |
 | New round | Short "Round 2" banner with a sparkle burst from the orb | Banner fades | Lottie | New (needs art) |
 | Swap seats | The two halves trade places with a quick flip | Crossfade | SwiftUI / CSS | New (instant) |
 | Picture tap | Thumbnail zooms to full size (shared element) and back | Crossfade | SwiftUI / CSS | Partial (overlay rise) |
@@ -99,9 +99,9 @@ Status key:
 
 | Moment | Animation | Reduce Motion | Engine | Status |
 | --- | --- | --- | --- | --- |
-| Ask sheet in a game | Slides up over that player's side with a spring; the backdrop dims | Fade | SwiftUI / CSS | Partial (rise) |
+| Ask sheet in a game | Slides up over that player's side with a spring; the backdrop dims | Fade | SwiftUI / CSS | Built (preview) |
 | Checking the rules | Orb "thinking": eyes glance up, mouth goes flat | Static | Canvas / CSS | Built |
-| Answer arrives | Orb switches to "speaking"; the answer rises; page chips stagger in (40 ms apart) | Fade | SwiftUI / CSS | Partial (no speaking, no stagger) |
+| Answer arrives | Orb switches to "speaking"; the answer rises; page chips stagger in (40 ms apart) | Fade | SwiftUI / CSS | Built (preview) |
 | Error | Field shakes once; message fades in | Message only | SwiftUI / CSS | New |
 
 ### Sign-in

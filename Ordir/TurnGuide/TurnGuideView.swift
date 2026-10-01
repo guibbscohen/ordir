@@ -187,6 +187,8 @@ private struct TurnGuideRunner: View {
     }
     @State private var enlarged: EnlargedImage?
     @State private var showsGameMenu = false
+    /// The last move was "Previous step", so steps change in the opposite direction.
+    @State private var goingBack = false
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.dismiss) private var dismiss
 
@@ -201,6 +203,8 @@ private struct TurnGuideRunner: View {
             }
         }
         .toolbar(.hidden, for: .navigationBar)
+        .sensoryFeedback(.impact(weight: .light), trigger: session.position)
+        .sensoryFeedback(.success, trigger: session.isFinished) { _, finished in finished }
         .task(id: stepKey) { await speak() }
         .sheet(item: $enlarged) { item in
             EnlargedImageView(script: session.script, item: item)
@@ -256,8 +260,14 @@ private struct TurnGuideRunner: View {
             startedAt: session.stepStartedAt,
             isSpeaking: isSpeaking,
             stepTransition: stepTransition,
-            done: { withAnimation(stepAnimation) { session.advance() } },
-            endLoop: { withAnimation(stepAnimation) { session.endLoop() } },
+            done: {
+                goingBack = false
+                withAnimation(stepAnimation) { session.advance() }
+            },
+            endLoop: {
+                goingBack = false
+                withAnimation(stepAnimation) { session.endLoop() }
+            },
             enlarge: { enlarged = EnlargedImage(image: $0, isFar: isFar) },
             event: session.pendingEvent,
             dismissEvent: { withAnimation(stepAnimation) { session.dismissEvent() } },
@@ -292,6 +302,7 @@ private struct TurnGuideRunner: View {
                 .accessibilityIdentifier("guide-progress")
             Spacer(minLength: 8)
             barButton("Previous step", systemImage: "arrow.uturn.backward") {
+                goingBack = true
                 withAnimation(stepAnimation) { session.goBack() }
             }
             .disabled(!session.canGoBack)
@@ -323,6 +334,7 @@ private struct TurnGuideRunner: View {
             .layoutPriority(1)
             Spacer(minLength: 8)
             barButton("Previous step", systemImage: "arrow.uturn.backward") {
+                goingBack = true
                 withAnimation(stepAnimation) { session.goBack() }
             }
             .disabled(!session.canGoBack)
@@ -361,6 +373,8 @@ private struct TurnGuideRunner: View {
         VStack(spacing: 1) {
             Text(session.phase.title)
                 .font(.ordir(.footnote).weight(.semibold))
+                .id(session.phase.title)
+                .transition(reduceMotion ? .opacity : .push(from: .bottom))
             Text(progressText)
                 .font(.ordir(.caption).monospacedDigit())
         }
@@ -464,11 +478,13 @@ private struct TurnGuideRunner: View {
         reduceMotion ? .easeInOut(duration: 0.2) : .smooth(duration: 0.4)
     }
 
-    /// New step fades in with a short rise; a plain cross-fade with Reduce Motion on.
+    /// Forward, the new step rises in as the old one lifts away; going back, the step comes in from above
+    /// and the old one sinks. A plain cross-fade with Reduce Motion on.
     private var stepTransition: AnyTransition {
         reduceMotion
             ? .opacity
-            : .asymmetric(insertion: .opacity.combined(with: .offset(y: 16)), removal: .opacity)
+            : .asymmetric(insertion: .opacity.combined(with: .offset(y: goingBack ? -16 : 16)),
+                          removal: .opacity.combined(with: .offset(y: goingBack ? 12 : -12)))
     }
 
     /// The mascot "speaks" for roughly as long as the instruction takes to read aloud.
@@ -896,6 +912,8 @@ private struct PassTurnChecklist: View {
     let pass: () -> Void
     let cancel: () -> Void
     @AccessibilityFocusState private var headingFocused: Bool
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var glowing = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -911,7 +929,11 @@ private struct PassTurnChecklist: View {
             }
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
-                    ReminderChecklist(reminders: reminders)
+                    ReminderChecklist(reminders: reminders) { count in
+                        guard count == reminders.count, !reduceMotion else { return }
+                        withAnimation(.easeOut(duration: 0.3)) { glowing = true }
+                        withAnimation(.easeIn(duration: 0.6).delay(0.35)) { glowing = false }
+                    }
                     CitationList(script: script, citations: reminders.flatMap(\.citations))
                 }
             }
@@ -926,6 +948,7 @@ private struct PassTurnChecklist: View {
                         .frame(maxWidth: .infinity, minHeight: 50)
                 }
                 .buttonStyle(PrimaryButtonStyle())
+                .shadow(color: Color.ordirSparkle.opacity(glowing ? 0.7 : 0), radius: glowing ? 16 : 0)
             }
         }
         .padding(.horizontal, 20)
@@ -943,6 +966,8 @@ private struct PassTurnChecklist: View {
 /// Tick-off list for the moment the turn passes. Resets with every new step.
 private struct ReminderChecklist: View {
     let reminders: [TurnScript.Reminder]
+    /// Called with how many items are ticked, after each tap.
+    var onChange: (Int) -> Void = { _ in }
     @State private var checked: Set<Int> = []
 
     var body: some View {
@@ -951,9 +976,11 @@ private struct ReminderChecklist: View {
                 let isChecked = checked.contains(index)
                 Button {
                     if isChecked { checked.remove(index) } else { checked.insert(index) }
+                    onChange(checked.count)
                 } label: {
                     HStack(alignment: .firstTextBaseline, spacing: 12) {
                         Image(systemName: isChecked ? "checkmark.circle.fill" : "circle")
+                            .contentTransition(.symbolEffect(.replace))
                             .foregroundStyle(isChecked ? Color.primary : Color.secondary)
                         Text(reminder.text)
                             .foregroundStyle(isChecked ? Color.secondary : Color.primary)
@@ -968,6 +995,7 @@ private struct ReminderChecklist: View {
                 .accessibilityAddTraits(isChecked ? [.isToggle, .isSelected] : [.isToggle])
             }
         }
+        .sensoryFeedback(.selection, trigger: checked)
     }
 }
 
