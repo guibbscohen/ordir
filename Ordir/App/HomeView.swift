@@ -15,6 +15,8 @@ struct HomeView: View {
         .flatMap(OrdirGame.init(rawValue:))
         .map { [$0] } ?? []
 
+    /// When the opening's line reaches the header's orb, which is then built (nil: shown as is).
+    var orbBuildStart: Date?
     /// Reports where the header's orb is on screen (global coordinates): the opening's line ends there.
     var onOrbFrame: (CGRect) -> Void = { _ in }
 
@@ -46,7 +48,7 @@ struct HomeView: View {
 
     private var header: some View {
         VStack(spacing: 12) {
-            OrdirMascotView()
+            OrdirMascotView(buildStart: orbBuildStart)
                 .frame(height: 72)
                 .background {
                     GeometryReader { proxy in
@@ -59,10 +61,36 @@ struct HomeView: View {
             Text("Ordir")
                 .font(.ordir(.title).weight(.semibold))
                 .accessibilityAddTraits(.isHeader)
-            Text("Learn any turn, step by step.")
+            Text(Self.phraseOfDay)
                 .font(.ordir(.subheadline))
-                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 18)
+                .padding(.vertical, 12)
+                .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                .overlay(alignment: .top) {
+                    BubbleTail()  // points up at the orb
+                        .fill(.quaternary.opacity(0.5))
+                        .frame(width: 16, height: 8)
+                        .offset(y: -8)
+                }
+                .padding(.top, 8)
         }
+    }
+
+    /// What the orb says on Home, one a day (the preview uses the same list).
+    private static let phrases = [
+        "What shall we play today?",
+        "Ready for your next turn?",
+        "Set up the board, I’ll walk you through it.",
+        "Got a rules question? I’m all ears.",
+        "Who’s going first today?",
+        "A new game, a fresh start.",
+        "Let’s learn a turn together.",
+        "Shuffle up. I’ll keep the rules straight.",
+    ]
+    private static var phraseOfDay: String {
+        let day = Calendar.current.ordinality(of: .day, in: .era, for: .now) ?? 0
+        return phrases[day % phrases.count]
     }
 
     private var gameList: some View {
@@ -88,6 +116,18 @@ struct HomeView: View {
     private static let scripts: [OrdirGame: TurnScript] = Dictionary(
         uniqueKeysWithValues: OrdirGame.allCases.compactMap { game in TurnScript.bundled(for: game).map { (game, $0) } }
     )
+}
+
+/// The little triangle on top of the phrase bubble.
+private struct BubbleTail: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: rect.minX, y: rect.maxY))
+        path.addLine(to: CGPoint(x: rect.midX, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+        path.closeSubpath()
+        return path
+    }
 }
 
 /// A playable game: its cover art (cropped from the rulebook cover) over the name.

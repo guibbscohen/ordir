@@ -7,7 +7,7 @@
 //  - The orb and name sit on black, above a deep blue and violet glow.
 //  - A glowing line draws itself from the orb down the screen.
 //  - The view glides down through the glow to Home, which waits one screen below (OrdirApp slides it up
-//    with `camera(at:)`), and the line ends at Home's orb (`target`).
+//    with `camera(at:)`), and the line ends at Home's orb (`target`), which it then builds (`buildDelay`).
 //  A tap skips it; Reduce Motion shows the orb and name, then fades to Home.
 //
 
@@ -22,7 +22,9 @@ struct OpeningView: View {
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    static let length = 3.15
+    static let length = 2.95
+    /// When Home's orb starts being built: as the line reaches it.
+    static let buildDelay = 2.9
     private static let orbHeight: CGFloat = 88
     private static let violet = Color(red: 0.49, green: 0.36, blue: 1)
     private static let deepBlue = Color(red: 0.15, green: 0.33, blue: 0.84)
@@ -66,11 +68,10 @@ struct OpeningView: View {
                 glow(size: size)
                     .opacity(Self.smooth(t / 1.2) * (1 - Self.smooth((t - 2.5) / 0.5)))
                 line(from: CGPoint(x: orb.x + 40, y: orb.y + 10), size: size)
-                    .trim(from: 0, to: Self.smooth((t - 0.6) / 2))
+                    .trim(from: 0, to: Self.smooth((t - 0.6) / 2.3))
                     .stroke(Color.ordirSparkle, style: StrokeStyle(lineWidth: 2.5, lineCap: .round))
                     .shadow(color: Color.ordirSparkle.opacity(0.9), radius: 3)
                     .shadow(color: Self.violet.opacity(0.7), radius: 10)
-                    .opacity(1 - Self.smooth((t - 2.75) / 0.35))
             }
 
             OrdirMascotView()
@@ -115,7 +116,8 @@ struct OpeningView: View {
     /// From the orb, out to the right and down across the boundary, then into Home's orb from the right.
     private func line(from start: CGPoint, size: CGSize) -> Path {
         let w = size.width, h = size.height
-        let end = target.map { CGPoint(x: $0.maxX + 2, y: $0.minY + $0.height * 0.55) } ?? CGPoint(x: w * 0.2, y: h * 1.08)
+        // Where the orb's outline starts (its right side), so the line carries on into tracing it.
+        let end = target.map { CGPoint(x: $0.minX + $0.width * 0.876, y: $0.minY + $0.height * 0.46) } ?? CGPoint(x: w * 0.2, y: h * 1.08)
         let middle = CGPoint(x: w * 0.62, y: h * 0.9)
         let bend = CGPoint(x: w * 0.98, y: h * 0.72)
         var path = Path()

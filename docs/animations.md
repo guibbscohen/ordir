@@ -42,6 +42,7 @@ Status key:
 | --- | --- | --- | --- | --- |
 | App launch | On black, the orb (88 pt, with its face) comes out of a blur, sparkles popping; "Ordir" and the tagline rise; a deep blue and violet glow sits below. A glowing line draws itself from the orb down the screen. Inspired by Ripplix's "Happier" splash. | Orb and name, short fade, Home after 0.9 s | SwiftUI / CSS | Built |
 | Opening → Home | One continuous camera move: the view glides down through the glow to Home, waiting one screen below; the line ends at Home's orb, which lights up. No cut or fade. | Crossfade | SwiftUI (Home slides with the same clock) / CSS (Web Animations) | Built |
+| Arriving on Home | The line carries on into Home's orb and builds it: traces its outline, fills it, the sparkles pop, the face appears. Then "Ask me a rules question" is conjured under "Ordir" (blur to sharp) and the orb's phrase of the day pops up in a speech bubble. | Shown as is | SwiftUI (`OrdirMascotView(buildStart:)`) / CSS | Built (the app's Ask link comes with sign-in) |
 | Richer opening (optional) | "Orb awakening": sparkles swirl in from the edges and ignite the orb with a soft glow pulse | Marker: orb already lit | Lottie | New (needs art) |
 
 ### Home
