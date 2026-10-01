@@ -90,3 +90,6 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
 - 2026-10-01: Home keeps the opening's deep blue/violet glow as a subtle ambient gradient (behind the header
   and phrase bubble, fading to black before the game cards, plus a faint glow behind the glass bar), so the
   opening settles into Home. Turn-guide screens stay true black for legibility.
+- 2026-10-01: Home's Ask and Join are game-agnostic. Ask from Home picks the game (and expansions) first; inside
+  a game it's scoped to that game. Join takes only the code, then shows the table's game, expansions and free
+  sides (peek_table), and asks for a side last. Game-specific UI appears only once the game is known.
