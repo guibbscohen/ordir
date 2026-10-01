@@ -442,8 +442,7 @@ private struct TurnGuideRunner: View {
             .buttonStyle(PrimaryButtonStyle())
             .padding(.top, 12)
             Button("Back to games") { dismiss() }
-                .font(.subheadline.weight(.semibold))
-                .frame(minHeight: 44)
+                .buttonStyle(TextButtonStyle())
         }
         .padding(32)
         .transition(stepTransition)
@@ -565,6 +564,7 @@ private struct HandoffView: View {
                 Text("Pass the phone to the \(Text(side.displayName).foregroundColor(side.color))")
                     .font(.title2.weight(.semibold))
                     .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
                     .accessibilityAddTraits(.isHeader)
                 Text("Next: \(stepTitle)")
                     .font(.body)
@@ -691,13 +691,12 @@ private struct SeatPanel: View {
     }
 
     private var actions: some View {
-        HStack(spacing: 12) {
+        ActionRow {
             if let loop = phase.loop {
                 Button(loop.endLabel) { passTurn(then: endLoop) }
-                    .font(.subheadline.weight(.semibold))
-                    .multilineTextAlignment(.center)
-                    .frame(minHeight: 44)
+                    .buttonStyle(TextButtonStyle())
             }
+        } primary: {
             Button { passTurn(then: done) } label: {
                 Text("Done")
                     .font(.headline)
@@ -768,8 +767,7 @@ private struct StepCard: View {
                     CitationList(script: script, citations: addition.citations)
                     if let id = addition.sets, let state = script.state(id) {
                         Button(state.markLabel) { markState(id) }
-                            .font(.subheadline.weight(.semibold))
-                            .frame(minHeight: 44)
+                            .buttonStyle(TextButtonStyle())
                     }
                 }
             }
@@ -852,6 +850,7 @@ private struct EventChecklist: View {
                     .accessibilityHidden(true)
                 Text(state.event.title)
                     .font(.title3.weight(.semibold))
+                    .fixedSize(horizontal: false, vertical: true)
                     .accessibilityAddTraits(.isHeader)
                     .accessibilityFocused($headingFocused)
             }
@@ -900,6 +899,7 @@ private struct PassTurnChecklist: View {
                     .accessibilityHidden(true)
                 Text("Before you pass the turn")
                     .font(.title3.weight(.semibold))
+                    .fixedSize(horizontal: false, vertical: true)
                     .accessibilityAddTraits(.isHeader)
                     .accessibilityFocused($headingFocused)
             }
@@ -910,10 +910,10 @@ private struct PassTurnChecklist: View {
                 }
             }
             .scrollIndicators(.hidden)
-            HStack(spacing: 12) {
+            ActionRow {
                 Button("Not yet", action: cancel)
-                    .font(.subheadline.weight(.semibold))
-                    .frame(minHeight: 44)
+                    .buttonStyle(TextButtonStyle())
+            } primary: {
                 Button(action: pass) {
                     Text("Pass the turn")
                         .font(.headline)
@@ -1144,6 +1144,39 @@ private struct EnlargedImageView: View {
 }
 
 // MARK: - Styling
+
+/// A secondary text button whose whole 44-point row is tappable, wrapping instead of truncating.
+private struct TextButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(Color.accentColor)
+            .multilineTextAlignment(.center)
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(minWidth: 44, minHeight: 44)
+            .contentShape(Rectangle())
+            .opacity(configuration.isPressed ? 0.6 : 1)
+    }
+}
+
+/// A secondary button beside the primary one; stacked above it when large text leaves no room.
+private struct ActionRow<Secondary: View, Primary: View>: View {
+    @ViewBuilder let secondary: Secondary
+    @ViewBuilder let primary: Primary
+
+    var body: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 12) {
+                secondary
+                primary
+            }
+            VStack(spacing: 8) {
+                secondary
+                primary
+            }
+        }
+    }
+}
 
 private struct PrimaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
