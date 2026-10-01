@@ -666,10 +666,14 @@ function handoff(s, animate) {
 
 // Coming-soon games show on Home so players see what's next.
 const GAMES = [
-  { id: "dune", title: "Dune: War for Arrakis", detail: "2 players · turn guide and rules questions", cover: "cover" },
+  { id: "dune", script: "duneWarForArrakis", title: "Dune: War for Arrakis", detail: "2 players · turn guide and rules questions", cover: "cover",
+    sides: [["atreides", "Atreides"], ["harkonnen", "Harkonnen"]], askExample: "Can a Legion move and leave a Leader behind?" },
   { id: "starWarsRebellion", title: "Star Wars: Rebellion", soon: true },
   { id: "warOfTheRing2E", title: "War of the Ring (2nd Edition)", soon: true },
 ];
+// Games with a turn guide and rules (not "Coming soon"), and the one a table or question is about.
+const PLAYABLE = GAMES.filter((g) => !g.soon);
+const gameOf = (scriptId) => GAMES.find((g) => g.script === scriptId);
 const CHEVRON = '<svg class="chev" width="10" height="16" viewBox="0 0 10 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 2l6 6-6 6"/></svg>';
 const TAB_ICONS = {
   games: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="2.2"/><rect x="13" y="3" width="8" height="8" rx="2.2"/><rect x="3" y="13" width="8" height="8" rx="2.2"/><rect x="13" y="13" width="8" height="8" rx="2.2"/></svg>',
@@ -731,8 +735,24 @@ function gamesPage() {
     </div>`;
 }
 
-const askPage = () => `<h1 tabindex="-1">Ask a rules question</h1>
-  <p class="hint" style="font-size:15px;margin-top:-12px">Dune: War for Arrakis · answers cite the rulebook and FAQ pages.</p>${askBody()}`;
+// From Home, a question isn't about any game yet: pick the game (and the expansions you play with) first.
+function askPage() {
+  const a = online.ask, game = gameOf(a.game);
+  const games = PLAYABLE.map((g) => `<button class="option" role="radio" aria-checked="${a.game === g.script}" data-askgame="${g.script}">
+      <div><strong>${esc(g.title)}</strong></div><span class="radio" aria-hidden="true"></span></button>`).join("");
+  const script = state.script && state.script.game === a.game ? state.script : null;
+  const expansions = script && script.expansions.length ? `<div class="section"><h3>Expansions you play with</h3>
+      ${script.expansions.map((e) => `<label class="toggle" for="askexp-${e.id}"><div><strong>${esc(e.title)}</strong></div>
+        <input type="checkbox" id="askexp-${e.id}" data-askexp="${e.id}" ${a.expansions.has(e.id) ? "checked" : ""}><span class="switch" aria-hidden="true"></span></label>`).join("")}</div>` : "";
+  return `<h1 tabindex="-1">Ask a rules question</h1>
+    <p class="hint" style="font-size:15px;margin-top:-12px">Answers come only from the official rulebook and FAQ, with the page.</p>
+    <div role="radiogroup" aria-label="Which game?" class="group"><h2>Which game?</h2>${games}</div>
+    ${expansions}${askBody()}`;
+}
+// What a question is about: the game being played, or the one picked on Home's Ask tab.
+const inGame = () => state.screen === "game" && !!state.session;
+const askGame = () => (inGame() ? state.script.game : online.ask.game);
+const askExpansions = () => (inGame() ? [...state.session.expansions] : [...online.ask.expansions]);
 
 const joinPage = () => `<h1 tabindex="-1">Join a table</h1>${lobbyBody(true)}`;
 
@@ -807,8 +827,11 @@ const online = {
   session: null,
   ready: false,
   signIn: { email: "", code: "", sent: false, busy: false, error: "" },
-  ask: { open: false, seat: null, question: "", busy: false, error: "", answers: [] },  // seat: the side whose sheet is open
-  lobby: { open: false, code: "", side: "atreides", busy: false, error: "" },
+  ask: { open: false, seat: null, question: "", busy: false, error: "", answers: [],
+    game: PLAYABLE[0].script, expansions: new Set() },  // from Home: the game (and expansions) a question is about  // seat: the side whose sheet is open
+  lobby: { open: false, code: "", side: "atreides", busy: false, error: "",
+    found: null,     // the table a code points to, before joining: { code, game, expansions, taken }
+    joinSide: null },
   table: null,      // the game_tables row this phone sits at
   mySide: null,
   version: 0,
@@ -874,7 +897,7 @@ function askBody(compact) {
   const a = online.ask;
   if (!signedIn()) return signInPane("Sign in with your email to ask questions. Answers come only from the official rulebook, FAQ and the expansions you play with.");
   return `<div class="field"><label for="ask-question">Your question</label>
-      <textarea id="ask-question" maxlength="500" placeholder="Can a Legion move and leave a Leader behind?">${esc(a.question)}</textarea></div>
+      <textarea id="ask-question" maxlength="500" placeholder="${esc(gameOf(askGame())?.askExample || "Ask about any rule")}">${esc(a.question)}</textarea></div>
     <button class="primary" style="flex:none" data-act="ask-send" ${a.busy ? "disabled" : ""}>${a.busy ? "Checking the rules…" : "Ask"}</button>
     ${a.busy ? `<div class="waiting" style="padding:0">${mascot("thinking")}</div>` : ""}
     ${a.error ? `<p class="error" role="alert">${esc(a.error)}</p>` : ""}
@@ -897,20 +920,48 @@ function askPanel() {
 function askSheet() {
   return `<div class="overlay sheet enter" role="dialog" aria-label="Rules question">
     <div class="head"><h2 style="flex:1;font-size:17px" tabindex="-1">Ask a rules question</h2><button class="textbtn" data-act="ask-close">Close</button></div>
+    <p class="hint" style="margin-top:-8px">About ${esc(gameOf(askGame())?.title || "this game")}</p>
     <div class="scroll" style="padding:0;display:flex;flex-direction:column;gap:12px">${askBody(true)}</div></div>`;
+}
+
+// Joining by code: the code first, then the table's game and its free sides, then join.
+function joinBody(label) {
+  const l = online.lobby, f = l.found;
+  if (!f) {
+    return `<div class="field"><label for="table-code">${label}</label>
+        <input id="table-code" autocomplete="off" autocapitalize="characters" maxlength="6" value="${esc(l.code)}"></div>
+      <button class="primary" style="flex:none" data-act="table-find" ${l.busy ? "disabled" : ""}>${l.busy ? "Looking…" : "Find table"}</button>
+      ${l.error ? `<p class="error" role="alert">${esc(l.error)}</p>` : ""}`;
+  }
+  const game = gameOf(f.game);
+  const cover = game && game.cover && state.script && state.script.game === f.game && imageOf(game.cover);
+  const expansions = f.expansions.map((id) => (state.script && state.script.game === f.game ? expansionTitle(id) : id));
+  const sides = game && game.sides ? game.sides.map(([id, name]) => {
+    const taken = f.taken.includes(id);
+    return `<button class="option" role="radio" aria-checked="${l.joinSide === id}" data-joinside="${id}" ${taken ? 'disabled aria-disabled="true"' : ""}>
+      <div><strong class="side-${id}">${esc(name)}</strong>${taken ? "<span>Taken</span>" : ""}</div><span class="radio" aria-hidden="true"></span></button>`;
+  }).join("") : "";
+  return `<div class="game" style="cursor:default">${cover ? `<span class="art"><img src="${imgUrl(game.cover)}" alt=""></span>` : ""}
+      <span class="meta"><div><strong id="join-found" tabindex="-1">${esc(game ? game.title : f.game)}</strong>
+        <span>Table ${esc(f.code)}${expansions.length ? ` · with ${esc(expansions.join(", "))}` : ""}</span></div></span></div>
+    ${game && !game.soon ? `<div role="radiogroup" aria-label="Your side" class="group"><h2>Pick your side</h2>${sides}</div>
+      <button class="primary" style="flex:none" data-act="table-join" ${l.busy || !l.joinSide ? "disabled" : ""}>${l.busy ? "Joining…" : "Join table"}</button>`
+      : `<p style="margin:0">This table plays ${esc(game ? game.title : f.game)}, which isn't in Ordir yet.</p>`}
+    ${l.error ? `<p class="error" role="alert">${esc(l.error)}</p>` : ""}
+    <button class="textbtn" style="align-self:flex-start" data-act="table-reset">Use a different code</button>`;
 }
 
 function lobbyBody(joinOnly) {
   const l = online.lobby;
-  const sides = ["atreides", "harkonnen"].map((side) => `<button class="option" role="radio" aria-checked="${l.side === side}" data-side="${side}">
-      <div><strong class="side-${side}">${SIDE_NAME[side]}</strong></div><span class="radio" aria-hidden="true"></span></button>`).join("");
-  return !signedIn() ? signInPane(joinOnly ? "Sign in with your email to join the other player's table." : "Sign in with your email so the other player can join your table.") : `
-      <div role="radiogroup" aria-label="Your side" style="display:flex;flex-direction:column;gap:12px"><h2 style="margin:0;font-size:17px">Your side</h2>${sides}</div>
-      ${joinOnly ? "" : `<button class="primary" style="flex:none" data-act="table-create" ${l.busy ? "disabled" : ""}>Start a table</button>`}
-      <div class="field"><label for="table-code">${joinOnly ? "The code from the other phone" : "Or join with the code from the other phone"}</label>
-        <input id="table-code" autocomplete="off" autocapitalize="characters" maxlength="6" value="${esc(l.code)}"></div>
-      <button class="primary" style="flex:none" data-act="table-join" ${l.busy ? "disabled" : ""}>Join table</button>
-      ${l.error ? `<p class="error" role="alert">${esc(l.error)}</p>` : ""}`;
+  if (!signedIn()) return signInPane(joinOnly ? "Sign in with your email to join the other player's table." : "Sign in with your email so the other player can join your table.");
+  if (joinOnly) return joinBody("The code from the other phone");
+  // Starting a table, from a game's setup: that game's sides.
+  const game = gameOf(state.script.game);
+  const sides = game.sides.map(([id, name]) => `<button class="option" role="radio" aria-checked="${l.side === id}" data-side="${id}">
+      <div><strong class="side-${id}">${esc(name)}</strong></div><span class="radio" aria-hidden="true"></span></button>`).join("");
+  return `<div role="radiogroup" aria-label="Your side" style="display:flex;flex-direction:column;gap:12px"><h2 style="margin:0;font-size:17px">Your side</h2>${sides}</div>
+      <button class="primary" style="flex:none" data-act="table-create" ${l.busy ? "disabled" : ""}>Start a table</button>
+      ${joinBody("Or join with the code from the other phone")}`;
 }
 
 function lobby() {
@@ -1019,11 +1070,11 @@ async function onlineAction(act, el) {
     a.busy = true; a.error = ""; render();
     try {
       const token = (await client.auth.getSession()).data.session?.access_token;
-      const expansions = state.session ? [...state.session.expansions] : [...state.chosen];
+      const expansions = askExpansions();
       const response = await fetch(`${BACKEND.url}/functions/v1/rules-answer`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}`, apikey: BACKEND.key, "Content-Type": "application/json" },
-        body: JSON.stringify({ game: state.script.game, expansions, question: a.question }),
+        body: JSON.stringify({ game: askGame(), expansions, question: a.question }),
       });
       const body = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(body.error || "Couldn't get an answer. Try again.");
@@ -1038,16 +1089,32 @@ async function onlineAction(act, el) {
     a.busy = false; render();
     document.querySelector(".answer")?.setAttribute("tabindex", "-1");
     document.querySelector(".answer")?.focus();
-  } else if (act === "table-create" || act === "table-join") {
+  } else if (act === "table-find") {
     l.code = ($("#table-code")?.value || l.code).trim().toUpperCase();
-    if (act === "table-join" && l.code.length !== 6) { l.error = "Enter the 6-character code from the other phone."; return render(); }
+    if (l.code.length !== 6) { l.error = "Enter the 6-character code from the other phone."; return render(); }
     l.busy = true; l.error = ""; render();
+    const { data, error } = await client.rpc("peek_table", { code: l.code });
+    l.busy = false;
+    if (error || !data || !data.length) { l.error = errorText(error, "No table with that code."); return render(); }
+    const row = data[0], game = gameOf(row.game);
+    l.found = { code: l.code, game: row.game, expansions: row.expansions || [], taken: row.taken_sides || [] };
+    // One free side: pick it for them.
+    const free = game && game.sides ? game.sides.map(([id]) => id).filter((id) => !l.found.taken.includes(id)) : [];
+    l.joinSide = free.length === 1 ? free[0] : null;
+    if (game && game.sides && !free.length) l.error = "Both sides are taken at this table.";
+    state.usedKey = null; render();
+    $("#join-found")?.focus();  // the table's game, so screen readers start there
+  } else if (act === "table-create" || act === "table-join") {
+    l.busy = true; l.error = ""; render();
+    const side = act === "table-create" ? l.side : l.joinSide;
     const { data, error } = act === "table-create"
-      ? await client.rpc("create_table", { game: state.script.game, expansions: [...state.chosen], side: l.side })
-      : await client.rpc("join_table", { code: l.code, side: l.side });
+      ? await client.rpc("create_table", { game: state.script.game, expansions: [...state.chosen], side })
+      : await client.rpc("join_table", { code: l.found.code, side });
     l.busy = false;
     if (error) { l.error = errorText(error, "Couldn't open the table. Try again."); return render(); }
-    await sitAt(data, l.side);
+    if (act === "table-join" && data.game !== state.script.game) { l.error = "This game isn't in Ordir yet."; return render(); }
+    l.found = null; l.joinSide = null; l.code = "";
+    await sitAt(data, side);
   }
 }
 
@@ -1056,7 +1123,7 @@ async function onlineAction(act, el) {
 // a checklist, picture or menu that just opened; the new step's title; or the control they used.
 // Whatever an overlay covers is made inert so Tab can't reach it.
 const focusKey = (el) => {
-  for (const name of ["act", "mode", "enlarge", "winner", "mark", "side"]) {
+  for (const name of ["act", "mode", "enlarge", "winner", "mark", "side", "joinside", "askgame"]) {
     if (el.dataset[name] !== undefined) return `[data-${name}="${el.dataset[name]}"]${el.dataset.seat ? `[data-seat="${el.dataset.seat}"]` : ""}`;
   }
   return null;
@@ -1078,7 +1145,7 @@ function settleFocus(phone, stepChanged, kept) {
   }
   const heading = first(".near .title", ".title", ".handoff h2", ".pane h1");
   // Swapping seats or picking a play mode keeps focus on that control.
-  const stays = /data-act="(swap|tab-)|data-mode|data-state/.test(usedKey);
+  const stays = /data-act="(swap|tab-)|data-mode|data-state|data-joinside|data-askgame|data-askexp/.test(usedKey);
   const target = dialog || (stepChanged && !stays ? heading : first(state.returnTo, usedKey) || heading);
   if (!dialog) state.returnTo = null;
   if (target) target.focus();
@@ -1178,7 +1245,7 @@ function run(action) {
 
 // At an own-phone table, any tap that changes the shared position is saved for the other phone.
 document.addEventListener("click", (event) => {
-  const el = event.target.closest("[data-act], [data-enlarge], [data-check], [data-mode], [data-mark], [data-winner], [data-evcheck], [data-side]");
+  const el = event.target.closest("[data-act], [data-enlarge], [data-check], [data-mode], [data-mark], [data-winner], [data-evcheck], [data-side], [data-joinside], [data-askgame]");
   if (!el) return;
   const atTable = () => state.mode === "own" && online.table && state.session;
   const before = atTable() ? JSON.stringify(shared()) : null;
@@ -1261,7 +1328,7 @@ function startIntro() {
 document.addEventListener("keydown", (event) => {
   if (state.screen === "intro" && ["Enter", " ", "Escape"].includes(event.key)) { event.preventDefault(); showHome(); }
 });
-const ONLINE_ACTIONS = ["send-code", "verify-code", "change-email", "sign-out", "ask-send", "table-create", "table-join"];
+const ONLINE_ACTIONS = ["send-code", "verify-code", "change-email", "sign-out", "ask-send", "table-create", "table-join", "table-find"];
 function connect() {
   backend().then(render, () => { online.ready = true; online.signIn.error = "Can't reach Ordir right now. Check your connection and try again."; render(); });
 }
@@ -1271,6 +1338,11 @@ function handleClick(el) {
   if (el.dataset.enlarge || ["done", "end-loop", "menu", "ask-here"].includes(el.dataset.act)) state.returnTo = state.usedKey;
   if (el.dataset.mode) { state.mode = el.dataset.mode; render(); return; }
   if (el.dataset.side) { online.lobby.side = el.dataset.side; render(); return; }
+  if (el.dataset.joinside) { online.lobby.joinSide = el.dataset.joinside; online.lobby.error = ""; render(); return; }
+  if (el.dataset.askgame) {
+    if (online.ask.game !== el.dataset.askgame) { online.ask.game = el.dataset.askgame; online.ask.expansions = new Set(); }
+    render(); return;
+  }
   if (ONLINE_ACTIONS.includes(el.dataset.act)) {
     onlineAction(el.dataset.act, el).catch((error) => { online.signIn.busy = online.ask.busy = online.lobby.busy = false; online.ask.error = online.lobby.error = errorText(error, "Something went wrong. Try again."); render(); });
     return;
@@ -1297,7 +1369,7 @@ function handleClick(el) {
       if (state.mode === "own") { online.lobby.open = true; render(); connect(); break; }
       state.session = makeSession(state.script, new Set(state.chosen), state.mode === "pass"); onStepChanged(); break;
     case "skip-intro": showHome(); break;
-    case "home": leaveTable(); Object.assign(online.lobby, { open: false, error: "" }); state.session = null; state.battle = null; state.screen = "home"; state.tab = "games"; render(); break;
+    case "home": leaveTable(); Object.assign(online.lobby, { open: false, error: "", found: null, joinSide: null }); state.session = null; state.battle = null; state.screen = "home"; state.tab = "games"; render(); break;
     case "game-dune": state.screen = "game"; render(); break;
     case "tab-games": case "tab-ask": case "tab-join": case "tab-account": case "orb-ask":
       state.tabFrom = TABS.findIndex(([id]) => id === state.tab);
@@ -1306,6 +1378,7 @@ function handleClick(el) {
     case "ask-open": state.menu = false; online.ask.open = true; online.ask.seat = null; render(); connect(); break;
     case "ask-here": online.ask.open = true; online.ask.seat = el.dataset.seat; render(); connect(); break;
     case "ask-close": online.ask.open = false; online.ask.seat = null; render(); break;
+    case "table-reset": Object.assign(online.lobby, { found: null, joinSide: null, error: "" }); render(); $("#table-code")?.focus(); break;
     case "battle": state.battle = makeBattle(state.session); state.lastKey = null; onStepChanged(); break;
     case "leave-battle": state.battle = null; state.lastKey = null; onStepChanged(); break;
     case "close": leaveTable(); online.lobby.open = false; state.battle = null; state.session = null; state.pending = null; state.enlarged = null; state.menu = false; render(); break;
@@ -1324,7 +1397,7 @@ function handleClick(el) {
   }
 }
 // Enter in a sign-in or table field submits it.
-const SUBMITS = { "signin-email": "send-code", "signin-code": "verify-code", "table-code": "table-join" };
+const SUBMITS = { "signin-email": "send-code", "signin-code": "verify-code", "table-code": "table-find" };
 document.addEventListener("keydown", (event) => {
   const act = event.key === "Enter" && SUBMITS[event.target.id];
   if (act) { event.preventDefault(); document.querySelector(`[data-act="${act}"]`)?.click(); }
@@ -1345,6 +1418,8 @@ document.addEventListener("keydown", (event) => {
 document.addEventListener("change", (event) => {
   const stateId = event.target.dataset && event.target.dataset.state;
   if (stateId) { state.usedKey = `[data-state="${stateId}"]`; setGameState(cur(), stateId, event.target.checked); render(); return; }
+  const askExp = event.target.dataset && event.target.dataset.askexp;
+  if (askExp) { event.target.checked ? online.ask.expansions.add(askExp) : online.ask.expansions.delete(askExp); return; }
   const id = event.target.dataset && event.target.dataset.exp;
   if (!id) return;
   event.target.checked ? state.chosen.add(id) : state.chosen.delete(id);

@@ -40,6 +40,7 @@ The database, the `rules-answer` Edge Function and the table functions are alrea
   - `rules_pages`: source text; only the function reads it.
   - `rules_questions`: each player's questions.
   - `profiles`, `game_tables` and `table_players`: own-phone tables.
+  - `peek_table(code)`: before joining, the table's game, expansions and taken sides (signed-in players only).
 - `supabase/functions/rules-answer/`: answers a question with Claude Opus 5.5, citing source pages.
   Signed-in players only, 30 questions a day.
 - `tools/rules_corpus.py` and `.github/workflows/rules-corpus.yml`: extract the official PDFs page by
