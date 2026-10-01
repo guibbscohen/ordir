@@ -30,6 +30,7 @@ struct HomeView: View {
                 .padding(.horizontal, 20)
                 .padding(.bottom, 32)
             }
+            .background { ambience.ignoresSafeArea() }
             .navigationDestination(for: OrdirGame.self) { game in
                 if let script = TurnScript.bundled(for: game) {
                     TurnGuideView(
@@ -44,6 +45,24 @@ struct HomeView: View {
                 }
             }
         }
+    }
+
+    /// The opening's deep blue and violet glow, settled behind the header and fading to black before the
+    /// game cards, plus a faint glow at the bottom (the preview matches).
+    private var ambience: some View {
+        GeometryReader { proxy in
+            let w = proxy.size.width
+            ZStack {
+                Color.black
+                RadialGradient(colors: [Color(red: 0.49, green: 0.36, blue: 1).opacity(0.30), .clear],
+                               center: UnitPoint(x: 0.18, y: 0), startRadius: 0, endRadius: w * 0.75)
+                RadialGradient(colors: [Color(red: 0.15, green: 0.33, blue: 0.84).opacity(0.32), .clear],
+                               center: UnitPoint(x: 0.88, y: 0.06), startRadius: 0, endRadius: w * 0.72)
+                RadialGradient(colors: [Color(red: 0.49, green: 0.36, blue: 1).opacity(0.22), .clear],
+                               center: UnitPoint(x: 0.5, y: 1.04), startRadius: 0, endRadius: w * 0.6)
+            }
+        }
+        .accessibilityHidden(true)
     }
 
     private var header: some View {

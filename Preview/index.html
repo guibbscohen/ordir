@@ -226,6 +226,13 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 .group { display: flex; flex-direction: column; gap: 12px; }
 .group h2 { margin: 0; font-size: 13px; font-weight: 600; color: var(--muted); }
 .home .scroll { padding-bottom: 112px; }  /* room to scroll past the floating bar */
+/* Home's ambient light: the opening's glow settles behind the header and fades to black before the cards;
+   a faint glow sits behind the glass bar so its blur has colour to work with. */
+.pane.home { background:
+  radial-gradient(75% 32% at 18% 0%, rgba(124, 92, 255, .30), transparent 70%),
+  radial-gradient(70% 36% at 88% 6%, rgba(37, 84, 214, .32), transparent 70%),
+  radial-gradient(70% 20% at 50% 104%, rgba(124, 92, 255, .22), transparent 70%),
+  #000; }
 .orb-btn { flex: none; border-radius: 50%; display: grid; place-items: center; }
 .brand .orb-btn { width: 52px; height: 52px; }
 .brand .orb-btn .mascot { width: 52px; height: 52px; }

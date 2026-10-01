@@ -84,3 +84,6 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   fills it, sparkles pop, the face appears). Home's header has no tagline: once the orb is built, "Ask me a
   rules question" appears under "Ordir", and a centered speech bubble from the orb shows a phrase of the day
   (e.g. "What shall we play today?"), changing daily.
+- 2026-10-01: Home keeps the opening's deep blue/violet glow as a subtle ambient gradient (behind the header
+  and phrase bubble, fading to black before the game cards, plus a faint glow behind the glass bar), so the
+  opening settles into Home. Turn-guide screens stay true black for legibility.
