@@ -78,10 +78,16 @@ final class AccessibilityAuditTests: XCTestCase {
         return app
     }
 
-    /// Fails the test with one message per issue the audit finds.
+    /// Fails the test with one message per issue the audit finds, naming the element.
     private func audit(_ app: XCUIApplication) throws {
         // Let step transitions and the mascot settle so the audit sees the resting screen.
         Thread.sleep(forTimeInterval: 1)
-        try app.performAccessibilityAudit()
+        try app.performAccessibilityAudit { issue in
+            let element = issue.element
+            let label = element?.label ?? "?"
+            let frame = element.map { "\($0.frame.integral)" } ?? "?"
+            XCTFail("\(issue.compactDescription): \"\(label)\" (\(element?.elementType.rawValue ?? 0)) at \(frame). \(issue.detailedDescription)")
+            return true
+        }
     }
 }
