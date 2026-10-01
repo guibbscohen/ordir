@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Build the browser preview of the Dune guide from the same data the app ships.
 
-Copies Preview/index.html, its font (Preview/fonts), the turn script and every picture it names (the crops in
-Ordir/Assets.xcassets, from tools/crop_source_images.py) into Preview/dist/, so the preview can't
-drift from the app's data. Run from the repo root:
+Copies Preview/index.html, its font (Preview/fonts), its icons and web-app manifest, the turn script
+and every picture it names (the crops in Ordir/Assets.xcassets, from tools/crop_source_images.py)
+into Preview/dist/, so the preview can't drift from the app's data. Run from the repo root:
 
     python3 tools/build_preview.py
 
@@ -29,6 +29,8 @@ def main():
     shutil.copy(ROOT / "Preview" / "index.html", DIST / "index.html")
     shutil.copytree(ROOT / "Preview" / "fonts", DIST / "fonts")
     shutil.copytree(ROOT / "Preview" / "email", DIST / "email")  # images for the sign-in email (docs/email)
+    shutil.copytree(ROOT / "Preview" / "icons", DIST / "icons")  # Home Screen and tab icons (rendered from icons/icon.svg)
+    shutil.copy(ROOT / "Preview" / "manifest.webmanifest", DIST / "manifest.webmanifest")
     shutil.copy(SCRIPT, DIST / "turnscript.json")
     missing = []
     for image in script["images"]:
