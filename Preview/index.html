@@ -159,6 +159,22 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 .toggle input:checked + .switch { background: var(--atreides); }
 .toggle input:checked + .switch::after { transform: translateX(20px); }
 .hint { color: var(--muted); font-size: 13px; margin: 0; }
+/* Online: sign-in, rules questions, own-phone tables */
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 15px; font-weight: 600; }
+.field input, .field textarea { font: inherit; color: var(--fg); background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; min-height: 48px; width: 100%; }
+.field textarea { min-height: 96px; resize: vertical; }
+.field input:focus-visible, .field textarea:focus-visible { outline: 2px solid var(--sparkle); outline-offset: 1px; }
+.error { color: var(--harkonnen); font-size: 15px; margin: 0; }
+.code { font-size: 32px; font-weight: 700; letter-spacing: .12em; font-variant-numeric: tabular-nums; }
+.answer { background: var(--surface); border-radius: 14px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; line-height: 1.45; }
+.answer .q { color: var(--muted); font-size: 15px; margin: 0; }
+.answer p { margin: 0; }
+.answer ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 4px; }
+.chip { display: inline-block; margin-left: 4px; padding: 0 8px; border-radius: 999px; background: var(--surface-2); color: var(--sparkle); font-size: 13px; font-weight: 600; line-height: 22px; text-decoration: none; white-space: nowrap; }
+.strip { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 20px; font-size: 13px; color: var(--muted); border-bottom: 1px solid var(--line); }
+.strip b { color: var(--fg); letter-spacing: .08em; }
+.phone.own { grid-template-rows: auto auto minmax(0, 1fr); }
 .done-pane { justify-content: center; align-items: center; text-align: center; gap: 20px; padding: 32px; }
 .done-pane .mascot { height: 96px; width: 96px; }
 .done-pane p { margin: 0; color: var(--muted); line-height: 1.4; }
@@ -453,7 +469,8 @@ function picker() {
     <div class="head">${mascot("idle")}<h1 tabindex="-1">How are you playing?</h1></div>
     <div role="radiogroup" aria-label="How are you playing?" style="display:flex;flex-direction:column;gap:12px">
       ${[["table", "One phone on the table", "Split screen: the top half faces the player across the table."],
-         ["pass", "Pass the phone", "Full screen: hand the phone to whoever acts next."]].map(([id, title, detail]) =>
+         ["pass", "Pass the phone", "Full screen: hand the phone to whoever acts next."],
+         ["own", "Each on our own phone", "Sign in, start a table and share its code; each phone shows its own side."]].map(([id, title, detail]) =>
         `<button class="option" role="radio" aria-checked="${state.mode === id}" data-mode="${id}">
           <div><strong>${title}</strong><span>${detail}</span></div><span class="radio" aria-hidden="true"></span></button>`).join("")}
     </div>
@@ -463,8 +480,9 @@ function picker() {
         <div><strong>${esc(e.title)}</strong><span>${esc(e.summary)}</span></div>
         <input type="checkbox" id="exp-${e.id}" data-exp="${e.id}" ${state.chosen.has(e.id) ? "checked" : ""}><span class="switch" aria-hidden="true"></span></label>`).join("")}
     </div>
-    <p class="hint">Leave them all off to play the base game.</p></div>
-    <div class="actions"><button class="primary" data-act="start">Start guide</button></div></div>`;
+    <p class="hint">Leave them all off to play the base game.</p>
+    <button class="textbtn" style="align-self:flex-start" data-act="ask-open">Ask a rules question</button></div>
+    <div class="actions"><button class="primary" data-act="start">${state.mode === "own" ? "Continue" : "Start guide"}</button></div></div>`;
 }
 
 function battleOver() {
@@ -489,7 +507,8 @@ function gameMenu(s) {
   return `<div class="overlay enter menu" role="dialog" aria-modal="true" aria-label="Game" style="padding-top:20px">
     <div class="head"><h2 style="flex:1" tabindex="-1">Game</h2><button class="textbtn" data-act="menu-close">Close</button></div>
     <div class="scroll" style="padding:0;display:flex;flex-direction:column;gap:16px">
-      <p class="hint" style="font-size:15px">${phaseOf(s).part === "setup" ? "Setup" : `Round ${s.pos.round}`}</p>
+      <p class="hint" style="font-size:15px">${phaseOf(s).part === "setup" ? "Setup" : `Round ${s.pos.round}`}${online.table ? ` · Table <b>${esc(online.table.code)}</b> · You're the ${SIDE_NAME[online.mySide]}` : ""}</p>
+      <button class="option" data-act="ask-open"><div><strong>Ask a rules question</strong><span>Answers cite the rulebook and FAQ pages.</span></div></button>
       ${toggles ? `<div class="section"><h3>Happened this game</h3>${toggles}</div>` : ""}
       <div class="section"><h3>End the game</h3>
         <button class="option" data-winner="atreides"><div><strong class="side-atreides">The Atreides won</strong></div></button>
@@ -499,27 +518,262 @@ function gameMenu(s) {
       <button class="textbtn" style="align-self:flex-start" data-act="close">Leave the guide</button></div></div>`;
 }
 
+// ---- Online: sign-in, rules questions, own-phone tables ----
+// Talks to the Ordir backend (Supabase). supabase-js loads only when a player first opens one of
+// these features, so the offline guide works without a network.
+const BACKEND = { url: "https://dhaeqyvdjkhbedqsnqzj.supabase.co", key: "sb_publishable_8tU1Ih0mwFEaHMz0o_i3gg_nLm2NjjM" };
+const online = {
+  client: null,
+  session: null,
+  ready: false,
+  signIn: { email: "", code: "", sent: false, busy: false, error: "" },
+  ask: { open: false, question: "", busy: false, error: "", answers: [] },
+  lobby: { open: false, code: "", side: "atreides", busy: false, error: "" },
+  table: null,      // the game_tables row this phone sits at
+  mySide: null,
+  version: 0,
+  channel: null,
+  live: false,      // Realtime connected
+  poll: null,
+  queue: Promise.resolve(),
+};
+
+let clientPromise = null;
+function backend() {
+  clientPromise ||= import("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm").then(async ({ createClient }) => {
+    const client = createClient(BACKEND.url, BACKEND.key);
+    online.client = client;
+    online.session = (await client.auth.getSession()).data.session;
+    online.ready = true;
+    client.auth.onAuthStateChange((_event, session) => { online.session = session; render(); });
+    return client;
+  });
+  return clientPromise;
+}
+const signedIn = () => online.session && !online.session.user.is_anonymous;
+const errorText = (error, fallback) => (error && (error.message || error.error_description)) || fallback;
+
+function signInPane(reason) {
+  const f = online.signIn;
+  if (!online.ready) return `<p class="hint" style="font-size:15px">Connecting…</p>`;
+  return `<div class="section" style="gap:12px"><p style="margin:0">${esc(reason)}</p>
+    ${f.sent
+      ? `<div class="field"><label for="signin-code">The 6-digit code we emailed to ${esc(f.email)}</label>
+           <input id="signin-code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" value="${esc(f.code)}"></div>
+         <button class="primary" data-act="verify-code" ${f.busy ? "disabled" : ""}>${f.busy ? "Checking…" : "Sign in"}</button>
+         <button class="textbtn" style="align-self:flex-start" data-act="change-email">Use a different email</button>`
+      : `<div class="field"><label for="signin-email">Email</label>
+           <input id="signin-email" type="email" autocomplete="email" value="${esc(f.email)}"></div>
+         <button class="primary" data-act="send-code" ${f.busy ? "disabled" : ""}>${f.busy ? "Sending…" : "Email me a code"}</button>`}
+    ${f.error ? `<p class="error" role="alert">${esc(f.error)}</p>` : ""}</div>`;
+}
+
+/** Answer text with its citations as page chips; "- " lines become a list. */
+function answerHtml(answer) {
+  const html = answer.map((block) => {
+    const seen = new Set();
+    const chips = block.citations.filter((c) => !seen.has(`${c.source}-${c.page}`) && seen.add(`${c.source}-${c.page}`)).map((c) => {
+      const src = sourceOf(c.source);
+      return src ? `<a class="chip" href="${esc(src.url)}#page=${c.page}" target="_blank" rel="noopener" title="${esc(c.quote)}">${esc(src.shortTitle)} p. ${c.page}</a>` : "";
+    }).join("");
+    return esc(block.text) + chips;
+  }).join("");
+  let out = "", list = false;
+  for (const line of html.split("\n")) {
+    if (!line.trim()) continue;
+    const item = /^\s*[-•]\s+/.test(line);
+    if (item && !list) { out += "<ul>"; list = true; }
+    if (!item && list) { out += "</ul>"; list = false; }
+    out += item ? `<li>${line.replace(/^\s*[-•]\s+/, "")}</li>` : `<p>${line}</p>`;
+  }
+  return out + (list ? "</ul>" : "");
+}
+
+function askPanel() {
+  const a = online.ask;
+  return `<div class="overlay enter menu" role="dialog" aria-modal="true" aria-label="Rules question" style="padding-top:20px">
+    <div class="head"><h2 style="flex:1" tabindex="-1">Ask a rules question</h2><button class="textbtn" data-act="ask-close">Close</button></div>
+    <div class="scroll" style="padding:0;display:flex;flex-direction:column;gap:16px">
+      ${!signedIn() ? signInPane("Sign in with your email to ask questions. Answers come only from the official rulebook, FAQ and the expansions you play with.") : `
+        <div class="field"><label for="ask-question">Your question</label>
+          <textarea id="ask-question" maxlength="500" placeholder="Can a Legion move and leave a Leader behind?">${esc(a.question)}</textarea></div>
+        <button class="primary" data-act="ask-send" ${a.busy ? "disabled" : ""}>${a.busy ? "Checking the rules…" : "Ask"}</button>
+        ${a.busy ? `<div class="waiting" style="padding:0">${mascot("thinking")}</div>` : ""}
+        ${a.error ? `<p class="error" role="alert">${esc(a.error)}</p>` : ""}
+        ${a.answers.map((x) => `<article class="answer"><p class="q">${esc(x.question)}</p>${answerHtml(x.answer)}</article>`).join("")}
+        <p class="hint">Answers cite the official sources; tap a page to open it. Signed in as ${esc(online.session.user.email || "")} · <button class="textbtn" data-act="sign-out" style="min-height:0;font-size:13px">Sign out</button></p>`}
+    </div></div>`;
+}
+
+function lobby() {
+  const l = online.lobby;
+  const sides = ["atreides", "harkonnen"].map((side) => `<button class="option" role="radio" aria-checked="${l.side === side}" data-side="${side}">
+      <div><strong class="side-${side}">${SIDE_NAME[side]}</strong></div><span class="radio" aria-hidden="true"></span></button>`).join("");
+  return `<div class="pane"><div class="scroll">
+    <div class="head">${mascot("idle")}<h1 tabindex="-1">Each on our own phone</h1></div>
+    ${!signedIn() ? signInPane("Sign in with your email so the other player can join your table.") : `
+      <div role="radiogroup" aria-label="Your side" style="display:flex;flex-direction:column;gap:12px"><h2 style="margin:0;font-size:17px">Your side</h2>${sides}</div>
+      <button class="primary" data-act="table-create" ${l.busy ? "disabled" : ""}>Start a table</button>
+      <div class="field"><label for="table-code">Or join with the code from the other phone</label>
+        <input id="table-code" autocomplete="off" autocapitalize="characters" maxlength="6" value="${esc(l.code)}"></div>
+      <button class="primary" data-act="table-join" ${l.busy ? "disabled" : ""}>Join table</button>
+      ${l.error ? `<p class="error" role="alert">${esc(l.error)}</p>` : ""}`}
+    </div>
+    <div class="actions"><button class="textbtn" data-act="close">Back</button></div></div>`;
+}
+
+function tableStrip() {
+  return `<div class="strip"><span>Table <b>${esc(online.table.code)}</b></span><span>You're the <span class="side-${online.mySide}">${SIDE_NAME[online.mySide]}</span></span></div>`;
+}
+
+// The shared guide position, as stored in game_tables.state.
+const snapshot = (s) => s && { pos: s.pos, history: s.history, states: [...s.states], pendingEvent: s.pendingEvent ? s.pendingEvent.id : null, finished: s.finished, winner: s.winner };
+const shared = () => ({ ...snapshot(state.session), battle: state.battle ? snapshot(state.battle) : null });
+function restore(s, snap) {
+  s.pos = snap.pos; s.history = snap.history || []; s.states = new Set(snap.states || []);
+  s.pendingEvent = snap.pendingEvent ? (state.script.states || []).find((x) => x.id === snap.pendingEvent) || null : null;
+  s.finished = !!snap.finished; s.winner = snap.winner || null; s.handoffTo = null;
+}
+function applyRow(row) {
+  online.table = row;
+  online.version = row.version;
+  const snap = row.state || {};
+  if (snap.pos) {
+    restore(state.session, snap);
+    state.battle = snap.battle ? makeBattle(state.session) : null;
+    if (state.battle) restore(state.battle, snap.battle);
+  }
+  const startedAt = Date.parse(row.step_started_at) || Date.now();
+  state.session.startedAt = startedAt;
+  if (state.battle) state.battle.startedAt = startedAt;
+  onStepChanged();
+}
+
+/** Saves this phone's move; if the other phone moved first, shows theirs instead. */
+function share(stepChanged) {
+  const next = shared();
+  online.queue = online.queue.then(async () => {
+    const { data, error } = await online.client.rpc("advance_table", {
+      table_id: online.table.id, expected_version: online.version, state: next, step_changed: stepChanged,
+    });
+    if (error) {
+      const { data: row } = await online.client.from("game_tables").select("*").eq("id", online.table.id).single();
+      if (row) applyRow(row);
+    } else {
+      online.version = data.version;
+    }
+  });
+}
+
+async function sitAt(row, side) {
+  online.mySide = side;
+  state.session = makeSession(state.script, new Set(row.expansions), false);
+  state.battle = null;
+  online.lobby.open = false;
+  if (online.channel) online.client.removeChannel(online.channel);
+  online.channel = online.client.channel(`table-${row.id}`)
+    .on("postgres_changes", { event: "UPDATE", schema: "public", table: "game_tables", filter: `id=eq.${row.id}` },
+      (change) => { if (change.new.version > online.version) applyRow(change.new); })
+    .subscribe((status) => { online.live = status === "SUBSCRIBED"; });
+  // Safety net for networks that block Realtime: check every 3 s, or every 15 s while live.
+  clearInterval(online.poll);
+  let tick = 0;
+  online.poll = setInterval(async () => {
+    if (!online.table || (online.live && ++tick % 5)) return;
+    const { data } = await online.client.from("game_tables").select("*")
+      .eq("id", online.table.id).gt("version", online.version).maybeSingle();
+    if (data && data.version > online.version) applyRow(data);
+  }, 3000);
+  applyRow(row);
+}
+
+function leaveTable() {
+  if (online.channel) online.client.removeChannel(online.channel);
+  clearInterval(online.poll);
+  online.channel = null; online.poll = null; online.live = false; online.table = null; online.mySide = null;
+}
+
+async function onlineAction(act, el) {
+  const client = await backend();
+  const f = online.signIn, a = online.ask, l = online.lobby;
+  if (act === "send-code") {
+    f.email = ($("#signin-email")?.value || f.email).trim();
+    if (!/^\S+@\S+\.\S+$/.test(f.email)) { f.error = "Enter your email address."; return render(); }
+    f.busy = true; f.error = ""; render();
+    const { error } = await client.auth.signInWithOtp({ email: f.email, options: { shouldCreateUser: true } });
+    f.busy = false; f.sent = !error; f.error = error ? errorText(error, "Couldn't send the code. Try again.") : "";
+    render(); $("#signin-code")?.focus();
+  } else if (act === "verify-code") {
+    f.code = ($("#signin-code")?.value || f.code).trim();
+    f.busy = true; f.error = ""; render();
+    const { error } = await client.auth.verifyOtp({ email: f.email, token: f.code, type: "email" });
+    f.busy = false; f.error = error ? "That code didn't work. Check it, or send a new one." : "";
+    if (!error) { f.sent = false; f.code = ""; }
+    render();
+  } else if (act === "change-email") {
+    f.sent = false; f.code = ""; f.error = ""; render(); $("#signin-email")?.focus();
+  } else if (act === "sign-out") {
+    leaveTable(); await client.auth.signOut(); render();
+  } else if (act === "ask-send") {
+    a.question = ($("#ask-question")?.value || a.question).trim();
+    if (a.question.length < 3) { a.error = "Type a question first."; return render(); }
+    a.busy = true; a.error = ""; render();
+    try {
+      const token = (await client.auth.getSession()).data.session?.access_token;
+      const expansions = state.session ? [...state.session.expansions] : [...state.chosen];
+      const response = await fetch(`${BACKEND.url}/functions/v1/rules-answer`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}`, apikey: BACKEND.key, "Content-Type": "application/json" },
+        body: JSON.stringify({ game: state.script.game, expansions, question: a.question }),
+      });
+      const body = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(body.error || "Couldn't get an answer. Try again.");
+      a.answers.unshift({ question: a.question, answer: body.answer });
+      a.question = "";
+    } catch (error) {
+      a.error = errorText(error, "Couldn't get an answer. Try again.");
+    }
+    a.busy = false; render();
+    document.querySelector(".answer")?.setAttribute("tabindex", "-1");
+    document.querySelector(".answer")?.focus();
+  } else if (act === "table-create" || act === "table-join") {
+    l.code = ($("#table-code")?.value || l.code).trim().toUpperCase();
+    if (act === "table-join" && l.code.length !== 6) { l.error = "Enter the 6-character code from the other phone."; return render(); }
+    l.busy = true; l.error = ""; render();
+    const { data, error } = act === "table-create"
+      ? await client.rpc("create_table", { game: state.script.game, expansions: [...state.chosen], side: l.side })
+      : await client.rpc("join_table", { code: l.code, side: l.side });
+    l.busy = false;
+    if (error) { l.error = errorText(error, "Couldn't open the table. Try again."); return render(); }
+    await sitAt(data, l.side);
+  }
+}
+
 // ---- Focus ----
 // Re-rendering replaces the screen, so after each action focus moves to where the player carries on:
 // a checklist, picture or menu that just opened; the new step's title; or the control they used.
 // Whatever an overlay covers is made inert so Tab can't reach it.
 const focusKey = (el) => {
-  for (const name of ["act", "mode", "enlarge", "winner", "mark"]) {
+  for (const name of ["act", "mode", "enlarge", "winner", "mark", "side"]) {
     if (el.dataset[name] !== undefined) return `[data-${name}="${el.dataset[name]}"]${el.dataset.seat ? `[data-seat="${el.dataset.seat}"]` : ""}`;
   }
   return null;
 };
-function settleFocus(phone, stepChanged) {
+function settleFocus(phone, stepChanged, kept) {
   const usedKey = state.usedKey;
   state.usedKey = null;
   for (const half of phone.querySelectorAll(".half")) {
     const overlay = half.querySelector(":scope > .overlay");
     if (overlay) for (const child of half.children) if (child !== overlay) child.inert = true;
   }
-  if (state.menu) for (const child of phone.children) if (!child.classList.contains("menu")) child.inert = true;
-  if (!usedKey) return;
+  if (state.menu || online.ask.open) for (const child of phone.children) if (!child.classList.contains("menu")) child.inert = true;
   const first = (...selectors) => selectors.map((sel) => sel && phone.querySelector(sel)).find(Boolean);
   const dialog = [...phone.querySelectorAll('[role="dialog"] [tabindex="-1"]')].find((h) => !h.closest("[inert]"));
+  // A re-render nobody tapped for (an answer arriving, the other phone moving): keep focus where it was.
+  if (!usedKey) {
+    if (kept) (phone.querySelector(kept) || dialog || first(".near .title", ".title", ".handoff h2", ".pane h1"))?.focus();
+    return;
+  }
   const heading = first(".near .title", ".title", ".handoff h2", ".pane h1");
   // Swapping seats or picking a play mode keeps focus on that control.
   const stays = /data-act="swap"|data-mode|data-state/.test(usedKey);
@@ -531,21 +785,29 @@ function settleFocus(phone, stepChanged) {
 function render() {
   const phone = $("#phone");
   const s = cur();
-  const key = !s ? "picker" : s.finished ? `done-${s.isBattle}` : `${stepKey(s)}-${s.handoffTo === null}-${state.battle !== null}`;
+  const key = !s ? (online.lobby.open ? "lobby" : "picker") : s.finished ? `done-${s.isBattle}` : `${stepKey(s)}-${s.handoffTo === null}-${state.battle !== null}`;
   const animate = key !== state.lastKey;
   state.lastKey = key;
+  const active = document.activeElement;
+  const kept = active && phone.contains(active) ? (active.id ? `#${active.id}` : focusKey(active) || "[data-none]") : null;
+  const menu = s && state.menu ? gameMenu(s) : "";
+  const ask = online.ask.open ? askPanel() : "";
   if (!s) {
-    phone.className = "phone single"; phone.innerHTML = picker();
+    phone.className = "phone single"; phone.innerHTML = (online.lobby.open ? lobby() : picker()) + ask;
   } else if (s.finished) {
-    phone.className = "phone single"; phone.innerHTML = s.isBattle ? battleOver() : finished();
+    phone.className = "phone single"; phone.innerHTML = (s.isBattle ? battleOver() : finished()) + ask;
+  } else if (state.mode === "own" && online.table) {
+    // Own phone: only this player's side, with the table code under the bar.
+    phone.className = "phone pass own";
+    phone.innerHTML = passBar(s) + tableStrip() + half(online.mySide, false, animate) + menu + ask;
   } else if (state.mode === "pass") {
     phone.className = "phone pass";
-    phone.innerHTML = passBar(s) + (s.handoffTo ? handoff(s, animate) : half(stepOf(s).side, false, animate)) + (state.menu ? gameMenu(s) : "");
+    phone.innerHTML = passBar(s) + (s.handoffTo ? handoff(s, animate) : half(stepOf(s).side, false, animate)) + menu + ask;
   } else {
     phone.className = "phone";
-    phone.innerHTML = half(farSeat(), true, animate) + bar(s) + half(state.nearSeat, false, animate) + (state.menu ? gameMenu(s) : "");
+    phone.innerHTML = half(farSeat(), true, animate) + bar(s) + half(state.nearSeat, false, animate) + menu + ask;
   }
-  settleFocus(phone, animate);
+  settleFocus(phone, animate, kept);
 }
 
 // ---- Behaviour ----
@@ -578,13 +840,30 @@ function run(action) {
   onStepChanged();
 }
 
+// At an own-phone table, any tap that changes the shared position is saved for the other phone.
 document.addEventListener("click", (event) => {
-  const el = event.target.closest("[data-act], [data-enlarge], [data-check], [data-mode], [data-mark], [data-winner], [data-evcheck]");
+  const el = event.target.closest("[data-act], [data-enlarge], [data-check], [data-mode], [data-mark], [data-winner], [data-evcheck], [data-side]");
   if (!el) return;
+  const atTable = () => state.mode === "own" && online.table && state.session;
+  const before = atTable() ? JSON.stringify(shared()) : null;
+  const stepBefore = atTable() ? stepKey(cur()) : null;
+  handleClick(el);
+  if (before !== null && atTable() && JSON.stringify(shared()) !== before) share(stepKey(cur()) !== stepBefore);
+});
+const ONLINE_ACTIONS = ["send-code", "verify-code", "change-email", "sign-out", "ask-send", "table-create", "table-join"];
+function connect() {
+  backend().then(render, () => { online.ready = true; online.signIn.error = "Can't reach Ordir right now. Check your connection and try again."; render(); });
+}
+function handleClick(el) {
   const s = cur();
   state.usedKey = focusKey(el);
   if (el.dataset.enlarge || ["done", "end-loop", "menu"].includes(el.dataset.act)) state.returnTo = state.usedKey;
   if (el.dataset.mode) { state.mode = el.dataset.mode; render(); return; }
+  if (el.dataset.side) { online.lobby.side = el.dataset.side; render(); return; }
+  if (ONLINE_ACTIONS.includes(el.dataset.act)) {
+    onlineAction(el.dataset.act, el).catch((error) => { online.signIn.busy = online.ask.busy = online.lobby.busy = false; online.ask.error = online.lobby.error = errorText(error, "Something went wrong. Try again."); render(); });
+    return;
+  }
   if (el.dataset.mark) { setGameState(s, el.dataset.mark, true); render(); return; }
   if (el.dataset.winner) { s.winner = el.dataset.winner; s.finished = true; s.handoffTo = null; s.pendingEvent = null; state.menu = false; onStepChanged(); return; }
   if (el.dataset.evcheck !== undefined) { const on = !el.classList.contains("on"); el.classList.toggle("on", on); el.setAttribute("aria-pressed", on); return; }
@@ -598,10 +877,14 @@ document.addEventListener("click", (event) => {
     return;
   }
   switch (el.dataset.act) {
-    case "start": state.session = makeSession(state.script, new Set(state.chosen), state.mode === "pass"); onStepChanged(); break;
+    case "start":
+      if (state.mode === "own") { online.lobby.open = true; render(); connect(); break; }
+      state.session = makeSession(state.script, new Set(state.chosen), state.mode === "pass"); onStepChanged(); break;
+    case "ask-open": state.menu = false; online.ask.open = true; render(); connect(); break;
+    case "ask-close": online.ask.open = false; render(); break;
     case "battle": state.battle = makeBattle(state.session); state.lastKey = null; onStepChanged(); break;
     case "leave-battle": state.battle = null; state.lastKey = null; onStepChanged(); break;
-    case "close": state.battle = null; state.session = null; state.pending = null; state.enlarged = null; state.menu = false; render(); break;
+    case "close": leaveTable(); online.lobby.open = false; state.battle = null; state.session = null; state.pending = null; state.enlarged = null; state.menu = false; render(); break;
     case "restart": state.session = makeSession(state.script, state.session.expansions, state.session.passesPhone); onStepChanged(); break;
     case "handoff-ready": s.handoffTo = null; s.startedAt = Date.now(); onStepChanged(); break;
     case "back": goBack(s); onStepChanged(); break;
@@ -615,11 +898,23 @@ document.addEventListener("click", (event) => {
     case "menu-close": state.menu = false; render(); break;
     case "event-done": s.pendingEvent = null; render(); break;
   }
+}
+// Enter in a sign-in or table field submits it.
+const SUBMITS = { "signin-email": "send-code", "signin-code": "verify-code", "table-code": "table-join" };
+document.addEventListener("keydown", (event) => {
+  const act = event.key === "Enter" && SUBMITS[event.target.id];
+  if (act) { event.preventDefault(); document.querySelector(`[data-act="${act}"]`)?.click(); }
 });
-// Escape closes the picture, the Game menu, or the turn-change checklist (in that order).
+// Typed text survives re-renders.
+document.addEventListener("input", (event) => {
+  const fields = { "signin-email": [online.signIn, "email"], "signin-code": [online.signIn, "code"], "ask-question": [online.ask, "question"], "table-code": [online.lobby, "code"] };
+  const field = fields[event.target.id];
+  if (field) field[0][field[1]] = event.target.value;
+});
+// Escape closes the rules question, the picture, the Game menu, or the turn-change checklist (in that order).
 document.addEventListener("keydown", (event) => {
   if (event.key !== "Escape") return;
-  const act = state.enlarged ? "close-enlarged" : state.menu ? "menu-close" : state.pending ? "not-yet" : null;
+  const act = online.ask.open ? "ask-close" : state.enlarged ? "close-enlarged" : state.menu ? "menu-close" : state.pending ? "not-yet" : null;
   const button = act && document.querySelector(`[data-act="${act}"]`);
   if (button) { event.preventDefault(); button.click(); }
 });
