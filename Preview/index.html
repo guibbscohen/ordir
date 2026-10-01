@@ -33,6 +33,8 @@ button:disabled { opacity: .35; cursor: default; }
 [tabindex="-1"]:focus { outline: none; }
 .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
+/* The main landmark takes the phone's place in the page column, so the phone still fills the screen. */
+main { display: flex; flex-direction: column; flex: 1; min-height: 0; width: 100%; max-width: 430px; max-height: 920px; }
 .phone {
   width: 100%; max-width: 430px; flex: 1; min-height: 0; max-height: 920px;
   border: 1px solid var(--line); border-radius: 28px; overflow: hidden;
