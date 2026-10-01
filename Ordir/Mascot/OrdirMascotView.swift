@@ -28,14 +28,18 @@ struct OrdirMascotView: View {
     var isSpeaking: Bool
     var isThinking: Bool
     var sparkleColor: Color
+    /// When set, the orb is built from that moment: its outline is traced, then filled, the sparkles pop
+    /// and the face appears (Home's orb, as the opening's line reaches it). Hidden until then.
+    var buildStart: Date?
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var transition = ModeTransition(from: .idle, start: .distantPast)
 
-    init(isSpeaking: Bool = false, isThinking: Bool = false, sparkleColor: Color = .ordirSparkle) {
+    init(isSpeaking: Bool = false, isThinking: Bool = false, sparkleColor: Color = .ordirSparkle, buildStart: Date? = nil) {
         self.isSpeaking = isSpeaking
         self.isThinking = isThinking
         self.sparkleColor = sparkleColor
+        self.buildStart = buildStart
     }
 
     private var mode: OrdirMascotMode {
@@ -45,7 +49,7 @@ struct OrdirMascotView: View {
     }
 
     var body: some View {
-        // Idle with Reduce Motion on is fully static, so stop the clock entirely.
+        // Idle with Reduce Motion on is fully static (and never built), so stop the clock entirely.
         TimelineView(.animation(minimumInterval: nil, paused: reduceMotion && mode == .idle)) { timeline in
             let frame = MascotFrame.blended(
                 transition: transition,
@@ -53,8 +57,9 @@ struct OrdirMascotView: View {
                 at: timeline.date,
                 reduceMotion: reduceMotion
             )
+            let build = MascotBuild(time: reduceMotion ? nil : buildStart.map { timeline.date.timeIntervalSince($0) })
             Canvas { context, size in
-                OrdirMascotRenderer.draw(frame, in: &context, size: size, sparkleColor: sparkleColor)
+                OrdirMascotRenderer.draw(frame, build: build, in: &context, size: size, sparkleColor: sparkleColor)
             }
         }
         .aspectRatio(OrdirMascotGeometry.viewBox.width / OrdirMascotGeometry.viewBox.height, contentMode: .fit)
@@ -111,19 +116,22 @@ enum OrdirMascotGeometry {
     }
 
     // In animation order: main outer, medium inner, tiny inner. The medium and tiny sparkles sit
-    // (+4, -46) and (+28, +28) from the logo's positions, clear of the face; the preview matches.
+    // (+4, -46) and (-70, +20) from the logo's positions, clear of the face; the preview matches.
     static let sparkles: [Sparkle] = [
         Sparkle(center: CGPoint(x: 225.988, y: 104.436), size: 123.0, path: outerSparkle),
         Sparkle(center: CGPoint(x: 120.634, y: 105.687), size: 63.8, path: mediumSparkle),
-        Sparkle(center: CGPoint(x: 199.092, y: 223.885), size: 34.4, path: tinySparkle),
+        Sparkle(center: CGPoint(x: 101.092, y: 215.885), size: 34.4, path: tinySparkle),
     ]
 
     /// The face: two dot eyes and a one-line smile (a quadratic curve), drawn in the foreground colour.
-    static let eyes = [CGPoint(x: 128.715, y: 164.465), CGPoint(x: 179.715, y: 164.465)]
-    static let eyeRadius: CGFloat = 10
-    static let mouthStart = CGPoint(x: 135.715, y: 193.465)
-    static let mouthControl = CGPoint(x: 154.215, y: 208.465)
-    static let mouthEnd = CGPoint(x: 172.715, y: 193.465)
+    /// It's turned slightly up and to the right, so the far eye is smaller.
+    static let eyes: [(center: CGPoint, radius: CGFloat)] = [
+        (CGPoint(x: 148.715, y: 146.465), 10.5),
+        (CGPoint(x: 189.715, y: 143.465), 8.5),
+    ]
+    static let mouthStart = CGPoint(x: 156.715, y: 173.465)
+    static let mouthControl = CGPoint(x: 175.715, y: 186.465)
+    static let mouthEnd = CGPoint(x: 192.715, y: 168.465)
     static let mouthWidth: CGFloat = 8
 
     // outerSparkle: centre (225.988, 104.436), size 123.0×116.0
@@ -365,10 +373,29 @@ private struct MascotFrame {
     }
 }
 
+/// How far the orb is built, `time` seconds after it started (nil: fully built).
+private struct MascotBuild {
+    var trace = 1.0     // share of the outline drawn
+    var outline = 0.0   // opacity of the traced outline
+    var fill = 1.0      // opacity of the globe and pedestal
+    var face = 1.0
+    var sparkles = [1.0, 1.0, 1.0]
+
+    init(time t: Double?) {
+        guard let t, t < 1.6 else { return }
+        func smooth(_ x: Double) -> Double { let x = min(1, max(0, x)); return x * x * (3 - 2 * x) }
+        trace = smooth(t / 0.7)
+        outline = t < 0 ? 0 : 1 - smooth((t - 0.8) / 0.3)
+        fill = smooth((t - 0.55) / 0.3)
+        face = smooth((t - 0.95) / 0.25)
+        sparkles = (0..<3).map { smooth((t - 0.7 - 0.1 * Double($0)) / 0.4) }
+    }
+}
+
 // MARK: - Rendering
 
 private enum OrdirMascotRenderer {
-    static func draw(_ frame: MascotFrame, in context: inout GraphicsContext, size: CGSize, sparkleColor: Color) {
+    static func draw(_ frame: MascotFrame, build: MascotBuild, in context: inout GraphicsContext, size: CGSize, sparkleColor: Color) {
         typealias G = OrdirMascotGeometry
         // Aspect-fit the viewBox into the canvas, centred. All drawing below is in points.
         let box = G.viewBox
@@ -396,16 +423,27 @@ private enum OrdirMascotRenderer {
         }
 
         // Static globe frame and pedestal, in the environment's foreground colour (follows light/dark mode).
-        context.fill(G.frame.applying(toCanvas), with: .foreground)
+        var globe = context
+        globe.opacity = build.fill
+        globe.fill(G.frame.applying(toCanvas), with: .foreground)
+        if build.outline > 0.01 && build.trace > 0 {
+            var outline = context
+            outline.opacity = build.outline
+            outline.addFilter(.shadow(color: sparkleColor.opacity(0.9), radius: 3 * unit * 10))
+            outline.stroke(G.frame.applying(toCanvas).trimmedPath(from: 0, to: build.trace), with: .color(sparkleColor),
+                           style: StrokeStyle(lineWidth: 7 * unit, lineCap: .round, lineJoin: .round))
+        }
 
         // Face: eyes squash to blink and drift up-right to glance; the smile's depth follows the mode.
+        var face = context
+        face.opacity = build.face
         let gaze = CGSize(width: 4 * frame.glance * unit, height: -5 * frame.glance * unit)
-        let eyeHeight = G.eyeRadius * unit * (1 - 0.9 * frame.blink)
         for eye in G.eyes {
-            let c = point(eye)
-            context.fill(
-                Path(ellipseIn: CGRect(x: c.x - G.eyeRadius * unit + gaze.width, y: c.y - eyeHeight + gaze.height,
-                                       width: G.eyeRadius * unit * 2, height: eyeHeight * 2)),
+            let c = point(eye.center)
+            let width = eye.radius * unit, height = width * (1 - 0.9 * frame.blink)
+            face.fill(
+                Path(ellipseIn: CGRect(x: c.x - width + gaze.width, y: c.y - height + gaze.height,
+                                       width: width * 2, height: height * 2)),
                 with: .foreground
             )
         }
@@ -413,17 +451,18 @@ private enum OrdirMascotRenderer {
         var mouth = Path()
         mouth.move(to: start)
         mouth.addQuadCurve(to: end, control: CGPoint(x: control.x, y: start.y + (control.y - start.y) * frame.smile))
-        context.stroke(mouth, with: .foreground, style: StrokeStyle(lineWidth: G.mouthWidth * unit, lineCap: .round))
+        face.stroke(mouth, with: .foreground, style: StrokeStyle(lineWidth: G.mouthWidth * unit, lineCap: .round))
 
         // Sparkles: scale and rotate around their own centres, then place.
-        for (spec, state) in zip(G.sparkles, frame.sparkles) {
+        for (index, (spec, state)) in zip(G.sparkles, frame.sparkles).enumerated() {
             let center = point(spec.center)
-            let transform = CGAffineTransform(scaleX: unit * state.scale, y: unit * state.scale)
+            let popped = build.sparkles[index]
+            let transform = CGAffineTransform(scaleX: unit * state.scale * popped, y: unit * state.scale * popped)
                 .concatenating(CGAffineTransform(rotationAngle: state.rotation * .pi / 180))
                 .concatenating(CGAffineTransform(translationX: center.x, y: center.y))
 
             var layer = context
-            layer.opacity = state.opacity
+            layer.opacity = state.opacity * popped
             if state.glow > 0.01 {
                 layer.addFilter(.shadow(color: sparkleColor.opacity(0.8 * state.glow), radius: spec.size * unit * 0.25 * state.glow))
             }

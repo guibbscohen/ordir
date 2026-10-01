@@ -15,9 +15,9 @@ struct HomeView: View {
         .flatMap(OrdirGame.init(rawValue:))
         .map { [$0] } ?? []
 
-    /// While the opening plays, its orb flies to this header's orb, so Home hides its own until it lands.
-    var hidesOrb = false
-    /// Reports where the header's orb is on screen (global coordinates), as the opening's landing spot.
+    /// When the opening's line reaches the header's orb, which is then built (nil: shown as is).
+    var orbBuildStart: Date?
+    /// Reports where the header's orb is on screen (global coordinates): the opening's line ends there.
     var onOrbFrame: (CGRect) -> Void = { _ in }
 
     var body: some View {
@@ -30,6 +30,7 @@ struct HomeView: View {
                 .padding(.horizontal, 20)
                 .padding(.bottom, 32)
             }
+            .background { ambience.ignoresSafeArea() }
             .navigationDestination(for: OrdirGame.self) { game in
                 if let script = TurnScript.bundled(for: game) {
                     TurnGuideView(
@@ -46,11 +47,28 @@ struct HomeView: View {
         }
     }
 
+    /// The opening's deep blue and violet glow, settled behind the header and fading to black before the
+    /// game cards, plus a faint glow at the bottom (the preview matches).
+    private var ambience: some View {
+        GeometryReader { proxy in
+            let w = proxy.size.width
+            ZStack {
+                Color.black
+                RadialGradient(colors: [Color(red: 0.49, green: 0.36, blue: 1).opacity(0.30), .clear],
+                               center: UnitPoint(x: 0.18, y: 0), startRadius: 0, endRadius: w * 0.75)
+                RadialGradient(colors: [Color(red: 0.15, green: 0.33, blue: 0.84).opacity(0.32), .clear],
+                               center: UnitPoint(x: 0.88, y: 0.06), startRadius: 0, endRadius: w * 0.72)
+                RadialGradient(colors: [Color(red: 0.49, green: 0.36, blue: 1).opacity(0.22), .clear],
+                               center: UnitPoint(x: 0.5, y: 1.04), startRadius: 0, endRadius: w * 0.6)
+            }
+        }
+        .accessibilityHidden(true)
+    }
+
     private var header: some View {
         VStack(spacing: 12) {
-            OrdirMascotView()
+            OrdirMascotView(buildStart: orbBuildStart)
                 .frame(height: 72)
-                .opacity(hidesOrb ? 0 : 1)
                 .background {
                     GeometryReader { proxy in
                         Color.clear
@@ -62,10 +80,36 @@ struct HomeView: View {
             Text("Ordir")
                 .font(.ordir(.title).weight(.semibold))
                 .accessibilityAddTraits(.isHeader)
-            Text("Learn any turn, step by step.")
+            Text(Self.phraseOfDay)
                 .font(.ordir(.subheadline))
-                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 18)
+                .padding(.vertical, 12)
+                .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                .overlay(alignment: .top) {
+                    BubbleTail()  // points up at the orb
+                        .fill(.quaternary.opacity(0.5))
+                        .frame(width: 16, height: 8)
+                        .offset(y: -8)
+                }
+                .padding(.top, 8)
         }
+    }
+
+    /// What the orb says on Home, one a day (the preview uses the same list).
+    private static let phrases = [
+        "What shall we play today?",
+        "Ready for your next turn?",
+        "Set up the board, I’ll walk you through it.",
+        "Got a rules question? I’m all ears.",
+        "Who’s going first today?",
+        "A new game, a fresh start.",
+        "Let’s learn a turn together.",
+        "Shuffle up. I’ll keep the rules straight.",
+    ]
+    private static var phraseOfDay: String {
+        let day = Calendar.current.ordinality(of: .day, in: .era, for: .now) ?? 0
+        return phrases[day % phrases.count]
     }
 
     private var gameList: some View {
@@ -91,6 +135,18 @@ struct HomeView: View {
     private static let scripts: [OrdirGame: TurnScript] = Dictionary(
         uniqueKeysWithValues: OrdirGame.allCases.compactMap { game in TurnScript.bundled(for: game).map { (game, $0) } }
     )
+}
+
+/// The little triangle on top of the phrase bubble.
+private struct BubbleTail: Shape {
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.move(to: CGPoint(x: rect.minX, y: rect.maxY))
+        path.addLine(to: CGPoint(x: rect.midX, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+        path.closeSubpath()
+        return path
+    }
 }
 
 /// A playable game: its cover art (cropped from the rulebook cover) over the name.
