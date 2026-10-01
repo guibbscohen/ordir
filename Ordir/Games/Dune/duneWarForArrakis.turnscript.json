@@ -82,8 +82,8 @@
         "bullets": [
           "Remove every Smuggler Harvester and the Smuggler Carryall from the game.",
           "Place the Smugglers Base in any empty Desert Area of one of the four lowest Sectors (below the North Pole).",
-          "Move Staban Tuek, Gurney Halleck and every Smuggler Regular on the Smugglers board to the Smugglers Base’s Area.",
-          "Put Staban Tuek’s Leader card on your Desert Power Action box.",
+          "Move Staban Tuek, Gurney Halleck and every Smuggler Regular on the Smugglers board to the Smugglers Base\u2019s Area.",
+          "Put Staban Tuek\u2019s Leader card on your Desert Power Action box.",
           "Add the Smugglers Action die to your Action dice from the next Action Resolution."
         ],
         "images": [
@@ -110,7 +110,7 @@
           {
             "source": "smugglers",
             "page": 7,
-            "excerpt": "place his Leader card on the Desert Power Action box of the Atreides player’s board"
+            "excerpt": "place his Leader card on the Desert Power Action box of the Atreides player\u2019s board"
           },
           {
             "source": "smugglers",
@@ -122,6 +122,18 @@
     }
   ],
   "images": [
+    {
+      "id": "cover",
+      "caption": "Box art",
+      "source": "rulebook",
+      "page": 1,
+      "crop": [
+        0.02,
+        0.095,
+        0.9,
+        0.64
+      ]
+    },
     {
       "id": "game-board",
       "caption": "Game board, set up",
@@ -1038,7 +1050,7 @@
           "instruction": "Each player takes their dashboard.",
           "bullets": [
             "Atreides: Sietch Tabr. Harkonnen: Giedi Prime.",
-            "Put each named Leader card marked ‘in play at the start of the game’ on the Action box with the matching symbol.",
+            "Put each named Leader card marked \u2018in play at the start of the game\u2019 on the Action box with the matching symbol.",
             "Keep the generic Leader cards (Naib and Bashar) and the other named Leader cards nearby."
           ],
           "components": [
@@ -1056,7 +1068,7 @@
             {
               "source": "rulebook",
               "page": 15,
-              "excerpt": "Take your faction’s appropriate dashboard, placing all named Leader cards marked as ‘in play at the start of the game’ on the Action boxes showing the corresponding Action symbol."
+              "excerpt": "Take your faction\u2019s appropriate dashboard, placing all named Leader cards marked as \u2018in play at the start of the game\u2019 on the Action boxes showing the corresponding Action symbol."
             },
             {
               "source": "rulebook",
@@ -1071,7 +1083,7 @@
           "title": "Set up The Spice Must Flow",
           "instruction": "Put The Spice Must Flow board next to your Giedi Prime dashboard.",
           "bullets": [
-            "Line up the 3 Imperium markers on the step marked ‘start here’."
+            "Line up the 3 Imperium markers on the step marked \u2018start here\u2019."
           ],
           "components": [
             "The Spice Must Flow board",
@@ -1085,7 +1097,7 @@
             {
               "source": "rulebook",
               "page": 15,
-              "excerpt": "The Harkonnen player takes the Spice Must Flow board and places it next to the Giedi Prime dashboard, lining up the 3 Imperium markers along the step marked ‘start here’."
+              "excerpt": "The Harkonnen player takes the Spice Must Flow board and places it next to the Giedi Prime dashboard, lining up the 3 Imperium markers along the step marked \u2018start here\u2019."
             }
           ]
         },
@@ -1120,7 +1132,7 @@
           "expansion": "spacingGuild",
           "side": "both",
           "title": "Add the Guild Planning cards",
-          "instruction": "Add this expansion’s Planning cards to their matching decks, 3 per deck, before the decks are shuffled.",
+          "instruction": "Add this expansion\u2019s Planning cards to their matching decks, 3 per deck, before the decks are shuffled.",
           "components": [
             "12 Spacing Guild Planning cards"
           ],
@@ -1189,7 +1201,7 @@
           "id": "setup-pieces",
           "side": "both",
           "title": "Gather your pieces",
-          "instruction": "Keep your faction’s figures, Action dice, Combat dice, other tokens and reference cards within reach.",
+          "instruction": "Keep your faction\u2019s figures, Action dice, Combat dice, other tokens and reference cards within reach.",
           "components": [
             "Figures",
             "Action dice",
@@ -1206,7 +1218,7 @@
             {
               "source": "rulebook",
               "page": 15,
-              "excerpt": "The players keep their faction’s figures, sets of Action dice, Combat dice, additional tokens and reference cards within reach."
+              "excerpt": "The players keep their faction\u2019s figures, sets of Action dice, Combat dice, additional tokens and reference cards within reach."
             }
           ]
         },
@@ -1489,7 +1501,7 @@
           "instruction": "Draw 3 Prescience cards and lay them faceup next to the deck.",
           "bullets": [
             "Both players can see them.",
-            "The Atreides can claim up to 2 this round, as soon as a card’s requirements are met."
+            "The Atreides can claim up to 2 this round, as soon as a card\u2019s requirements are met."
           ],
           "components": [
             "Prescience deck"
@@ -1613,7 +1625,7 @@
           "instruction": "You may place 1 Escort Ornithopter instead of a standard one.",
           "bullets": [
             "Only 1, when you place Ornithopters.",
-            "It can’t Scout or Troop-transport.",
+            "It can\u2019t Scout or Troop-transport.",
             "It escorts Troops instead."
           ],
           "components": [
@@ -1662,7 +1674,7 @@
             {
               "source": "rulebook",
               "page": 8,
-              "excerpt": "An area is free for a player when it doesn’t contain enemy Settlements, enemy Units, or Sandworms."
+              "excerpt": "An area is free for a player when it doesn\u2019t contain enemy Settlements, enemy Units, or Sandworms."
             }
           ]
         },
@@ -1707,8 +1719,8 @@
           "title": "Place Desert War tokens",
           "instruction": "Put a Desert War token on each empty slot of the first column of The Spice Must Flow board.",
           "bullets": [
-            "Slots holding Action dice aren’t empty.",
-            "Tokens that don’t fit sit out this round."
+            "Slots holding Action dice aren\u2019t empty.",
+            "Tokens that don\u2019t fit sit out this round."
           ],
           "components": [
             "Harkonnen Desert War tokens",
@@ -1774,7 +1786,7 @@
             "Atreides: 4 dice.",
             "Harkonnen: every die not set aside.",
             "4 or more of your dice show the same result: keep 1 and reroll the other matching dice (once per round).",
-            "Both players must change dice that exceed an Action box’s slots: choose new results one at a time, taking turns, Harkonnen first."
+            "Both players must change dice that exceed an Action box\u2019s slots: choose new results one at a time, taking turns, Harkonnen first."
           ],
           "components": [
             "Action dice",
@@ -1837,7 +1849,7 @@
           {
             "source": "faq",
             "page": 1,
-            "entry": "Can the Atreides act after the Harkonnen’s last die?",
+            "entry": "Can the Atreides act after the Harkonnen\u2019s last die?",
             "excerpt": "the Action Resolution phase is over once the Harkonnen player has executed all their available Actions."
           }
         ]
@@ -1952,10 +1964,10 @@
               "bullets": [
                 "Leadership: move a Legion with a Leader, or attack with a Legion containing a Smuggler Unit.",
                 "Strategy: move a Legion, or move 2 Legions that each contain a Smuggler Unit.",
-                "Deployment: place 2 Smuggler Units in the Smugglers Base’s Area.",
+                "Deployment: place 2 Smuggler Units in the Smugglers Base\u2019s Area.",
                 "Mentat: play 1 Planning card, or draw 2 House Atreides cards and keep one.",
                 "House: use it as any other Smugglers result.",
-                "It can’t play Planning cards except through Mentat.",
+                "It can\u2019t play Planning cards except through Mentat.",
                 "Smuggler Ornithopter: remove one from a connected Air Zone to move or attack with a Legion up to 2 Areas away."
               ],
               "images": [
@@ -1988,7 +2000,7 @@
                 "Spacing Guild: advance your Heighliner 1 step.",
                 "CHOAM: put 1 Space Frigate on your Heighliner board.",
                 "Landsraad: put 2 Houses Major Troops on it.",
-                "A Sandworm destroying the Harvester doesn’t count."
+                "A Sandworm destroying the Harvester doesn\u2019t count."
               ],
               "images": [
                 "sg-reference-cards",
@@ -2003,7 +2015,7 @@
                 {
                   "source": "spacingGuild",
                   "page": 4,
-                  "excerpt": "Using a Sandworm to destroy a Harvester doesn’t grant an Imperium Action."
+                  "excerpt": "Using a Sandworm to destroy a Harvester doesn\u2019t grant an Imperium Action."
                 }
               ]
             },
@@ -2056,12 +2068,12 @@
               ]
             },
             {
-              "text": "Used a named Leader’s special Action? Flip its card: it’s spent until next round.",
+              "text": "Used a named Leader\u2019s special Action? Flip its card: it\u2019s spent until next round.",
               "citations": [
                 {
                   "source": "rulebook",
                   "page": 18,
-                  "excerpt": "the Leader card is pulled out of the dashboard and flipped: the Leader card is considered ‘spent’"
+                  "excerpt": "the Leader card is pulled out of the dashboard and flipped: the Leader card is considered \u2018spent\u2019"
                 }
               ]
             },
@@ -2107,7 +2119,7 @@
                 {
                   "source": "rulebook",
                   "page": 27,
-                  "excerpt": "When a Harkonnen Settlement is destroyed, the Atreides player immediately advances each Prescience marker a number of steps equal to the Settlement’s rank."
+                  "excerpt": "When a Harkonnen Settlement is destroyed, the Atreides player immediately advances each Prescience marker a number of steps equal to the Settlement\u2019s rank."
                 }
               ]
             },
@@ -2122,7 +2134,7 @@
               ]
             },
             {
-              "text": "A revealed Prescience card’s requirements are met? Claim it (2 per round at most).",
+              "text": "A revealed Prescience card\u2019s requirements are met? Claim it (2 per round at most).",
               "citations": [
                 {
                   "source": "rulebook",
@@ -2275,12 +2287,12 @@
               ]
             },
             {
-              "text": "Used a named Leader’s special Action? Flip its card: it’s spent until next round.",
+              "text": "Used a named Leader\u2019s special Action? Flip its card: it\u2019s spent until next round.",
               "citations": [
                 {
                   "source": "rulebook",
                   "page": 18,
-                  "excerpt": "the Leader card is pulled out of the dashboard and flipped: the Leader card is considered ‘spent’"
+                  "excerpt": "the Leader card is pulled out of the dashboard and flipped: the Leader card is considered \u2018spent\u2019"
                 }
               ]
             },
@@ -2361,7 +2373,7 @@
           "expansion": "spacingGuild",
           "side": "both",
           "title": "Remove Space Frigates",
-          "instruction": "Remove every Space Frigate still on the board and return it to its owner’s reserve.",
+          "instruction": "Remove every Space Frigate still on the board and return it to its owner\u2019s reserve.",
           "components": [
             "Space Frigates"
           ],
@@ -2440,7 +2452,7 @@
               "text": "Smuggler Units are now yours.",
               "bullets": [
                 "No Wormsign goes in an Area with Smuggler Units; remove any already there.",
-                "Coriolis Storms don’t affect Smuggler Units."
+                "Coriolis Storms don\u2019t affect Smuggler Units."
               ],
               "images": [
                 "sm-smuggler-regulars"
@@ -2535,7 +2547,7 @@
                 "state": "smugglersAllied",
                 "is": false
               },
-              "text": "The Smuggler Carryall can save only Smuggler Harvesters, and Harkonnen Carryalls can’t save Smuggler Harvesters.",
+              "text": "The Smuggler Carryall can save only Smuggler Harvesters, and Harkonnen Carryalls can\u2019t save Smuggler Harvesters.",
               "images": [
                 "sm-vehicles"
               ],
@@ -2585,7 +2597,7 @@
           "additions": [
             {
               "expansion": "desertWar",
-              "text": "Desert Troopers can’t take hits from any source, including Coriolis Storms and Sandworms.",
+              "text": "Desert Troopers can\u2019t take hits from any source, including Coriolis Storms and Sandworms.",
               "images": [
                 "dw-suspensor-troopers",
                 "dw-sandriders",
@@ -2595,7 +2607,7 @@
                 {
                   "source": "desertWar",
                   "page": 5,
-                  "excerpt": "they cannot be inflicted any Hits from any source – including Coriolis Storms and Sandworms."
+                  "excerpt": "they cannot be inflicted any Hits from any source \u2013 including Coriolis Storms and Sandworms."
                 }
               ]
             }
@@ -2710,7 +2722,7 @@
           "additions": [
             {
               "expansion": "spacingGuild",
-              "text": "Your spice also buys Imperium Actions of that marker’s power.",
+              "text": "Your spice also buys Imperium Actions of that marker\u2019s power.",
               "bullets": [
                 "Pay 2 to keep a marker: 1 Imperium Action.",
                 "Pay 3 to raise it: 2 Imperium Actions.",
@@ -2750,7 +2762,7 @@
           "id": "end-air-vehicles",
           "side": "harkonnen",
           "title": "Remove air vehicles",
-          "instruction": "Remove all Ornithopters and Carryalls still on the board. You can use an Ornithopter’s Scouting as you remove it.",
+          "instruction": "Remove all Ornithopters and Carryalls still on the board. You can use an Ornithopter\u2019s Scouting as you remove it.",
           "components": [
             "Ornithopters",
             "Carryalls"
@@ -2762,7 +2774,7 @@
             {
               "source": "rulebook",
               "page": 16,
-              "excerpt": "Remove all Ornithopters and Carryalls still on the board (the Ornithopters’ Scouting ability can be used now, if possible)."
+              "excerpt": "Remove all Ornithopters and Carryalls still on the board (the Ornithopters\u2019 Scouting ability can be used now, if possible)."
             }
           ],
           "additions": [
@@ -2801,7 +2813,7 @@
           "expansion": "desertWar",
           "side": "both",
           "title": "Clear the desert",
-          "instruction": "Remove what’s left of the Desert War.",
+          "instruction": "Remove what\u2019s left of the Desert War.",
           "bullets": [
             "All Escort Ornithopters and Fremen Camps.",
             "All Desert Troopers, except Sandriders sharing an Area with a Sandworm."
@@ -2901,7 +2913,7 @@
             {
               "source": "rulebook",
               "page": 16,
-              "excerpt": "Place all ‘spent’ Named Leader cards back on the corresponding Action boxes on the player dashboards."
+              "excerpt": "Place all \u2018spent\u2019 Named Leader cards back on the corresponding Action boxes on the player dashboards."
             }
           ]
         },
@@ -3001,7 +3013,7 @@
             "title": "Choose the attack",
             "instruction": "Attack an enemy Legion in an adjacent Area.",
             "bullets": [
-              "Areas across an impassable border aren’t adjacent.",
+              "Areas across an impassable border aren\u2019t adjacent.",
               "Attack with all or part of your Legion; it stays in its own Area during the battle.",
               "Attacking with a Leadership Action: at least 1 Leader must take part.",
               "Atreides may also attack an Area they can reach by Sandriding; Harkonnen, by Troop-transport.",
@@ -3122,7 +3134,7 @@
             "title": "Roll Combat dice",
             "instruction": "Each player rolls 1 Combat die per Unit in their Legion.",
             "bullets": [
-              "Leaders don’t add dice.",
+              "Leaders don\u2019t add dice.",
               "Defender in an Area with a Settlement: add dice equal to its rank, every round.",
               "6 dice at most."
             ],
@@ -3147,7 +3159,7 @@
             "additions": [
               {
                 "expansion": "desertWar",
-                "text": "Desert Troopers in the Area don’t take part in the battle.",
+                "text": "Desert Troopers in the Area don\u2019t take part in the battle.",
                 "bullets": [],
                 "images": [
                   "dw-suspensor-troopers",
@@ -3189,7 +3201,7 @@
             "instruction": "Read each roll:",
             "bullets": [
               "Hit: 1 hit on the enemy Legion.",
-              "Shield: cancels 1 of the opponent’s Hits.",
+              "Shield: cancels 1 of the opponent\u2019s Hits.",
               "Special: counts only through Leaders. Each Generic Leader turns 1 Special into 1 Hit; each Named Leader uses 1 Special as its Leader card shows.",
               "More Leaders than Specials: choose which Leaders use them, attacker first.",
               "Each Sardaukar or Fedaykin cancels 1 opposing Shield, including Shields that come from Specials."
@@ -3207,7 +3219,7 @@
               {
                 "source": "rulebook",
                 "page": 24,
-                "excerpt": "Each Shield cancels 1 opponent’s Hit"
+                "excerpt": "Each Shield cancels 1 opponent\u2019s Hit"
               },
               {
                 "source": "rulebook",
@@ -3300,7 +3312,7 @@
               {
                 "source": "rulebook",
                 "page": 27,
-                "excerpt": "their figures are placed on the leftmost slot of the Regeneration Tank of the player’s dashboard."
+                "excerpt": "their figures are placed on the leftmost slot of the Regeneration Tank of the player\u2019s dashboard."
               },
               {
                 "source": "faq",
@@ -3321,7 +3333,7 @@
                   {
                     "source": "desertWar",
                     "page": 4,
-                    "excerpt": "it can be assigned 2 Hits to be removed instead of 1 (if it’s assigned only 1 Hit it is also removed)."
+                    "excerpt": "it can be assigned 2 Hits to be removed instead of 1 (if it\u2019s assigned only 1 Hit it is also removed)."
                   }
                 ]
               }
@@ -3335,7 +3347,7 @@
             "bullets": [
               "Cease the attack: the battle ends and your Legion stays where it started.",
               "Continue: the defender may retreat, or another combat round starts.",
-              "A leftover Shield can’t cancel the hit taken to continue the battle (FAQ 3.0)."
+              "A leftover Shield can\u2019t cancel the hit taken to continue the battle (FAQ 3.0)."
             ],
             "components": [
               "Your Legion"
@@ -3364,7 +3376,7 @@
             "instruction": "If the attacker continues, choose:",
             "bullets": [
               "Retreat: the attacker moves your Legion to an adjacent Area that is free for you, and the battle ends.",
-              "No such Area: you can’t retreat.",
+              "No such Area: you can\u2019t retreat.",
               "Stand: another combat round starts."
             ],
             "components": [
@@ -3430,7 +3442,7 @@
             "instruction": "You may move into the attacked Area, now empty of enemy Units.",
             "bullets": [
               "Move any number of the attacking figures, or none: you never have to advance (FAQ 3.0).",
-              "Moving at least 1 Unit into an enemy Settlement’s Area destroys it; an undefended Settlement falls without a roll.",
+              "Moving at least 1 Unit into an enemy Settlement\u2019s Area destroys it; an undefended Settlement falls without a roll.",
               "Sietch destroyed: the Harkonnen gain Supremacy points equal to its rank.",
               "Harkonnen Settlement destroyed: every Prescience marker advances by its rank. Arrakeen: check the Secret Objective at once.",
               "Atreides advancing where a Harvester stood: remove the Harvester."
@@ -3475,7 +3487,7 @@
               {
                 "source": "rulebook",
                 "page": 27,
-                "excerpt": "When a Harkonnen Settlement is destroyed, the Atreides player immediately advances each Prescience marker a number of steps equal to the Settlement’s rank."
+                "excerpt": "When a Harkonnen Settlement is destroyed, the Atreides player immediately advances each Prescience marker a number of steps equal to the Settlement\u2019s rank."
               },
               {
                 "source": "faq",

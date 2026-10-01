@@ -415,7 +415,7 @@ private struct OrdirMascotPreviewHarness: View {
     private func labelled(_ title: String, _ mascot: OrdirMascotView) -> some View {
         VStack(spacing: 8) {
             mascot.frame(width: 72, height: 72)
-            Text(title).font(.footnote).foregroundStyle(.secondary)
+            Text(title).font(.ordir(.footnote)).foregroundStyle(.secondary)
         }
     }
 }

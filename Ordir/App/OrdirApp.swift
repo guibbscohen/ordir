@@ -11,6 +11,10 @@ struct OrdirApp: App {
     // `-OrdirOpenGame`, so they skip it.
     @State private var showsOpening = UserDefaults.standard.string(forKey: "OrdirOpenGame") == nil
 
+    init() {
+        OrdirFont.register()
+    }
+
     var body: some Scene {
         WindowGroup {
             ZStack {
@@ -24,6 +28,7 @@ struct OrdirApp: App {
                     .zIndex(1)
                 }
             }
+            .font(.ordir(.body))
         }
     }
 }

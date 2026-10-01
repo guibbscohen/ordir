@@ -12,9 +12,13 @@ REPOS=(
   bencium/bencium-marketplace
   AccessLint/skills
 )
+# Libraries kept alongside as reference code and docs (not skills, so not indexed).
+REFERENCE_REPOS=(
+  airbnb/lottie-ios
+)
 
 mkdir -p "$DEST"
-for repo in "${REPOS[@]}"; do
+for repo in "${REPOS[@]}" "${REFERENCE_REPOS[@]}"; do
   dir="$DEST/${repo%%/*}__${repo##*/}"
   if [ -d "$dir/.git" ]; then
     git -C "$dir" fetch -q --depth 1 origin HEAD && git -C "$dir" reset -q --hard FETCH_HEAD \

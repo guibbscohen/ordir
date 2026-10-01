@@ -23,7 +23,7 @@ setup (API key, rulebook loading, sign-in email, GitHub Pages) is in [Backend se
 
 | Path | What it is |
 | --- | --- |
-| `Ordir/App/` | App entry point, opening animation and home screen (mascot + games, unfinished ones "Coming soon") |
+| `Ordir/App/` | App entry point, opening animation and home screen (games with cover art, unfinished ones "Coming soon") |
 | `Ordir/Mascot/` | `OrdirMascotView` (animated logo), `OrdirThinkingIndicator` + spinner verbs |
 | `Ordir/Games/` | `OrdirGame`, the launch games, and each game's turn script (`<game>.turnscript.json`) |
 | `Ordir/TurnGuide/` | `TurnScript` model, `TurnGuideSession` (step state machine), `TurnGuideView` (pass-and-play screen) |

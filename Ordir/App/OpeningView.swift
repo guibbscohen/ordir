@@ -26,9 +26,9 @@ struct OpeningView: View {
                 .padding(.bottom, 16)
             VStack(spacing: 8) {
                 Text("Ordir")
-                    .font(.system(.largeTitle, weight: .bold))
+                    .font(.ordir(.largeTitle).weight(.bold))
                 Text("Learn any turn, step by step.")
-                    .font(.body)
+                    .font(.ordir(.body))
                     .foregroundStyle(.secondary)
             }
             .multilineTextAlignment(.center)

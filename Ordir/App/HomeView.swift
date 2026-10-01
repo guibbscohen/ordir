@@ -47,10 +47,10 @@ struct HomeView: View {
                 .frame(height: 120)
                 .padding(.top, 48)
             Text("Ordir")
-                .font(.largeTitle.weight(.semibold))
+                .font(.ordir(.largeTitle).weight(.semibold))
                 .accessibilityAddTraits(.isHeader)
             Text("Learn any turn, step by step.")
-                .font(.subheadline)
+                .font(.ordir(.subheadline))
                 .foregroundStyle(.secondary)
         }
     }
@@ -58,69 +58,113 @@ struct HomeView: View {
     private var gameList: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Choose a game")
-                .font(.headline)
+                .font(.ordir(.headline))
                 .accessibilityAddTraits(.isHeader)
-            ForEach(OrdirGame.allCases) { game in
-                if game.hasTurnGuide {
-                    NavigationLink(value: game) {
-                        GameRow(game: game)
-                    }
-                    .buttonStyle(.plain)
-                } else {
-                    ComingSoonRow(game: game)
+            ForEach(OrdirGame.allCases.filter { Self.scripts[$0] != nil }) { game in
+                NavigationLink(value: game) {
+                    GameCard(game: game, script: Self.scripts[game]!)
+                }
+                .buttonStyle(.plain)
+            }
+            LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
+                ForEach(OrdirGame.allCases.filter { Self.scripts[$0] == nil }) { game in
+                    ComingSoonTile(game: game)
                 }
             }
         }
     }
+
+    /// Each game's bundled turn guide, loaded once; games without one show as "Coming soon".
+    private static let scripts: [OrdirGame: TurnScript] = Dictionary(
+        uniqueKeysWithValues: OrdirGame.allCases.compactMap { game in TurnScript.bundled(for: game).map { (game, $0) } }
+    )
 }
 
-private struct GameRow: View {
+/// A playable game: its cover art (cropped from the rulebook cover) over the name.
+private struct GameCard: View {
     let game: OrdirGame
+    let script: TurnScript
+
+    private var cover: TurnScript.SourceImage? { script.pictures(["cover"]).first }
 
     var body: some View {
-        HStack {
-            Text(game.displayName)
-                .font(.body)
-            Spacer()
-            Image(systemName: "chevron.right")
-                .font(.footnote.weight(.semibold))
-                .foregroundStyle(.tertiary)
-                .accessibilityHidden(true)
+        VStack(alignment: .leading, spacing: 0) {
+            if let cover {
+                Color.clear
+                    .aspectRatio(5 / 4, contentMode: .fit)
+                    .overlay {
+                        Image(script.assetName(for: cover))
+                            .resizable()
+                            .scaledToFill()
+                    }
+                    .clipped()
+                    .accessibilityHidden(true)
+            }
+            HStack(spacing: 12) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(game.displayName)
+                        .font(.ordir(.headline))
+                    Text("Turn guide, step by step")
+                        .font(.ordir(.subheadline))
+                        .foregroundStyle(.secondary)
+                    if let cover {
+                        Text("Cover art: \(script.label(for: cover))")
+                            .font(.ordir(.caption))
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                Image(systemName: "chevron.right")
+                    .font(.ordir(.footnote).weight(.semibold))
+                    .foregroundStyle(.tertiary)
+                    .accessibilityHidden(true)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
         }
-        .padding(.horizontal, 16)
-        .frame(minHeight: 56)
-        .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-        .contentShape(Rectangle())
+        .background(.quaternary.opacity(0.5))
+        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .contentShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .accessibilityElement(children: .combine)
     }
 }
 
-/// A game whose turn guide isn't written yet: greyed, with a "Coming soon" badge, not tappable.
-private struct ComingSoonRow: View {
+/// A game whose turn guide isn't written yet: house-style art with a "Coming soon" badge, not tappable.
+private struct ComingSoonTile: View {
     let game: OrdirGame
-    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
-        // At accessibility text sizes the badge goes under the name instead of squeezing it.
-        let layout = dynamicTypeSize.isAccessibilitySize
-            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8))
-            : AnyLayout(HStackLayout(spacing: 12))
-        layout {
+        VStack(alignment: .leading, spacing: 0) {
+            Color.clear
+                .aspectRatio(1, contentMode: .fit)
+                .overlay {
+                    RadialGradient(colors: [Color(white: 0.17), Color(white: 0.07), Color(white: 0.04)],
+                                   center: UnitPoint(x: 0.3, y: 0.2), startRadius: 0, endRadius: 200)
+                    OrdirMascotView()
+                        .padding(44)
+                        .opacity(0.35)
+                }
+                .overlay(alignment: .topLeading) {
+                    Text("Coming soon")
+                        .font(.ordir(.caption).weight(.semibold))
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 3)
+                        .background(.black.opacity(0.55), in: Capsule())
+                        .overlay(Capsule().strokeBorder(.white.opacity(0.14)))
+                        .padding(10)
+                }
+                .clipped()
             Text(game.displayName)
-                .font(.body)
+                .font(.ordir(.subheadline).weight(.semibold))
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
-            Text("Coming soon")
-                .font(.footnote.weight(.semibold))
-                .foregroundStyle(.secondary)
-                .padding(.horizontal, 10)
-                .padding(.vertical, 3)
-                .overlay(Capsule().strokeBorder(.quaternary))
+                .padding(.horizontal, 12)
+                .padding(.vertical, 10)
         }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 12)
-        .frame(minHeight: 56)
-        .background(.quaternary.opacity(0.25), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-        .accessibilityElement(children: .combine)
+        .background(.quaternary.opacity(0.25))
+        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("\(game.displayName), coming soon")
     }
 }
 
@@ -132,20 +176,13 @@ private struct GamePlaceholderView: View {
         VStack(spacing: 24) {
             OrdirThinkingIndicator(game: game)
             Text("Turn guides for \(game.displayName) are on the way.")
-                .font(.footnote)
+                .font(.ordir(.footnote))
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
         }
         .padding(32)
         .navigationTitle(game.displayName)
         .navigationBarTitleDisplayMode(.inline)
-    }
-}
-
-private extension OrdirGame {
-    /// Whether the app bundles this game's turn script.
-    var hasTurnGuide: Bool {
-        Bundle.main.url(forResource: "\(rawValue).turnscript", withExtension: "json") != nil
     }
 }
 
