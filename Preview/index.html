@@ -35,6 +35,8 @@
   color-scheme: dark;
 }
 html, body { height: 100%; }
+html { -webkit-text-size-adjust: 100%; touch-action: manipulation; }  /* no double-tap zoom on quick taps */
+body { margin: 0; }
 body {
   background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.45;
   display: flex; flex-direction: column; align-items: center; gap: 12px;
@@ -197,7 +199,7 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 /* Online: sign-in, rules questions, own-phone tables */
 .field { display: flex; flex-direction: column; gap: 6px; }
 .field label { font-size: 15px; font-weight: 600; }
-.field input, .field textarea { font: inherit; color: var(--fg); background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; min-height: 48px; width: 100%; }
+.field input, .field textarea { font: inherit; font-size: 16px; color: var(--fg); background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; min-height: 48px; width: 100%; }
 .field textarea { min-height: 96px; resize: vertical; }
 .field input:focus-visible, .field textarea:focus-visible { outline: 2px solid var(--sparkle); outline-offset: 1px; }
 .error { color: var(--harkonnen); font-size: 15px; margin: 0; }
@@ -264,7 +266,7 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 .chat-empty .mascot { width: 64px; height: 64px; }
 .chat-empty p { margin: 0; line-height: 1.45; }
 .composer { display: flex; align-items: flex-end; gap: 8px; padding: 10px 12px calc(10px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); }
-.composer textarea { flex: 1; font: inherit; color: var(--fg); background: var(--surface-2); border: 1px solid var(--line); border-radius: 22px;
+.composer textarea { flex: 1; font: inherit; font-size: 16px; color: var(--fg); background: var(--surface-2); border: 1px solid var(--line); border-radius: 22px;
   padding: 11px 16px; min-height: 46px; max-height: 120px; resize: none; }
 .composer textarea:focus-visible { outline: 2px solid var(--sparkle); outline-offset: 1px; }
 .composer .send { flex: none; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: var(--fg); color: #000; }
@@ -306,8 +308,8 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
   filter: drop-shadow(0 0 3px rgba(158, 199, 255, .9)) drop-shadow(0 0 10px rgba(124, 92, 255, .7)); }
 .intro-line path { fill: none; stroke: var(--sparkle); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
 /* Home's layer sits exactly where Home will (clear of the notch and home bar), one screen down. */
-.intro-home { position: absolute; left: 0; right: 0; top: env(safe-area-inset-top); bottom: env(safe-area-inset-bottom);
-  display: flex; flex-direction: column; transform: translateY(200%); }
+.intro-home { position: absolute; inset: 0; padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);
+  display: flex; flex-direction: column; transform: translateY(100%); }
 .intro-home > .pane { flex: 1; }
 .intro-orb { width: 88px; height: 88px; margin-bottom: 18px; }
 .intro-orb .mascot { width: 88px; height: 88px; animation: orb-in .8s cubic-bezier(.2, .8, .2, 1) both; }
@@ -329,7 +331,7 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 .brand p { margin: 2px 0 0; color: var(--muted); }
 .group { display: flex; flex-direction: column; gap: 12px; }
 .group h2 { margin: 0; font-size: 13px; font-weight: 600; color: var(--muted); }
-.home .scroll { padding-bottom: 112px; }  /* room to scroll past the floating bar */
+.home .scroll { padding-bottom: calc(112px + env(safe-area-inset-bottom)); }  /* room to scroll past the floating bar */
 /* Home's ambient light (on the whole screen, notch included): the opening's glow settles behind the header and
    fades to black before the cards; a faint glow sits behind the glass bar so its blur has colour to work with. */
 .phone.home-bg, .ambient-below { background:
@@ -386,7 +388,7 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 .chev { color: var(--muted); flex: none; }
 
 /* Floating "liquid glass" tab bar on Home */
-.tabbar { position: absolute; left: 12px; right: 12px; bottom: 12px; z-index: 2; display: flex; gap: 2px; padding: 6px; border-radius: 999px;
+.tabbar { position: absolute; left: 12px; right: 12px; bottom: max(12px, env(safe-area-inset-bottom)); z-index: 2; display: flex; gap: 2px; padding: 6px; border-radius: 999px;
   background: rgba(30, 30, 32, .9); border: 1px solid rgba(255, 255, 255, .12);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14), 0 10px 30px rgba(0, 0, 0, .55); }
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
@@ -457,12 +459,14 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 }
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 /* On a real phone the preview is the app: edge to edge, clear of the notch and home bar, no frame. */
+/* iOS zooms into any text field under 16px when it takes focus, so fields stay at 16px. */
 @media (max-width: 500px) {
+  html, body { overflow: hidden; overscroll-behavior: none; }
   body { display: block; padding: 0; }
   main { max-width: none; max-height: none; height: 100vh; height: 100dvh; }
   .phone { max-width: none; max-height: none; border: 0; border-radius: 0;
     padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
-  footer { padding: 24px 24px calc(24px + env(safe-area-inset-bottom)); }
+  footer { display: none; }  /* the same credits are on the Account tab */
 }
 </style>
 
@@ -891,7 +895,9 @@ function accountPage() {
   return `<h1 tabindex="-1">Account</h1>
     ${!signedIn() ? signInPane("Sign in with your email to ask rules questions and to play at a table, each on your own phone.") : `
       <p style="margin:0">Signed in as <b>${esc(online.session.user.email || "")}</b></p>
-      <button class="primary" style="flex:none" data-act="sign-out">Sign out</button>`}`;
+      <button class="primary" style="flex:none" data-act="sign-out">Sign out</button>`}
+    <p class="hint">Logo: “Magic Ball” by Ziyad Aljunaidi, Noun Project (CC BY 3.0). Type: Google Sans Flex (SIL OFL 1.1).
+      Rules © CMON / Gale Force Nine; Ordir cites them by page and isn't affiliated with them.</p>`;
 }
 
 function picker() {
@@ -1457,8 +1463,8 @@ function layIntroLine() {
   if (state.screen !== "intro" || !approach || !from || !to) return null;
   const box = phone.getBoundingClientRect(), W = box.width, H = box.height;
   const a = from.getBoundingClientRect(), b = to.getBoundingClientRect(), l = layer.getBoundingClientRect();
-  // Home's orb at rest is the layer's top inset (the notch) plus its place in the layer, one screen down.
-  const restY = (y) => H + parseFloat(getComputedStyle(layer).top) + (y - l.top);
+  // Home's orb at rest: its place in the layer (which is the phone's own box, notch inset included), one screen down.
+  const restY = (y) => H + (y - l.top);
   // The opening's orb, in the opening's own (moving) frame.
   const t = $(".intro-track").getBoundingClientRect();
   const sx = a.right - t.left - 4, sy = a.top - t.top + a.height * 0.62;
@@ -1483,15 +1489,18 @@ function startIntro() {
   if (H === null) return;
   document.fonts?.ready.then(layIntroLine);
   setTimeout(layIntroLine, 1200);  // before the camera moves, whatever has loaded by then
+  const resized = new ResizeObserver(() => (state.screen === "intro" ? layIntroLine() : resized.disconnect()));
+  resized.observe($("#phone"));
   const camera = { duration: 1600, delay: 1300, easing: "cubic-bezier(.65, 0, .35, 1)", fill: "both" };
   // Hidden until it starts drawing: a not-yet-drawn line would still show its round cap as a dot.
   const draw = [{ strokeDashoffset: 1, opacity: 0 }, { strokeDashoffset: 0.995, opacity: 1, offset: 0.01 }, { strokeDashoffset: 0, opacity: 1 }];
   $(".intro-line .approach").animate(draw, { duration: 2300, delay: 600, easing: "cubic-bezier(.4, 0, .25, 1)", fill: "both" });
   $(".intro-line .rim").animate(draw, { duration: 550, delay: 2900, easing: "cubic-bezier(.3, 0, .2, 1)", fill: "both" });
   $(".intro-line").animate([{ opacity: 1 }, { opacity: 0 }], { duration: 450, delay: 3500, fill: "forwards" });
-  $(".intro-track").animate([{ transform: "translateY(0)" }, { transform: `translateY(${-H}px)` }], camera);
-  $(".intro-backdrop").animate([{ transform: "translateY(0)" }, { transform: `translateY(${-H}px)` }], camera);
-  $(".intro-home").animate([{ transform: `translateY(${H}px)` }, { transform: "translateY(0)" }], camera);
+  // The track and backdrop are two screens tall, so -50% is one screen; Home's layer is one screen tall.
+  $(".intro-track").animate([{ transform: "translateY(0)" }, { transform: "translateY(-50%)" }], camera);
+  $(".intro-backdrop").animate([{ transform: "translateY(0)" }, { transform: "translateY(-50%)" }], camera);
+  $(".intro-home").animate([{ transform: "translateY(100%)" }, { transform: "translateY(0)" }], camera);
   $(".intro .skip").animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, delay: 1300, fill: "forwards" });
   // As the rim closes, the orb fills in under the line, then the Ask link and the phrase appear.
   setTimeout(() => {
