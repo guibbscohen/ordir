@@ -1,6 +1,8 @@
 // rules-answer: answers a rules question from a game's official sources, citing source and page.
 //
-// POST { game, expansions: string[], question } with a signed-in player's access token.
+// POST { game, expansions: string[], question, followUp? } with a signed-in player's access token.
+// With followUp, the player's last few questions on that game (from rules_questions, never from the
+// client) come first as earlier turns, so "and with Smugglers?" makes sense.
 // Returns { answer: [{ text, citations: [{ source, page, quote }] }], refused, questionsLeft }.
 //
 // The sources' text comes from the rules_pages table (loaded by the Rules corpus workflow), split
@@ -14,6 +16,9 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 
 const MODEL = "claude-opus-5-5";
 const DAILY_QUESTIONS = 30;
+/** A follow-up sees this many earlier questions on the same game, from the last few hours. */
+const FOLLOW_UP_TURNS = 3;
+const FOLLOW_UP_HOURS = 6;
 
 /** Which sources each game has, in the order Claude reads them. Keep in step with the turn script. */
 const GAMES: Record<string, { title: string; sources: Record<string, string>; base: string[] }> = {
@@ -97,7 +102,7 @@ Deno.serve(async (req) => {
   const user = auth?.user;
   if (!user || user.is_anonymous) return json({ error: "Sign in to ask rules questions." }, 401);
 
-  let body: { game?: string; expansions?: string[]; question?: string };
+  let body: { game?: string; expansions?: string[]; question?: string; followUp?: boolean };
   try {
     body = await req.json();
   } catch {
@@ -134,7 +139,31 @@ Deno.serve(async (req) => {
     citations: { enabled: true },
     ...(index === documents.length - 1 ? { cache_control: { type: "ephemeral" } } : {}),
   }));
-  content.push({ type: "text", text: question });
+
+  // Earlier turns of this chat, oldest first, as plain text: the documents stay at the start of the
+  // first user turn, so their cached prefix still matches.
+  const turns: { question: string; answer: string }[] = [];
+  if (body.followUp) {
+    const { data: earlier } = await supabase
+      .from("rules_questions")
+      .select("question, answer")
+      .eq("user_id", user.id)
+      .eq("game", body.game)
+      .not("answer", "is", null)
+      .gte("created_at", new Date(Date.now() - FOLLOW_UP_HOURS * 60 * 60 * 1000).toISOString())
+      .order("created_at", { ascending: false })
+      .limit(FOLLOW_UP_TURNS);
+    for (const row of (earlier ?? []).reverse()) {
+      const answer = (row.answer as { text: string }[]).map((block) => block.text).join("").trim();
+      if (answer) turns.push({ question: row.question, answer });
+    }
+  }
+  const messages: Anthropic.Beta.BetaMessageParam[] = [];
+  for (const [index, turn] of turns.entries()) {
+    messages.push({ role: "user", content: index === 0 ? [...content, { type: "text", text: turn.question }] : turn.question });
+    messages.push({ role: "assistant", content: turn.answer });
+  }
+  messages.push({ role: "user", content: turns.length ? question : [...content, { type: "text", text: question }] });
 
   let response: Anthropic.Beta.BetaMessage;
   try {
@@ -143,7 +172,7 @@ Deno.serve(async (req) => {
       max_tokens: 16000,
       output_config: { effort: "medium" },
       system: SYSTEM,
-      messages: [{ role: "user", content }],
+      messages,
       // On a safety decline, the API retries on a suitable fallback model within the same call.
       betas: ["server-side-fallback-2026-07-01"],
       fallbacks: "default",

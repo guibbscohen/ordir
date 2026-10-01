@@ -100,6 +100,8 @@ Status key:
 | Moment | Animation | Reduce Motion | Engine | Status |
 | --- | --- | --- | --- | --- |
 | Ask sheet in a game | Slides up over that player's side with a spring; the backdrop dims | Fade | SwiftUI / CSS | Built (preview) |
+| Game search | The list of games (cover and name) drops open under the search bar; typing filters it | Instant | SwiftUI / CSS | Built (preview) |
+| Chat takes over | After asking, the game's chat rises over the whole screen; the question shows as a bubble at once | Fade | SwiftUI / CSS | Built (preview) |
 | Checking the rules | Orb "thinking": eyes glance up, mouth goes flat | Static | Canvas / CSS | Built |
 | Answer arrives | Orb switches to "speaking"; the answer rises; page chips stagger in (40 ms apart) | Fade | SwiftUI / CSS | Built (preview) |
 | Error | Field shakes once; message fades in | Message only | SwiftUI / CSS | New |
