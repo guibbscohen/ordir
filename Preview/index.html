@@ -34,7 +34,9 @@
   --font: "Google Sans Flex", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
   color-scheme: dark;
 }
-html, body { height: 100%; }
+/* --app-h: the real screen height when running from the Home Screen (set below), where iOS reports the window
+   one status bar shorter than the screen and would leave a black band at the bottom. */
+html, body { height: var(--app-h, 100%); }
 html { -webkit-text-size-adjust: 100%; touch-action: manipulation; }  /* no double-tap zoom on quick taps */
 body { margin: 0; }
 body {
@@ -468,7 +470,7 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 @media (max-width: 500px) {
   html, body { overflow: hidden; overscroll-behavior: none; }
   body { display: block; padding: 0; }
-  main { max-width: none; max-height: none; height: 100vh; height: 100dvh; }
+  main { max-width: none; max-height: none; height: 100vh; height: var(--app-h, 100dvh); }
   .phone { max-width: none; max-height: none; border: 0; border-radius: 0;
     padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
   footer { display: none; }  /* the same credits are on the Account tab */
@@ -1445,6 +1447,16 @@ document.addEventListener("click", (event) => {
 });
 // The opening plays once, then Home. Any tap, Enter, Space or Escape skips it.
 let introTimer = null;
+// From the Home Screen (with the status bar laid over the page), iOS reports the window one status bar shorter
+// than the screen. There the app takes the screen's real height instead, so nothing is left black at the bottom.
+function fitHomeScreenApp() {
+  if (!navigator.standalone) return;
+  const landscape = matchMedia("(orientation: landscape)").matches;
+  const height = landscape ? Math.min(screen.width, screen.height) : Math.max(screen.width, screen.height);
+  document.documentElement.style.setProperty("--app-h", `${Math.max(height, innerHeight)}px`);
+}
+fitHomeScreenApp();
+addEventListener("resize", fitHomeScreenApp);
 // The build, stamped by tools/build_preview.py (commit and date), so a phone can show which version it runs.
 const BUILD = "__BUILD__";
 // Layout info: a small live readout of the screen, safe-area insets and the opening's measurements. It stays on
@@ -1480,7 +1492,7 @@ function showLayoutInfo(on) {
     const bar = $(".tabbar")?.getBoundingClientRect();
     layoutInfo.el.textContent = [
       `version ${BUILD} · ${navigator.standalone ? "Home Screen app" : "browser"} · ${state.screen}`,
-      `window ${innerWidth}×${innerHeight} · zoom ${vv ? vv.scale.toFixed(2) : "?"} · page scroll ${Math.round(scrollY)}/${document.documentElement.scrollHeight}`,
+      `window ${innerWidth}×${innerHeight} · screen ${screen.width}×${screen.height} · app ${document.documentElement.style.getPropertyValue("--app-h") || "—"} · zoom ${vv ? vv.scale.toFixed(2) : "?"} · page scroll ${Math.round(scrollY)}/${document.documentElement.scrollHeight}`,
       `insets t${t} r${rt} b${b} l${l} · phone ${Math.round(r.left)},${Math.round(r.top)} ${Math.round(r.width)}×${Math.round(r.height)}`,
       bar ? `tab bar bottom ${Math.round(bar.bottom)} (screen ${innerHeight})` : "",
       introLog.length ? `opening: ${introLog.join(" → ")}` : "",
