@@ -99,3 +99,6 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   bottom; follow-ups keep context). Each game has one chat; the Ask tab lists them under "Your chats" to reopen.
 - 2026-10-01: Until TestFlight (needs the paid Apple Developer account), the phone test build is the online
   preview added to the Home Screen: full screen, black, with the orb icon (Preview/icons).
+- 2026-10-01: The preview must work as a Home Screen app on iPhone: edge to edge with no page scroll, clear of the
+  notch and home indicator, no zoom on taps or text fields (fields at 16px), and the opening laid out in
+  percentages so it survives the screen settling at launch. Test with emulated safe-area insets.
