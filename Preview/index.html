@@ -193,17 +193,25 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
    Tap to skip; Reduce Motion gets a short fade. Positions and timing are set from script (startIntro). */
 .intro { position: absolute; inset: 0; z-index: 5; overflow: hidden; cursor: pointer; }
 .intro-track { position: absolute; left: 0; top: 0; width: 100%; height: 200%; }
-.intro-scene { height: 50%; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+.intro-scene { height: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 6px; padding: 24px; text-align: center; }
-.intro-glow { position: absolute; left: -30%; right: -30%; top: 22%; height: 42%; pointer-events: none;
-  background: radial-gradient(40% 34% at 32% 48%, rgba(124, 92, 255, .5), transparent 70%),
-              radial-gradient(44% 36% at 70% 56%, rgba(37, 84, 214, .55), transparent 70%),
-              radial-gradient(34% 26% at 50% 66%, rgba(158, 199, 255, .28), transparent 70%);
-  animation: fade 1.2s ease both; }
+/* The world behind the opening and Home, two screens tall: Home's light is centred on the boundary, so it
+   spreads up into the opening and down into Home with no edge; the opening adds its own violet and blue
+   light lower down, which scrolls away with the camera. The bottom screen is exactly Home's background. */
+.intro-backdrop { position: absolute; left: 0; top: 0; width: 100%; height: 200%; display: grid; grid-template-rows: 1fr 1fr; pointer-events: none; }
+.ambient-above { background:
+  radial-gradient(75% 32% at 18% 100%, rgba(124, 92, 255, .30), transparent 70%),
+  radial-gradient(70% 36% at 88% 106%, rgba(37, 84, 214, .32), transparent 70%),
+  radial-gradient(45% 30% at 30% 74%, rgba(124, 92, 255, .42), transparent 70%),
+  radial-gradient(50% 28% at 72% 72%, rgba(37, 84, 214, .48), transparent 70%),
+  radial-gradient(36% 18% at 50% 82%, rgba(158, 199, 255, .2), transparent 70%),  /* all fade out above the boundary */
+  #000; }
 .intro-line { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none;
   filter: drop-shadow(0 0 3px rgba(158, 199, 255, .9)) drop-shadow(0 0 10px rgba(124, 92, 255, .7)); }
 .intro-line path { fill: none; stroke: var(--sparkle); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
-.intro-home { position: absolute; inset: 0; display: flex; flex-direction: column; transform: translateY(100%); }
+/* Home's layer sits exactly where Home will (clear of the notch and home bar), one screen down. */
+.intro-home { position: absolute; left: 0; right: 0; top: env(safe-area-inset-top); bottom: env(safe-area-inset-bottom);
+  display: flex; flex-direction: column; transform: translateY(200%); }
 .intro-home > .pane { flex: 1; }
 .intro-orb { width: 88px; height: 88px; margin-bottom: 18px; }
 .intro-orb .mascot { width: 88px; height: 88px; animation: orb-in .8s cubic-bezier(.2, .8, .2, 1) both; }
@@ -226,9 +234,9 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 .group { display: flex; flex-direction: column; gap: 12px; }
 .group h2 { margin: 0; font-size: 13px; font-weight: 600; color: var(--muted); }
 .home .scroll { padding-bottom: 112px; }  /* room to scroll past the floating bar */
-/* Home's ambient light: the opening's glow settles behind the header and fades to black before the cards;
-   a faint glow sits behind the glass bar so its blur has colour to work with. */
-.pane.home { background:
+/* Home's ambient light (on the whole screen, notch included): the opening's glow settles behind the header and
+   fades to black before the cards; a faint glow sits behind the glass bar so its blur has colour to work with. */
+.phone.home-bg, .ambient-below { background:
   radial-gradient(75% 32% at 18% 0%, rgba(124, 92, 255, .30), transparent 70%),
   radial-gradient(70% 36% at 88% 6%, rgba(37, 84, 214, .32), transparent 70%),
   radial-gradient(70% 20% at 50% 104%, rgba(124, 92, 255, .22), transparent 70%),
@@ -335,7 +343,7 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
   .intro-line { display: none; }
   .brand.build *, .bubble.build { animation: none !important; }
   .brand.build .trace { opacity: 0; }
-  .intro-glow { animation: fade .3s ease both; }
+
   .mascot .sp { animation: none !important; }
   .mascot .face * { animation: none !important; transition: none; }
   .switch, .switch::after { transition: none; }
@@ -636,7 +644,6 @@ function intro() {
   return `<div class="intro" data-act="skip-intro">
     <div class="intro-track">
       <div class="intro-scene"><div class="intro-orb">${mascot("idle")}</div><h1>Ordir</h1><p>Learn any turn, step by step.</p></div>
-      <div class="intro-glow" aria-hidden="true"></div>
       <svg class="intro-line" aria-hidden="true"><path pathLength="1"/></svg>
     </div>
     <button class="textbtn skip" data-act="skip-intro">Skip</button></div>`;
@@ -1042,10 +1049,11 @@ function render() {
     phone.classList.add("phone", "single", "intro-on");
     // A redraw mid-opening (the turn script arriving) refreshes Home's layer only, so the camera keeps moving.
     if (opening) phone.querySelector(".intro-home").innerHTML = home(false);
-    else phone.innerHTML = `<div class="intro-home">${home(false)}</div>` + intro();
+    else phone.innerHTML = `<div class="intro-backdrop" aria-hidden="true"><div class="ambient-above"></div><div class="ambient-below"></div></div>`
+      + `<div class="intro-home">${home(false)}</div>` + intro();
     phone.querySelector(".intro-home").inert = true;
   } else if (state.screen === "home") {
-    phone.className = "phone single"; phone.innerHTML = home(animate);
+    phone.className = "phone single home-bg"; phone.innerHTML = home(animate);
   } else if (!s) {
     phone.className = "phone single"; phone.innerHTML = (online.lobby.open ? lobby() : picker()) + ask;
   } else if (s.finished) {
@@ -1120,24 +1128,41 @@ function showHome(landed) {
   try { if (Object.keys(localStorage).some((k) => k.startsWith("sb-") && k.endsWith("-auth-token"))) connect(); } catch {}
 }
 // The camera move: the line draws from the orb down to Home's orb while the view glides one screen down.
-function startIntro() {
-  const phone = $("#phone"), path = $(".intro-line path"), from = $(".intro-orb"), to = $(".intro-home .brand .orb-btn");
-  if (state.screen !== "intro" || !path || !from || !to) return;
+// Lays the line from the orb to where Home's orb will be, in the two-screen world (the opening on top, Home
+// below). Run again once the font has loaded, in case Home's header moved.
+function layIntroLine() {
+  const phone = $("#phone"), path = $(".intro-line path"), from = $(".intro-orb"), layer = $(".intro-home");
+  const to = layer && layer.querySelector(".brand .orb-btn");
+  if (state.screen !== "intro" || !path || !from || !to) return null;
   const box = phone.getBoundingClientRect(), W = box.width, H = box.height;
-  const a = from.getBoundingClientRect(), b = to.getBoundingClientRect();  // Home's orb is already one screen down
-  const sx = a.right - box.left - 4, sy = a.top - box.top + a.height * 0.62;
+  const a = from.getBoundingClientRect(), b = to.getBoundingClientRect(), l = layer.getBoundingClientRect();
+  // Home's orb at rest is the layer's top inset (the notch) plus its place in the layer, one screen down.
+  const restY = (y) => H + parseFloat(getComputedStyle(layer).top) + (y - l.top);
+  // The opening's orb, in the opening's own (moving) frame.
+  const t = $(".intro-track").getBoundingClientRect();
+  const sx = a.right - t.left - 4, sy = a.top - t.top + a.height * 0.62;
   // End where the orb's outline starts (its right side), so the line carries on into tracing it.
-  const ex = b.left - box.left + b.width * 0.87, ey = b.top - box.top + b.height * 0.48;
+  const ex = b.left - t.left + b.width * 0.87, ey = restY(b.top + b.height * 0.48);
   const r = (n) => Math.round(n);
   $(".intro-line").setAttribute("viewBox", `0 0 ${r(W)} ${r(2 * H)}`);
   path.setAttribute("d", `M${r(sx)} ${r(sy)}C${r(W * 0.95)} ${r(sy + H * 0.14)} ${r(W * 0.98)} ${r(H * 0.72)} ${r(W * 0.62)} ${r(H * 0.9)}`
     + `S${r(ex + W * 0.35)} ${r(ey + H * 0.02)} ${r(ex)} ${r(ey)}`);
+  return H;
+}
+
+// The camera move: the line draws from the orb down to Home's orb while the view glides one screen down,
+// the backdrop, Home and the opening moving together.
+function startIntro() {
+  const H = layIntroLine();
+  if (H === null) return;
+  document.fonts?.ready.then(layIntroLine);
+  setTimeout(layIntroLine, 1200);  // before the camera moves, whatever has loaded by then
   const camera = { duration: 1600, delay: 1300, easing: "cubic-bezier(.65, 0, .35, 1)", fill: "both" };
-  path.animate([{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { duration: 2300, delay: 600, easing: "cubic-bezier(.4, 0, .2, 1)", fill: "both" });
+  $(".intro-line path").animate([{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { duration: 2300, delay: 600, easing: "cubic-bezier(.4, 0, .2, 1)", fill: "both" });
   $(".intro-track").animate([{ transform: "translateY(0)" }, { transform: `translateY(${-H}px)` }], camera);
+  $(".intro-backdrop").animate([{ transform: "translateY(0)" }, { transform: `translateY(${-H}px)` }], camera);
   $(".intro-home").animate([{ transform: `translateY(${H}px)` }, { transform: "translateY(0)" }], camera);
   $(".intro .skip").animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, delay: 1300, fill: "forwards" });
-  $(".intro-glow").animate([{ opacity: 1 }, { opacity: 0 }], { duration: 500, delay: 2500, fill: "forwards" });
   introTimer = setTimeout(() => showHome(true), 2950);
 }
 document.addEventListener("keydown", (event) => {

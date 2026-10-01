@@ -79,7 +79,9 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
 - 2026-10-01: The opening is one continuous camera move down to Home (never a cut or fade), inspired by
   Ripplix's "Happier" splash: the small orb and name on black above a deep blue/violet glow, a calm glowing
   line drawn from the orb down the screen, the view gliding down through the colours to Home waiting one
-  screen below, and the line ending at Home's orb. Tap to skip; a short fade with Reduce Motion.
+  screen below, and the line ending at Home's orb. Tap to skip; a short fade with Reduce Motion. The two
+  screens are one world: one continuous background (Home's light centred on the boundary, no seams or
+  resets), and Home's layer sits exactly where Home will (clear of the notch) so the line meets the orb.
 - 2026-10-01: When the opening reaches Home, the line that leads down "builds" Home's orb (traces its outline,
   fills it, sparkles pop, the face appears). Home's header has no tagline: once the orb is built, "Ask me a
   rules question" appears under "Ordir", and a centered speech bubble from the orb shows a phrase of the day
