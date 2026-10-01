@@ -569,6 +569,8 @@ private struct HandoffView: View {
                 Text("Next: \(stepTitle)")
                     .font(.body)
                     .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
             }
             Spacer(minLength: 0)
             Button(action: ready) {
@@ -734,9 +736,11 @@ private struct StepCard: View {
                         Text(context)
                             .font(.footnote.weight(.semibold))
                             .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                     Text(title)
                         .font(.title3.weight(.semibold))
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 .accessibilityElement(children: .combine)
                 .accessibilityAddTraits(.isHeader)
@@ -751,7 +755,9 @@ private struct StepCard: View {
                     Button(action: startBattle) {
                         Label("Start a battle", systemImage: "shield.lefthalf.filled")
                             .font(.subheadline.weight(.semibold))
+                            .fixedSize(horizontal: false, vertical: true)
                             .frame(minHeight: 44)
+                            .contentShape(Rectangle())
                     }
                     .accessibilityHint("Walks both players through the battle, then returns to this turn")
                 }
@@ -1159,21 +1165,19 @@ private struct TextButtonStyle: ButtonStyle {
     }
 }
 
-/// A secondary button beside the primary one; stacked above it when large text leaves no room.
+/// A secondary button beside the primary one; stacked above it at accessibility text sizes.
 private struct ActionRow<Secondary: View, Primary: View>: View {
     @ViewBuilder let secondary: Secondary
     @ViewBuilder let primary: Primary
+    @Environment(\.dynamicTypeSize) private var typeSize
 
     var body: some View {
-        ViewThatFits(in: .horizontal) {
-            HStack(spacing: 12) {
-                secondary
-                primary
-            }
-            VStack(spacing: 8) {
-                secondary
-                primary
-            }
+        let layout = typeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(spacing: 8))
+            : AnyLayout(HStackLayout(spacing: 12))
+        layout {
+            secondary
+            primary
         }
     }
 }
@@ -1181,6 +1185,8 @@ private struct ActionRow<Secondary: View, Primary: View>: View {
 private struct PrimaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
+            .multilineTextAlignment(.center)
+            .fixedSize(horizontal: false, vertical: true)
             .foregroundStyle(.background)
             .background(
                 Color.primary.opacity(configuration.isPressed ? 0.7 : 1),
