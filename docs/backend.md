@@ -15,12 +15,15 @@ The database, the `rules-answer` Edge Function and the table functions are alrea
 
 ## Sign-in emails
 
-3. **Show the code in the email.** Supabase → Authentication → Emails → **Magic Link** template.
-   Make sure it contains `{{ .Token }}`, for example: `Your Ordir code is {{ .Token }}`.
+3. **Show the code in the email.** Supabase → Authentication → Emails → Templates: paste
+   `docs/email/sign-in-code.html` into **Magic Link** and **Confirm signup** (subject: `Your Ordir code`).
+   It shows `{{ .Token }}`, the 6-digit code; its orb image is served with the preview on GitHub Pages.
 4. **Let friends sign in.** Supabase's built-in email only reaches members of your Supabase
-   organization, a few times an hour.
-   - Before inviting others, add a custom SMTP sender under Authentication → Emails → SMTP Settings.
-   - A free Resend or Postmark account works.
+   organization, a few times an hour, so Ordir sends through Resend (domain `ordir.devocto.com`, verified).
+   - Resend → API Keys: a key with sending access to that domain.
+   - Supabase → Authentication → Emails → SMTP Settings: host `smtp.resend.com`, port `465`, username
+     `resend`, password the API key, sender `no-reply@ordir.devocto.com`, name `Ordir`.
+   - Authentication → Rate Limits: raise the email limit (e.g. 30 an hour).
 
 ## Online preview
 
