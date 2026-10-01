@@ -75,9 +75,11 @@ private struct SetupPicker: View {
                 HStack(spacing: 14) {
                     OrdirMascotView()
                         .frame(width: 48, height: 48)
+                        .accessibilityHidden(true)
                     Text("How are you playing?")
                         .font(.title3.weight(.semibold))
                         .fixedSize(horizontal: false, vertical: true)
+                        .accessibilityAddTraits(.isHeader)
                 }
                 VStack(spacing: 12) {
                     modeRow(.table, title: "One phone on the table", detail: "Split screen: the top half faces the player across the table.")
@@ -86,6 +88,7 @@ private struct SetupPicker: View {
                 Text("Which expansions are you playing with?")
                     .font(.title3.weight(.semibold))
                     .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityAddTraits(.isHeader)
                 VStack(spacing: 12) {
                     ForEach(script.expansions) { expansion in
                         Toggle(isOn: binding(for: expansion.id)) {
@@ -224,13 +227,20 @@ private struct TurnGuideRunner: View {
 
     private var farSeat: TurnScript.Side { nearSeat == .atreides ? .harkonnen : .atreides }
 
+    /// VoiceOver starts with the near half, then the bar, then the far half; when a step is for both
+    /// players, the far half's identical copy is skipped (unless it holds an event checklist).
     private var splitScreen: some View {
         VStack(spacing: 0) {
             panel(for: farSeat, isFar: true)
                 .rotationEffect(.degrees(180))
+                .accessibilityHidden(session.step.side == .both && session.pendingEvent == nil)
+                .accessibilitySortPriority(0)
             centerBar
+                .accessibilitySortPriority(1)
             panel(for: nearSeat, isFar: false)
+                .accessibilitySortPriority(2)
         }
+        .accessibilityElement(children: .contain)
     }
 
     private func panel(for seat: TurnScript.Side, isFar: Bool) -> some View {
@@ -289,9 +299,10 @@ private struct TurnGuideRunner: View {
                 .font(.footnote.monospacedDigit())
                 .foregroundStyle(.secondary)
                 .frame(minWidth: 44)
+                .accessibilityLabel(Text("Time on this step: ") + Text(session.stepStartedAt, style: .timer))
         }
         .padding(.horizontal, 8)
-        .frame(height: 52)
+        .frame(minHeight: 52)
         .background(.bar)
         .overlay(alignment: .bottom) { Divider() }
     }
@@ -309,6 +320,7 @@ private struct TurnGuideRunner: View {
                 phaseLabel
                     .accessibilityIdentifier("guide-progress")
             }
+            .layoutPriority(1)
             Spacer(minLength: 8)
             barButton("Previous step", systemImage: "arrow.uturn.backward") {
                 withAnimation(stepAnimation) { session.goBack() }
@@ -319,7 +331,7 @@ private struct TurnGuideRunner: View {
             }
         }
         .padding(.horizontal, 8)
-        .frame(height: 60)
+        .frame(minHeight: 60)
         .background(.bar)
         .overlay(alignment: .top) { Divider() }
         .overlay(alignment: .bottom) { Divider() }
@@ -338,21 +350,23 @@ private struct TurnGuideRunner: View {
         Button(action: action) {
             Image(systemName: systemImage)
                 .font(.body.weight(.medium))
-                .frame(width: 44, height: 44)
+                .frame(minWidth: 44, minHeight: 44)
         }
         .accessibilityLabel(title)
     }
 
+    /// Phase over progress, wrapping rather than clipping at large text sizes. The progress uses the
+    /// primary colour: secondary text falls below 4.5:1 on the bar's translucent background.
     private var phaseLabel: some View {
-        HStack(spacing: 6) {
+        VStack(spacing: 1) {
             Text(session.phase.title)
                 .font(.footnote.weight(.semibold))
             Text(progressText)
                 .font(.caption.monospacedDigit())
-                .foregroundStyle(.secondary)
         }
-        .lineLimit(1)
-        .minimumScaleFactor(0.8)
+        .multilineTextAlignment(.center)
+        .fixedSize(horizontal: false, vertical: true)
+        .layoutPriority(1)
         .accessibilityElement(children: .combine)
     }
 
@@ -380,8 +394,10 @@ private struct TurnGuideRunner: View {
         VStack(spacing: 20) {
             OrdirMascotView()
                 .frame(height: 96)
+                .accessibilityHidden(true)
             Text("Battle over")
                 .font(.title2.weight(.semibold))
+                .accessibilityAddTraits(.isHeader)
             Text("Back to the turn: finish your Action, then tap Done.")
                 .font(.body)
                 .foregroundStyle(.secondary)
@@ -404,8 +420,10 @@ private struct TurnGuideRunner: View {
         VStack(spacing: 20) {
             OrdirMascotView()
                 .frame(height: 96)
+                .accessibilityHidden(true)
             Text("Game over")
                 .font(.title2.weight(.semibold))
+                .accessibilityAddTraits(.isHeader)
             if let winner = session.winner {
                 Text("The \(Text(winner.displayName).foregroundColor(winner.color)) win")
                     .font(.title3.weight(.semibold))
@@ -424,8 +442,7 @@ private struct TurnGuideRunner: View {
             .buttonStyle(PrimaryButtonStyle())
             .padding(.top, 12)
             Button("Back to games") { dismiss() }
-                .font(.subheadline.weight(.semibold))
-                .frame(minHeight: 44)
+                .buttonStyle(TextButtonStyle())
         }
         .padding(32)
         .transition(stepTransition)
@@ -542,13 +559,18 @@ private struct HandoffView: View {
             Spacer(minLength: 0)
             OrdirMascotView(isThinking: true)
                 .frame(height: 80)
+                .accessibilityHidden(true)
             VStack(spacing: 6) {
                 Text("Pass the phone to the \(Text(side.displayName).foregroundColor(side.color))")
                     .font(.title2.weight(.semibold))
                     .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityAddTraits(.isHeader)
                 Text("Next: \(stepTitle)")
                     .font(.body)
                     .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
             }
             Spacer(minLength: 0)
             Button(action: ready) {
@@ -667,16 +689,16 @@ private struct SeatPanel: View {
         .padding(.bottom, 8)
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(seat.displayName) side")
+        .accessibilityAddTraits(.isHeader)
     }
 
     private var actions: some View {
-        HStack(spacing: 12) {
+        ActionRow {
             if let loop = phase.loop {
                 Button(loop.endLabel) { passTurn(then: endLoop) }
-                    .font(.subheadline.weight(.semibold))
-                    .multilineTextAlignment(.center)
-                    .frame(minHeight: 44)
+                    .buttonStyle(TextButtonStyle())
             }
+        } primary: {
             Button { passTurn(then: done) } label: {
                 Text("Done")
                     .font(.headline)
@@ -708,14 +730,17 @@ private struct StepCard: View {
             HStack(spacing: 14) {
                 OrdirMascotView(isSpeaking: isSpeaking)
                     .frame(width: 48, height: 48)
+                    .accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 2) {
                     if let context {
                         Text(context)
                             .font(.footnote.weight(.semibold))
                             .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                     Text(title)
                         .font(.title3.weight(.semibold))
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 .accessibilityElement(children: .combine)
                 .accessibilityAddTraits(.isHeader)
@@ -730,7 +755,9 @@ private struct StepCard: View {
                     Button(action: startBattle) {
                         Label("Start a battle", systemImage: "shield.lefthalf.filled")
                             .font(.subheadline.weight(.semibold))
+                            .fixedSize(horizontal: false, vertical: true)
                             .frame(minHeight: 44)
+                            .contentShape(Rectangle())
                     }
                     .accessibilityHint("Walks both players through the battle, then returns to this turn")
                 }
@@ -746,8 +773,7 @@ private struct StepCard: View {
                     CitationList(script: script, citations: addition.citations)
                     if let id = addition.sets, let state = script.state(id) {
                         Button(state.markLabel) { markState(id) }
-                            .font(.subheadline.weight(.semibold))
-                            .frame(minHeight: 44)
+                            .buttonStyle(TextButtonStyle())
                     }
                 }
             }
@@ -820,15 +846,19 @@ private struct EventChecklist: View {
     let state: TurnScript.GameState
     let enlarge: (TurnScript.SourceImage) -> Void
     let done: () -> Void
+    @AccessibilityFocusState private var headingFocused: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 12) {
                 OrdirMascotView(isSpeaking: true)
                     .frame(width: 40, height: 40)
+                    .accessibilityHidden(true)
                 Text(state.event.title)
                     .font(.title3.weight(.semibold))
+                    .fixedSize(horizontal: false, vertical: true)
                     .accessibilityAddTraits(.isHeader)
+                    .accessibilityFocused($headingFocused)
             }
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
@@ -851,6 +881,11 @@ private struct EventChecklist: View {
         .padding(.vertical, 12)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background(.background)
+        .task {
+            // Let the overlay settle before VoiceOver focus moves onto it.
+            try? await Task.sleep(for: .milliseconds(300))
+            headingFocused = true
+        }
     }
 }
 
@@ -860,15 +895,19 @@ private struct PassTurnChecklist: View {
     let reminders: [TurnScript.Reminder]
     let pass: () -> Void
     let cancel: () -> Void
+    @AccessibilityFocusState private var headingFocused: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(spacing: 12) {
                 OrdirMascotView(isSpeaking: true)
                     .frame(width: 40, height: 40)
+                    .accessibilityHidden(true)
                 Text("Before you pass the turn")
                     .font(.title3.weight(.semibold))
+                    .fixedSize(horizontal: false, vertical: true)
                     .accessibilityAddTraits(.isHeader)
+                    .accessibilityFocused($headingFocused)
             }
             ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
@@ -877,10 +916,10 @@ private struct PassTurnChecklist: View {
                 }
             }
             .scrollIndicators(.hidden)
-            HStack(spacing: 12) {
+            ActionRow {
                 Button("Not yet", action: cancel)
-                    .font(.subheadline.weight(.semibold))
-                    .frame(minHeight: 44)
+                    .buttonStyle(TextButtonStyle())
+            } primary: {
                 Button(action: pass) {
                     Text("Pass the turn")
                         .font(.headline)
@@ -893,6 +932,11 @@ private struct PassTurnChecklist: View {
         .padding(.vertical, 12)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background(.background)
+        .task {
+            // Let the overlay settle before VoiceOver focus moves onto it.
+            try? await Task.sleep(for: .milliseconds(300))
+            headingFocused = true
+        }
     }
 }
 
@@ -921,7 +965,7 @@ private struct ReminderChecklist: View {
                     .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                .accessibilityAddTraits(isChecked ? .isSelected : [])
+                .accessibilityAddTraits(isChecked ? [.isToggle, .isSelected] : [.isToggle])
             }
         }
     }
@@ -945,10 +989,11 @@ private struct PictureStrip: View {
                                 .frame(width: 176, height: 112)
                                 .background(Color(white: 0.12))
                                 .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                                .accessibilityHidden(true)
                             Text(picture.caption)
                                 .font(.caption)
                                 .foregroundStyle(.primary)
-                                .lineLimit(2)
+                                .fixedSize(horizontal: false, vertical: true)
                             Text(script.label(for: picture))
                                 .font(.caption2)
                                 .foregroundStyle(.secondary)
@@ -1029,22 +1074,30 @@ private struct WaitingView: View {
     let stepTitle: String
     let startedAt: Date
 
+    /// Centred in the half, and scrollable when large text makes it taller than the half.
     var body: some View {
-        VStack(spacing: 14) {
-            Spacer(minLength: 0)
-            OrdirMascotView(isThinking: true)
-                .frame(height: 64)
-            line
-                .font(.title3)
-                .multilineTextAlignment(.center)
-            Text(startedAt, style: .timer)
-                .font(.title2.monospacedDigit())
-                .foregroundStyle(.secondary)
-            Spacer(minLength: 0)
+        GeometryReader { geometry in
+            ScrollView {
+                VStack(spacing: 14) {
+                    OrdirMascotView(isThinking: true)
+                        .frame(height: 64)
+                        .accessibilityHidden(true)
+                    line
+                        .font(.title3)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Text(startedAt, style: .timer)
+                        .font(.title2.monospacedDigit())
+                        .foregroundStyle(.secondary)
+                }
+                .padding(.horizontal, 24)
+                .padding(.vertical, 16)
+                .frame(maxWidth: .infinity, minHeight: geometry.size.height)
+                .accessibilityElement(children: .combine)
+            }
+            .scrollBounceBehavior(.basedOnSize)
+            .scrollIndicators(.hidden)
         }
-        .padding(.horizontal, 24)
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .accessibilityElement(children: .combine)
     }
 
     private var line: Text {
@@ -1098,9 +1151,42 @@ private struct EnlargedImageView: View {
 
 // MARK: - Styling
 
+/// A secondary text button whose whole 44-point row is tappable, wrapping instead of truncating.
+private struct TextButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.subheadline.weight(.semibold))
+            .foregroundStyle(Color.accentColor)
+            .multilineTextAlignment(.center)
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(minWidth: 44, minHeight: 44)
+            .contentShape(Rectangle())
+            .opacity(configuration.isPressed ? 0.6 : 1)
+    }
+}
+
+/// A secondary button beside the primary one; stacked above it at accessibility text sizes.
+private struct ActionRow<Secondary: View, Primary: View>: View {
+    @ViewBuilder let secondary: Secondary
+    @ViewBuilder let primary: Primary
+    @Environment(\.dynamicTypeSize) private var typeSize
+
+    var body: some View {
+        let layout = typeSize.isAccessibilitySize
+            ? AnyLayout(VStackLayout(spacing: 8))
+            : AnyLayout(HStackLayout(spacing: 12))
+        layout {
+            secondary
+            primary
+        }
+    }
+}
+
 private struct PrimaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
+            .multilineTextAlignment(.center)
+            .fixedSize(horizontal: false, vertical: true)
             .foregroundStyle(.background)
             .background(
                 Color.primary.opacity(configuration.isPressed ? 0.7 : 1),

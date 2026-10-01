@@ -4,6 +4,10 @@ name: iOS walkthrough
 # the simulator and uploads screenshots of every step. Slow on macOS runners, which cost 10x.
 on:
   workflow_dispatch:
+    inputs:
+      tests:
+        description: "Tests to run, e.g. OrdirUITests/AccessibilityAuditTests (default: all UI tests)"
+        default: "OrdirUITests"
 
 concurrency:
   group: ios-walkthrough-${{ github.ref }}
@@ -39,7 +43,7 @@ jobs:
             -scheme Ordir \
             -destination "id=${{ steps.sim.outputs.udid }}" \
             -derivedDataPath build \
-            -only-testing:OrdirUITests \
+            -only-testing:"${{ inputs.tests }}" \
             CODE_SIGNING_ALLOWED=NO \
             2>&1 | tee test.log | grep -E "Test Case .*(passed|failed)|error:|Executed|\*\* TEST" || true
           grep -q "\*\* TEST SUCCEEDED \*\*" test.log

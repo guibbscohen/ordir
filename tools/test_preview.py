@@ -5,13 +5,15 @@ Three games, each played into round 2 and then ended from the Game menu:
 - one phone on the table, base game, with a two-round battle;
 - one phone on the table, every expansion, marking the Smugglers alliance;
 - pass the phone, base game.
-Fails on any page error, failed request or step that doesn't advance. Run from the repo root after
-tools/build_preview.py:
+Fails on any page error, failed request or step that doesn't advance. Accessibility is checked on
+the way: axe-core (WCAG 2.2 AA and best practices) scans each kind of screen once per game, focus
+must land on each new step and dialog, and Escape must close the Game menu. Run from the repo root
+after tools/build_preview.py:
 
     python3 tools/test_preview.py
 
-Needs Playwright (`pip install playwright`, then `python -m playwright install chromium`, or set
-CHROMIUM_PATH to an installed Chromium).
+Needs Playwright and axe (`pip install playwright axe-playwright-python`, then
+`python -m playwright install chromium`, or set CHROMIUM_PATH to an installed Chromium).
 """
 import functools
 import http.server
@@ -20,11 +22,14 @@ import pathlib
 import sys
 import threading
 
+from axe_playwright_python.sync_playwright import Axe
 from playwright.sync_api import sync_playwright
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DIST = ROOT / "Preview" / "dist"
 LABEL = ".phase-label:not(.mirror)"
+AXE = Axe()
+AXE_RULES = {"runOnly": {"type": "tag", "values": ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"]}}
 
 
 class Failed(Exception):
@@ -52,6 +57,26 @@ def label(page):
     return page.text_content(LABEL).strip()
 
 
+class Accessibility:
+    """Scans each kind of screen once per game with axe and records every violation."""
+
+    def __init__(self, page, problems):
+        self.page, self.problems, self.seen = page, problems, set()
+
+    def scan(self, kind):
+        if kind in self.seen:
+            return
+        self.seen.add(kind)
+        self.page.wait_for_timeout(400)  # let the step's fade-in finish so colours are final
+        for violation in AXE.run(self.page, options=AXE_RULES).response["violations"]:
+            targets = ", ".join(" ".join(map(str, node["target"])) for node in violation["nodes"][:3])
+            self.problems.append(f"a11y on {kind}: {violation['id']} ({violation['help']}) at {targets}")
+
+
+def focused(page, selector):
+    return page.evaluate("(sel) => !!document.activeElement && document.activeElement.matches(sel)", selector)
+
+
 def tap_if(page, selector):
     """Taps the first visible match, if any."""
     element = page.query_selector(selector)
@@ -61,8 +86,9 @@ def tap_if(page, selector):
     return False
 
 
-def fight_battle(page):
+def fight_battle(page, a11y):
     page.click("[data-act=battle]")
+    a11y.scan("battle")
     combat_taps = 0
     for _ in range(80):
         if tap_if(page, ".done-pane [data-act=leave-battle]"):
@@ -79,21 +105,26 @@ def fight_battle(page):
     raise Failed("battle never finished")
 
 
-def play(page, url, mode="table", expansions=(), fights_battle=False):
+def play(page, url, problems, mode="table", expansions=(), fights_battle=False):
+    a11y = Accessibility(page, problems)
     page.goto(url)
     page.wait_for_selector("[data-act=start]")
+    a11y.scan("setup picker")
     if mode == "pass":
         page.click("[data-mode=pass]")
     for expansion in expansions:
         page.click(f"label[for=exp-{expansion}]")
         check(page.is_checked(f"#exp-{expansion}"), f"{expansion} did not switch on")
     page.click("[data-act=start]")
+    check(focused(page, ".title"), "focus did not move to the first step's title")
 
     steps = turns_in_loop = handoffs = 0
     fought = marked = False
     while "Round 2" not in label(page):
         steps += 1
         check(steps < 250, f"never reached round 2 (stuck on {label(page)})")
+        if page.query_selector("[data-act=handoff-ready]"):
+            a11y.scan("handoff")
         if tap_if(page, "[data-act=handoff-ready]"):
             handoffs += 1
             continue
@@ -103,10 +134,11 @@ def play(page, url, mode="table", expansions=(), fights_battle=False):
             marked = True
             continue
         before = label(page)
+        a11y.scan("step")
         end = page.query_selector("[data-act=end-loop]")
         if fights_battle and not fought and end and page.query_selector("[data-act=battle]"):
             fought = True
-            fight_battle(page)
+            fight_battle(page, a11y)
             continue
         if end and turns_in_loop >= 2:
             end.click()
@@ -117,12 +149,22 @@ def play(page, url, mode="table", expansions=(), fights_battle=False):
             page.click("[data-act=done] >> nth=0")
         # Action turns stop at the "Before you pass the turn" checklist.
         if end:
+            check(focused(page, '[role="dialog"] h2'), f"focus did not move to the checklist on {before}")
+            a11y.scan("turn-change checklist")
             check(tap_if(page, "[data-act=pass]"), f"no turn-change checklist on {before}")
         check(label(page) != before or page.query_selector("[data-act=handoff-ready]"), f"Done did not advance past {before}")
+        check(focused(page, ".title, .handoff h2"), f"focus did not move to the step after {before}")
 
+    page.click("[data-act=menu]")
+    check(focused(page, ".menu h2"), "focus did not move to the Game menu")
+    a11y.scan("game menu")
+    page.keyboard.press("Escape")
+    check(not page.query_selector(".menu"), "Escape did not close the Game menu")
+    check(focused(page, "[data-act=menu]"), "focus did not return to the Game menu button")
     page.click("[data-act=menu]")
     page.click("[data-winner=atreides]")
     check("Game over" in page.text_content("#phone"), "game did not end")
+    a11y.scan("game over")
     if fights_battle:
         check(fought, "never offered to start a battle")
     if expansions:
@@ -154,9 +196,9 @@ def main():
             page.on("requestfailed", lambda r: problems.append(f"request failed: {r.url}"))
             page.on("response", lambda r: r.status >= 400 and problems.append(f"HTTP {r.status}: {r.url}"))
             try:
-                steps = play(page, url, **options)
+                steps = play(page, url, problems, **options)
                 check(not problems, "; ".join(dict.fromkeys(problems)))
-                print(f"ok   {name}: {steps} steps into round 2, then Game over")
+                print(f"ok   {name}: {steps} steps into round 2, then Game over; no accessibility issues")
             except Failed as error:
                 failed = True
                 page.screenshot(path=str(DIST / f"failure-{number}.png"))

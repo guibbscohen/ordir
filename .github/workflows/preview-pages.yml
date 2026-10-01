@@ -1,0 +1,47 @@
+name: Preview on GitHub Pages
+
+# Publishes the browser preview (Preview/dist, built from the app's turn script and pictures) to
+# GitHub Pages whenever main changes it, so it can be opened on any phone. Linux only, so cheap.
+# One-time setup: Settings → Pages → Build and deployment → Source: GitHub Actions.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "Preview/**"
+      - "Ordir/Games/**"
+      - "Ordir/Assets.xcassets/**"
+      - "tools/build_preview.py"
+      - ".github/workflows/preview-pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: preview-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - name: Build the preview
+        run: python3 tools/build_preview.py
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: Preview/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

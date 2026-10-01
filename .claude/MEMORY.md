@@ -46,3 +46,13 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
 - 2026-09-30: Guides run setup once, then repeat rounds until the players end the game from the Game menu
   (who won). The app only tracks game state that changes which steps apply (e.g. Smugglers allied); scores
   and positions stay on the physical board.
+- 2026-10-01: Backend is the Supabase project "Ordir" (ref dhaeqyvdjkhbedqsnqzj, sa-east-1, DevOcto org;
+  OftalmoPronto was paused to free the slot). Secrets (e.g. ANTHROPIC_API_KEY) live only in Supabase.
+- 2026-10-01: Rules questions are answered by Claude Opus 5.5 in a Supabase Edge Function, from the
+  official source texts only, with page citations on every claim; FAQ wins over the rulebook; if the
+  sources don't cover it, say so. Answers follow the itemized style (lead line + bullets).
+- 2026-10-01: Sign-in is email one-time code now; Sign in with Apple is added once the Apple Developer
+  account exists. Own-phone multiplayer (join a table by code, each player sees their side) ships in
+  the browser preview and the app, on the same backend.
+- 2026-10-01: The online preview (sign-in, rules questions, own-phone tables) is hosted on GitHub Pages,
+  built from main by a Linux job; the private claude.ai artifact link stays for the offline guide.

@@ -2,7 +2,7 @@ name: Turn scripts
 
 # Cheap Linux checks on every push: every citation's excerpt is on its cited PDF page and every
 # picture has its asset, and the browser preview, built from the same data, plays through in
-# Chromium. The macOS jobs cost 10x the minutes, so they run less often.
+# Chromium with accessibility checks. The macOS jobs cost 10x the minutes, so they run less often.
 on:
   push:
   pull_request:
@@ -35,7 +35,7 @@ jobs:
       - name: Build the browser preview and play it in Chromium
         run: |
           python3 -m venv .venv
-          .venv/bin/pip install --quiet playwright==1.63.0
+          .venv/bin/pip install --quiet playwright==1.63.0 axe-playwright-python==0.1.8
           .venv/bin/python -m playwright install --with-deps chromium
           .venv/bin/python tools/build_preview.py
           .venv/bin/python tools/test_preview.py

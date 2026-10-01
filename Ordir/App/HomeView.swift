@@ -48,6 +48,7 @@ struct HomeView: View {
                 .padding(.top, 48)
             Text("Ordir")
                 .font(.largeTitle.weight(.semibold))
+                .accessibilityAddTraits(.isHeader)
             Text("Learn any turn, step by step.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
@@ -58,6 +59,7 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Choose a game")
                 .font(.headline)
+                .accessibilityAddTraits(.isHeader)
             ForEach(OrdirGame.allCases) { game in
                 NavigationLink(value: game) {
                     GameRow(game: game)
