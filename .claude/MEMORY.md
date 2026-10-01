@@ -75,8 +75,8 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   phone frame), with a restrained type scale and generous spacing; nothing should feel zoomed in or squished.
 - 2026-10-01: The orb mascot has a minimalist face: two dot eyes and a small one-line smile, turned slightly
   up and to the right as if seen from the side (far eye smaller). It blinks; the smile follows
-  idle/thinking/speaking; still with Reduce Motion. The preview's Home Screen icon is the orb with its face on the
-  navy background (Preview/icons/icon.svg); the native app icon keeps its original art until the user decides.
+  idle/thinking/speaking; still with Reduce Motion. The icon (app and preview Home Screen) is the orb with its
+  face on the navy background, rendered from Preview/icons/icon.svg into AppIcon.png and Preview/icons.
 - 2026-10-01: The opening is one continuous camera move down to Home (never a cut or fade), inspired by
   Ripplix's "Happier" splash: the small orb and name on black above a deep blue/violet glow, a calm glowing
   line drawn from the orb down the screen, the view gliding down through the colours to Home waiting one
