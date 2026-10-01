@@ -56,8 +56,8 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   the browser preview and the app, on the same backend.
 - 2026-10-01: The online preview (sign-in, rules questions, own-phone tables) is hosted on GitHub Pages,
   built from main by a Linux job; the private claude.ai artifact link stays for the offline guide.
-- 2026-10-01: Launch flow (preview and app): a ~1.5 s animated opening (mascot fades in, sparkles twinkle,
-  "Ordir" + tagline), tap to skip, a quick fade with Reduce Motion; then Home. Home shows the game list
+- 2026-10-01: Launch flow (preview and app): the animated opening (~3 s, described below), tap to skip, a
+  short fade with Reduce Motion; then Home. Home shows the game list
   (unfinished games as greyed "Coming soon" cards), Ask a rules question, Account (sign in/out), and Join a
   table by code.
 - 2026-10-01: Home navigation is a floating "liquid glass" bar at the bottom (translucent blur, rounded pill,
@@ -71,3 +71,10 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
 - 2026-10-01: Animations follow `docs/animations.md` (every interaction's motion and its Reduce Motion
   version). Illustrated one-off moments use Lottie (airbnb/lottie-ios, via lottie-spm; lottie-web in the
   preview); layout motion stays SwiftUI/CSS; the orb stays procedural.
+- 2026-10-01: Give the UI breathing room: on a phone the preview fills the screen edge to edge (no
+  phone frame), with a restrained type scale and generous spacing; nothing should feel zoomed in or squished.
+- 2026-10-01: The orb mascot has a minimalist face: two dot eyes and a small one-line smile (blinks; the
+  smile follows idle/thinking/speaking; still with Reduce Motion). The app icon keeps its original art.
+- 2026-10-01: The opening is a short story that ends on Home, inspired by Ripplix's "Happier" splash: a
+  black/deep-blue/violet gradient, a glowing line drawn from the orb, the gradient settling to black and the
+  orb (kept small and elegant) gliding into Home's header. Tap to skip; crossfade with Reduce Motion.

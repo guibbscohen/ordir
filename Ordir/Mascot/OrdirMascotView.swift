@@ -110,12 +110,21 @@ enum OrdirMascotGeometry {
         var path: Path     // centred on the origin
     }
 
-    // In animation order: main outer, medium inner, tiny inner.
+    // In animation order: main outer, medium inner, tiny inner. The medium and tiny sparkles sit
+    // (+4, -46) and (+28, +28) from the logo's positions, clear of the face; the preview matches.
     static let sparkles: [Sparkle] = [
         Sparkle(center: CGPoint(x: 225.988, y: 104.436), size: 123.0, path: outerSparkle),
-        Sparkle(center: CGPoint(x: 116.634, y: 151.687), size: 63.8, path: mediumSparkle),
-        Sparkle(center: CGPoint(x: 171.092, y: 195.885), size: 34.4, path: tinySparkle),
+        Sparkle(center: CGPoint(x: 120.634, y: 105.687), size: 63.8, path: mediumSparkle),
+        Sparkle(center: CGPoint(x: 199.092, y: 223.885), size: 34.4, path: tinySparkle),
     ]
+
+    /// The face: two dot eyes and a one-line smile (a quadratic curve), drawn in the foreground colour.
+    static let eyes = [CGPoint(x: 128.715, y: 164.465), CGPoint(x: 179.715, y: 164.465)]
+    static let eyeRadius: CGFloat = 10
+    static let mouthStart = CGPoint(x: 135.715, y: 193.465)
+    static let mouthControl = CGPoint(x: 154.215, y: 208.465)
+    static let mouthEnd = CGPoint(x: 172.715, y: 193.465)
+    static let mouthWidth: CGFloat = 8
 
     // outerSparkle: centre (225.988, 104.436), size 123.0×116.0
     static let outerSparkle: Path = {
@@ -253,6 +262,9 @@ private struct MascotFrame {
 
     var sparkles: [SparkleState]
     var orbGlow: Double  // 0...1, light inside the crystal ball
+    var blink: Double = 0       // 0 open ... 1 closed
+    var smile: Double = 1       // depth of the smile: 1 resting, < 1 flatter, > 1 open
+    var glance: Double = 0      // 0 ahead ... 1 looking up and to the right
 
     static func blended(transition: ModeTransition, to mode: OrdirMascotMode, at date: Date, reduceMotion: Bool) -> MascotFrame {
         let t = date.timeIntervalSinceReferenceDate
@@ -264,6 +276,25 @@ private struct MascotFrame {
     }
 
     static func frame(for mode: OrdirMascotMode, time t: Double, reduceMotion: Bool) -> MascotFrame {
+        var frame = sparkleFrame(for: mode, time: t, reduceMotion: reduceMotion)
+        guard !reduceMotion else {
+            frame.smile = mode == .thinking ? 0.25 : 1
+            return frame
+        }
+        // A quick blink every 4.6 s, in every mode.
+        let phase = t.truncatingRemainder(dividingBy: 4.6)
+        frame.blink = phase > 4.42 ? max(0, 1 - abs(phase - 4.5) / 0.08) : 0
+        switch mode {
+        case .idle: break
+        case .speaking: frame.smile = 0.6 + wave(1.55 * t)
+        case .thinking:
+            frame.smile = 0.25
+            frame.glance = easeInOut(min(1, 2 * wave(t / 2.8 - 0.25)))
+        }
+        return frame
+    }
+
+    private static func sparkleFrame(for mode: OrdirMascotMode, time t: Double, reduceMotion: Bool) -> MascotFrame {
         let count = OrdirMascotGeometry.sparkles.count
         switch mode {
         case .idle:
@@ -324,7 +355,13 @@ private struct MascotFrame {
                 glow: mix(s.glow, e.glow)
             )
         }
-        return MascotFrame(sparkles: sparkles, orbGlow: mix(a.orbGlow, b.orbGlow))
+        return MascotFrame(
+            sparkles: sparkles,
+            orbGlow: mix(a.orbGlow, b.orbGlow),
+            blink: mix(a.blink, b.blink),
+            smile: mix(a.smile, b.smile),
+            glance: mix(a.glance, b.glance)
+        )
     }
 }
 
@@ -360,6 +397,23 @@ private enum OrdirMascotRenderer {
 
         // Static globe frame and pedestal, in the environment's foreground colour (follows light/dark mode).
         context.fill(G.frame.applying(toCanvas), with: .foreground)
+
+        // Face: eyes squash to blink and drift up-right to glance; the smile's depth follows the mode.
+        let gaze = CGSize(width: 4 * frame.glance * unit, height: -5 * frame.glance * unit)
+        let eyeHeight = G.eyeRadius * unit * (1 - 0.9 * frame.blink)
+        for eye in G.eyes {
+            let c = point(eye)
+            context.fill(
+                Path(ellipseIn: CGRect(x: c.x - G.eyeRadius * unit + gaze.width, y: c.y - eyeHeight + gaze.height,
+                                       width: G.eyeRadius * unit * 2, height: eyeHeight * 2)),
+                with: .foreground
+            )
+        }
+        let start = point(G.mouthStart), end = point(G.mouthEnd), control = point(G.mouthControl)
+        var mouth = Path()
+        mouth.move(to: start)
+        mouth.addQuadCurve(to: end, control: CGPoint(x: control.x, y: start.y + (control.y - start.y) * frame.smile))
+        context.stroke(mouth, with: .foreground, style: StrokeStyle(lineWidth: G.mouthWidth * unit, lineCap: .round))
 
         // Sparkles: scale and rotate around their own centres, then place.
         for (spec, state) in zip(G.sparkles, frame.sparkles) {

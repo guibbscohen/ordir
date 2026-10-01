@@ -116,6 +116,7 @@ def play(page, url, problems, mode="table", expansions=(), fights_battle=False):
         page.click(".intro .skip")
     else:
         a11y.scan("opening", settle=1250)  # once its text has faded in; then let it play out
+    page.wait_for_selector(".intro", state="detached", timeout=8000)
     page.wait_for_selector("[data-act=game-dune]:not([disabled])")
     check(focused(page, ".pane h1"), "focus did not move to Home's heading")
     check(len(page.query_selector_all(".game.soon")) == 2, "Home does not list the two coming-soon games")

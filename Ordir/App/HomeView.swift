@@ -15,6 +15,11 @@ struct HomeView: View {
         .flatMap(OrdirGame.init(rawValue:))
         .map { [$0] } ?? []
 
+    /// While the opening plays, its orb flies to this header's orb, so Home hides its own until it lands.
+    var hidesOrb = false
+    /// Reports where the header's orb is on screen (global coordinates), as the opening's landing spot.
+    var onOrbFrame: (CGRect) -> Void = { _ in }
+
     var body: some View {
         NavigationStack(path: $path) {
             ScrollView {
@@ -44,10 +49,18 @@ struct HomeView: View {
     private var header: some View {
         VStack(spacing: 12) {
             OrdirMascotView()
-                .frame(height: 120)
-                .padding(.top, 48)
+                .frame(height: 72)
+                .opacity(hidesOrb ? 0 : 1)
+                .background {
+                    GeometryReader { proxy in
+                        Color.clear
+                            .onAppear { onOrbFrame(proxy.frame(in: .global)) }
+                            .onChange(of: proxy.frame(in: .global)) { _, frame in onOrbFrame(frame) }
+                    }
+                }
+                .padding(.top, 40)
             Text("Ordir")
-                .font(.ordir(.largeTitle).weight(.semibold))
+                .font(.ordir(.title).weight(.semibold))
                 .accessibilityAddTraits(.isHeader)
             Text("Learn any turn, step by step.")
                 .font(.ordir(.subheadline))
