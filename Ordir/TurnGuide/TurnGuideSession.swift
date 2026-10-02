@@ -197,7 +197,8 @@ final class TurnGuideSession {
             )
         }
         let battleScript = TurnScript(
-            game: script.game, title: battle.title, version: script.version, sources: script.sources,
+            game: script.game, title: battle.title, version: script.version,
+            sides: script.sides, victory: script.victory, sources: script.sources,
             expansions: script.expansions, states: script.states, images: script.images,
             phases: phases, battle: nil
         )
