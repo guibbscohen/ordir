@@ -79,6 +79,18 @@ const GAMES: Record<string, { title: string; sources: Record<string, string>; ba
       bloodlines: "Bloodlines expansion rulebook (played with the original Dune: Imperium)",
     },
   },
+  terraformingMars: {
+    title: "Terraforming Mars",
+    base: ["rulebook"],
+    sources: {
+      rulebook: "Terraforming Mars rulebook (FryxGames)",
+      prelude: "Prelude expansion rules",
+      venusNext: "Venus Next expansion rules",
+      colonies: "Colonies expansion rules",
+      turmoil: "Turmoil expansion rules",
+      hellasElysium: "Hellas & Elysium map rules (when playing on one of those boards)",
+    },
+  },
 };
 
 const SYSTEM = `You are Ordir's rules referee for board games. Answer the player's question using only the official documents provided: the game's rulebook, the publisher's FAQ, and the rulebooks of the expansions in play.

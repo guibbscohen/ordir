@@ -314,7 +314,7 @@ def tour_gestures_languages(page, url, problems):
     check(titles == sorted(titles), f"A–Z did not sort the games: {titles}")
     page.click("[data-act=sort-recent]")
     first = page.text_content("#home-browse .game-row strong")
-    check(first == "Dune: Imperium", f"Most recently added starts with {first}")
+    check(first == "Terraforming Mars", f"Most recently added starts with {first}")
 
     # Languages: Account switches them, and the choice sticks.
     for lang, account, games in (("pt-BR", "Conta", "Os favoritos do Ordi"), ("es-419", "Cuenta", "Los favoritos de Ordi")):
@@ -373,6 +373,8 @@ def own_phone_seats(page, url, problems):
     page.wait_for_selector(".strip")
     check("You’re Player 3" in page.text_content(".strip"), "the table strip does not name the seat")
     check(page.query_selector("[data-act=done]"), "an own phone at a game without sides has no Done")
+    seats5 = page.evaluate("seatsOf(scripts.terraformingMars).map((x) => x.name)")
+    check(seats5 == ["Player 1", "Player 2", "Player 3", "Player 4", "Player 5"], f"Terraforming Mars seats {seats5}")
     a11y.scan("own-phone step")
 
 
@@ -473,6 +475,9 @@ def main():
         ("Dune: Imperium: table, every expansion", dict(game="duneImperium", script="duneImperium", loop_taps=4,
                                                         expansions=("riseOfIx", "immortality", "bloodlines"))),
         ("Dune: Imperium: pass the phone, base game", dict(mode="pass", game="duneImperium", script="duneImperium", loop_taps=6)),
+        ("Terraforming Mars: pass the phone, base game", dict(mode="pass", game="terraformingMars", script="terraformingMars", loop_taps=5)),
+        ("Terraforming Mars: table, every expansion and a map", dict(game="terraformingMars", script="terraformingMars", loop_taps=3,
+                                                                    expansions=("prelude", "venusNext", "colonies", "turmoil", "hellasElysium"))),
     ]
     failed = False
     with sync_playwright() as p:

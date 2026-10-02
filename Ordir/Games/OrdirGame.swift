@@ -14,6 +14,7 @@ enum OrdirGame: String, CaseIterable, Identifiable, Codable {
     case knarr
     case brassBirmingham
     case duneImperium
+    case terraformingMars
 
     var id: String { rawValue }
 
@@ -25,6 +26,7 @@ enum OrdirGame: String, CaseIterable, Identifiable, Codable {
         case .knarr: "Knarr"
         case .brassBirmingham: "Brass: Birmingham"
         case .duneImperium: "Dune: Imperium"
+        case .terraformingMars: "Terraforming Mars"
         }
     }
 
@@ -34,6 +36,7 @@ enum OrdirGame: String, CaseIterable, Identifiable, Codable {
         case .duneWarForArrakis, .starWarsRebellion, .warOfTheRing2E: "2"
         case .knarr, .brassBirmingham: "2–4"
         case .duneImperium: "3–4"
+        case .terraformingMars: "2–5"
         }
     }
 

@@ -18,7 +18,7 @@ final class TurnsAroundTheTableTests: XCTestCase {
     }
 
     func testTheyTakeTurnsWithoutSides() throws {
-        for game in [OrdirGame.knarr, .brassBirmingham, .duneImperium] {
+        for game in [OrdirGame.knarr, .brassBirmingham, .duneImperium, .terraformingMars] {
             let script = try script(game)
             XCTAssertTrue(script.takesTurns, "\(game)")
             XCTAssertNil(script.battle, "\(game)")
@@ -66,8 +66,16 @@ final class TurnsAroundTheTableTests: XCTestCase {
         XCTAssertEqual(TurnGuideSession(script: script, expansions: all).additions.count, 3)
     }
 
+    func testTerraformingMarsExpansionsAddToSetup() throws {
+        let script = try script(.terraformingMars)
+        XCTAssertTrue(TurnGuideSession(script: script, expansions: []).additions.isEmpty)
+        let all = Set(script.expansions.map(\.id))
+        // Hellas or Elysium, Venus Next, Colonies and Turmoil each add to the board's setup.
+        XCTAssertEqual(TurnGuideSession(script: script, expansions: all).additions.count, 4)
+    }
+
     func testEveryPictureHasItsAsset() throws {
-        for game in [OrdirGame.knarr, .brassBirmingham, .duneImperium] {
+        for game in [OrdirGame.knarr, .brassBirmingham, .duneImperium, .terraformingMars] {
             let script = try script(game)
             for image in script.images {
                 XCTAssertNotNil(UIImage(named: script.assetName(for: image)), "\(game): missing asset for \(image.id)")

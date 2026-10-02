@@ -123,7 +123,8 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   passing it: the handoff screen asks to pass to the next player. Two players can still use the split screen.
   Dune: Imperium is 3–4 players for now (no House Hagal solo/2-player).
 - 2026-10-02: "Each on our own phone" works for every game. Two-sided games seat players by side; games without fixed
-  sides seat up to 4 as Player 1–4, every phone shows the player on turn's step and anyone at the table can tap Done.
+  sides seat Player 1–4 (Player 1–5 for Terraforming Mars), every phone shows the player on turn's step and anyone at
+  the table can tap Done.
 - 2026-10-02: Going back (swipe, Back, tab bar) returns to where the player was: Home keeps each tab's scroll
   position instead of jumping to the top.
 - 2026-10-02: The opening shows a small, low-opacity "App by DevOcto" credit centred under the slogan, with the DevOcto
@@ -134,3 +135,5 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   when signed in; Account has "Share usage data"), script errors, Game over ratings, answer thumbs and "Report a
   problem" reports (Account and Game menu, optional screenshot) to Supabase (events, bug_reports; insert-only RLS).
   The tester dashboard is a private claude.ai artifact that queries them through the Supabase connector.
+- 2026-10-02: Terraforming Mars ships with Prelude, Venus Next, Colonies and Turmoil as expansions and the Hellas & Elysium
+  maps as options; 2–5 players (no solo or draft variant for now), played by passing the phone like the other no-sides games.
