@@ -121,4 +121,6 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   and Knarr (base game).
 - 2026-10-02: Games for 3+ players with no fixed sides (Dune: Imperium, Brass, Knarr) are played on one phone by
   passing it: the handoff screen asks to pass to the next player. Two players can still use the split screen.
-  Dune: Imperium is 3–4 players for now (no House Hagal solo/2-player). Own-phone tables stay two-seat for now.
+  Dune: Imperium is 3–4 players for now (no House Hagal solo/2-player).
+- 2026-10-02: "Each on our own phone" works for every game. Two-sided games seat players by side; games without fixed
+  sides seat up to 4 as Player 1–4, every phone shows the player on turn's step and anyone at the table can tap Done.

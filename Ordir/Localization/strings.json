@@ -232,7 +232,12 @@
     "With two players the screen can split, the top half facing the player across from you. Or pass the phone to whoever’s turn it is, or each use your own.": "Com dois jogadores a tela pode se dividir, com a metade de cima virada para quem está à sua frente. Ou passem o celular para quem joga agora, ou cada um use o seu.",
     "With two players the screen can split, the top half facing the player across from you. Or pass the phone to whoever’s turn it is.": "Com dois jogadores a tela pode se dividir, com a metade de cima virada para quem está à sua frente. Ou passem o celular para quem joga agora.",
     "Across the table": "Do outro lado da mesa",
-    "This side of the table": "Deste lado da mesa"
+    "This side of the table": "Deste lado da mesa",
+    "Player {0}": "Jogador {0}",
+    "Your seat": "Seu lugar",
+    "Pick your seat": "Escolha seu lugar",
+    "Every seat is taken at this table.": "Todos os lugares desta mesa estão ocupados.",
+    "You’re {0}": "Você é o {0}"
   },
   "es-419": {
     "Both players": "Ambos jugadores",
@@ -467,6 +472,11 @@
     "With two players the screen can split, the top half facing the player across from you. Or pass the phone to whoever’s turn it is, or each use your own.": "Con dos jugadores la pantalla puede dividirse, con la mitad de arriba mirando a quien está frente a ti. O pasen el teléfono a quien tiene el turno, o cada uno use el suyo.",
     "With two players the screen can split, the top half facing the player across from you. Or pass the phone to whoever’s turn it is.": "Con dos jugadores la pantalla puede dividirse, con la mitad de arriba mirando a quien está frente a ti. O pasen el teléfono a quien tiene el turno.",
     "Across the table": "Al otro lado de la mesa",
-    "This side of the table": "De este lado de la mesa"
+    "This side of the table": "De este lado de la mesa",
+    "Player {0}": "Jugador {0}",
+    "Your seat": "Tu lugar",
+    "Pick your seat": "Elige tu lugar",
+    "Every seat is taken at this table.": "Todos los lugares de esta mesa están ocupados.",
+    "You’re {0}": "Eres el {0}"
   }
 }
