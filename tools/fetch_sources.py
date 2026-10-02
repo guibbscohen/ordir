@@ -15,6 +15,7 @@ import json
 import pathlib
 import sys
 import time
+import urllib.parse
 import urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -24,18 +25,27 @@ def sha256(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def download(url, waits=(5, 15, 30)):
-    """The file at url, trying again after each wait: a publisher's site is sometimes briefly unreachable."""
+# Sites that failed every attempt this run: their other files fail at once rather than each waiting it out.
+unreachable = set()
+
+
+def download(url, waits=(5, 15)):
+    """The file at url, trying again after each wait: a publisher's site is sometimes briefly unreachable.
+    Each attempt gives up after 30 s, so a site that hangs can't run the check past its time limit."""
+    host = urllib.parse.urlsplit(url).hostname
+    if host in unreachable:
+        raise OSError(f"{host} was unreachable earlier in this run")
     # Some publisher sites refuse Python's default user agent.
     request = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Ordir source fetch)"})
     for wait in (*waits, None):
         try:
-            with urllib.request.urlopen(request, timeout=120) as response:
+            with urllib.request.urlopen(request, timeout=30) as response:
                 return response.read()
         except OSError as error:
             if wait is None:
+                unreachable.add(host)
                 raise
-            print(f"retry {url} in {wait} s ({error})")
+            print(f"retry {url} in {wait} s ({error})", flush=True)
             time.sleep(wait)
 
 
@@ -46,7 +56,7 @@ def main():
             path = ROOT / source["file"]
             if not path.exists() or sha256(path) != source["sha256"]:
                 path.parent.mkdir(parents=True, exist_ok=True)
-                print(f"fetch {source['url']}")
+                print(f"fetch {source['url']}", flush=True)
                 try:
                     path.write_bytes(download(source["url"]))
                 except OSError as error:

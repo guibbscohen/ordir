@@ -30,7 +30,7 @@ jobs:
         run: |
           python3 -m venv .venv
           .venv/bin/pip install --quiet pypdf cryptography fonttools
-          .venv/bin/python tools/fetch_sources.py
+          .venv/bin/python -u tools/fetch_sources.py
           .venv/bin/python tools/rules_corpus.py
 
       - name: Replace the pages in Supabase
