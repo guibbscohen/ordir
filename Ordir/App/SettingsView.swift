@@ -2,8 +2,8 @@
 //  SettingsView.swift
 //  Ordir
 //
-//  The language Ordir speaks, and the tutorial again. Opened from Home's gear (the preview has these on its
-//  Account tab).
+//  Ordir Pro (coming soon), the language Ordir speaks, and the tutorial again. Opened from Home's gear (the
+//  preview has these on its Account tab).
 //
 
 import SwiftUI
@@ -13,10 +13,37 @@ struct SettingsView: View {
     let replayTutorial: () -> Void
     @AppStorage(OrdirLanguage.storageKey) private var language = OrdirLanguage.current.rawValue
     @Environment(\.dismiss) private var dismiss
+    @State private var showsPro = false
 
     var body: some View {
         NavigationStack {
             List {
+                Section {
+                    Button {
+                        showsPro = true
+                    } label: {
+                        HStack(spacing: 14) {
+                            OrdirMascotView(isCool: true)
+                                .frame(width: 44)
+                                .accessibilityHidden(true)
+                            VStack(alignment: .leading, spacing: 4) {
+                                ProMark()
+                                Text(tr("Free plan · {0} rules questions a month", OrdirPro.freeQuestions))
+                                    .font(.ordir(.footnote))
+                                    .foregroundStyle(.secondary)
+                            }
+                            Spacer(minLength: 8)
+                            Image(systemName: "chevron.right")
+                                .font(.ordir(.footnote))
+                                .foregroundStyle(.tertiary)
+                                .accessibilityHidden(true)
+                        }
+                        .frame(minHeight: 56)
+                        .contentShape(Rectangle())
+                    }
+                    .foregroundStyle(.primary)
+                    .accessibilityIdentifier("ordir-pro")
+                }
                 Section(tr("Language")) {
                     ForEach(OrdirLanguage.allCases) { option in
                         let isSelected = option.rawValue == language
@@ -60,6 +87,7 @@ struct SettingsView: View {
                 .font(.ordir(.footnote))
                 .foregroundStyle(.secondary)
             }
+            .sheet(isPresented: $showsPro) { OrdirProView() }
             .navigationTitle(tr("Settings"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

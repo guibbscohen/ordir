@@ -156,3 +156,7 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   Pro proposals" claude.ai canvas). Free Ordi stays without shades. Pro perks: more rules questions, new games early, the
   shades mascot and app icon; turn guides, tables and expansions stay free. Plans: yearly, monthly and a one-off Game
   Night pass. The comparison shows the free questions left this month.
+- 2026-10-02: Ordir Pro ships as "Coming soon" (no App Store yet), in the preview and the app: the Pro screen, the Account
+  (app: Settings) card and the chat's "x of 5 free questions left this month" line, with every plan marked Coming soon and
+  no purchase. The free limit (5 a month) is shown, never enforced, until the user says otherwise. "Pro" is always a white
+  rounded tag with the word knocked out in bold (see-through letters), next to "Ordir".

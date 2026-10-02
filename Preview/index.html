@@ -45,6 +45,8 @@
   --fg: #f5f5f7;
   --muted: #9a9aa0;
   --sparkle: #9ec7ff;
+  --visor: #7846c8;     /* the cooler Ordi's shades (Ordir Pro) */
+  --visor-stripe: #c9b5e9;
   --on: #4cc38a;        /* switches turned on */
   --danger: #ff6b5e;    /* errors */
   --font: "Google Sans Flex", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -517,6 +519,8 @@ button.bubble { font: inherit; font-size: 15px; color: var(--fg); cursor: pointe
 .mascot.thinking .sp3 { animation-delay: .9s; }
 .mascot .face .eye { fill: var(--fg); transform-box: fill-box; transform-origin: center; animation: blink 4.6s ease-in-out infinite; }
 .mascot .face .eye + .eye { animation-delay: .04s; }
+.mascot .visor .lens { fill: var(--visor); }
+.mascot .visor .stripes { stroke: var(--visor-stripe); fill: none; }
 .mascot .face .mouth { fill: none; stroke: var(--fg); stroke-width: 8; stroke-linecap: round; transform-box: fill-box; transform-origin: center top; transition: transform .25s ease; }
 .mascot.speaking .mouth { animation: talk .32s ease-in-out infinite alternate; }
 .mascot.thinking .eye { animation: blink 4.6s ease-in-out infinite, glance 2.8s ease-in-out infinite; }
@@ -562,6 +566,49 @@ html, body { overscroll-behavior-x: none; }
 .tour-dots .on { background: var(--sparkle); }
 .overlay.tour .actions { padding: 0; margin-top: auto; }
 .overlay.tour .actions .primary { margin-left: auto; flex: none; padding: 0 28px; }
+
+/* Ordir Pro: the knocked-out "Pro" tag, the Account card, the chat's free-question line and the Pro screen. */
+.pro-badge { height: .95em; width: auto; flex: none; }
+.pro-badge text { font-family: var(--font); font-size: 15px; font-weight: 800; }
+.pro-mark { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; }
+.pro-card { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; padding: 14px 16px; border-radius: 18px; border: 1px solid var(--line);
+  background: radial-gradient(120% 140% at 90% 0%, rgba(120, 70, 200, .38), rgba(88, 92, 230, .12) 45%, var(--surface-2) 80%); }
+.pro-card .mascot { width: 52px; height: 59px; flex: none; }
+.pro-card > div { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.pro-card .pro-mark { font-size: 17px; }
+.pro-card > div > span { color: var(--muted); font-size: 14px; line-height: 1.35; }
+.quota { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 4px 16px 0; font-size: 13px; color: var(--muted); }
+.quota .textbtn { font-size: 13px; flex: none; }
+.sheet .quota { padding: 4px 0 0; }
+.overlay.pro { padding: 0; gap: 0; background: radial-gradient(70% 34% at 50% 10%, rgba(120, 70, 200, .30), rgba(88, 92, 230, .10) 55%, transparent 85%), var(--bg); }
+.pro-top { display: flex; justify-content: flex-end; padding: 12px 16px 0; }
+.overlay.pro .scroll { display: flex; flex-direction: column; gap: 16px; padding: 0 20px 20px; }
+.overlay.pro .scroll:focus-visible { outline: 2px solid var(--sparkle); outline-offset: -2px; }
+.pro-hero { display: flex; justify-content: center; align-items: flex-end; gap: 28px; }
+.pro-hero figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+.pro-hero .mascot { width: 76px; height: 86px; }
+.pro-hero .free { opacity: .75; }
+.pro-hero .cool .mascot { width: 120px; height: 136px; }
+.pro-hero figcaption { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 15px; font-weight: 600; }
+.pro-hero figcaption > span { color: var(--muted); font-size: 13px; font-weight: 400; }
+.overlay.pro h2.pro-title { text-align: center; font-size: 24px; font-weight: 700; text-wrap: balance; }
+.overlay.pro .lead { text-align: center; color: var(--muted); font-size: 15px; line-height: 1.4; margin: -8px 0 0; }
+.compare { width: 100%; border-collapse: collapse; background: var(--surface); border-radius: 16px; overflow: hidden; font-size: 15px; }
+.compare th, .compare td { padding: 12px 10px; border-top: 1px solid var(--line); text-align: center; }
+.compare thead th { border-top: 0; font-size: 13px; color: var(--muted); font-weight: 600; }
+.compare th[scope="row"] { text-align: left; font-weight: 400; padding-left: 16px; }
+.compare .free { color: var(--muted); width: 56px; }
+.compare .pro { font-weight: 600; width: 56px; }
+.compare svg { width: 18px; height: 18px; vertical-align: middle; }
+.plan { display: flex; align-items: center; gap: 12px; background: var(--surface-2); border-radius: 14px; padding: 14px 16px; }
+.plan > div { flex: 1; min-width: 0; }
+.plan strong { display: block; font-size: 16px; }
+.plan > div > span { color: var(--muted); font-size: 14px; line-height: 1.35; }
+.soon { flex: none; font-size: 12px; font-weight: 700; border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; }
+.pro-foot { display: flex; flex-direction: column; gap: 8px; padding: 12px 20px calc(12px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); }
+.pro-foot .primary { flex: none; }
+.pro-foot .primary:disabled { background: var(--surface-2); color: var(--muted); }
+.pro-foot .hint { text-align: center; }
 
 @media (prefers-reduced-motion: reduce) {
   .tour-card.turn, .tour-card.turn.back { animation: fade .2s ease both; }
@@ -634,7 +681,25 @@ function t(text, ...args) {
 // and a one-line smile, turned slightly up and to the right (the far eye is smaller). The two small
 // sparkles sit clear of the face.
 const MASCOT_PATHS = `<path class="sp sp1" d="M290.228 82.5405 270.757 75.6223C266.801 74.207 263.838 71.2439 262.291 67.4343L254.394 46.971C252 40.8995 246.629 37.9365 241.272 37.9365 235.915 37.9365 230.412 40.8995 228.15 46.971L220.254 67.4343C218.706 71.2439 215.743 74.2069 211.788 75.6223L192.317 82.5405C179.764 86.9189 179.764 104.697 192.317 109.207L211.788 116.126C215.743 117.541 218.706 120.504 220.254 124.314L228.15 144.777C230.545 150.848 235.915 153.811 241.272 153.811 246.629 153.811 252.132 150.848 254.394 144.777L262.291 124.314C263.838 120.504 266.801 117.541 270.757 116.126L290.228 109.207C302.781 104.829 302.781 87.051 290.228 82.5405ZM263.561 96.0856C253.825 99.4719 246.206 106.945 242.396 116.549L240.981 120.081 239.566 116.549C235.902 106.959 228.137 99.4719 218.402 96.0856L217.7 95.8078 218.402 95.53C228.137 92.1438 235.756 84.6703 239.566 75.0668L240.981 71.5349 242.396 75.0668C246.06 84.6567 253.825 92.1438 263.561 95.53L264.262 95.8078Z"/><g transform="translate(-70 20)"><path class="sp sp2" d="M172.7 183.56C169.168 184.83 169.168 189.632 172.7 190.901L178.057 192.74C179.182 193.163 180.028 194.01 180.451 195.002L182.713 200.65C183.414 202.343 184.83 203.19 186.377 203.19 187.925 203.19 189.34 202.343 190.041 200.65L192.303 195.002C192.726 193.878 193.573 193.163 194.697 192.74L200.054 190.901C203.586 189.632 203.586 184.83 200.054 183.56L194.697 181.721C193.573 181.298 192.726 180.451 192.303 179.459L190.041 173.811C189.34 172.118 187.925 171.271 186.377 171.271 184.83 171.271 183.414 172.118 182.713 173.811L180.451 179.459C180.028 180.584 179.182 181.298 178.057 181.721Z"/></g><g transform="translate(4 -46)"><path class="sp sp3" d="M147.157 132.634C145.187 131.933 143.493 130.372 142.779 128.401L138.692 117.819C137.422 114.71 134.737 113.163 131.919 113.163 129.102 113.163 126.271 114.71 125.147 117.819L121.059 128.401C120.358 130.372 118.665 131.933 116.681 132.634L106.522 136.166C100.027 138.428 100.027 147.594 106.522 149.988L116.681 153.52C118.652 154.221 120.345 155.782 121.059 157.753L125.147 168.335C126.416 171.444 129.102 172.991 131.919 172.991 134.737 172.991 137.567 171.444 138.692 168.335L142.779 157.753C143.48 155.782 145.173 154.221 147.157 153.52L157.316 149.988C163.811 147.726 163.811 138.56 157.316 136.166Z"/></g><path class="orb" d="M284.871 154.221C285.148 148.441 280.638 143.493 274.857 143.216 269.077 142.938 264.13 147.449 263.852 153.229 261.59 203.745 220.108 243.389 169.459 243.389 118.811 243.389 74.9214 200.915 74.9214 148.851 74.9214 96.7866 117.395 54.3125 169.459 54.3125 176.801 54.3125 183.997 55.1591 191.047 56.7067 196.695 57.9765 202.476 54.4448 203.745 48.8099 205.015 43.1616 201.484 37.3812 195.849 36.1114 187.237 34.1404 178.348 33.1484 169.459 33.1484 105.543 33.0161 53.6115 84.9347 53.6115 148.851 53.6115 183.706 69.1274 215.029 93.678 236.193L86.3365 258.627C82.1037 271.603 87.8841 285.717 99.8816 291.366 122.885 302.371 146.297 307.728 169.869 307.728 193.428 307.728 216.007 302.503 239.288 292.066 252.687 285.995 259.182 270.757 254.103 257.357L245.783 235.624C268.64 215.584 283.601 186.801 285.003 154.076ZM106.39 265.254 111.747 249.023C121.059 254.381 131.218 258.481 141.8 261.153L139.115 283.164C129.102 280.77 119.075 277.092 109.062 272.304 106.668 271.18 105.53 268.071 106.522 265.254Z"/><g class="face"><circle class="eye" cx="164" cy="138" r="10.5"/><circle class="eye" cx="205" cy="135" r="8.5"/><path class="mouth" d="M172 165Q191 178 208 160"/></g>`;
-const mascot = (mode) => `<svg class="mascot ${mode}" viewBox="-6 0 300 340" aria-hidden="true"><g transform="translate(-15.285 8.465) scale(1 1.00101)">${MASCOT_PATHS}</g></svg>`;
+// The cooler Ordi (Ordir Pro): the same orb in a glow-violet wraparound visor (two equal lenses, two light stripes
+// each), the simple smile under it, and the big and top-left sparkles a little higher so the visor clears them.
+const VISOR = "M63.5 126.2L150.4 129.3L166 135.6L181.6 129.3L268.5 126.2L256.6 160.6L222.3 191.8L187.9 188.7L166 169.9L144.1 188.7L109.8 191.8L75.4 160.6Z";
+const MASCOT_COOL_PATHS = MASCOT_PATHS
+  .replace(/(<path class="sp sp1"[^>]*\/>)/, '<g transform="translate(0 -40)">$1</g>')
+  .replace("translate(4 -46)", "translate(4 -54)")
+  .replace(/<g class="face">.*<\/g>$/, `<g class="visor"><clipPath id="ordi-visor"><path d="${VISOR}"/></clipPath><path class="lens" d="${VISOR}"/>`
+    + `<g class="stripes" clip-path="url(#ordi-visor)"><path d="M84.8 207.4L116 110.6" stroke-width="17.5"/><path d="M112.9 207.4L144.1 110.6" stroke-width="7.5"/>`
+    + `<path d="M191 207.4L222.3 110.6" stroke-width="17.5"/><path d="M219.1 207.4L250.4 110.6" stroke-width="7.5"/></g></g>`
+    + `<g class="face"><path class="mouth" d="M148 210Q167 223 184 205"/></g>`);
+const mascot = (mode, cool = false) => `<svg class="mascot ${mode}${cool ? " cool" : ""}" viewBox="-6 0 300 340" aria-hidden="true"><g transform="translate(-15.285 8.465) scale(1 1.00101)">${cool ? MASCOT_COOL_PATHS : MASCOT_PATHS}</g></svg>`;
+// "Pro" knocked out of a white rounded tag: the letters are see-through.
+let proBadges = 0;
+const proBadge = () => {
+  const id = `pro-cut-${++proBadges}`;
+  return `<svg class="pro-badge" viewBox="0 0 40 22" role="img" aria-label="Pro"><mask id="${id}"><rect width="40" height="22" rx="6" fill="#fff"/>`
+    + `<text x="20" y="16" text-anchor="middle" fill="#000">Pro</text></mask><rect width="40" height="22" rx="6" fill="#fff" mask="url(#${id})"/></svg>`;
+};
+const proMark = () => `<span class="pro-mark">Ordir ${proBadge()}</span>`;
 // The crystal ball's rim, in the mascot's own coordinates: its centre, the middle of the rim, and where the
 // rim runs (clockwise from its right side round to the gap under the big sparkle, in degrees).
 const ORB_RIM = { cx: 169.459, cy: 148.851, r: 105, from: 3, to: 286 };
@@ -722,6 +787,7 @@ function setLang(id) {
 const state = {
   lang: startLang(),
   tutorial: null,     // the tutorial's open card ({ i }), on first launch or from Account
+  pro: null,          // the Ordir Pro screen, while open ({ enter })
   screen: "intro",    // "intro" → "home" → "game" (picker, lobby and guide)
   tab: "games",       // Home's tab: games, ask, join or account
   homeQuery: "",      // Home's game search
@@ -1199,6 +1265,7 @@ const joinPage = () => `<h1 tabindex="-1">${t("Join a table")}</h1>${lobbyBody(t
 
 function accountPage() {
   return `<h1 tabindex="-1">${t("Account")}</h1>
+    ${proCard()}
     ${!signedIn() ? signInPane(t("Sign in with your email to ask rules questions and to play at a table, each on your own phone.")) : `
       <p style="margin:0">${t("Signed in as {0}", `<b>${esc(online.session.user.email || "")}</b>`)}</p>
       <button class="primary" style="flex:none" data-act="sign-out">${t("Sign out")}</button>`}
@@ -1469,6 +1536,63 @@ function reportPanel() {
       ${r.error ? `<p class="error" role="alert">${esc(r.error)}</p>` : ""}
       <button class="primary" style="flex:none" data-act="report-send" ${r.busy ? "disabled" : ""}>${r.busy ? t("Sending…") : t("Send report")}</button></div></div>`;
 }
+// ---- Ordir Pro ----
+// Coming soon: the Pro screen shows Free next to Pro (the cooler Ordi) and the plans, none on sale yet. The free
+// limit is shown, not enforced: while Ordir is in testing, every question is answered.
+const FREE_QUESTIONS = 5, PRO_QUESTIONS = 100;
+/** Rules questions this calendar month, from the player's chats. */
+function questionsThisMonth() {
+  const now = new Date();
+  return Object.values(online.ask.threads).flat()
+    .filter((x) => { const d = new Date(x.at); return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth(); }).length;
+}
+const freeLeft = () => Math.max(0, FREE_QUESTIONS - questionsThisMonth());
+const freePlanLine = () => (signedIn() ? t("Free plan · {0} of {1} rules questions left this month", freeLeft(), FREE_QUESTIONS)
+  : t("Free plan · {0} rules questions a month", FREE_QUESTIONS));
+const proCard = () => `<button class="pro-card" data-act="pro-open">${mascot("idle", true)}<div><strong>${proMark()}</strong>
+  <span>${freePlanLine()}</span></div>${CHEVRON}</button>`;
+// Over the chat's composer: what's left of this month's free questions, and the way to Pro.
+const quotaNote = () => `<div class="quota"><span>${freeLeft() ? t("{0} of {1} free questions left this month", freeLeft(), FREE_QUESTIONS)
+  : t("Free questions used. They’re on us while Ordir is in testing.")}</span><button class="textbtn" data-act="pro-open">${t("See Ordir Pro")}</button></div>`;
+const INCLUDED = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>`;
+function proPanel() {
+  const yes = `${INCLUDED}<span class="sr-only">${t("Included")}</span>`, no = `<span aria-hidden="true">–</span><span class="sr-only">${t("Not included")}</span>`;
+  const rows = [
+    [t("Rules questions a month"), String(FREE_QUESTIONS), String(PRO_QUESTIONS)],
+    [t("Turn guides for every game"), yes, yes],
+    [t("One phone, or each on your own"), yes, yes],
+    [t("Expansions"), yes, yes],
+    [t("New games before everyone else"), no, yes],
+    [t("Ordi in shades, and the app icon"), no, yes],
+  ];
+  const plans = [
+    [t("Yearly"), t("{0} rules questions a month, and Ordi in shades", PRO_QUESTIONS)],
+    [t("Monthly"), t("{0} rules questions a month, and Ordi in shades", PRO_QUESTIONS)],
+    [t("Game Night pass"), t("25 rules questions for 24 hours, on one game")],
+  ];
+  return `<div class="overlay${state.pro.enter ? " enter" : ""} menu pro" role="dialog" aria-modal="true" aria-labelledby="pro-title">
+    <div class="pro-top"><button class="close-x" data-act="pro-close" aria-label="${t("Close")}">${CLOSE_X}</button></div>
+    <div class="scroll" tabindex="0" role="region" aria-labelledby="pro-title">
+      <div class="pro-hero"><figure class="free">${mascot("idle")}<figcaption>Ordi<span>${t("Free")}</span></figcaption></figure>
+        <figure class="cool">${mascot("idle", true)}<figcaption>${t("The cooler Ordi")}${proMark()}</figcaption></figure></div>
+      <h2 class="pro-title" id="pro-title" tabindex="-1">${t("Same Ordi. Cooler shades.")}</h2>
+      <p class="lead">${t("Ordir Pro answers far more rules questions, and Ordi gets the sunglasses.")}</p>
+      <table class="compare"><caption class="sr-only">${t("Free and Pro compared")}</caption>
+        <thead><tr><th scope="col"><span class="sr-only">${t("Feature")}</span></th><th scope="col" class="free">${t("Free")}</th><th scope="col" class="pro">Pro</th></tr></thead>
+        <tbody>${rows.map(([what, free, pro]) => `<tr><th scope="row">${what}</th><td class="free">${free}</td><td class="pro">${pro}</td></tr>`).join("")}</tbody></table>
+      <p class="hint" style="text-align:center">${freePlanLine()}</p>
+      <div class="group"><h2>${t("Plans")}</h2>
+        ${plans.map(([name, detail]) => `<div class="plan"><div><strong>${name}</strong><span>${detail}</span></div><span class="soon">${t("Coming soon")}</span></div>`).join("")}</div>
+    </div>
+    <div class="pro-foot"><button class="primary" disabled>${t("Coming soon")}</button>
+      <p class="hint">${t("Ordir Pro isn’t available yet. While Ordir is in testing, rules questions are on us.")}</p></div></div>`;
+}
+function openPro() {
+  state.returnTo = state.usedKey;  // closing goes back to the button that opened it
+  state.pro = { enter: true };
+  track("pro_open", { from: online.ask.open ? "chat" : state.screen === "home" ? state.tab : state.screen });
+  render();
+}
 function openReport() {
   state.menu = false;
   state.returnTo = state.usedKey;  // closing the form goes back to the button that opened it, where it's still there
@@ -1597,7 +1721,7 @@ function chatPanel() {
     <div class="chat-head">${thumb(game)}<div><h2 id="chat-title" tabindex="-1">${esc(game?.title || t("Rules question"))}</h2>
       <p>${t("Rules chat")} · ${esc(titles.length ? t("With {0}", titles.join(", ")) : t("Base game"))}</p></div>
       <button class="close-x" data-act="ask-close" aria-label="${t("Close")}">${CLOSE_X}</button></div>
-    <div class="scroll thread">${chatThread()}</div>${signedIn() ? composer() : ""}</div>`;
+    <div class="scroll thread">${chatThread()}</div>${signedIn() ? quotaNote() + composer() : ""}</div>`;
 }
 
 // From the step's orb: a short sheet over that player's side, so the other side keeps playing.
@@ -1605,7 +1729,7 @@ function askSheet() {
   return `<div class="overlay sheet${askEnter ? " enter" : ""}" role="dialog" aria-label="${t("Rules question")}">
     <div class="head"><h2 style="flex:1;font-size:17px" tabindex="-1">${t("Ask a rules question")}</h2><button class="textbtn" data-act="ask-close">${t("Close")}</button></div>
     <p class="hint" style="margin-top:-8px">${t("About {0}", esc(gameOf(askGame())?.title || t("this game")))}</p>
-    <div class="scroll thread">${chatThread()}</div>${signedIn() ? composer() : ""}</div>`;
+    <div class="scroll thread">${chatThread()}</div>${signedIn() ? quotaNote() + composer() : ""}</div>`;
 }
 // The chat slides in when it opens, not on every redraw while it's open.
 let askEnter = true;
@@ -1855,6 +1979,7 @@ function settleFocus(phone, stepChanged, kept) {
     if (overlay) for (const child of half.children) if (child !== overlay) child.inert = true;
   }
   if (state.menu || state.tutorial || state.report || (online.ask.open && online.ask.seat === null)) for (const child of phone.children) if (!child.classList.contains("menu")) child.inert = true;
+  if (state.pro) for (const child of phone.children) if (!child.classList.contains("pro")) child.inert = true;
   const first = (...selectors) => selectors.map((sel) => sel && phone.querySelector(sel)).find(Boolean);
   const dialog = [...phone.querySelectorAll('[role="dialog"] [tabindex="-1"]')].find((h) => !h.closest("[inert]"));
   // On Home, focus never scrolls the page (it keeps the player's place); back from a game, it returns to the
@@ -1900,7 +2025,7 @@ function render() {
   const kept = active && phone.contains(active) ? (active.id ? `#${active.id}` : focusKey(active) || "[data-none]") : null;
   const menu = s && state.menu ? gameMenu(s) : "";
   askEnter = !phone.querySelector(".chat, .sheet");
-  const ask = (online.ask.open && online.ask.seat === null ? chatPanel() : "") + (state.report ? reportPanel() : "");
+  const ask = (online.ask.open && online.ask.seat === null ? chatPanel() : "") + (state.report ? reportPanel() : "") + (state.pro ? proPanel() : "");
   const view = viewName();
   if (view !== tracking.view && state.screen !== "intro") { tracking.view = view; track("screen_view", { view, game: state.screen === "game" ? state.script?.game : undefined }); }
   if (signedIn() && online.client && online.ask.loadedFor !== online.session.user.id && (state.tab === "ask" || online.ask.open)) loadThreads();
@@ -1961,6 +2086,7 @@ function render() {
   state.tabFrom = null;
   if (state.tutorial) { state.tutorial.enter = false; state.tutorial.turn = 0; }
   if (state.report) state.report.enter = false;
+  if (state.pro) state.pro.enter = false;
   const homeScroller = state.screen === "home" && phone.querySelector(".home > .scroll");
   const homeTop = homeScroll[state.tab] || 0;
   if (homeScroller) homeScroller.scrollTop = homeTop;
@@ -2262,6 +2388,8 @@ function handleClick(el) {
       state.session = makeSession(state.script, new Set(state.chosen), state.mode === "pass"); onStepChanged(); break;
     case "skip-intro": showHome(); break;
     case "report-open": openReport(); break;
+    case "pro-open": openPro(); break;
+    case "pro-close": state.pro = null; render(); break;
     case "report-close": state.report = null; render(); break;
     case "report-unshot": state.report.shot = null; state.report.enter = false; render(); $("#report-shot")?.focus(); break;
     case "report-send": sendReport(); break;
@@ -2353,7 +2481,7 @@ document.addEventListener("input", (event) => {
 });
 // ---- Going back ----
 // What closes first: the tutorial, the rules chat, the picture, the Game menu, or the turn-change checklist.
-const closeAct = () => (state.tutorial ? (state.tutorial.i === TOUR.length - 1 ? "tour-next" : "tour-skip") : state.report ? "report-close" : online.ask.open ? "ask-close" : state.enlarged ? "close-enlarged"
+const closeAct = () => (state.tutorial ? (state.tutorial.i === TOUR.length - 1 ? "tour-next" : "tour-skip") : state.pro ? "pro-close" : state.report ? "report-close" : online.ask.open ? "ask-close" : state.enlarged ? "close-enlarged"
   : state.menu ? "menu-close" : state.pending ? "not-yet" : null);
 // What going back does: close that, or leave a game's setup (or the table lobby, or the end of the game).
 // A running guide has no "back" here: brushing the phone on the table never leaves a game.
