@@ -1,0 +1,223 @@
+{
+  "language": "es-419",
+  "title": "Brass: Birmingham",
+  "sides": {
+    "player": "Jugador en turno"
+  },
+  "victory": "Tras puntuar la Era del Ferrocarril, gana quien tenga más PV. Desempate: mayor ingreso, luego más dinero; si sigue el empate, esos jugadores empatan.",
+  "sources": {
+    "rulebook": {
+      "title": "Reglamento (v2018.11; dos páginas impresas por página del PDF)",
+      "shortTitle": "Reglamento"
+    }
+  },
+  "expansions": {},
+  "images": {
+    "cover": "Portada del reglamento",
+    "components": "Componentes",
+    "board-setup": "Preparación del tablero",
+    "supply": "Carbón, hierro, cerveza y dinero",
+    "player-area": "Preparación del área de jugador",
+    "actions": "Las acciones",
+    "turn-order": "Orden de turno: dinero gastado sobre las losetas de Personaje",
+    "income": "Ingresos en el Marcador de Progreso",
+    "era-scoring": "Puntuar conexiones e industrias volteadas",
+    "end-canal": "Fin de la Era de los Canales",
+    "build-cards": "Cartas de Ubicación, Ubicación Comodín, Industria e Industria Comodín",
+    "market": "Vender carbón y hierro a los Mercados",
+    "connections": "Red y ubicaciones conectadas",
+    "sell": "Vender a un Comerciante",
+    "merchant-bonuses": "Bonificaciones de cerveza de los Comerciantes",
+    "network": "Conexiones de ferrocarril"
+  },
+  "states": {
+    "railEra": {
+      "title": "Era del Ferrocarril",
+      "markLabel": "La Era de los Canales terminó",
+      "trigger": "La Era de los Canales termina tras la ronda en la que todos los jugadores usan la última carta de su mano.",
+      "event": {
+        "title": "Fin de la Era de los Canales",
+        "bullets": [
+          "Conexiones: cada una de tus losetas de Conexión puntúa 1 PV por cada icono de conexión en las ubicaciones vecinas. Retira las losetas de Conexión a medida que puntúan.",
+          "Industrias: luego puntúa los PV de la esquina inferior izquierda de tus losetas de Industria volteadas (mitad superior negra). Las no volteadas no puntúan.",
+          "Retira del tablero todas las losetas de Industria de nivel 1 (no de los Tableros de jugador). Las de nivel 2 o más se quedan.",
+          "Pon 1 barril de cerveza en cada espacio de cerveza vacío junto a una loseta de Comerciante (no en blanco).",
+          "Barajen las Pilas de Descarte de todos en un nuevo Mazo de Robo (volteen antes la carta de abajo, boca abajo).",
+          "Cada jugador roba 8 cartas. Comienza la Era del Ferrocarril."
+        ]
+      }
+    }
+  },
+  "phases": {
+    "setup": {
+      "title": "Preparación"
+    },
+    "turns": {
+      "title": "Turnos",
+      "loop": {
+        "endLabel": "Todos han jugado",
+        "note": "Jueguen en el orden de las losetas de Personaje en el Marcador de Orden de Turno."
+      }
+    },
+    "round-end": {
+      "title": "Fin de la ronda"
+    }
+  },
+  "steps": {
+    "setup-board": {
+      "title": "Tablero y cartas",
+      "instruction": "Coloquen el tablero por su lado de día o de noche y preparen las cartas:",
+      "bullets": [
+        "Menos de 4 jugadores: devuelvan a la caja todas las cartas y losetas de Comerciante que muestren un número de jugadores mayor que el suyo (esquina inferior derecha de las cartas, parte superior de las losetas).",
+        "Coloquen las cartas de Ubicación Comodín e Industria Comodín boca arriba en 2 de las Zonas de Robo.",
+        "Barajen el resto para formar el Mazo de Robo, boca abajo en la última Zona de Robo."
+      ],
+      "components": [
+        "Tablero",
+        "Cartas de Ubicación y de Industria",
+        "Cartas Comodín",
+        "Losetas de Comerciante"
+      ]
+    },
+    "setup-markets": {
+      "title": "Comerciantes y mercados",
+      "instruction": "Preparen los Comerciantes, los Mercados y la reserva:",
+      "bullets": [
+        "Barajen las losetas de Comerciante y pongan 1 boca arriba en cada espacio de Comerciante marcado con su número de jugadores (2 jugadores: ninguna en Warrington ni Nottingham; 3 jugadores: ninguna en Nottingham).",
+        "1 barril de cerveza en cada espacio de cerveza junto a una loseta de Comerciante (no en blanco).",
+        "Mercado de Carbón: un cubo negro en cada espacio menos uno de los de £1. Mercado de Hierro: un cubo naranja en cada espacio menos los dos de £1.",
+        "Los demás cubos y barriles junto al tablero son la Reserva General (ilimitada); el dinero es el Banco."
+      ],
+      "components": [
+        "Losetas de Comerciante",
+        "Barriles de cerveza",
+        "Cubos de carbón",
+        "Cubos de hierro",
+        "Dinero"
+      ]
+    },
+    "setup-players": {
+      "title": "Tu área de jugador",
+      "instruction": "Cada jugador prepara:",
+      "bullets": [
+        "Un Tablero de jugador, £17 del Banco y una loseta de Personaje.",
+        "Las losetas de Conexión de tu color a tu lado, y las losetas de Industria apiladas en sus espacios de tu Tablero (mitad superior negra boca abajo).",
+        "Marcador de PV en el 0 y Marcador de Ingresos en el 10 del Marcador de Progreso."
+      ],
+      "components": [
+        "Tablero de jugador",
+        "Loseta de Personaje",
+        "Losetas de Conexión",
+        "Losetas de Industria",
+        "Marcadores de PV y de Ingresos"
+      ]
+    },
+    "setup-hands": {
+      "title": "Manos y orden de turno",
+      "instruction": "Repartan las cartas y fijen el primer orden de turno:",
+      "bullets": [
+        "Cada jugador roba 8 cartas (mano oculta) y 1 más boca abajo a su lado: su Pila de Descarte.",
+        "Barajen las losetas de Personaje y pónganlas en orden aleatorio en el Marcador de Orden de Turno."
+      ],
+      "components": [
+        "Mazo de Robo",
+        "Losetas de Personaje"
+      ]
+    },
+    "turn-actions": {
+      "title": "Tus 2 acciones",
+      "instruction": "Haz 2 acciones (solo 1 cada uno en la primera ronda de la Era de los Canales). Descarta una carta por cada una. Elige entre:",
+      "bullets": [
+        "Construir: requiere una carta de Ubicación (esa ubicación) o de Industria (esa industria, en tu red). Paga el costo de tu Tablero y usa el carbón y el hierro necesarios.",
+        "Red: coloca una loseta de Conexión junto a tu red.",
+        "Desarrollar: retira 1 o 2 de las losetas de Industria más bajas de tu Tablero, usando 1 hierro por cada una.",
+        "Vender: voltea una Hilandería, Manufactura o Alfarería conectada a un Comerciante que la compre, usando la cerveza indicada.",
+        "Préstamo: toma £30 y retrocede tu Marcador de Ingresos 3 niveles de ingreso.",
+        "Explorar: descarta 2 cartas más y toma 1 Ubicación Comodín y 1 Industria Comodín (no si tienes una carta Comodín en la mano).",
+        "Puedes repetir la misma acción, o pasar (descartando una carta igualmente)."
+      ],
+      "components": [
+        "Cartas",
+        "Losetas de Industria",
+        "Losetas de Conexión",
+        "Dinero"
+      ],
+      "additions": [
+        {
+          "title": "Era de los Canales",
+          "text": "Construcción y conexiones en la Era de los Canales:",
+          "bullets": [
+            "Como máximo 1 loseta de Industria tuya por ubicación.",
+            "Solo conexiones de Canal: 1 por acción de Red, por £3."
+          ]
+        },
+        {
+          "title": "Era del Ferrocarril",
+          "text": "Construcción y conexiones en la Era del Ferrocarril:",
+          "bullets": [
+            "Puedes construir varias losetas de Industria en una misma ubicación.",
+            "Solo conexiones de Ferrocarril, cada una usando 1 carbón: 1 por £5, o 2 por £15 más 1 cerveza de una Cervecería."
+          ]
+        }
+      ]
+    },
+    "turn-end": {
+      "title": "Fin de tu turno",
+      "instruction": "Completa tu mano hasta 8 cartas con el Mazo de Robo.",
+      "bullets": [
+        "Cuando se acabe el Mazo de Robo, tu mano se reduce cada ronda hasta quedarte sin cartas."
+      ],
+      "components": [
+        "Mazo de Robo",
+        "Loseta de Personaje",
+        "Dinero"
+      ],
+      "reminders": [
+        "Todo el dinero que gastaste este turno está sobre tu loseta de Personaje en el Marcador de Orden de Turno.",
+        "Las cartas Comodín usadas volvieron a sus Zonas de Robo, no a tu Pila de Descarte.",
+        "Toda Mina de Carbón o Fundición vaciada este turno se voltea, y sube el ingreso de su dueño."
+      ]
+    },
+    "round-order": {
+      "title": "Orden de turno",
+      "instruction": "Reordenen las losetas de Personaje en el Marcador de Orden de Turno:",
+      "bullets": [
+        "Quien gastó menos dinero esta ronda va primero en la siguiente, y así sucesivamente; quien gastó más va último.",
+        "Las cantidades iguales mantienen su orden relativo.",
+        "Luego devuelvan al Banco todo el dinero de las losetas de Personaje."
+      ],
+      "components": [
+        "Losetas de Personaje",
+        "Dinero"
+      ]
+    },
+    "round-income": {
+      "title": "Ingresos",
+      "instruction": "Cada jugador recibe del Banco su nivel de ingresos (la moneda junto a su Marcador de Ingresos).",
+      "bullets": [
+        "Ingreso negativo: paga esa cantidad al Banco.",
+        "¿No puedes pagar? Retira tus propias losetas de Industria del tablero por la mitad de su costo cada una (redondeando hacia abajo), parando cuando tengas suficiente; si aun así no alcanza, pierde 1 PV por cada £1 que falte.",
+        "No hay ingresos tras la última ronda de la partida."
+      ],
+      "components": [
+        "Marcadores de Ingresos",
+        "Dinero"
+      ],
+      "additions": [
+        {
+          "title": "¿Fin de la Era de los Canales?",
+          "text": "¿Todos los jugadores acaban de usar la última carta de su mano? Entonces la Era de los Canales termina ahora (8/9/10 rondas con 4/3/2 jugadores)."
+        },
+        {
+          "title": "¿Fin de la partida?",
+          "text": "¿Todos los jugadores acaban de usar la última carta de su mano? Entonces terminan la Era del Ferrocarril y la partida (esta vez sin ingresos). Puntúen la era:",
+          "bullets": [
+            "Conexiones: cada una de tus losetas de Conexión puntúa 1 PV por cada icono de conexión en las ubicaciones vecinas. Retira las losetas de Conexión a medida que puntúan.",
+            "Industrias: luego puntúa los PV de la esquina inferior izquierda de tus losetas de Industria volteadas (mitad superior negra). Las no volteadas no puntúan.",
+            "Gana quien tenga más PV. Terminen la partida desde el menú Juego."
+          ]
+        }
+      ]
+    }
+  }
+}

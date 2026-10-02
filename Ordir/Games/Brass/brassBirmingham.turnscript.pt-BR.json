@@ -1,0 +1,223 @@
+{
+  "language": "pt-BR",
+  "title": "Brass: Birmingham",
+  "sides": {
+    "player": "Jogador da vez"
+  },
+  "victory": "Depois da pontuação da Era das Ferrovias, vence quem tiver mais PV. Desempate: maior renda, depois mais dinheiro; se ainda empatar, esses jogadores empatam.",
+  "sources": {
+    "rulebook": {
+      "title": "Livro de regras (v2018.11; duas páginas impressas por página do PDF)",
+      "shortTitle": "Livro de regras"
+    }
+  },
+  "expansions": {},
+  "images": {
+    "cover": "Capa do livro de regras",
+    "components": "Componentes",
+    "board-setup": "Preparação do tabuleiro",
+    "supply": "Carvão, ferro, cerveja e dinheiro",
+    "player-area": "Preparação da área do jogador",
+    "actions": "As ações",
+    "turn-order": "Ordem de turno: dinheiro gasto sobre as peças de Personagem",
+    "income": "Renda na Trilha de Progresso",
+    "era-scoring": "Pontuando conexões e indústrias viradas",
+    "end-canal": "Fim da Era dos Canais",
+    "build-cards": "Cartas de Local, Local Coringa, Indústria e Indústria Coringa",
+    "market": "Vendendo carvão e ferro aos Mercados",
+    "connections": "Rede e locais conectados",
+    "sell": "Vendendo a um Mercador",
+    "merchant-bonuses": "Bônus de cerveja dos Mercadores",
+    "network": "Conexões de ferrovia"
+  },
+  "states": {
+    "railEra": {
+      "title": "Era das Ferrovias",
+      "markLabel": "A Era dos Canais acabou",
+      "trigger": "A Era dos Canais termina após a rodada em que todos os jogadores usam a última carta da mão.",
+      "event": {
+        "title": "Fim da Era dos Canais",
+        "bullets": [
+          "Conexões: cada uma das suas peças de Conexão vale 1 PV para cada ícone de conexão nos locais vizinhos. Retire as peças de Conexão à medida que pontuam.",
+          "Indústrias: depois pontue os PV do canto inferior esquerdo das suas peças de Indústria viradas (metade de cima preta). Peças não viradas não pontuam.",
+          "Retire do tabuleiro todas as peças de Indústria de nível 1 (não das Pranchetas). As de nível 2 ou mais ficam.",
+          "Coloque 1 barril de cerveja em cada espaço de cerveja vazio ao lado de uma peça de Mercador (não vazia).",
+          "Embaralhe as Pilhas de Descarte de todos num novo Monte de Compra (desvire antes a carta de baixo, virada para baixo).",
+          "Cada jogador compra 8 cartas. Começa a Era das Ferrovias."
+        ]
+      }
+    }
+  },
+  "phases": {
+    "setup": {
+      "title": "Preparação"
+    },
+    "turns": {
+      "title": "Turnos",
+      "loop": {
+        "endLabel": "Todos já jogaram",
+        "note": "Joguem na ordem das peças de Personagem na Trilha de Ordem de Turno."
+      }
+    },
+    "round-end": {
+      "title": "Fim da rodada"
+    }
+  },
+  "steps": {
+    "setup-board": {
+      "title": "Tabuleiro e cartas",
+      "instruction": "Coloquem o tabuleiro no lado dia ou noite e preparem as cartas:",
+      "bullets": [
+        "Menos de 4 jogadores: devolvam à caixa todas as cartas e peças de Mercador que mostram um número de jogadores maior que o de vocês (canto inferior direito das cartas, topo das peças de Mercador).",
+        "Coloquem as cartas de Local Coringa e Indústria Coringa viradas para cima em 2 das Áreas de Compra.",
+        "Embaralhem o resto para formar o Monte de Compra, virado para baixo na última Área de Compra."
+      ],
+      "components": [
+        "Tabuleiro",
+        "Cartas de Local e de Indústria",
+        "Cartas Coringa",
+        "Peças de Mercador"
+      ]
+    },
+    "setup-markets": {
+      "title": "Mercadores e mercados",
+      "instruction": "Preparem os Mercadores, os Mercados e a reserva:",
+      "bullets": [
+        "Embaralhem as peças de Mercador e coloquem 1 virada para cima em cada espaço de Mercador marcado com o número de jogadores (2 jogadores: nenhuma em Warrington e Nottingham; 3 jogadores: nenhuma em Nottingham).",
+        "1 barril de cerveja em cada espaço de cerveja ao lado de uma peça de Mercador (não vazia).",
+        "Mercado de Carvão: um cubo preto em cada espaço, menos um dos espaços de £1. Mercado de Ferro: um cubo laranja em cada espaço, menos os dois de £1.",
+        "Os demais cubos e barris ao lado do tabuleiro são a Reserva Geral (ilimitada); o dinheiro é o Banco."
+      ],
+      "components": [
+        "Peças de Mercador",
+        "Barris de cerveja",
+        "Cubos de carvão",
+        "Cubos de ferro",
+        "Dinheiro"
+      ]
+    },
+    "setup-players": {
+      "title": "Sua área de jogador",
+      "instruction": "Cada jogador prepara:",
+      "bullets": [
+        "Uma Prancheta, £17 do Banco e uma peça de Personagem.",
+        "As peças de Conexão da sua cor ao seu lado, e as peças de Indústria empilhadas nos seus espaços da Prancheta (metade de cima preta virada para baixo).",
+        "Marcador de PV no 0 e Marcador de Renda no 10 da Trilha de Progresso."
+      ],
+      "components": [
+        "Prancheta",
+        "Peça de Personagem",
+        "Peças de Conexão",
+        "Peças de Indústria",
+        "Marcadores de PV e de Renda"
+      ]
+    },
+    "setup-hands": {
+      "title": "Mãos e ordem de turno",
+      "instruction": "Distribuam as cartas e definam a primeira ordem de turno:",
+      "bullets": [
+        "Cada jogador compra 8 cartas (mão escondida) e mais 1 virada para baixo ao seu lado: sua Pilha de Descarte.",
+        "Embaralhem as peças de Personagem e coloquem-nas em ordem aleatória na Trilha de Ordem de Turno."
+      ],
+      "components": [
+        "Monte de Compra",
+        "Peças de Personagem"
+      ]
+    },
+    "turn-actions": {
+      "title": "Suas 2 ações",
+      "instruction": "Faça 2 ações (só 1 cada na primeira rodada da Era dos Canais). Descarte uma carta para cada. Escolha entre:",
+      "bullets": [
+        "Construir: exige uma carta de Local (aquele local) ou de Indústria (aquela indústria, na sua rede). Pague o custo da Prancheta e use o carvão e o ferro necessários.",
+        "Rede: coloque uma peça de Conexão junto à sua rede.",
+        "Desenvolver: retire 1 ou 2 das peças de Indústria mais baixas da Prancheta, usando 1 ferro cada.",
+        "Vender: vire uma Tecelagem, Manufatura ou Olaria conectada a um Mercador que a compre, usando a cerveja indicada.",
+        "Empréstimo: pegue £30 e recue seu Marcador de Renda 3 níveis de renda.",
+        "Explorar: descarte mais 2 cartas e pegue 1 Local Coringa e 1 Indústria Coringa (não se tiver uma carta Coringa na mão).",
+        "Você pode repetir a mesma ação, ou passar (descartando uma carta mesmo assim)."
+      ],
+      "components": [
+        "Cartas",
+        "Peças de Indústria",
+        "Peças de Conexão",
+        "Dinheiro"
+      ],
+      "additions": [
+        {
+          "title": "Era dos Canais",
+          "text": "Construção e conexões na Era dos Canais:",
+          "bullets": [
+            "No máximo 1 peça de Indústria sua por local.",
+            "Só conexões de Canal: 1 por ação de Rede, por £3."
+          ]
+        },
+        {
+          "title": "Era das Ferrovias",
+          "text": "Construção e conexões na Era das Ferrovias:",
+          "bullets": [
+            "Você pode construir várias peças de Indústria num mesmo local.",
+            "Só conexões de Ferrovia, cada uma usando 1 carvão: 1 por £5, ou 2 por £15 mais 1 cerveja de uma Cervejaria."
+          ]
+        }
+      ]
+    },
+    "turn-end": {
+      "title": "Fim do seu turno",
+      "instruction": "Complete sua mão até 8 cartas com o Monte de Compra.",
+      "bullets": [
+        "Quando o Monte de Compra acabar, sua mão diminui a cada rodada até não sobrar nenhuma carta."
+      ],
+      "components": [
+        "Monte de Compra",
+        "Peça de Personagem",
+        "Dinheiro"
+      ],
+      "reminders": [
+        "Todo o dinheiro que você gastou neste turno está sobre sua peça de Personagem na Trilha de Ordem de Turno.",
+        "As cartas Coringa usadas voltaram para suas Áreas de Compra, não para a sua Pilha de Descarte.",
+        "Toda Mina de Carvão ou Siderúrgica esvaziada neste turno é virada, e a renda do dono sobe."
+      ]
+    },
+    "round-order": {
+      "title": "Ordem de turno",
+      "instruction": "Reorganizem as peças de Personagem na Trilha de Ordem de Turno:",
+      "bullets": [
+        "Quem gastou menos dinheiro nesta rodada joga primeiro na próxima, e assim por diante; quem gastou mais joga por último.",
+        "Valores iguais mantêm a ordem entre si.",
+        "Depois devolvam ao Banco todo o dinheiro sobre as peças de Personagem."
+      ],
+      "components": [
+        "Peças de Personagem",
+        "Dinheiro"
+      ]
+    },
+    "round-income": {
+      "title": "Renda",
+      "instruction": "Cada jogador recebe do Banco o valor do seu nível de renda (a moeda ao lado do Marcador de Renda).",
+      "bullets": [
+        "Renda negativa: pague esse valor ao Banco.",
+        "Não consegue pagar? Retire suas próprias peças de Indústria do tabuleiro por metade do custo cada (arredondando para baixo), parando quando tiver o suficiente; se ainda faltar, perca 1 PV por £1 que faltar.",
+        "Não há renda após a última rodada do jogo."
+      ],
+      "components": [
+        "Marcadores de Renda",
+        "Dinheiro"
+      ],
+      "additions": [
+        {
+          "title": "Fim da Era dos Canais?",
+          "text": "Todos os jogadores acabaram de usar a última carta da mão? Então a Era dos Canais termina agora (8/9/10 rodadas com 4/3/2 jogadores)."
+        },
+        {
+          "title": "Fim do jogo?",
+          "text": "Todos os jogadores acabaram de usar a última carta da mão? Então a Era das Ferrovias e o jogo terminam (sem renda desta vez). Pontuem a era:",
+          "bullets": [
+            "Conexões: cada uma das suas peças de Conexão vale 1 PV para cada ícone de conexão nos locais vizinhos. Retire as peças de Conexão à medida que pontuam.",
+            "Indústrias: depois pontue os PV do canto inferior esquerdo das suas peças de Indústria viradas (metade de cima preta). Peças não viradas não pontuam.",
+            "Vence quem tiver mais PV. Encerrem o jogo pelo menu Jogo."
+          ]
+        }
+      ]
+    }
+  }
+}

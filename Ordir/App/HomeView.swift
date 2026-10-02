@@ -2,7 +2,8 @@
 //  HomeView.swift
 //  Ordir
 //
-//  First screen after the opening: the mascot and the games, unfinished ones marked "Coming soon".
+//  First screen after the opening: the mascot, a game search, Ordi's favourites and every game (sorted A–Z or
+//  by most recently added); games without a turn guide yet are marked "Coming soon".
 //
 
 import SwiftUI
@@ -27,6 +28,9 @@ struct HomeView: View {
     /// The app rebuilds Home when the language changes, so this is loaded again.
     @State private var scripts = HomeView.loadScripts()
     @State private var showsSettings = false
+    /// Home's game search; while it has text, only matching games show.
+    @State private var query = ""
+    @AppStorage("OrdirGameSort") private var sort = GameSort.recent
     @State private var showsTutorial = false
     /// Set once the tutorial has been seen or skipped (`-OrdirTourDone YES` at launch for tests).
     private var tourDone: Bool { UserDefaults.standard.bool(forKey: "OrdirTourDone") }
@@ -177,22 +181,93 @@ struct HomeView: View {
         "Every game night needs a referee. Hi.",
     ]
 
+    /// The search box, then, with it empty, Ordi's favourites and every game in the chosen order; while
+    /// typing, only the games that match.
     private var gameList: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(tr("Choose a game"))
-                .font(.ordir(.headline))
-                .accessibilityAddTraits(.isHeader)
-            ForEach(OrdirGame.allCases.filter { scripts[$0] != nil }) { game in
-                NavigationLink(value: game) {
-                    GameCard(game: game, script: scripts[game]!)
+        VStack(alignment: .leading, spacing: 28) {
+            searchField
+            if searching {
+                VStack(alignment: .leading, spacing: 8) {
+                    let matches = OrdirGame.allCases.filter { $0.displayName.localizedStandardContains(query.trimmingCharacters(in: .whitespaces)) }
+                    ForEach(matches) { game in gameRow(game) }
+                    if matches.isEmpty {
+                        Text(tr("No games match."))
+                            .font(.ordir(.subheadline))
+                            .foregroundStyle(.secondary)
+                            .padding(.vertical, 8)
+                    }
                 }
-                .buttonStyle(PressableCardStyle())
-            }
-            LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
-                ForEach(OrdirGame.allCases.filter { scripts[$0] == nil }) { game in
-                    ComingSoonTile(game: game)
+            } else {
+                VStack(alignment: .leading, spacing: 12) {
+                    Text(tr("Ordi’s Current Favorites"))
+                        .font(.ordir(.headline))
+                        .accessibilityAddTraits(.isHeader)
+                    ForEach(OrdirGame.favorites.filter { scripts[$0] != nil }) { game in
+                        NavigationLink(value: game) {
+                            GameCard(game: game, script: scripts[game]!)
+                        }
+                        .buttonStyle(PressableCardStyle())
+                    }
+                }
+                VStack(alignment: .leading, spacing: 12) {
+                    Text(tr("All games"))
+                        .font(.ordir(.headline))
+                        .accessibilityAddTraits(.isHeader)
+                    Picker(tr("Sort games"), selection: $sort) {
+                        Text(tr("A–Z")).tag(GameSort.name)
+                        Text(tr("Most recently added")).tag(GameSort.recent)
+                    }
+                    .pickerStyle(.segmented)
+                    VStack(spacing: 8) {
+                        ForEach(sortedGames) { game in gameRow(game) }
+                    }
                 }
             }
+        }
+    }
+
+    private var searching: Bool { !query.trimmingCharacters(in: .whitespaces).isEmpty }
+
+    private var sortedGames: [OrdirGame] {
+        switch sort {
+        case .name: OrdirGame.allCases.sorted { $0.displayName.localizedStandardCompare($1.displayName) == .orderedAscending }
+        case .recent: OrdirGame.allCases.reversed()
+        }
+    }
+
+    private var searchField: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "magnifyingglass")
+                .foregroundStyle(.secondary)
+                .accessibilityHidden(true)
+            TextField(tr("Search games"), text: $query)
+                .font(.ordir(.body))
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                .submitLabel(.search)
+                .accessibilityIdentifier("home-search")
+            if !query.isEmpty {
+                Button { query = "" } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundStyle(.secondary)
+                }
+                .accessibilityLabel(tr("Clear search"))
+            }
+        }
+        .padding(.horizontal, 14)
+        .frame(minHeight: 48)
+        .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+    }
+
+    @ViewBuilder
+    private func gameRow(_ game: OrdirGame) -> some View {
+        if let script = scripts[game] {
+            NavigationLink(value: game) {
+                GameRow(game: game, script: script)
+            }
+            .buttonStyle(PressableCardStyle())
+        } else {
+            GameRow(game: game, script: nil)
         }
     }
 
@@ -271,42 +346,61 @@ private struct GameCard: View {
     }
 }
 
-/// A game whose turn guide isn't written yet: house-style art with a "Coming soon" badge, not tappable.
-private struct ComingSoonTile: View {
+/// How Home's list of every game is ordered.
+enum GameSort: String {
+    case name, recent
+}
+
+/// A game in Home's list: its cover (or the orb, until it has one), name and player count. A game without its
+/// turn guide yet is greyed out as "Coming soon" and can't be opened.
+private struct GameRow: View {
     let game: OrdirGame
+    let script: TurnScript?
+
+    private var cover: TurnScript.SourceImage? { script?.pictures(["cover"]).first }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            Color.clear
-                .aspectRatio(1, contentMode: .fit)
-                .overlay {
-                    RadialGradient(colors: [Color(white: 0.17), Color(white: 0.07), Color(white: 0.04)],
-                                   center: UnitPoint(x: 0.3, y: 0.2), startRadius: 0, endRadius: 200)
-                    OrdirMascotView()
-                        .padding(44)
-                        .opacity(0.35)
+        HStack(spacing: 14) {
+            Group {
+                if let script, let cover {
+                    Image(script.assetName(for: cover))
+                        .resizable()
+                        .scaledToFill()
+                } else {
+                    ZStack {
+                        RadialGradient(colors: [Color(white: 0.17), Color(white: 0.07), Color(white: 0.04)],
+                                       center: UnitPoint(x: 0.3, y: 0.2), startRadius: 0, endRadius: 60)
+                        OrdirMascotView()
+                            .padding(12)
+                            .opacity(0.35)
+                    }
                 }
-                .overlay(alignment: .topLeading) {
-                    Text(tr("Coming soon"))
-                        .font(.ordir(.caption).weight(.semibold))
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 3)
-                        .background(.black.opacity(0.55), in: Capsule())
-                        .overlay(Capsule().strokeBorder(.white.opacity(0.14)))
-                        .padding(10)
-                }
-                .clipped()
-            Text(game.displayName)
-                .font(.ordir(.subheadline).weight(.semibold))
-                .foregroundStyle(.secondary)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 10)
+            }
+            .frame(width: 52, height: 52)
+            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(game.displayName)
+                    .font(.ordir(.headline))
+                    .foregroundStyle(script == nil ? .secondary : .primary)
+                Text(script == nil ? tr("Coming soon") : tr("{0} players", game.players))
+                    .font(.ordir(.subheadline))
+                    .foregroundStyle(.secondary)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            if script != nil {
+                Image(systemName: "chevron.right")
+                    .font(.ordir(.footnote).weight(.semibold))
+                    .foregroundStyle(.tertiary)
+                    .accessibilityHidden(true)
+            }
         }
-        .background(.quaternary.opacity(0.25))
-        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(tr("{0}, coming soon", game.displayName))
+        .padding(10)
+        .background(.quaternary.opacity(script == nil ? 0.25 : 0.5))
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .contentShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .accessibilityElement(children: .combine)
+        .accessibilityIdentifier("game-row-\(game.rawValue)")
     }
 }
 

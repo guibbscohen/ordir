@@ -13,7 +13,8 @@ struct TurnScript: Decodable {
     let game: OrdirGame
     let title: String
     let version: Int
-    /// The two sides (factions) the game is played between; steps name one of them, or both.
+    /// The two sides (factions) the game is played between; steps name one of them, or both. Games without
+    /// fixed sides (everyone does the same things in turn) have one: the player on turn (`takesTurns`).
     let sides: [SideInfo]
     /// How each side wins, shown when the players end the game.
     let victory: Victory
@@ -69,7 +70,8 @@ struct TurnScript: Decodable {
 
     struct GameState: Decodable, Identifiable {
         let id: String
-        let expansion: String
+        /// The expansion it belongs to; none for the base game's (e.g. Brass's Rail Era).
+        let expansion: String?
         let title: String
         /// Button label for marking that it happened, e.g. "The Smugglers have joined us".
         let markLabel: String
@@ -129,8 +131,11 @@ struct TurnScript: Decodable {
         }
     }
 
+    /// Extra rules for a step: an expansion's, or the base game's for a moment (e.g. the end of an era), with its
+    /// own heading.
     struct Addition: Decodable {
-        let expansion: String
+        let expansion: String?
+        let title: String?
         let when: Condition?
         /// A state this addition lets the players mark as happened.
         let sets: String?
@@ -178,6 +183,9 @@ struct TurnScript: Decodable {
         let note: String
         let citations: [Citation]
     }
+
+    /// No fixed sides: play passes round the table, and the phone with it in pass-the-phone play.
+    var takesTurns: Bool { sides.count == 1 }
 
     func name(of side: Side) -> String {
         side == .both ? tr("Both players") : sides.first { $0.id == side }?.name ?? side.rawValue.capitalized
@@ -279,7 +287,7 @@ struct TurnScript: Decodable {
                     guard let words = table("steps")[id] as? [String: Any] else { return }
                     put(&step, words, ["title", "instruction", "bullets", "components"])
                     if var additions = step["additions"] as? [[String: Any]], let texts = words["additions"] as? [Any] {
-                        for index in additions.indices where index < texts.count { put(&additions[index], texts[index], ["text", "bullets"]) }
+                        for index in additions.indices where index < texts.count { put(&additions[index], texts[index], ["title", "text", "bullets"]) }
                         step["additions"] = additions
                     }
                     if var reminders = step["reminders"] as? [[String: Any]], let texts = words["reminders"] as? [String] {

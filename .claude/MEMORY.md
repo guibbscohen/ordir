@@ -114,3 +114,11 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   phone's language at first; Account lets players change it. Everything is translated: screens, tutorial, turn-guide
   steps (per-game translation files, still citing the English rulebook pages) and rules answers. Citation quotes stay
   in the source's language. Every new string or step ships in all three languages.
+- 2026-10-02: The orb mascot is called Ordi. Home has a search box at the top; while typing it shows one filtered list
+  of games (favorites hidden). With the box empty, Home shows "Ordi's Current Favorites" (Dune: War for Arrakis,
+  Star Wars: Rebellion, War of the Ring 2E), then every game in a list sortable A–Z or Most recently added.
+- 2026-10-02: Next games: Dune: Imperium (with Rise of Ix, Immortality and Bloodlines), Brass: Birmingham (base game)
+  and Knarr (base game).
+- 2026-10-02: Games for 3+ players with no fixed sides (Dune: Imperium, Brass, Knarr) are played on one phone by
+  passing it: the handoff screen asks to pass to the next player. Two players can still use the split screen.
+  Dune: Imperium is 3–4 players for now (no House Hagal solo/2-player). Own-phone tables stay two-seat for now.

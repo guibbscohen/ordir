@@ -82,7 +82,8 @@ def translatable(script):
                 entry["bullets"] = step["bullets"]
             entry["components"] = step["components"]
             if step.get("additions"):
-                entry["additions"] = [{"text": a["text"], **({"bullets": a["bullets"]} if a.get("bullets") else {})} for a in step["additions"]]
+                entry["additions"] = [{**({"title": a["title"]} if a.get("title") else {}), "text": a["text"],
+                                       **({"bullets": a["bullets"]} if a.get("bullets") else {})} for a in step["additions"]]
             if step.get("reminders"):
                 entry["reminders"] = [r["text"] for r in step["reminders"]]
             out["steps"][step["id"]] = entry
@@ -137,12 +138,15 @@ def validate(path):
         if not (ROOT / "Ordir" / "Assets.xcassets" / script["game"] / f"{name}.imageset" / f"{name}.jpg").exists():
             errors.append(f"{where}: asset missing, run tools/crop_source_images.py")
 
-    # The two sides (factions) the game is played between; steps name one of them, or "both".
+    # The two sides (factions) the game is played between; steps name one of them, or "both". Games without
+    # fixed sides have one, the player on turn (play passes round the table) and no battle.
     declared = script.get("sides", [])
-    if len(declared) != 2 or not all(
+    if len(declared) not in (1, 2) or not all(
         side.get("id") and side.get("name") and re.fullmatch(r"#[0-9a-fA-F]{6}", side.get("color", "")) for side in declared
     ):
-        errors.append("sides: need exactly 2 sides, each with id, name and a #rrggbb color")
+        errors.append("sides: need 2 sides (or 1, the player on turn), each with id, name and a #rrggbb color")
+    if len(declared) == 1 and script.get("battle"):
+        errors.append("battle: needs two sides (attacker and defender)")
     SIDES = {side.get("id") for side in declared} | {"both"}
     victory = script.get("victory", {})
     if not victory.get("note", "").strip():
@@ -157,7 +161,7 @@ def validate(path):
     for state in script.get("states", []):
         where = f"state {state.get('id')}"
         states[state.get("id")] = state
-        if state.get("expansion") not in expansions:
+        if "expansion" in state and state["expansion"] not in expansions:  # none: a base-game state
             errors.append(f"{where}: unknown expansion {state.get('expansion')!r}")
         if not state.get("title") or not state.get("trigger"):
             errors.append(f"{where}: needs title and trigger")
@@ -224,8 +228,11 @@ def validate(path):
                     check_citations(reminder.get("citations", []), at, sources, pages, errors)
                 for n, addition in enumerate(step.get("additions", []), 1):
                     at = f"{where} addition {n}"
-                    if addition.get("expansion") not in expansions:
-                        errors.append(f"{at}: unknown expansion {addition.get('expansion')!r}")
+                    # An expansion's rules, or the base game's (no expansion) under their own title.
+                    if "expansion" in addition and addition["expansion"] not in expansions:
+                        errors.append(f"{at}: unknown expansion {addition['expansion']!r}")
+                    if "expansion" not in addition and not addition.get("title", "").strip():
+                        errors.append(f"{at}: a base-game addition needs a title")
                     if not addition.get("text", "").strip():
                         errors.append(f"{at}: missing text")
                     if not addition.get("images"):

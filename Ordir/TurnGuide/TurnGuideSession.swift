@@ -67,7 +67,9 @@ final class TurnGuideSession {
 
     /// Expansion additions that apply to the current step right now.
     var additions: [TurnScript.Addition] {
-        (step.additions ?? []).filter { expansions.contains($0.expansion) && applies($0.when) }
+        (step.additions ?? []).filter { addition in
+            (addition.expansion.map(expansions.contains) ?? true) && applies(addition.when)
+        }
     }
     /// Turn-change reminders for the current step, without those of switched-off expansions.
     var reminders: [TurnScript.Reminder] {
@@ -78,12 +80,15 @@ final class TurnGuideSession {
     }
     /// States the players can mark or correct: those of switched-on expansions.
     var availableStates: [TurnScript.GameState] {
-        (script.states ?? []).filter { expansions.contains($0.expansion) }
+        (script.states ?? []).filter { state in state.expansion.map(expansions.contains) ?? true }
     }
     var canGoBack: Bool { !history.isEmpty || isFinished }
 
-    /// Turn number inside a looping phase, e.g. the 5th alternating Action turn.
-    var turnNumber: Int { (position.pass - 1) * phase.steps.count + position.step + 1 }
+    /// Turn number inside a looping phase, e.g. the 5th alternating Action turn. Without fixed sides, each
+    /// time round the loop is the next player's turn.
+    var turnNumber: Int {
+        script.takesTurns ? position.pass : (position.pass - 1) * phase.steps.count + position.step + 1
+    }
 
     /// The current phase's steps that apply now, for "3 of 5".
     var applicableSteps: [TurnScript.Step] { phase.steps.filter { applies($0.when) } }
@@ -237,11 +242,13 @@ final class TurnGuideSession {
 
     private func move(to next: Position) {
         let previousSide = step.side
+        // Without fixed sides, going round the loop again (or into a new round) is another player's turn.
+        let nextPlayer = script.takesTurns && (next.pass > position.pass || next.round > position.round)
         history.append(position)
         position = next
         stepStartedAt = .now
         // Steps for both players need no handoff; a switch to the other single side does.
-        handoffTo = passesPhone && step.side != .both && step.side != previousSide ? step.side : nil
+        handoffTo = passesPhone && step.side != .both && (step.side != previousSide || nextPlayer) ? step.side : nil
     }
 }
 

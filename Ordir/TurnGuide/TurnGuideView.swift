@@ -82,33 +82,37 @@ private struct SetupPicker: View {
                         .accessibilityAddTraits(.isHeader)
                 }
                 VStack(spacing: 12) {
-                    modeRow(.table, title: tr("One phone on the table"), detail: tr("Split screen: the top half faces the player across the table."))
+                    modeRow(.table, title: tr("One phone on the table"), detail: script.takesTurns
+                        ? tr("Split screen for two players: the top half faces the player across the table.")
+                        : tr("Split screen: the top half faces the player across the table."))
                     modeRow(.pass, title: tr("Pass the phone"), detail: tr("Full screen: hand the phone to whoever acts next."))
                 }
-                Text(tr("Which expansions are you playing with?"))
-                    .font(.ordir(.title3).weight(.semibold))
-                    .fixedSize(horizontal: false, vertical: true)
-                    .accessibilityAddTraits(.isHeader)
-                VStack(spacing: 12) {
-                    ForEach(script.expansions) { expansion in
-                        Toggle(isOn: binding(for: expansion.id)) {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(expansion.title)
-                                    .font(.ordir(.headline))
-                                Text(expansion.summary)
-                                    .font(.ordir(.subheadline))
-                                    .foregroundStyle(.secondary)
-                                    .fixedSize(horizontal: false, vertical: true)
+                if !script.expansions.isEmpty {
+                    Text(tr("Which expansions are you playing with?"))
+                        .font(.ordir(.title3).weight(.semibold))
+                        .fixedSize(horizontal: false, vertical: true)
+                        .accessibilityAddTraits(.isHeader)
+                    VStack(spacing: 12) {
+                        ForEach(script.expansions) { expansion in
+                            Toggle(isOn: binding(for: expansion.id)) {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(expansion.title)
+                                        .font(.ordir(.headline))
+                                    Text(expansion.summary)
+                                        .font(.ordir(.subheadline))
+                                        .foregroundStyle(.secondary)
+                                        .fixedSize(horizontal: false, vertical: true)
+                                }
                             }
+                            .accessibilityIdentifier("expansion-\(expansion.id)")
+                            .padding(16)
+                            .background(Color(white: 0.11), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                         }
-                        .accessibilityIdentifier("expansion-\(expansion.id)")
-                        .padding(16)
-                        .background(Color(white: 0.11), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                     }
+                    Text(tr("Leave them all off to play the base game."))
+                        .font(.ordir(.footnote))
+                        .foregroundStyle(.secondary)
                 }
-                Text(tr("Leave them all off to play the base game."))
-                    .font(.ordir(.footnote))
-                    .foregroundStyle(.secondary)
             }
             .padding(20)
         }
@@ -338,8 +342,10 @@ private struct TurnGuideRunner: View {
                 withAnimation(stepAnimation) { session.goBack() }
             }
             .disabled(!session.canGoBack)
-            barButton(tr("Swap seats"), systemImage: "arrow.up.arrow.down") {
-                withAnimation(stepAnimation) { nearSeat = farSeat }
+            if !session.script.takesTurns {
+                barButton(tr("Swap seats"), systemImage: "arrow.up.arrow.down") {
+                    withAnimation(stepAnimation) { nearSeat = farSeat }
+                }
             }
         }
         .padding(.horizontal, 8)
@@ -464,9 +470,11 @@ private struct TurnGuideRunner: View {
 
     // MARK: Behaviour
 
-    /// Inside a loop, number each side's turns: "Action turn 2". Battles show the round in the bar instead.
+    /// Inside a loop, number each side's turns: "Action turn 2". Battles show the round in the bar instead, and
+    /// games without fixed sides the turn.
     private var stepTitle: String {
-        session.phase.loop == nil || isBattle ? session.step.title : "\(session.step.title) \(session.position.pass)"
+        session.phase.loop == nil || isBattle || session.script.takesTurns
+            ? session.step.title : "\(session.step.title) \(session.position.pass)"
     }
 
     private var stepKey: String {
@@ -537,9 +545,14 @@ private struct GameMenu: View {
                     }
                 }
                 Section {
-                    ForEach(session.script.sides) { side in
-                        Button(tr("The {0} won", side.name)) { endGame(side.id) }
-                            .foregroundStyle(session.script.color(of: side.id))
+                    if session.script.takesTurns {
+                        // No sides to name: the score track says who won.
+                        Button(tr("End the game now")) { endGame(nil) }
+                    } else {
+                        ForEach(session.script.sides) { side in
+                            Button(tr("The {0} won", side.name)) { endGame(side.id) }
+                                .foregroundStyle(session.script.color(of: side.id))
+                        }
                     }
                 } header: {
                     Text(tr("End the game"))
@@ -578,7 +591,13 @@ private struct HandoffView: View {
                 .frame(height: 80)
                 .accessibilityHidden(true)
             VStack(spacing: 6) {
-                Text(tr: "Pass the phone to the {0}", Text(script.name(of: side)).foregroundColor(script.color(of: side)))
+                Group {
+                    if script.takesTurns {
+                        Text(tr("Pass the phone to the player whose turn it is"))
+                    } else {
+                        Text(tr: "Pass the phone to the {0}", Text(script.name(of: side)).foregroundColor(script.color(of: side)))
+                    }
+                }
                     .font(.ordir(.title2).weight(.semibold))
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
@@ -591,7 +610,7 @@ private struct HandoffView: View {
             }
             Spacer(minLength: 0)
             Button(action: ready) {
-                Text(tr("I’m the {0}", script.name(of: side)))
+                Text(script.takesTurns ? tr("I have the phone") : tr("I’m the {0}", script.name(of: side)))
                     .font(.ordir(.headline))
                     .frame(maxWidth: .infinity, minHeight: 54)
             }
@@ -781,7 +800,7 @@ private struct StepCard: View {
             }
 
             ForEach(Array(additions.enumerated()), id: \.offset) { _, addition in
-                section(script.expansionTitle(addition.expansion)) {
+                section(addition.title ?? addition.expansion.map(script.expansionTitle) ?? "") {
                     Text(addition.text)
                         .font(.ordir(.body))
                         .fixedSize(horizontal: false, vertical: true)
