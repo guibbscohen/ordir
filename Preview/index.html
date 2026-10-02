@@ -260,6 +260,12 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 .chat-head > div { flex: 1; min-width: 0; }
 .chat-head h2 { font-size: 17px; }
 .chat-head p { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+.close-x { flex: none; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--surface-2); color: var(--fg); }
+.close-x svg { width: 16px; height: 16px; }
+/* Full-screen overlays (the Game menu, a rules chat) cover the whole phone, so they keep clear of the status bar and
+   home indicator themselves (the chat's composer pads the bottom). */
+.phone > .overlay { padding-top: calc(20px + env(safe-area-inset-top)); padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
+.phone > .overlay.chat { padding-top: env(safe-area-inset-top); padding-bottom: 0; }
 .thread { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding: 16px; }
 .msg { align-self: flex-end; max-width: 85%; margin: 0; padding: 10px 14px; border-radius: 18px 18px 4px 18px; background: #1d2a3d; line-height: 1.4; overflow-wrap: anywhere; }
 .thread .answer { align-self: flex-start; max-width: 94%; border-radius: 18px 18px 18px 4px; }
@@ -840,6 +846,7 @@ function askPage() {
 const thumb = (g) => `<span class="thumb" aria-hidden="true">${g && g.cover && state.script && imageOf(g.cover) ? `<img src="${imgUrl(g.cover)}" alt="">` : mascot("")}</span>`;
 const norm = (text) => text.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 const LENS = '<svg class="lens" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>';
+const CLOSE_X = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg>';
 const SEND = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5.5 11.5L12 5l6.5 6.5"/></svg>';
 
 // The search bar: tap or type to open the list of games (cover and name); typing filters it.
@@ -950,7 +957,7 @@ function gameMenu(s) {
   const toggles = statesOf(s).map((x) => `<label class="toggle" for="state-${x.id}">
       <div><strong>${esc(x.title)}</strong><span>${esc(x.trigger)}</span></div>
       <input type="checkbox" id="state-${x.id}" data-state="${x.id}" ${s.states.has(x.id) ? "checked" : ""}><span class="switch" aria-hidden="true"></span></label>`).join("");
-  return `<div class="overlay enter menu" role="dialog" aria-modal="true" aria-label="Game" style="padding-top:20px">
+  return `<div class="overlay enter menu" role="dialog" aria-modal="true" aria-label="Game">
     <div class="head"><h2 style="flex:1" tabindex="-1">Game</h2><button class="textbtn" data-act="menu-close">Close</button></div>
     <div class="scroll" style="padding:0;display:flex;flex-direction:column;gap:16px">
       <p class="hint" style="font-size:15px">${phaseOf(s).part === "setup" ? "Setup" : `Round ${s.pos.round}`}${online.table ? ` · Table <b>${esc(online.table.code)}</b> · You're the ${SIDE_NAME[online.mySide]}` : ""}</p>
@@ -1071,7 +1078,7 @@ function chatPanel() {
   return `<div class="overlay${askEnter ? " enter" : ""} menu chat" role="dialog" aria-modal="true" aria-labelledby="chat-title">
     <div class="chat-head">${thumb(game)}<div><h2 id="chat-title" tabindex="-1">${esc(game?.title || "Rules question")}</h2>
       <p>Rules chat · ${esc(titles.length ? `With ${titles.join(", ")}` : "Base game")}</p></div>
-      <button class="textbtn" data-act="ask-close">Close</button></div>
+      <button class="close-x" data-act="ask-close" aria-label="Close">${CLOSE_X}</button></div>
     <div class="scroll thread">${chatThread()}</div>${signedIn() ? composer() : ""}</div>`;
 }
 
@@ -1457,6 +1464,15 @@ function fitHomeScreenApp() {
 }
 fitHomeScreenApp();
 addEventListener("resize", fitHomeScreenApp);
+// iOS can leave the page scrolled after the keyboard closes (the app then sits lower, its tab bar cut off). The page
+// itself never scrolls (only the panes inside it), so it goes back to the top once no text field has focus.
+function resetPageScroll() {
+  if (document.activeElement && document.activeElement.matches("input, textarea")) return;
+  if (scrollX || scrollY) scrollTo(0, 0);
+  fitHomeScreenApp();
+}
+document.addEventListener("focusout", () => setTimeout(resetPageScroll, 120));
+window.visualViewport?.addEventListener("resize", () => setTimeout(resetPageScroll, 120));
 // The build, stamped by tools/build_preview.py (commit and date), so a phone can show which version it runs.
 const BUILD = "__BUILD__";
 // Layout info: a small live readout of the screen, safe-area insets and the opening's measurements. It stays on
@@ -1492,6 +1508,7 @@ function showLayoutInfo(on) {
     const bar = $(".tabbar")?.getBoundingClientRect();
     layoutInfo.el.textContent = [
       `version ${BUILD} · ${navigator.standalone ? "Home Screen app" : "browser"} · ${state.screen}`,
+      `visible ${vv ? `${Math.round(vv.width)}×${Math.round(vv.height)} at ${Math.round(vv.offsetTop)}` : "?"} · html ${document.documentElement.clientHeight}`,
       `window ${innerWidth}×${innerHeight} · screen ${screen.width}×${screen.height} · app ${document.documentElement.style.getPropertyValue("--app-h") || "—"} · zoom ${vv ? vv.scale.toFixed(2) : "?"} · page scroll ${Math.round(scrollY)}/${document.documentElement.scrollHeight}`,
       `insets t${t} r${rt} b${b} l${l} · phone ${Math.round(r.left)},${Math.round(r.top)} ${Math.round(r.width)}×${Math.round(r.height)}`,
       bar ? `tab bar bottom ${Math.round(bar.bottom)} (screen ${innerHeight})` : "",
