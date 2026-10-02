@@ -88,7 +88,7 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   the face appears, then the line fades. No separate trace, no cut. Home's header has no tagline: once the orb is built, "Ask me a
   rules question" appears under "Ordir", and a centered speech bubble from the orb shows a funny
   board-game line from a rotating set (a new one each launch, never the same twice in a row; tap for another).
-  The orb build, the Ask link and the bubble play quickly (all done ~0.85 s after the line reaches the orb).
+  The orb build, the Ask link and the bubble play quickly (all done ~0.6 s after the line reaches the orb).
 - 2026-10-01: Home keeps the opening's deep blue/violet glow as a subtle ambient gradient (behind the header
   and phrase bubble, fading to black before the game cards, plus a faint glow behind the glass bar), so the
   opening settles into Home. Turn-guide screens stay true black for legibility.
