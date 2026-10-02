@@ -258,7 +258,8 @@ def tour_gestures_languages(page, url, problems):
 
     # Coming back to Home lands where the player left off, not at the top.
     page.click("[data-act=tab-games]")
-    page.evaluate("document.querySelector('.home > .scroll').scrollTop = 2000")
+    # Scroll and redraw in the same moment (as when a game's guide finishes loading): the place must survive.
+    page.evaluate("document.querySelector('.home > .scroll').scrollTop = 2000; render()")
     page.wait_for_timeout(100)
     before = page.evaluate("document.querySelector('.home > .scroll').scrollTop")
     page.click("#home-browse [data-act=game-knarr]")
@@ -267,6 +268,11 @@ def tour_gestures_languages(page, url, problems):
     page.wait_for_selector("#home-browse")
     after = page.evaluate("document.querySelector('.home > .scroll').scrollTop")
     check(before > 300 and abs(after - before) < 2, f"Home went back to {after}px instead of {before}px")
+    check(not page.query_selector(".pane.home.enter"), "coming back to Home replayed its arrival animation")
+    check(focused(page, "#home-browse .game-row[data-act=game-knarr]"), "focus did not return to the game that was opened")
+    page.wait_for_timeout(400)
+    later = page.evaluate("document.querySelector('.home > .scroll').scrollTop")
+    check(abs(later - before) < 2, f"Home drifted to {later}px after coming back")
     page.evaluate("document.querySelector('.home > .scroll').scrollTop = 0")
 
     # Swipe-back and the browser's Back leave a game's setup; a running guide ignores swipe-back.
