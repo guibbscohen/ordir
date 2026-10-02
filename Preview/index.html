@@ -598,6 +598,11 @@ function sideName(id, script = state.script) {
 }
 // Games without fixed sides have one, the player on turn: play (and the phone) passes round the table.
 const takesTurns = (script = state.script) => script.sides.length === 1;
+// Own-phone tables seat the players: by faction, or (without fixed sides) as Player 1 to Player 4.
+const seatsOf = (script = state.script) => takesTurns(script)
+  ? [1, 2, 3, 4].map((n) => ({ id: `seat${n}`, name: t("Player {0}", n) })) : script.sides;
+const seatName = (id, script = state.script) => (seatsOf(script).find((x) => x.id === id) || { name: sideName(id, script) }).name;
+const youAre = (id) => takesTurns() ? t("You’re {0}", esc(seatName(id))) : t("You’re the {0}", `<span class="side-${id}">${esc(sideName(id))}</span>`);
 const otherSide = (id, script = state.script) => script.sides.map((x) => x.id).find((x) => x !== id) ?? id;
 function styleSides(script) {
   const style = document.createElement("style");
@@ -1198,8 +1203,7 @@ function picker() {
     <div role="radiogroup" aria-label="${t("How are you playing?")}" style="display:flex;flex-direction:column;gap:12px">
       ${[["table", "One phone on the table", takesTurns() ? "Split screen for two players: the top half faces the player across the table." : "Split screen: the top half faces the player across the table."],
          ["pass", "Pass the phone", "Full screen: hand the phone to whoever acts next."],
-         // Own-phone tables have a seat per side, so games without fixed sides are one phone only for now.
-         ...(takesTurns() ? [] : [["own", "Each on our own phone", "Sign in, start a table and share its code; each phone shows its own side."]])].map(([id, title, detail]) =>
+         ["own", "Each on our own phone", "Sign in, start a table and share its code; each phone shows its own side."]].map(([id, title, detail]) =>
         `<button class="option" role="radio" aria-checked="${state.mode === id}" data-mode="${id}">
           <div><strong>${t(title)}</strong><span>${t(detail)}</span></div><span class="radio" aria-hidden="true"></span></button>`).join("")}
     </div>
@@ -1236,7 +1240,7 @@ function gameMenu(s) {
   return `<div class="overlay enter menu" role="dialog" aria-modal="true" aria-label="${t("Game")}">
     <div class="head"><h2 style="flex:1" tabindex="-1">${t("Game")}</h2><button class="textbtn" data-act="menu-close">${t("Close")}</button></div>
     <div class="scroll" style="padding:0;display:flex;flex-direction:column;gap:16px">
-      <p class="hint" style="font-size:15px">${phaseOf(s).part === "setup" ? t("Setup") : t("Round {0}", s.pos.round)}${online.table ? ` · ${t("Table {0}", `<b>${esc(online.table.code)}</b>`)} · ${t("You’re the {0}", esc(sideName(online.mySide)))}` : ""}</p>
+      <p class="hint" style="font-size:15px">${phaseOf(s).part === "setup" ? t("Setup") : t("Round {0}", s.pos.round)}${online.table ? ` · ${t("Table {0}", `<b>${esc(online.table.code)}</b>`)} · ${youAre(online.mySide)}` : ""}</p>
       <button class="option" data-act="ask-open"><div><strong>${t("Ask a rules question")}</strong><span>${t("Answers cite the rulebook and FAQ pages.")}</span></div></button>
       ${toggles ? `<div class="section"><h3>${t("Happened this game")}</h3>${toggles}</div>` : ""}
       <div class="section"><h3>${t("End the game")}</h3>
@@ -1401,7 +1405,7 @@ function joinBody(label) {
   const script = scripts[f.game];
   const cover = coverOf(game);
   const expansions = f.expansions.map((id) => ((script && script.expansions.find((e) => e.id === id)) || { title: id }).title);
-  const sides = script ? script.sides.map(({ id, name }) => {
+  const sides = script ? seatsOf(script).map(({ id, name }) => {
     const taken = f.taken.includes(id);
     return `<button class="option" role="radio" aria-checked="${l.joinSide === id}" data-joinside="${id}" ${taken ? 'disabled aria-disabled="true"' : ""}>
       <div><strong class="side-${id}">${esc(name)}</strong>${taken ? `<span>${t("Taken")}</span>` : ""}</div><span class="radio" aria-hidden="true"></span></button>`;
@@ -1409,7 +1413,7 @@ function joinBody(label) {
   return `<div class="game" style="cursor:default">${cover ? `<span class="art"><img src="${imgUrl(game.cover, game.script)}" alt=""></span>` : ""}
       <span class="meta"><div><strong id="join-found" tabindex="-1">${esc(game ? game.title : f.game)}</strong>
         <span>${t("Table {0}", esc(f.code))}${expansions.length ? ` · ${t("with {0}", esc(expansions.join(", ")))}` : ""}</span></div></span></div>
-    ${script ? `<div role="radiogroup" aria-label="${t("Your side")}" class="group"><h2>${t("Pick your side")}</h2>${sides}</div>
+    ${script ? `<div role="radiogroup" aria-label="${takesTurns(script) ? t("Your seat") : t("Your side")}" class="group"><h2>${takesTurns(script) ? t("Pick your seat") : t("Pick your side")}</h2>${sides}</div>
       <button class="primary" style="flex:none" data-act="table-join" ${l.busy || !l.joinSide ? "disabled" : ""}>${l.busy ? t("Joining…") : t("Join table")}</button>`
       : `<p style="margin:0">${t("This table plays {0}, which isn’t in Ordir yet.", esc(game ? game.title : f.game))}</p>`}
     ${l.error ? `<p class="error" role="alert">${esc(l.error)}</p>` : ""}
@@ -1420,10 +1424,11 @@ function lobbyBody(joinOnly) {
   const l = online.lobby;
   if (!signedIn()) return signInPane(joinOnly ? t("Sign in with your email to join the other player’s table.") : t("Sign in with your email so the other player can join your table."));
   if (joinOnly) return joinBody(t("The code from the other phone"));
-  // Starting a table, from a game's setup: that game's sides.
-  const sides = state.script.sides.map(({ id, name }) => `<button class="option" role="radio" aria-checked="${l.side === id}" data-side="${id}">
+  // Starting a table, from a game's setup: that game's sides (or numbered seats).
+  const sides = seatsOf().map(({ id, name }) => `<button class="option" role="radio" aria-checked="${l.side === id}" data-side="${id}">
       <div><strong class="side-${id}">${esc(name)}</strong></div><span class="radio" aria-hidden="true"></span></button>`).join("");
-  return `<div role="radiogroup" aria-label="${t("Your side")}" style="display:flex;flex-direction:column;gap:12px"><h2 style="margin:0;font-size:17px">${t("Your side")}</h2>${sides}</div>
+  const heading = takesTurns() ? t("Your seat") : t("Your side");
+  return `<div role="radiogroup" aria-label="${heading}" style="display:flex;flex-direction:column;gap:12px"><h2 style="margin:0;font-size:17px">${heading}</h2>${sides}</div>
       <button class="primary" style="flex:none" data-act="table-create" ${l.busy ? "disabled" : ""}>${t("Start a table")}</button>
       ${joinBody(t("Or join with the code from the other phone"))}`;
 }
@@ -1435,7 +1440,7 @@ function lobby() {
 }
 
 function tableStrip() {
-  return `<div class="strip"><span>${t("Table {0}", `<b>${esc(online.table.code)}</b>`)}</span><span>${t("You’re the {0}", `<span class="side-${online.mySide}">${esc(sideName(online.mySide))}</span>`)}</span></div>`;
+  return `<div class="strip"><span>${t("Table {0}", `<b>${esc(online.table.code)}</b>`)}</span><span>${youAre(online.mySide)}</span></div>`;
 }
 
 // The shared guide position, as stored in game_tables.state.
@@ -1569,9 +1574,9 @@ async function onlineAction(act, el) {
     l.found = { code: l.code, game: row.game, expansions: row.expansions || [], taken: row.taken_sides || [] };
     // One free side: pick it for them.
     const script = scripts[row.game];
-    const free = script ? script.sides.map((x) => x.id).filter((id) => !l.found.taken.includes(id)) : [];
+    const free = script ? seatsOf(script).map((x) => x.id).filter((id) => !l.found.taken.includes(id)) : [];
     l.joinSide = free.length === 1 ? free[0] : null;
-    if (script && !free.length) l.error = t("Both sides are taken at this table.");
+    if (script && !free.length) l.error = takesTurns(script) ? t("Every seat is taken at this table.") : t("Both sides are taken at this table.");
     state.usedKey = null; render();
     $("#join-found")?.focus();  // the table's game, so screen readers start there
   } else if (act === "table-create" || act === "table-join") {
@@ -1659,9 +1664,10 @@ function render() {
   } else if (s.finished) {
     phone.className = "phone single"; phone.innerHTML = (s.isBattle ? battleOver() : finished()) + ask;
   } else if (state.mode === "own" && online.table) {
-    // Own phone: only this player's side, with the table code under the bar.
+    // Own phone: only this player's side, with the table code under the bar. Without fixed sides every phone
+    // shows the player on turn's step, and anyone at the table can move it on.
     phone.className = "phone pass own";
-    phone.innerHTML = passBar(s) + tableStrip() + half(online.mySide, false, animate) + menu + ask;
+    phone.innerHTML = passBar(s) + tableStrip() + half(takesTurns() ? state.script.sides[0].id : online.mySide, false, animate) + menu + ask;
   } else if (state.mode === "pass") {
     phone.className = "phone pass";
     phone.innerHTML = passBar(s) + (s.handoffTo ? handoff(s, animate) : half(stepOf(s).side, false, animate)) + menu + ask;
@@ -1942,8 +1948,7 @@ function handleClick(el) {
       state.script = scripts[opened.script];
       state.chosen = new Set();
       state.nearSeat = state.script.sides[0].id;
-      online.lobby.side = state.script.sides[0].id;
-      if (takesTurns() && state.mode === "own") state.mode = "table";
+      online.lobby.side = seatsOf()[0].id;
     }
     state.screen = "game"; render(); return;
   }

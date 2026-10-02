@@ -312,6 +312,49 @@ def tour_gestures_languages(page, url, problems):
     page.click("[data-lang=en]")
 
 
+# A stand-in for the backend: a signed-in player, a table that answers create_table and saves moves, and
+# Realtime that never connects (the poll keeps quiet). Lets the own-phone screens run without a network.
+FAKE_BACKEND = """
+online.session = { user: { id: "me", is_anonymous: false, email: "player@example.com" }, access_token: "x" };
+online.ready = true;
+const row = { id: "t1", code: "ABC234", version: 1, state: {}, expansions: [] };
+online.client = {
+  rpc: async (name, args) => (name === "create_table" ? { data: { ...row, game: args.game, expansions: args.expansions }, error: null }
+    : name === "advance_table" || name === "save_table" ? { data: { ...row, version: ++row.version, state: args.state }, error: null }
+    : { data: null, error: { message: name } }),
+  channel: () => ({ on() { return this; }, subscribe() { return this; } }),
+  removeChannel() {},
+  from: () => ({ select() { return this; }, eq() { return this; }, gt() { return this; }, maybeSingle: async () => ({ data: null }),
+                 single: async () => ({ data: row }) }),
+};
+clientPromise = Promise.resolve(online.client);
+"""
+
+
+def own_phone_seats(page, url, problems):
+    """Each on our own phone in a game without fixed sides: the lobby offers Player 1 to 4, and the table shows
+    the player on turn's step with Done on every phone."""
+    a11y = Accessibility(page, problems)
+    page.route("**/cdn.jsdelivr.net/npm/@supabase/**", lambda route: route.abort())
+    page.goto(url)
+    page.keyboard.press("Enter")
+    page.wait_for_selector("[data-act=game-knarr]:visible:not([disabled])")
+    page.evaluate(FAKE_BACKEND)
+    page.click("[data-act=game-knarr]:visible")
+    page.click("[data-mode=own]")
+    page.click("[data-act=start]")
+    page.wait_for_selector("[data-side=seat4]")
+    seats = [el.text_content().strip() for el in page.query_selector_all("[data-side]")]
+    check(seats == ["Player 1", "Player 2", "Player 3", "Player 4"], f"the lobby offered {seats}")
+    a11y.scan("own-phone lobby")
+    page.click("[data-side=seat3]")
+    page.click("[data-act=table-create]")
+    page.wait_for_selector(".strip")
+    check("You’re Player 3" in page.text_content(".strip"), "the table strip does not name the seat")
+    check(page.query_selector("[data-act=done]"), "an own phone at a game without sides has no Done")
+    a11y.scan("own-phone step")
+
+
 def main():
     check_dist = DIST / "index.html"
     if not check_dist.exists():
@@ -371,6 +414,19 @@ def main():
             page.screenshot(path=str(DIST / "failure-tour.png"))
             print(f"FAIL tutorial, gestures and languages: {error}")
         context.close()
+        page = browser.new_page(viewport={"width": 430, "height": 900})
+        page.add_init_script("try { localStorage.setItem('ordir-tour-done', '1') } catch {}")
+        problems = []
+        page.on("pageerror", lambda e: problems.append(f"page error: {e}"))
+        try:
+            own_phone_seats(page, url, problems)
+            check(not problems, "; ".join(dict.fromkeys(problems)))
+            print("ok   own phones at a game without sides: Player 1 to 4; no accessibility issues")
+        except Failed as error:
+            failed = True
+            page.screenshot(path=str(DIST / "failure-own.png"))
+            print(f"FAIL own phones at a game without sides: {error}")
+        page.close()
         browser.close()
     server.shutdown()
     sys.exit(1 if failed else 0)
