@@ -16,8 +16,10 @@ after tools/build_preview.py:
 Needs Playwright and axe (`pip install playwright axe-playwright-python`, then
 `python -m playwright install chromium`, or set CHROMIUM_PATH to an installed Chromium).
 """
+import base64
 import functools
 import http.server
+import json
 import os
 import pathlib
 import sys
@@ -374,6 +376,62 @@ def own_phone_seats(page, url, problems):
     a11y.scan("own-phone step")
 
 
+def tester_feedback(page, url, problems):
+    """With tracking on (as on the hosted preview): a game's milestones, the rating, a rules-free bug report with a
+    screenshot and the usage switch, checked against what Ordir sends to the backend (intercepted here)."""
+    sent = {"events": [], "bug_reports": []}
+    def capture(route):
+        table = route.request.url.split("/rest/v1/")[1].split("?")[0]
+        sent[table].extend(json.loads(route.request.post_data))
+        route.fulfill(status=201, body="")
+    page.add_init_script("window.ORDIR_TRACK = true")
+    page.route("**/rest/v1/events", capture)
+    page.route("**/rest/v1/bug_reports", capture)
+    play(page, url, problems, mode="pass", game="knarr", script="knarr", loop_taps=15)
+    a11y = Accessibility(page, problems)
+    # Game over: four stars and a comment.
+    page.click("[data-rate='4']")
+    check(page.get_attribute("[data-rate='4']", "aria-pressed") == "true" and focused(page, "[data-rate='4']"), "the rating did not take")
+    page.fill("#rate-text", "Clear steps")
+    page.click("[data-act=rate-send]")
+    check("Thanks for rating" in page.text_content("#phone"), "the rating was not acknowledged")
+    page.evaluate("flushEvents()")
+    names = [e["name"] for e in sent["events"]]
+    for name in ("session_start", "opening", "screen_view", "game_open", "guide_start", "setup_done", "round_reached", "game_over", "rating"):
+        check(name in names, f"no {name} event was sent (sent: {sorted(set(names))})")
+    rating = next(e for e in sent["events"] if e["name"] == "rating")
+    check(rating["props"] == {"game": "knarr", "stars": 4, "comment": "Clear steps", "mode": "pass", "rounds": 2}, f"the rating sent {rating['props']}")
+    check(len({e["device_id"] for e in sent["events"]}) == 1 and len({e["session_id"] for e in sent["events"]}) == 1, "events did not share one device and session")
+    # Account: report a problem, with a screenshot.
+    page.click("[data-act=close]")
+    page.click("[data-act=home]")
+    page.click("[data-act=tab-account]")
+    page.click("[data-act=report-open]")
+    check(focused(page, "#report-title"), "focus did not move to the report form")
+    a11y.scan("report form")
+    page.click("[data-act=report-send]")
+    check("Describe what happened first" in page.text_content(".report"), "an empty report was not stopped")
+    page.fill("#report-text", "The opening flickered")
+    shot = DIST / "test-shot.png"
+    shot.write_bytes(base64.b64decode("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="))
+    page.set_input_files("#report-shot", str(shot))
+    page.wait_for_selector(".shot img")
+    page.click("[data-act=report-send]")
+    page.wait_for_selector("text=Your report reached the Ordir team")
+    a11y.scan("report sent")
+    report = sent["bug_reports"][0]
+    check(report["description"] == "The opening flickered" and report["screenshot"].startswith("data:image/jpeg;base64,"), "the report lost its text or screenshot")
+    check(report["context"]["view"] == "home-account" and report["context"]["recent"], f"the report's context is incomplete: {report['context']}")
+    page.click(".report [data-act=report-close] >> nth=0")
+    check(focused(page, "[data-act=report-open]"), "focus did not return to Report a problem")
+    # Switching usage data off stops the events.
+    page.click("label[for=share-usage]")
+    before = len(sent["events"])
+    page.click("[data-act=tab-games]")
+    page.evaluate("flushEvents()")
+    check(len(sent["events"]) == before, "events were still sent with usage data off")
+
+
 def stale_copy_updates(page, url, problems):
     """A Home Screen app that opens an older cached copy finds the live build at launch and reloads into it, once."""
     live = (DIST / "index.html").read_text()
@@ -453,6 +511,19 @@ def main():
             page.screenshot(path=str(DIST / "failure-tour.png"))
             print(f"FAIL tutorial, gestures and languages: {error}")
         context.close()
+        page = browser.new_page(viewport={"width": 430, "height": 900})
+        page.add_init_script("try { localStorage.setItem('ordir-tour-done', '1') } catch {}")
+        problems = []
+        page.on("pageerror", lambda e: problems.append(f"page error: {e}"))
+        try:
+            tester_feedback(page, url, problems)
+            check(not problems, "; ".join(dict.fromkeys(problems)))
+            print("ok   tester feedback: milestones, rating, bug report with a screenshot, usage switch; no accessibility issues")
+        except Failed as error:
+            failed = True
+            page.screenshot(path=str(DIST / "failure-feedback.png"))
+            print(f"FAIL tester feedback: {error}")
+        page.close()
         page = browser.new_page(viewport={"width": 430, "height": 900})
         problems = []
         page.on("pageerror", lambda e: problems.append(f"page error: {e}"))

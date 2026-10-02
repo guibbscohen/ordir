@@ -130,3 +130,7 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   logo (Preview/icons/devocto.svg, the DevOcto imageset in the app) on its left. "App by" is translated.
 - 2026-10-02: The online preview updates itself: at launch (and on returning to Home) it checks the live build past the
   cache and reloads once if newer, never mid-game. Data files are fetched with the build's commit as a version.
+- 2026-10-02: Tester metrics: the hosted preview logs anonymous usage events (random id per phone, linked to the account
+  when signed in; Account has "Share usage data"), script errors, Game over ratings, answer thumbs and "Report a
+  problem" reports (Account and Game menu, optional screenshot) to Supabase (events, bug_reports; insert-only RLS).
+  The tester dashboard is a private claude.ai artifact that queries them through the Supabase connector.
