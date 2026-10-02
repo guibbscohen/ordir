@@ -459,7 +459,43 @@ button.bubble { font: inherit; font-size: 15px; color: var(--fg); cursor: pointe
 @keyframes speak { from { opacity: .55; transform: scale(.85); } to { opacity: 1; transform: scale(1.15); } }
 @keyframes think { 0%, 100% { opacity: .35; transform: scale(.8) rotate(0); } 50% { opacity: 1; transform: scale(1.1) rotate(45deg); } }
 
+/* Ordir handles sideways swipes itself (back, the tutorial's pages), so the browser doesn't take them for its own
+   back gesture; picture strips still scroll sideways. */
+html, body { overscroll-behavior-x: none; }
+.phone { touch-action: pan-y pinch-zoom; }
+.pics { touch-action: pan-x pan-y pinch-zoom; }
+
+/* The tutorial: one idea a card, a small picture over a short text, dots for where you are. */
+.overlay.tour { padding: 24px; gap: 20px; }
+.tour-card { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; margin-top: auto; }
+.tour-card h2 { font-size: 24px; }
+.tour-card p { margin: 0; max-width: 32ch; color: var(--muted); font-size: 17px; line-height: 1.45; }
+.tour-card.turn { animation: tour-in .3s ease both; }
+.tour-card.turn.back { animation-name: tour-in-back; }
+@keyframes tour-in { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: none; } }
+@keyframes tour-in-back { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: none; } }
+.tour-art { height: 132px; display: flex; align-items: center; justify-content: center; }
+.tour-art .mascot { width: 108px; height: 122px; }
+.tour-icon svg { width: 76px; height: 76px; color: var(--sparkle); }
+.tour-phone { width: 92px; height: 124px; border: 2px solid var(--line); border-radius: 16px; display: flex; flex-direction: column;
+  font-size: 11px; color: var(--muted); overflow: hidden; }
+.tour-phone span { flex: 1; display: flex; align-items: center; justify-content: center; }
+.tour-phone .far { transform: rotate(180deg); color: var(--sparkle); border-bottom: 1px solid var(--line); }
+.tour-step { width: 156px; padding: 14px; border-radius: 16px; background: var(--surface-2); display: flex; flex-direction: column; gap: 8px; }
+.tour-step i { height: 8px; border-radius: 4px; background: var(--line); }
+.tour-step i:nth-child(2) { width: 80%; } .tour-step i:nth-child(3) { width: 60%; }
+.tour-step b { margin-top: 6px; padding: 6px; border-radius: 999px; background: var(--fg); color: var(--bg); font-size: 12px; }
+.tour-checks { display: flex; flex-direction: column; gap: 10px; }
+.tour-checks span { width: 150px; height: 22px; border-radius: 8px; background: var(--surface-2); position: relative; }
+.tour-checks span::before { content: ""; position: absolute; left: 6px; top: 5px; width: 12px; height: 12px; border-radius: 4px; border: 2px solid var(--on); }
+.tour-dots { display: flex; gap: 8px; justify-content: center; }
+.tour-dots span { width: 7px; height: 7px; border-radius: 50%; background: var(--line); transition: background .2s; }
+.tour-dots .on { background: var(--sparkle); }
+.overlay.tour .actions { padding: 0; margin-top: auto; }
+.overlay.tour .actions .primary { margin-left: auto; flex: none; padding: 0 28px; }
+
 @media (prefers-reduced-motion: reduce) {
+  .tour-card.turn, .tour-card.turn.back { animation: fade .2s ease both; }
   .card.enter, .overlay.enter, .pane.enter, .card.enter.back, .overlay.sheet.enter, .answer.fresh { animation: fade .2s ease both; }
   .scroll.ghost { display: none; }
   .check.on.ticked .box path, .primary.ready, .phase-label b.roll, .tabbar.slide::before, .answer.fresh .chip, .game-list { animation: none; }
@@ -495,10 +531,33 @@ button.bubble { font: inherit; font-size: 15px; color: var(--fg); cursor: pointe
   Play with one phone on the table (split screen) or pass the phone between players.
   Logo: “Magic Ball” by Ziyad Aljunaidi, Noun Project (CC BY 3.0). Type: Google Sans Flex (SIL OFL 1.1). Rules © CMON / Gale Force Nine.</p></footer>
 
+<script src="strings.js"></script>
 <script>
 "use strict";
 const $ = (sel, root = document) => root.querySelector(sel);
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+// ---- Languages ----
+// English, Brazilian Portuguese and Latin American Spanish. Ordir follows the phone's language until the player
+// picks one on the Account tab. Screen text is looked up by its English wording in STRINGS (strings.js, built
+// from Ordir/Localization/strings.json, which the app shares); a missing translation falls back to English.
+// Each game's turn guide is translated in scripts/<game>.<lang>.json.
+const LANGS = [["en", "English"], ["pt-BR", "Português (Brasil)"], ["es-419", "Español (Latinoamérica)"]];
+function startLang() {
+  try { const saved = localStorage.getItem("ordir-lang"); if (LANGS.some(([id]) => id === saved)) return saved; } catch {}
+  for (const tag of navigator.languages || [navigator.language || "en"]) {
+    const x = tag.toLowerCase();
+    if (x.startsWith("pt")) return "pt-BR";
+    if (x.startsWith("es")) return "es-419";
+    if (x.startsWith("en")) return "en";
+  }
+  return "en";
+}
+/** The current language's wording of an English string; {0}, {1}… take the arguments. */
+function t(text, ...args) {
+  const out = (typeof STRINGS !== "undefined" && STRINGS[state.lang] && STRINGS[state.lang][text]) || text;
+  return args.length ? out.replace(/\{(\d)\}/g, (_, i) => args[i]) : out;
+}
 
 // Crystal-ball mascot, from Assets/ordir-logo.svg (three sparkles and the orb), with a face: two dot eyes
 // and a one-line smile, turned slightly up and to the right (the far eye is smaller). The two small
@@ -520,7 +579,7 @@ const ICONS = {
 const scripts = {};
 // A game's two sides (factions) come from its turn script: names, colours and who wins.
 function sideName(id, script = state.script) {
-  if (id === "both") return "Both players";
+  if (id === "both") return t("Both players");
   return ((script && script.sides.find((x) => x.id === id)) || { name: id }).name;
 }
 const otherSide = (id, script = state.script) => script.sides.map((x) => x.id).find((x) => x !== id);
@@ -530,7 +589,60 @@ function styleSides(script) {
   document.head.append(style);
 }
 
+// The English turn scripts as loaded, and each one's translation per language (null: none).
+const baseScripts = {}, translations = {};
+const getJSON = (url) => fetch(url).then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); });
+/** Loads every playable game's script (and, in Portuguese or Spanish, its translation) into `scripts`. */
+async function loadScripts() {
+  await Promise.all(PLAYABLE.map(async (g) => {
+    if (!baseScripts[g.script]) { baseScripts[g.script] = await getJSON(`scripts/${g.script}.json`); styleSides(baseScripts[g.script]); }
+    const key = `${g.script}.${state.lang}`;
+    if (state.lang !== "en" && !(key in translations)) translations[key] = await getJSON(`scripts/${key}.json`).catch(() => null);
+    scripts[g.script] = localize(baseScripts[g.script], state.lang === "en" ? null : translations[key]);
+  }));
+  if (state.script) state.script = scripts[state.script.game];
+}
+/** A copy of an English script with a translation's wording laid over it. Ids, pictures and citations
+ *  (quoted from the English rulebook, with their pages) stay as they are. */
+function localize(base, tr) {
+  if (!tr) return base;
+  const s = structuredClone(base);
+  const put = (obj, from, keys) => { if (obj && from) for (const k of keys) if (from[k] != null) obj[k] = from[k]; };
+  put(s, tr, ["title"]);
+  s.sides.forEach((x) => { if (tr.sides?.[x.id]) x.name = tr.sides[x.id]; });
+  if (tr.victory) s.victory.note = tr.victory;
+  s.sources.forEach((x) => put(x, tr.sources?.[x.id], ["title", "shortTitle"]));
+  s.expansions.forEach((x) => put(x, tr.expansions?.[x.id], ["title", "summary"]));
+  s.images.forEach((x) => { if (tr.images?.[x.id]) x.caption = tr.images[x.id]; });
+  (s.states || []).forEach((x) => {
+    const y = tr.states?.[x.id];
+    if (y) { put(x, y, ["title", "markLabel", "trigger"]); put(x.event, y.event, ["title", "bullets"]); }
+  });
+  if (s.battle && tr.battle) s.battle.title = tr.battle;
+  for (const p of [...s.phases, ...(s.battle ? s.battle.phases : [])]) {
+    const y = tr.phases?.[p.id];
+    if (y) { put(p, y, ["title"]); put(p.loop, y.loop, ["endLabel", "note"]); }
+    for (const st of p.steps) {
+      const z = tr.steps?.[st.id];
+      if (!z) continue;
+      put(st, z, ["title", "instruction", "bullets", "components"]);
+      (st.additions || []).forEach((a, i) => put(a, z.additions?.[i], ["text", "bullets"]));
+      (st.reminders || []).forEach((r, i) => { if (z.reminders?.[i]) r.text = z.reminders[i]; });
+    }
+  }
+  return s;
+}
+function setLang(id) {
+  state.lang = id;
+  try { localStorage.setItem("ordir-lang", id); } catch {}
+  document.documentElement.lang = id;
+  render();  // the screens at once; each game's guide text when its translation arrives
+  loadScripts().then(render, render);
+}
+
 const state = {
+  lang: startLang(),
+  tutorial: null,     // the tutorial's open card ({ i }), on first launch or from Account
   screen: "intro",    // "intro" → "home" → "game" (picker, lobby and guide)
   tab: "games",       // Home's tab: games, ask, join or account
   script: null,
@@ -623,7 +735,7 @@ const sourceOf = (id, script = state.script) => script && script.sources.find((x
 const imageOf = (id, script = state.script) => script && script.images.find((x) => x.id === id);
 const expansionTitle = (id) => (state.script.expansions.find((e) => e.id === id) || { title: id }).title;
 const imgUrl = (id, game = state.script.game) => `img/${game}/${id}.jpg`;
-const imgLabel = (img, script = state.script) => `${sourceOf(img.source, script).shortTitle}, page ${img.page}`;
+const imgLabel = (img, script = state.script) => t("{0}, page {1}", sourceOf(img.source, script).shortTitle, img.page);
 // A game's cover picture (from its script), for Home's cards and lists.
 const coverOf = (g) => g && g.cover && imageOf(g.cover, scripts[g.script]);
 const farSeat = () => otherSide(state.nearSeat);
@@ -633,9 +745,9 @@ function stepTitle(s) { const st = stepOf(s); return phaseOf(s).loop && !s.isBat
 function stepKey(s) { return `${s.pos.round}-${s.pos.phase}-${s.pos.step}-${s.pos.pass}-${s.finished}`; }
 function progressText(s) {
   const list = applicableSteps(s);
-  const inPhase = phaseOf(s).loop ? `Turn ${turnNumber(s)}` : `${list.findIndex((st) => st === stepOf(s)) + 1} of ${list.length}`;
-  if (s.isBattle) { const n = `${list.findIndex((st) => st === stepOf(s)) + 1} of ${list.length}`; return phaseOf(s).loop ? `Round ${s.pos.pass} · ${n}` : n; }
-  return phaseOf(s).part === "setup" ? inPhase : `Round ${s.pos.round} · ${inPhase}`;
+  const inPhase = phaseOf(s).loop ? t("Turn {0}", turnNumber(s)) : t("{0} of {1}", list.findIndex((st) => st === stepOf(s)) + 1, list.length);
+  if (s.isBattle) { const n = t("{0} of {1}", list.findIndex((st) => st === stepOf(s)) + 1, list.length); return phaseOf(s).loop ? `${t("Round {0}", s.pos.pass)} · ${n}` : n; }
+  return phaseOf(s).part === "setup" ? inPhase : `${t("Round {0}", s.pos.round)} · ${inPhase}`;
 }
 
 // "Rulebook p. 7, p. 27; FAQ p. 2": a short plain-text form of a list of citations.
@@ -646,7 +758,7 @@ function citeText(list, script = state.script) {
     if (!bySource.has(title)) bySource.set(title, []);
     if (!bySource.get(title).includes(c.page)) bySource.get(title).push(c.page);
   }
-  return [...bySource].map(([title, pages]) => `${title} ${pages.map((n) => `p. ${n}`).join(", ")}`).join("; ");
+  return [...bySource].map(([title, pages]) => `${title} ${pages.map((n) => t("p. {0}", n)).join(", ")}`).join("; ");
 }
 function citations(list) {
   const seen = new Set();
@@ -656,14 +768,14 @@ function citations(list) {
     seen.add(key);
     const src = sourceOf(c.source);
     return `<a class="cite" href="${esc(src.url)}#page=${c.page}" target="_blank" rel="noopener">
-      <span>${esc(src.shortTitle)}, page ${c.page}${c.entry ? `<small>${esc(c.entry)}</small>` : ""}</span><span class="arrow" aria-hidden="true">↗</span></a>`;
+      <span>${t("{0}, page {1}", esc(src.shortTitle), c.page)}${c.entry ? `<small>${esc(c.entry)}</small>` : ""}</span><span class="arrow" aria-hidden="true">↗</span></a>`;
   }).join("")}</div>`;
 }
 function pictures(ids, seat) {
   return `<div class="pics">${ids.map((id) => {
     const img = imageOf(id);
     if (!img) return "";
-    return `<button class="pic" data-enlarge="${esc(id)}" data-seat="${seat}" aria-label="${esc(img.caption)}, ${esc(imgLabel(img))}. Show larger">
+    return `<button class="pic" data-enlarge="${esc(id)}" data-seat="${seat}" aria-label="${t("{0}, {1}. Show larger", esc(img.caption), esc(imgLabel(img)))}">
       <span class="frame"><img src="${imgUrl(id)}" alt="" loading="lazy"></span>
       <span class="cap">${esc(img.caption)}</span><span class="src">${esc(imgLabel(img))}</span></button>`;
   }).join("")}</div>`;
@@ -679,26 +791,25 @@ const section = (title, body) => `<div class="section"><h3>${esc(title)}</h3>${b
 function stepCard(s, seat, animate) {
   const st = stepOf(s);
   // The seat label already says "Both players" when the whole screen belongs to both.
-  const context = [st.side === "both" && seat !== "both" ? "Both players" : null, st.expansion ? expansionTitle(st.expansion) : null].filter(Boolean).join(" · ");
+  const context = [st.side === "both" && seat !== "both" ? t("Both players") : null, st.expansion ? expansionTitle(st.expansion) : null].filter(Boolean).join(" · ");
   const loop = phaseOf(s).loop;
   return `<div class="card${animate ? ` enter${state.navBack ? " back" : ""}` : ""}">
-    <div class="head"><button class="orb-btn" data-act="ask-here" data-seat="${seat}" aria-label="Ask Ordir a rules question">${mascot(state.speaking ? "speaking" : "idle")}</button>
+    <div class="head"><button class="orb-btn" data-act="ask-here" data-seat="${seat}" aria-label="${t("Ask Ordir a rules question")}">${mascot(state.speaking ? "speaking" : "idle")}</button>
       <div>${context ? `<div class="context">${esc(context)}</div>` : ""}<h2 class="title" tabindex="-1">${esc(stepTitle(s))}</h2></div></div>
     <div><p class="lead">${esc(st.instruction)}</p>${bullets(st.bullets)}
-      ${st.opensBattle && state.script.battle && !s.isBattle ? `<button class="textbtn" data-act="battle">Start a battle</button>` : ""}</div>
+      ${st.opensBattle && state.script.battle && !s.isBattle ? `<button class="textbtn" data-act="battle">${t("Start a battle")}</button>` : ""}</div>
     ${additionsOf(s).map((a) => section(expansionTitle(a.expansion),
       `<p>${esc(a.text)}</p>${bullets(a.bullets)}${pictures(a.images, seat)}${citations(a.citations)}${markButton(a)}`)).join("")}
-    ${section("You’ll need", `${pictures(st.images, seat)}<div class="comps">${esc(st.components.join(", "))}</div>`)}
-    ${section("Source", citations(st.citations))}
-    ${loop ? section("When to stop", `<p>${esc(loop.note)}</p>${citations(loop.citations)}`) : ""}
+    ${section(t("You’ll need"), `${pictures(st.images, seat)}<div class="comps">${esc(st.components.join(", "))}</div>`)}
+    ${section(t("Source"), citations(st.citations))}
+    ${loop ? section(t("When to stop"), `<p>${esc(loop.note)}</p>${citations(loop.citations)}`) : ""}
   </div>`;
 }
 
 function waiting(s, seat) {
   const st = stepOf(s);
-  const who = st.side === "both" ? "Both players are" : `The ${sideName(st.side)} is`;
-  return `<div class="waiting"><button class="orb-btn" data-act="ask-here" data-seat="${seat}" aria-label="Ask Ordir a rules question">${mascot("thinking")}</button>
-    <p>${who} on <b>${esc(stepTitle(s))}</b></p>
+    return `<div class="waiting"><button class="orb-btn" data-act="ask-here" data-seat="${seat}" aria-label="${t("Ask Ordir a rules question")}">${mascot("thinking")}</button>
+    <p>${st.side === "both" ? t("Both players are on {0}", `<b>${esc(stepTitle(s))}</b>`) : t("The {0} is on {1}", esc(sideName(st.side)), `<b>${esc(stepTitle(s))}</b>`)}</p>
     <div class="timer" data-timer>${fmt(Date.now() - s.startedAt)}</div></div>`;
 }
 
@@ -712,26 +823,26 @@ function overlayFor(seat, animate) {
         ${ev.bullets.map((b, i) => `<button class="check" data-evcheck="${i}" aria-pressed="false"><span class="box" aria-hidden="true"></span><span class="txt">${esc(b)}</span></button>`).join("")}
         ${pictures(ev.images, seat)}${citations(ev.citations)}
       </div>
-      <div class="actions" style="padding:0"><button class="primary" data-act="event-done">Done</button></div></div>`;
+      <div class="actions" style="padding:0"><button class="primary" data-act="event-done">${t("Done")}</button></div></div>`;
   }
   if (state.enlarged && state.enlarged.seat === seat) {
     const img = imageOf(state.enlarged.id);
     return `<div class="overlay enlarged${animate ? " enter" : ""}" role="dialog" aria-label="${esc(img.caption)}">
       <img src="${imgUrl(img.id)}" alt="${esc(img.caption)}">
       <h2 tabindex="-1">${esc(img.caption)}</h2><div class="comps">${esc(imgLabel(img))}</div>
-      <div class="actions" style="padding:0;margin-top:auto"><button class="primary" data-act="close-enlarged">Close</button></div></div>`;
+      <div class="actions" style="padding:0;margin-top:auto"><button class="primary" data-act="close-enlarged">${t("Close")}</button></div></div>`;
   }
   if (state.pending && state.pending.seat === seat) {
     const reminders = remindersOf(s);
-    return `<div class="overlay${animate ? " enter" : ""}" role="dialog" aria-label="Before you pass the turn">
-      <div class="head">${mascot("speaking")}<h2 tabindex="-1">Before you pass the turn</h2></div>
+    return `<div class="overlay${animate ? " enter" : ""}" role="dialog" aria-label="${t("Before you pass the turn")}">
+      <div class="head">${mascot("speaking")}<h2 tabindex="-1">${t("Before you pass the turn")}</h2></div>
       <div class="scroll" style="padding:0">
         ${reminders.map((r, i) => `<button class="check${state.pending.checked.has(i) ? " on" : ""}" data-check="${i}" aria-pressed="${state.pending.checked.has(i)}">
           <span class="box" aria-hidden="true"><svg viewBox="0 0 20 20"><path pathLength="1" d="M5.5 10.5l3 3 6-6.5"/></svg></span><span class="txt">${esc(r.text)}</span></button>`).join("")}
         ${citations(reminders.flatMap((r) => r.citations))}
       </div>
-      <div class="actions" style="padding:0"><button class="textbtn" data-act="not-yet">Not yet</button>
-        <button class="primary" data-act="pass">Pass the turn</button></div></div>`;
+      <div class="actions" style="padding:0"><button class="textbtn" data-act="not-yet">${t("Not yet")}</button>
+        <button class="primary" data-act="pass">${t("Pass the turn")}</button></div></div>`;
   }
   return "";
 }
@@ -744,9 +855,9 @@ function half(seat, isFar, animate) {
   const body = acting
     ? `<div class="scroll">${stepCard(s, seat, animate)}</div>
        <div class="actions">${loop ? `<button class="textbtn" data-act="end-loop" data-seat="${seat}">${esc(loop.endLabel)}</button>` : ""}
-         <button class="primary" data-act="done" data-seat="${seat}">Done</button></div>`
+         <button class="primary" data-act="done" data-seat="${seat}">${t("Done")}</button></div>`
     : waiting(s, seat);
-  return `<section class="half ${isFar ? "far" : "near"}" aria-label="${sideName(seat)} side">
+  return `<section class="half ${isFar ? "far" : "near"}" aria-label="${esc(t("{0} side", sideName(seat)))}">
     <div class="seat ${seat}"><span class="dot"></span>${sideName(seat)}</div>${body}${overlayFor(seat, animate || !!state.pending || !!state.enlarged)}${online.ask.open && online.ask.seat === seat ? askSheet() : ""}</section>`;
 }
 
@@ -757,28 +868,28 @@ function bar(s) {
   const label = `${phaseName(s)}<span>${esc(progressText(s))}</span>`;
   const canBack = s.history.length > 0 || s.finished;
   return `<div class="bar">
-    ${s.isBattle ? `<button class="iconbtn" data-act="leave-battle" aria-label="Leave battle">${ICONS.close}</button>` : `<button class="iconbtn" data-act="menu" aria-label="Game menu">${ICONS.flag}</button>`}
+    ${s.isBattle ? `<button class="iconbtn" data-act="leave-battle" aria-label="${t("Leave battle")}">${ICONS.close}</button>` : `<button class="iconbtn" data-act="menu" aria-label="${t("Game menu")}">${ICONS.flag}</button>`}
     <div class="labels"><div class="phase-label mirror" aria-hidden="true">${label}</div><div class="phase-label">${label}</div></div>
-    <button class="iconbtn" data-act="back" aria-label="Previous step" ${canBack ? "" : "disabled"}>${ICONS.back}</button>
-    <button class="iconbtn" data-act="swap" aria-label="Swap seats">${ICONS.swap}</button></div>`;
+    <button class="iconbtn" data-act="back" aria-label="${t("Previous step")}" ${canBack ? "" : "disabled"}>${ICONS.back}</button>
+    <button class="iconbtn" data-act="swap" aria-label="${t("Swap seats")}">${ICONS.swap}</button></div>`;
 }
 
 function passBar(s) {
   const canBack = s.history.length > 0 || s.finished;
   return `<div class="bar" style="border-top:0">
-    ${s.isBattle ? `<button class="iconbtn" data-act="leave-battle" aria-label="Leave battle">${ICONS.close}</button>` : `<button class="iconbtn" data-act="menu" aria-label="Game menu">${ICONS.flag}</button>`}
+    ${s.isBattle ? `<button class="iconbtn" data-act="leave-battle" aria-label="${t("Leave battle")}">${ICONS.close}</button>` : `<button class="iconbtn" data-act="menu" aria-label="${t("Game menu")}">${ICONS.flag}</button>`}
     <div class="labels"><div class="phase-label">${phaseName(s)}<span>${esc(progressText(s))}</span></div></div>
-    <button class="iconbtn" data-act="back" aria-label="Previous step" ${canBack ? "" : "disabled"}>${ICONS.back}</button>
+    <button class="iconbtn" data-act="back" aria-label="${t("Previous step")}" ${canBack ? "" : "disabled"}>${ICONS.back}</button>
     <span class="timer-sm" data-timer>${fmt(Date.now() - s.startedAt)}</span></div>`;
 }
 
 function handoff(s, animate) {
   const side = s.handoffTo;
-  return `<section class="half" aria-label="Pass the phone">
+  return `<section class="half" aria-label="${t("Pass the phone")}">
     <div class="handoff${animate ? " card enter" : ""}">${mascot("thinking")}
-      <h2 tabindex="-1">Pass the phone to the <span class="side-${side}">${sideName(side)}</span></h2>
-      <p>Next: ${esc(stepTitle(s))}</p></div>
-    <div class="handoff-actions"><button class="primary" data-act="handoff-ready">I’m the ${sideName(side)}</button></div></section>`;
+      <h2 tabindex="-1">${t("Pass the phone to the {0}", `<span class="side-${side}">${esc(sideName(side))}</span>`)}</h2>
+      <p>${t("Next: {0}", esc(stepTitle(s)))}</p></div>
+    <div class="handoff-actions"><button class="primary" data-act="handoff-ready">${t("I’m the {0}", esc(sideName(side)))}</button></div></section>`;
 }
 
 // Coming-soon games show on Home so players see what's next.
@@ -805,15 +916,15 @@ const TABS = [["games", "Games"], ["ask", "Ask"], ["join", "Join"], ["account", 
 function intro() {
   return `<div class="intro" data-act="skip-intro">
     <div class="intro-track">
-      <div class="intro-scene"><div class="intro-orb">${mascot("idle")}</div><h1>Ordir</h1><p>Learn any turn, step by step.</p></div>
+      <div class="intro-scene"><div class="intro-orb">${mascot("idle")}</div><h1>Ordir</h1><p>${t("Learn any turn, step by step.")}</p></div>
       <svg class="intro-line" aria-hidden="true"><path class="approach" pathLength="1"/><path class="rim" pathLength="1"/></svg>
     </div>
-    <button class="textbtn skip" data-act="skip-intro">Skip</button></div>`;
+    <button class="textbtn skip" data-act="skip-intro">${t("Skip")}</button></div>`;
 }
 
 function home(animate) {
   const page = { games: gamesPage, ask: askPage, join: joinPage, account: accountPage }[state.tab]();
-  const bar = TABS.map(([id, label]) => `<button data-act="tab-${id}" ${state.tab === id ? 'aria-current="page"' : ""}>${TAB_ICONS[id]}<span>${label}</span></button>`).join("");
+  const bar = TABS.map(([id, label]) => `<button data-act="tab-${id}" ${state.tab === id ? 'aria-current="page"' : ""}>${TAB_ICONS[id]}<span>${t(label)}</span></button>`).join("");
   const to = TABS.findIndex(([id]) => id === state.tab), from = state.tabFrom ?? to;
   // Switching tabs: the pill slides over and the page crossfades; arriving on Home: the page rises in.
   const enter = !animate ? "" : state.tabFrom != null ? " fade" : " enter";
@@ -867,15 +978,15 @@ function gamesPage() {
   const main = GAMES.filter((g) => !g.soon), soon = GAMES.filter((g) => g.soon);
   const cover = (g) => coverOf(g);
   const build = state.buildHome ? " build" : "";
-  return `<div class="brand${build}"><button class="orb-btn" data-act="orb-ask" aria-label="Ask Ordir a rules question">${mascot("idle")}</button>
-      <div><h1 tabindex="-1">Ordir</h1><button class="ask-link" data-act="orb-ask">${TAB_ICONS.ask}Ask me a rules question</button></div></div>
-    <button class="bubble${build}" data-act="next-phrase" aria-label="${esc(PHRASES[phraseIndex])} (tap for another)">${esc(PHRASES[phraseIndex])}</button>
-    <div class="group"><h2>Choose a game</h2>
+  return `<div class="brand${build}"><button class="orb-btn" data-act="orb-ask" aria-label="${t("Ask Ordir a rules question")}">${mascot("idle")}</button>
+      <div><h1 tabindex="-1">Ordir</h1><button class="ask-link" data-act="orb-ask">${TAB_ICONS.ask}${t("Ask me a rules question")}</button></div></div>
+    <button class="bubble${build}" data-act="next-phrase" aria-label="${esc(t("{0} (tap for another)", t(PHRASES[phraseIndex])))}">${esc(t(PHRASES[phraseIndex]))}</button>
+    <div class="group"><h2>${t("Choose a game")}</h2>
       ${main.map((g) => `<button class="game" data-act="game-${g.id}" ${scripts[g.script] ? "" : "disabled"}>
         <span class="art">${cover(g) ? `<img src="${imgUrl(g.cover, g.script)}" alt="">` : ""}</span>
-        <span class="meta"><div><strong>${esc(g.title)}</strong><span>${esc(g.detail)}</span>
-          ${cover(g) ? `<span class="src">Cover art: ${esc(imgLabel(cover(g), scripts[g.script]))}</span>` : ""}</div>${CHEVRON}</span></button>`).join("")}
-      <div class="soon-grid">${soon.map((g) => `<div class="game soon"><span class="art">${mascot("")}<span class="badge">Coming soon</span></span>
+        <span class="meta"><div><strong>${esc(g.title)}</strong><span>${esc(t(g.detail))}</span>
+          ${cover(g) ? `<span class="src">${t("Cover art: {0}", esc(imgLabel(cover(g), scripts[g.script])))}</span>` : ""}</div>${CHEVRON}</span></button>`).join("")}
+      <div class="soon-grid">${soon.map((g) => `<div class="game soon"><span class="art">${mascot("")}<span class="badge">${t("Coming soon")}</span></span>
         <span class="meta"><div><strong>${esc(g.title)}</strong></div></span></div>`).join("")}</div>
     </div>`;
 }
@@ -885,16 +996,16 @@ function gamesPage() {
 function askPage() {
   const a = online.ask, game = gameOf(a.game);
   const script = scripts[a.game] || null;
-  const expansions = script && script.expansions.length ? `<fieldset class="pills"><legend>Expansions you play with</legend>
+  const expansions = script && script.expansions.length ? `<fieldset class="pills"><legend>${t("Expansions you play with")}</legend>
       ${script.expansions.map((e) => `<label class="pill"><input type="checkbox" data-askexp="${e.id}" ${a.expansions.has(e.id) ? "checked" : ""}>${esc(e.title)}</label>`).join("")}</fieldset>` : "";
-  const body = !signedIn() ? signInPane("Sign in with your email to ask questions. Answers come only from the official rulebook, FAQ and the expansions you play with.")
-    : `<div class="field"><label for="ask-first">Your question</label>
-        <textarea id="ask-first" maxlength="500" placeholder="${esc(game?.askExample || "Ask about any rule")}">${esc(a.question)}</textarea></div>
-      <button class="primary" style="flex:none" data-act="ask-start" ${a.busy ? "disabled" : ""}>Ask</button>
+  const body = !signedIn() ? signInPane(t("Sign in with your email to ask questions. Answers come only from the official rulebook, FAQ and the expansions you play with."))
+    : `<div class="field"><label for="ask-first">${t("Your question")}</label>
+        <textarea id="ask-first" maxlength="500" placeholder="${esc(game?.askExample ? t(game.askExample) : t("Ask about any rule"))}">${esc(a.question)}</textarea></div>
+      <button class="primary" style="flex:none" data-act="ask-start" ${a.busy ? "disabled" : ""}>${t("Ask")}</button>
       ${a.error && !a.open ? `<p class="error" role="alert">${esc(a.error)}</p>` : ""}
       ${chatList()}`;
-  return `<h1 tabindex="-1">Ask a rules question</h1>
-    <p class="hint" style="font-size:15px;margin-top:-12px">Answers come only from the official rulebook and FAQ, with the page.</p>
+  return `<h1 tabindex="-1">${t("Ask a rules question")}</h1>
+    <p class="hint" style="font-size:15px;margin-top:-12px">${t("Answers come only from the official rulebook and FAQ, with the page.")}</p>
     ${gameSearch()}${expansions}${body}`;
 }
 
@@ -910,12 +1021,12 @@ function gameSearch() {
   const a = online.ask, chosen = gameOf(a.game), query = norm(a.picking ? a.query : "");
   const options = GAMES.map((g) => `<button class="game-opt${g.soon ? " soon" : ""}" role="option" aria-selected="${!!g.script && g.script === a.game}"
       ${g.soon ? 'aria-disabled="true"' : `data-askgame="${g.script}"`} data-title="${esc(norm(g.title))}" ${norm(g.title).includes(query) ? "" : "hidden"}>${thumb(g)}
-      <span><strong>${esc(g.title)}</strong><span class="sub">${g.soon ? "Coming soon" : esc(g.detail)}</span></span></button>`).join("");
-  return `<div class="field search"><label for="ask-game">Game</label>
+      <span><strong>${esc(g.title)}</strong><span class="sub">${g.soon ? t("Coming soon") : esc(t(g.detail))}</span></span></button>`).join("");
+  return `<div class="field search"><label for="ask-game">${t("Game")}</label>
     <div class="search-box">${LENS}<input id="ask-game" role="combobox" aria-autocomplete="list" aria-controls="ask-games" aria-expanded="${!!a.picking}"
-      autocomplete="off" spellcheck="false" placeholder="Search games" value="${esc(a.picking ? a.query : chosen?.title || "")}"></div>
-    <div id="ask-games" class="game-list" role="listbox" aria-label="Games" ${a.picking ? "" : "hidden"}>${options}</div>
-    <p class="hint none" ${a.picking && !GAMES.some((g) => norm(g.title).includes(query)) ? "" : "hidden"}>No games match.</p></div>`;
+      autocomplete="off" spellcheck="false" placeholder="${t("Search games")}" value="${esc(a.picking ? a.query : chosen?.title || "")}"></div>
+    <div id="ask-games" class="game-list" role="listbox" aria-label="${t("Games")}" ${a.picking ? "" : "hidden"}>${options}</div>
+    <p class="hint none" ${a.picking && !GAMES.some((g) => norm(g.title).includes(query)) ? "" : "hidden"}>${t("No games match.")}</p></div>`;
 }
 const visibleGames = () => [...document.querySelectorAll(".game-opt:not([hidden])")];
 function setPicking(open) {
@@ -939,7 +1050,7 @@ function chatList() {
   const chats = Object.entries(online.ask.threads).filter(([id, t]) => t.length && gameOf(id))
     .sort(([, x], [, y]) => Date.parse(y.at(-1).at) - Date.parse(x.at(-1).at));
   if (!chats.length) return "";
-  return `<div class="group"><h2>Your chats</h2>${chats.map(([id, t]) => {
+  return `<div class="group"><h2>${t("Your chats")}</h2>${chats.map(([id, t]) => {
     const g = gameOf(id), last = t.at(-1);
     return `<button class="chat-row" data-chat="${id}">${thumb(g)}<div><strong>${esc(g.title)}</strong><span class="last">${esc(last.question)}</span></div>
       <time datetime="${esc(last.at)}">${ago(last.at)}</time></button>`;
@@ -947,83 +1058,137 @@ function chatList() {
 }
 function ago(iso) {
   const minutes = Math.round((Date.now() - Date.parse(iso)) / 60000), hours = Math.round(minutes / 60), days = Math.round(hours / 24);
-  if (minutes < 1) return "Just now";
-  if (minutes < 60) return `${minutes} min ago`;
-  if (hours < 24) return `${hours} h ago`;
-  if (days === 1) return "Yesterday";
-  if (days < 7) return `${days} days ago`;
-  return new Date(iso).toLocaleDateString(undefined, { day: "numeric", month: "short" });
+  if (minutes < 1) return t("Just now");
+  if (minutes < 60) return t("{0} min ago", minutes);
+  if (hours < 24) return t("{0} h ago", hours);
+  if (days === 1) return t("Yesterday");
+  if (days < 7) return t("{0} days ago", days);
+  return new Date(iso).toLocaleDateString(state.lang, { day: "numeric", month: "short" });
 }
 // What a question is about: the game being played, or the one picked on Home's Ask tab.
 const inGame = () => state.screen === "game" && !!state.session;
 const askGame = () => (inGame() ? state.script.game : online.ask.game);
 const askExpansions = () => (inGame() ? [...state.session.expansions] : [...online.ask.expansions]);
 
-const joinPage = () => `<h1 tabindex="-1">Join a table</h1>${lobbyBody(true)}`;
+const joinPage = () => `<h1 tabindex="-1">${t("Join a table")}</h1>${lobbyBody(true)}`;
 
 function accountPage() {
-  return `<h1 tabindex="-1">Account</h1>
-    ${!signedIn() ? signInPane("Sign in with your email to ask rules questions and to play at a table, each on your own phone.") : `
-      <p style="margin:0">Signed in as <b>${esc(online.session.user.email || "")}</b></p>
-      <button class="primary" style="flex:none" data-act="sign-out">Sign out</button>`}
-    <p class="hint">Logo: “Magic Ball” by Ziyad Aljunaidi, Noun Project (CC BY 3.0). Type: Google Sans Flex (SIL OFL 1.1).
-      Rules © CMON / Gale Force Nine; Ordir cites them by page and isn't affiliated with them.</p>
-    <p class="hint" style="display:flex;align-items:center;gap:8px">Version ${esc(BUILD)}
-      <button class="textbtn" style="font-size:13px" data-act="layout-info" aria-pressed="${layoutInfo.on}">Layout info</button></p>`;
+  return `<h1 tabindex="-1">${t("Account")}</h1>
+    ${!signedIn() ? signInPane(t("Sign in with your email to ask rules questions and to play at a table, each on your own phone.")) : `
+      <p style="margin:0">${t("Signed in as {0}", `<b>${esc(online.session.user.email || "")}</b>`)}</p>
+      <button class="primary" style="flex:none" data-act="sign-out">${t("Sign out")}</button>`}
+    <div role="radiogroup" aria-labelledby="lang-title" class="group"><h2 id="lang-title">${t("Language")}</h2>
+      ${LANGS.map(([id, name]) => `<button class="option" role="radio" aria-checked="${state.lang === id}" data-lang="${id}" lang="${id}">
+        <div><strong>${name}</strong></div><span class="radio" aria-hidden="true"></span></button>`).join("")}</div>
+    <div class="group"><h2>${t("Help")}</h2>
+      <button class="option" data-act="tutorial"><div><strong>${t("Replay the tutorial")}</strong><span>${t("A quick tour of how Ordir works.")}</span></div>${CHEVRON}</button></div>
+    <p class="hint">${t("Logo: “Magic Ball” by Ziyad Aljunaidi, Noun Project (CC BY 3.0). Type: Google Sans Flex (SIL OFL 1.1).")}
+      ${t("Rules © CMON / Gale Force Nine, Fantasy Flight Games and Ares Games; Ordir cites them by page and isn’t affiliated with them.")}</p>
+    <p class="hint" style="display:flex;align-items:center;gap:8px">${t("Version {0}", esc(BUILD))}
+      <button class="textbtn" style="font-size:13px" data-act="layout-info" aria-pressed="${layoutInfo.on}">${t("Layout info")}</button></p>`;
 }
+
+// ---- Tutorial ----
+// A short tour after the opening on a first visit (and from Account later): what Ordir does, one idea a card.
+// Back, Skip and Next on every card; a swipe moves between cards too.
+const TOUR = [
+  { art: () => mascot("speaking"), title: "Welcome to Ordir",
+    text: "I walk you through every turn, step by step, and answer rules questions with the page they come from." },
+  { art: () => `<span class="tour-icon">${TAB_ICONS.games}</span>`, title: "Pick a game",
+    text: "Choose a game, then how you’re playing and which expansions are on the table." },
+  { art: () => `<span class="tour-phone" aria-hidden="true"><span class="far">${t("Your turn")}</span><span>${t("Waiting…")}</span></span>`, title: "One phone, two players",
+    text: "On the table, the screen splits: the top half faces the player across from you. You can also pass the phone, or each use your own." },
+  { art: () => `<span class="tour-step" aria-hidden="true"><i></i><i></i><i></i><b>${t("Done")}</b></span>`, title: "Follow each step",
+    text: "Each step says who acts and what to do, with pictures and the rulebook page. Tap Done to move on; the arrow goes back a step." },
+  { art: () => `<span class="tour-checks" aria-hidden="true">${"<span></span>".repeat(3)}</span>`, title: "Before you pass the turn",
+    text: "When your turn ends, a short checklist reminds you what to tidy up. Tick it off, then pass the turn." },
+  { art: () => mascot("thinking"), title: "Ask the orb",
+    text: "Tap the orb any time for a rules question. Answers come only from the official rules, with the page." },
+  { art: () => `<span class="tour-icon">${TAB_ICONS.join}</span>`, title: "Play together",
+    text: "Join a friend’s table with a code. In Account you can change the language or replay this tour." },
+];
+function tour() {
+  if (!state.tutorial) return "";
+  const i = state.tutorial.i, card = TOUR[i], last = i === TOUR.length - 1;
+  return `<div class="overlay menu tour${state.tutorial.enter ? " enter" : ""}" role="dialog" aria-modal="true" aria-label="${t("Tutorial")}">
+    <div class="tour-card${state.tutorial.turn ? ` turn${state.tutorial.turn < 0 ? " back" : ""}` : ""}">
+      <div class="tour-art">${card.art()}</div>
+      <p class="hint" style="margin:0">${t("Step {0} of {1}", i + 1, TOUR.length)}</p>
+      <h2 tabindex="-1">${t(card.title)}</h2><p>${t(card.text)}</p></div>
+    <div class="tour-dots" aria-hidden="true">${TOUR.map((_, n) => `<span${n === i ? ' class="on"' : ""}></span>`).join("")}</div>
+    <div class="actions"><button class="textbtn" data-act="tour-back" ${i ? "" : "disabled"}>${t("Back")}</button>
+      ${last ? "" : `<button class="textbtn" data-act="tour-skip">${t("Skip")}</button>`}
+      <button class="primary" data-act="tour-next">${last ? t("Let’s play") : t("Next")}</button></div></div>`;
+}
+function openTour() { state.tutorial = { i: 0, enter: true }; state.usedKey = "[data-act=tour-next]"; render(); }
+function closeTour() {
+  state.tutorial = null;
+  try { localStorage.setItem("ordir-tour-done", "1"); } catch {}
+  state.usedKey = state.tab === "account" ? "[data-act=tutorial]" : "[data-none]";
+  render();
+}
+function turnTour(by) {
+  const i = state.tutorial.i + by;
+  if (i < 0) return;
+  if (i >= TOUR.length) return closeTour();
+  state.tutorial = { i, turn: by };
+  state.usedKey = "[data-act=tour-next]";
+  render();
+}
+const tourDone = () => { try { return localStorage.getItem("ordir-tour-done") === "1"; } catch { return true; } };
 
 function picker() {
   return `<div class="pane"><div class="scroll">
-    <button class="textbtn" style="align-self:flex-start;margin:-16px 0 -12px" data-act="home">‹ Games</button>
-    <div class="head">${mascot("idle")}<h1 tabindex="-1">How are you playing?</h1></div>
-    <div role="radiogroup" aria-label="How are you playing?" style="display:flex;flex-direction:column;gap:12px">
+    <button class="textbtn" style="align-self:flex-start;margin:-16px 0 -12px" data-act="home">‹ ${t("Games")}</button>
+    <div class="head">${mascot("idle")}<h1 tabindex="-1">${t("How are you playing?")}</h1></div>
+    <div role="radiogroup" aria-label="${t("How are you playing?")}" style="display:flex;flex-direction:column;gap:12px">
       ${[["table", "One phone on the table", "Split screen: the top half faces the player across the table."],
          ["pass", "Pass the phone", "Full screen: hand the phone to whoever acts next."],
          ["own", "Each on our own phone", "Sign in, start a table and share its code; each phone shows its own side."]].map(([id, title, detail]) =>
         `<button class="option" role="radio" aria-checked="${state.mode === id}" data-mode="${id}">
-          <div><strong>${title}</strong><span>${detail}</span></div><span class="radio" aria-hidden="true"></span></button>`).join("")}
+          <div><strong>${t(title)}</strong><span>${t(detail)}</span></div><span class="radio" aria-hidden="true"></span></button>`).join("")}
     </div>
-    <h1>Which expansions are you playing with?</h1>
+    <h1>${t("Which expansions are you playing with?")}</h1>
     <div style="display:flex;flex-direction:column;gap:12px">
       ${state.script.expansions.map((e) => `<label class="toggle" for="exp-${e.id}">
         <div><strong>${esc(e.title)}</strong><span>${esc(e.summary)}</span></div>
         <input type="checkbox" id="exp-${e.id}" data-exp="${e.id}" ${state.chosen.has(e.id) ? "checked" : ""}><span class="switch" aria-hidden="true"></span></label>`).join("")}
     </div>
-    <p class="hint">Leave them all off to play the base game.</p>
+    <p class="hint">${t("Leave them all off to play the base game.")}</p>
     </div>
-    <div class="actions"><button class="primary" data-act="start">${state.mode === "own" ? "Continue" : "Start guide"}</button></div></div>`;
+    <div class="actions"><button class="primary" data-act="start">${state.mode === "own" ? t("Continue") : t("Start guide")}</button></div></div>`;
 }
 
 function battleOver() {
-  return `<div class="pane done-pane">${mascot("idle")}<h1 tabindex="-1">Battle over</h1>
-    <p>Back to the turn: finish your Action, then tap Done.</p>
-    <button class="primary" data-act="leave-battle">Back to the turn</button></div>`;
+  return `<div class="pane done-pane">${mascot("idle")}<h1 tabindex="-1">${t("Battle over")}</h1>
+    <p>${t("Back to the turn: finish your Action, then tap Done.")}</p>
+    <button class="primary" data-act="leave-battle">${t("Back to the turn")}</button></div>`;
 }
 
 function finished() {
   const s = cur();
-  return `<div class="pane done-pane">${mascot("idle")}<h1 tabindex="-1">Game over</h1>
-    ${s.winner ? `<h2 style="margin:0;font-size:20px">The <span class="side-${s.winner}">${sideName(s.winner)}</span> win</h2>` : ""}
-    <p>Played in ${s.pos.round} round${s.pos.round === 1 ? "" : "s"}.</p>
-    <button class="primary" data-act="restart">Start over</button>
-    <button class="textbtn" data-act="close">Back to expansions</button></div>`;
+  return `<div class="pane done-pane">${mascot("idle")}<h1 tabindex="-1">${t("Game over")}</h1>
+    ${s.winner ? `<h2 style="margin:0;font-size:20px">${t("The {0} win", `<span class="side-${s.winner}">${esc(sideName(s.winner))}</span>`)}</h2>` : ""}
+    <p>${s.pos.round === 1 ? t("Played in 1 round.") : t("Played in {0} rounds.", s.pos.round)}</p>
+    <button class="primary" data-act="restart">${t("Start over")}</button>
+    <button class="textbtn" data-act="close">${t("Back to expansions")}</button></div>`;
 }
 
 function gameMenu(s) {
   const toggles = statesOf(s).map((x) => `<label class="toggle" for="state-${x.id}">
       <div><strong>${esc(x.title)}</strong><span>${esc(x.trigger)}</span></div>
       <input type="checkbox" id="state-${x.id}" data-state="${x.id}" ${s.states.has(x.id) ? "checked" : ""}><span class="switch" aria-hidden="true"></span></label>`).join("");
-  return `<div class="overlay enter menu" role="dialog" aria-modal="true" aria-label="Game">
-    <div class="head"><h2 style="flex:1" tabindex="-1">Game</h2><button class="textbtn" data-act="menu-close">Close</button></div>
+  return `<div class="overlay enter menu" role="dialog" aria-modal="true" aria-label="${t("Game")}">
+    <div class="head"><h2 style="flex:1" tabindex="-1">${t("Game")}</h2><button class="textbtn" data-act="menu-close">${t("Close")}</button></div>
     <div class="scroll" style="padding:0;display:flex;flex-direction:column;gap:16px">
-      <p class="hint" style="font-size:15px">${phaseOf(s).part === "setup" ? "Setup" : `Round ${s.pos.round}`}${online.table ? ` · Table <b>${esc(online.table.code)}</b> · You're the ${sideName(online.mySide)}` : ""}</p>
-      <button class="option" data-act="ask-open"><div><strong>Ask a rules question</strong><span>Answers cite the rulebook and FAQ pages.</span></div></button>
-      ${toggles ? `<div class="section"><h3>Happened this game</h3>${toggles}</div>` : ""}
-      <div class="section"><h3>End the game</h3>
-        ${state.script.sides.map((x) => `<button class="option" data-winner="${x.id}"><div><strong class="side-${x.id}">The ${esc(x.name)} won</strong></div></button>`).join("")}
+      <p class="hint" style="font-size:15px">${phaseOf(s).part === "setup" ? t("Setup") : t("Round {0}", s.pos.round)}${online.table ? ` · ${t("Table {0}", `<b>${esc(online.table.code)}</b>`)} · ${t("You’re the {0}", esc(sideName(online.mySide)))}` : ""}</p>
+      <button class="option" data-act="ask-open"><div><strong>${t("Ask a rules question")}</strong><span>${t("Answers cite the rulebook and FAQ pages.")}</span></div></button>
+      ${toggles ? `<div class="section"><h3>${t("Happened this game")}</h3>${toggles}</div>` : ""}
+      <div class="section"><h3>${t("End the game")}</h3>
+        ${state.script.sides.map((x) => `<button class="option" data-winner="${x.id}"><div><strong class="side-${x.id}">${t("The {0} won", esc(x.name))}</strong></div></button>`).join("")}
         <p class="hint">${esc(state.script.victory.note)} (${esc(citeText(state.script.victory.citations))})</p>
       </div>
-      <button class="textbtn" style="align-self:flex-start" data-act="close">Leave the guide</button></div></div>`;
+      <button class="textbtn" style="align-self:flex-start" data-act="close">${t("Leave the guide")}</button></div></div>`;
 }
 
 // ---- Online: sign-in, rules questions, own-phone tables ----
@@ -1069,16 +1234,16 @@ const errorText = (error, fallback) => (error && (error.message || error.error_d
 
 function signInPane(reason) {
   const f = online.signIn;
-  if (!online.ready) return `<p class="hint" style="font-size:15px">Connecting…</p>`;
+  if (!online.ready) return `<p class="hint" style="font-size:15px">${t("Connecting…")}</p>`;
   return `<div class="section" style="gap:12px"><p style="margin:0">${esc(reason)}</p>
     ${f.sent
-      ? `<div class="field"><label for="signin-code">The code we emailed to ${esc(f.email)}</label>
+      ? `<div class="field"><label for="signin-code">${t("The code we emailed to {0}", esc(f.email))}</label>
            <input id="signin-code" inputmode="numeric" autocomplete="one-time-code" maxlength="10" value="${esc(f.code)}"></div>
-         <button class="primary" data-act="verify-code" ${f.busy ? "disabled" : ""}>${f.busy ? "Checking…" : "Sign in"}</button>
-         <button class="textbtn" style="align-self:flex-start" data-act="change-email">Use a different email</button>`
-      : `<div class="field"><label for="signin-email">Email</label>
+         <button class="primary" data-act="verify-code" ${f.busy ? "disabled" : ""}>${f.busy ? t("Checking…") : t("Sign in")}</button>
+         <button class="textbtn" style="align-self:flex-start" data-act="change-email">${t("Use a different email")}</button>`
+      : `<div class="field"><label for="signin-email">${t("Email")}</label>
            <input id="signin-email" type="email" autocomplete="email" value="${esc(f.email)}"></div>
-         <button class="primary" data-act="send-code" ${f.busy ? "disabled" : ""}>${f.busy ? "Sending…" : "Email me a code"}</button>`}
+         <button class="primary" data-act="send-code" ${f.busy ? "disabled" : ""}>${f.busy ? t("Sending…") : t("Email me a code")}</button>`}
     ${f.error ? `<p class="error" role="alert">${esc(f.error)}</p>` : ""}</div>`;
 }
 
@@ -1089,7 +1254,7 @@ function answerHtml(answer, game) {
     const seen = new Set();
     const chips = block.citations.filter((c) => !seen.has(`${c.source}-${c.page}`) && seen.add(`${c.source}-${c.page}`)).map((c) => {
       const src = sourceOf(c.source, scripts[game]);
-      return src ? `<a class="chip" style="--i: ${chipIndex++}" href="${esc(src.url)}#page=${c.page}" target="_blank" rel="noopener" title="${esc(c.quote)}">${esc(src.shortTitle)} p. ${c.page}</a>` : "";
+      return src ? `<a class="chip" style="--i: ${chipIndex++}" href="${esc(src.url)}#page=${c.page}" target="_blank" rel="noopener" title="${esc(c.quote)}">${esc(src.shortTitle)} ${t("p. {0}", c.page)}</a>` : "";
     }).join("");
     return esc(block.text) + chips;
   }).join("");
@@ -1107,23 +1272,24 @@ function answerHtml(answer, game) {
 // A game's rules chat: the player's questions on the right, Ordir's answers (with page chips) on the left.
 function chatThread() {
   const a = online.ask, game = gameOf(askGame()), thread = a.threads[askGame()] || [];
-  if (!signedIn()) return signInPane("Sign in with your email to ask questions. Answers come only from the official rulebook, FAQ and the expansions you play with.");
+  if (!signedIn()) return signInPane(t("Sign in with your email to ask questions. Answers come only from the official rulebook, FAQ and the expansions you play with."));
   const turns = thread.map((x, i) => {
     const fresh = !a.busy && i === thread.length - 1 && a.freshUntil > Date.now();
-    return `<p class="msg"><span class="sr-only">You asked: </span>${esc(x.question)}</p>
+    return `<p class="msg"><span class="sr-only">${t("You asked:")} </span>${esc(x.question)}</p>
       <article class="answer${fresh ? " fresh" : ""}"><div class="answer-by">${mascot(fresh ? "speaking" : "idle")}<span>Ordir</span></div>${answerHtml(x.answer, askGame())}</article>`;
   }).join("");
-  const pending = a.busy ? `<p class="msg"><span class="sr-only">You asked: </span>${esc(a.busy.question)}</p>
-      <div class="answer checking" role="status"><div class="answer-by">${mascot("thinking")}<span>Checking the rules…</span></div></div>` : "";
-  const empty = thread.length || a.busy ? "" : `<div class="chat-empty">${mascot("idle")}<p>Ask anything about ${esc(game?.title || "this game")}.<br>Answers cite the rulebook and FAQ pages.</p></div>`;
+  const pending = a.busy ? `<p class="msg"><span class="sr-only">${t("You asked:")} </span>${esc(a.busy.question)}</p>
+      <div class="answer checking" role="status"><div class="answer-by">${mascot("thinking")}<span>${t("Checking the rules…")}</span></div></div>` : "";
+  const empty = thread.length || a.busy ? "" : `<div class="chat-empty">${mascot("idle")}<p>${t("Ask anything about {0}.", esc(game?.title || t("this game")))}<br>${t("Answers cite the rulebook and FAQ pages.")}</p></div>`;
   return empty + turns + pending + (a.error ? `<p class="error" role="alert">${esc(a.error)}</p>` : "");
 }
 function composer() {
   const a = online.ask, thread = a.threads[askGame()] || [];
-  const placeholder = thread.length ? "Ask a follow-up" : gameOf(askGame())?.askExample || "Ask about any rule";
-  return `<div class="composer"><label class="sr-only" for="ask-question">Your question</label>
+  const example = gameOf(askGame())?.askExample;
+  const placeholder = thread.length ? t("Ask a follow-up") : example ? t(example) : t("Ask about any rule");
+  return `<div class="composer"><label class="sr-only" for="ask-question">${t("Your question")}</label>
     <textarea id="ask-question" rows="1" maxlength="500" placeholder="${esc(placeholder)}">${esc(a.question)}</textarea>
-    <button class="send" data-act="ask-send" aria-label="Ask" ${a.busy ? "disabled" : ""}>${SEND}</button></div>`;
+    <button class="send" data-act="ask-send" aria-label="${t("Ask")}" ${a.busy ? "disabled" : ""}>${SEND}</button></div>`;
 }
 
 // Full screen: from Home's Ask page (after asking, or an earlier chat) and from the Game menu.
@@ -1131,17 +1297,17 @@ function chatPanel() {
   const game = gameOf(askGame());
   const titles = askExpansions().map((id) => scripts[askGame()]?.expansions.find((e) => e.id === id)?.title).filter(Boolean);
   return `<div class="overlay${askEnter ? " enter" : ""} menu chat" role="dialog" aria-modal="true" aria-labelledby="chat-title">
-    <div class="chat-head">${thumb(game)}<div><h2 id="chat-title" tabindex="-1">${esc(game?.title || "Rules question")}</h2>
-      <p>Rules chat · ${esc(titles.length ? `With ${titles.join(", ")}` : "Base game")}</p></div>
-      <button class="close-x" data-act="ask-close" aria-label="Close">${CLOSE_X}</button></div>
+    <div class="chat-head">${thumb(game)}<div><h2 id="chat-title" tabindex="-1">${esc(game?.title || t("Rules question"))}</h2>
+      <p>${t("Rules chat")} · ${esc(titles.length ? t("With {0}", titles.join(", ")) : t("Base game"))}</p></div>
+      <button class="close-x" data-act="ask-close" aria-label="${t("Close")}">${CLOSE_X}</button></div>
     <div class="scroll thread">${chatThread()}</div>${signedIn() ? composer() : ""}</div>`;
 }
 
 // From the step's orb: a short sheet over that player's side, so the other side keeps playing.
 function askSheet() {
-  return `<div class="overlay sheet${askEnter ? " enter" : ""}" role="dialog" aria-label="Rules question">
-    <div class="head"><h2 style="flex:1;font-size:17px" tabindex="-1">Ask a rules question</h2><button class="textbtn" data-act="ask-close">Close</button></div>
-    <p class="hint" style="margin-top:-8px">About ${esc(gameOf(askGame())?.title || "this game")}</p>
+  return `<div class="overlay sheet${askEnter ? " enter" : ""}" role="dialog" aria-label="${t("Rules question")}">
+    <div class="head"><h2 style="flex:1;font-size:17px" tabindex="-1">${t("Ask a rules question")}</h2><button class="textbtn" data-act="ask-close">${t("Close")}</button></div>
+    <p class="hint" style="margin-top:-8px">${t("About {0}", esc(gameOf(askGame())?.title || t("this game")))}</p>
     <div class="scroll thread">${chatThread()}</div>${signedIn() ? composer() : ""}</div>`;
 }
 // The chat slides in when it opens, not on every redraw while it's open.
@@ -1172,7 +1338,7 @@ function joinBody(label) {
   if (!f) {
     return `<div class="field"><label for="table-code">${label}</label>
         <input id="table-code" autocomplete="off" autocapitalize="characters" maxlength="6" value="${esc(l.code)}"></div>
-      <button class="primary" style="flex:none" data-act="table-find" ${l.busy ? "disabled" : ""}>${l.busy ? "Looking…" : "Find table"}</button>
+      <button class="primary" style="flex:none" data-act="table-find" ${l.busy ? "disabled" : ""}>${l.busy ? t("Looking…") : t("Find table")}</button>
       ${l.error ? `<p class="error" role="alert">${esc(l.error)}</p>` : ""}`;
   }
   const game = gameOf(f.game);
@@ -1182,38 +1348,38 @@ function joinBody(label) {
   const sides = script ? script.sides.map(({ id, name }) => {
     const taken = f.taken.includes(id);
     return `<button class="option" role="radio" aria-checked="${l.joinSide === id}" data-joinside="${id}" ${taken ? 'disabled aria-disabled="true"' : ""}>
-      <div><strong class="side-${id}">${esc(name)}</strong>${taken ? "<span>Taken</span>" : ""}</div><span class="radio" aria-hidden="true"></span></button>`;
+      <div><strong class="side-${id}">${esc(name)}</strong>${taken ? `<span>${t("Taken")}</span>` : ""}</div><span class="radio" aria-hidden="true"></span></button>`;
   }).join("") : "";
   return `<div class="game" style="cursor:default">${cover ? `<span class="art"><img src="${imgUrl(game.cover, game.script)}" alt=""></span>` : ""}
       <span class="meta"><div><strong id="join-found" tabindex="-1">${esc(game ? game.title : f.game)}</strong>
-        <span>Table ${esc(f.code)}${expansions.length ? ` · with ${esc(expansions.join(", "))}` : ""}</span></div></span></div>
-    ${script ? `<div role="radiogroup" aria-label="Your side" class="group"><h2>Pick your side</h2>${sides}</div>
-      <button class="primary" style="flex:none" data-act="table-join" ${l.busy || !l.joinSide ? "disabled" : ""}>${l.busy ? "Joining…" : "Join table"}</button>`
-      : `<p style="margin:0">This table plays ${esc(game ? game.title : f.game)}, which isn't in Ordir yet.</p>`}
+        <span>${t("Table {0}", esc(f.code))}${expansions.length ? ` · ${t("with {0}", esc(expansions.join(", ")))}` : ""}</span></div></span></div>
+    ${script ? `<div role="radiogroup" aria-label="${t("Your side")}" class="group"><h2>${t("Pick your side")}</h2>${sides}</div>
+      <button class="primary" style="flex:none" data-act="table-join" ${l.busy || !l.joinSide ? "disabled" : ""}>${l.busy ? t("Joining…") : t("Join table")}</button>`
+      : `<p style="margin:0">${t("This table plays {0}, which isn’t in Ordir yet.", esc(game ? game.title : f.game))}</p>`}
     ${l.error ? `<p class="error" role="alert">${esc(l.error)}</p>` : ""}
-    <button class="textbtn" style="align-self:flex-start" data-act="table-reset">Use a different code</button>`;
+    <button class="textbtn" style="align-self:flex-start" data-act="table-reset">${t("Use a different code")}</button>`;
 }
 
 function lobbyBody(joinOnly) {
   const l = online.lobby;
-  if (!signedIn()) return signInPane(joinOnly ? "Sign in with your email to join the other player's table." : "Sign in with your email so the other player can join your table.");
-  if (joinOnly) return joinBody("The code from the other phone");
+  if (!signedIn()) return signInPane(joinOnly ? t("Sign in with your email to join the other player’s table.") : t("Sign in with your email so the other player can join your table."));
+  if (joinOnly) return joinBody(t("The code from the other phone"));
   // Starting a table, from a game's setup: that game's sides.
   const sides = state.script.sides.map(({ id, name }) => `<button class="option" role="radio" aria-checked="${l.side === id}" data-side="${id}">
       <div><strong class="side-${id}">${esc(name)}</strong></div><span class="radio" aria-hidden="true"></span></button>`).join("");
-  return `<div role="radiogroup" aria-label="Your side" style="display:flex;flex-direction:column;gap:12px"><h2 style="margin:0;font-size:17px">Your side</h2>${sides}</div>
-      <button class="primary" style="flex:none" data-act="table-create" ${l.busy ? "disabled" : ""}>Start a table</button>
-      ${joinBody("Or join with the code from the other phone")}`;
+  return `<div role="radiogroup" aria-label="${t("Your side")}" style="display:flex;flex-direction:column;gap:12px"><h2 style="margin:0;font-size:17px">${t("Your side")}</h2>${sides}</div>
+      <button class="primary" style="flex:none" data-act="table-create" ${l.busy ? "disabled" : ""}>${t("Start a table")}</button>
+      ${joinBody(t("Or join with the code from the other phone"))}`;
 }
 
 function lobby() {
   return `<div class="pane"><div class="scroll">
-    <div class="head">${mascot("idle")}<h1 tabindex="-1">Each on our own phone</h1></div>${lobbyBody(false)}</div>
-    <div class="actions"><button class="textbtn" data-act="close">Back</button></div></div>`;
+    <div class="head">${mascot("idle")}<h1 tabindex="-1">${t("Each on our own phone")}</h1></div>${lobbyBody(false)}</div>
+    <div class="actions"><button class="textbtn" data-act="close">${t("Back")}</button></div></div>`;
 }
 
 function tableStrip() {
-  return `<div class="strip"><span>Table <b>${esc(online.table.code)}</b></span><span>You're the <span class="side-${online.mySide}">${sideName(online.mySide)}</span></span></div>`;
+  return `<div class="strip"><span>${t("Table {0}", `<b>${esc(online.table.code)}</b>`)}</span><span>${t("You’re the {0}", `<span class="side-${online.mySide}">${esc(sideName(online.mySide))}</span>`)}</span></div>`;
 }
 
 // The shared guide position, as stored in game_tables.state.
@@ -1290,16 +1456,16 @@ async function onlineAction(act, el) {
   const f = online.signIn, a = online.ask, l = online.lobby;
   if (act === "send-code") {
     f.email = ($("#signin-email")?.value || f.email).trim();
-    if (!/^\S+@\S+\.\S+$/.test(f.email)) { f.error = "Enter your email address."; return render(); }
+    if (!/^\S+@\S+\.\S+$/.test(f.email)) { f.error = t("Enter your email address."); return render(); }
     f.busy = true; f.error = ""; render();
     const { error } = await client.auth.signInWithOtp({ email: f.email, options: { shouldCreateUser: true } });
-    f.busy = false; f.sent = !error; f.error = error ? errorText(error, "Couldn't send the code. Try again.") : "";
+    f.busy = false; f.sent = !error; f.error = error ? errorText(error, t("Couldn’t send the code. Try again.")) : "";
     render(); $("#signin-code")?.focus();
   } else if (act === "verify-code") {
     f.code = ($("#signin-code")?.value || f.code).replace(/\s+/g, "");  // pasted codes may carry spaces
     f.busy = true; f.error = ""; render();
     const { error } = await client.auth.verifyOtp({ email: f.email, token: f.code, type: "email" });
-    f.busy = false; f.error = error ? "That code didn't work. Check it, or send a new one." : "";
+    f.busy = false; f.error = error ? t("That code didn’t work. Check it, or send a new one.") : "";
     if (!error) { f.sent = false; f.code = ""; }
     render();
   } else if (act === "change-email") {
@@ -1310,7 +1476,7 @@ async function onlineAction(act, el) {
   } else if (act === "ask-send" || act === "ask-start") {
     const field = el.closest(".chat, .sheet, .pane")?.querySelector("textarea");
     const question = (field ? field.value : a.question).trim();
-    if (question.length < 3) { a.error = "Type a question first."; render(); if (field) $(`#${field.id}`)?.focus(); return; }
+    if (question.length < 3) { a.error = t("Type a question first."); render(); if (field) $(`#${field.id}`)?.focus(); return; }
     await a.loading;  // earlier chats first, so this question isn't lost when they arrive
     const game = askGame(), expansions = askExpansions(), thread = (a.threads[game] ||= []);
     // From Home's Ask page the game's chat takes over the screen; closing it lands on that chat in the list.
@@ -1321,16 +1487,16 @@ async function onlineAction(act, el) {
       const response = await fetch(`${BACKEND.url}/functions/v1/rules-answer`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}`, apikey: BACKEND.key, "Content-Type": "application/json" },
-        body: JSON.stringify({ game, expansions, question, followUp: thread.length > 0 }),
+        body: JSON.stringify({ game, expansions, question, followUp: thread.length > 0, language: state.lang }),
       });
       const body = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(body.error || "Couldn't get an answer. Try again.");
+      if (!response.ok) throw new Error(body.error || t("Couldn’t get an answer. Try again."));
       thread.push({ question, answer: body.answer, expansions, at: new Date().toISOString() });
       // The orb "speaks" the new answer for a moment, then rests.
       a.freshUntil = Date.now() + 1500;
       setTimeout(() => document.querySelectorAll(".answer.fresh .answer-by .mascot").forEach((m) => m.setAttribute("class", "mascot idle")), 3000);
     } catch (error) {
-      a.error = errorText(error, "Couldn't get an answer. Try again.");
+      a.error = errorText(error, t("Couldn’t get an answer. Try again."));
       a.question ||= question;
     }
     a.busy = null; a.toBottom = true; render();
@@ -1338,18 +1504,18 @@ async function onlineAction(act, el) {
     if (!a.error && answer) { answer.setAttribute("tabindex", "-1"); answer.focus(); } else $("#ask-question")?.focus();
   } else if (act === "table-find") {
     l.code = ($("#table-code")?.value || l.code).trim().toUpperCase();
-    if (l.code.length !== 6) { l.error = "Enter the 6-character code from the other phone."; return render(); }
+    if (l.code.length !== 6) { l.error = t("Enter the 6-character code from the other phone."); return render(); }
     l.busy = true; l.error = ""; render();
     const { data, error } = await client.rpc("peek_table", { code: l.code });
     l.busy = false;
-    if (error || !data || !data.length) { l.error = errorText(error, "No table with that code."); return render(); }
+    if (error || !data || !data.length) { l.error = errorText(error, t("No table with that code.")); return render(); }
     const row = data[0], game = gameOf(row.game);
     l.found = { code: l.code, game: row.game, expansions: row.expansions || [], taken: row.taken_sides || [] };
     // One free side: pick it for them.
     const script = scripts[row.game];
     const free = script ? script.sides.map((x) => x.id).filter((id) => !l.found.taken.includes(id)) : [];
     l.joinSide = free.length === 1 ? free[0] : null;
-    if (script && !free.length) l.error = "Both sides are taken at this table.";
+    if (script && !free.length) l.error = t("Both sides are taken at this table.");
     state.usedKey = null; render();
     $("#join-found")?.focus();  // the table's game, so screen readers start there
   } else if (act === "table-create" || act === "table-join") {
@@ -1359,9 +1525,9 @@ async function onlineAction(act, el) {
       ? await client.rpc("create_table", { game: state.script.game, expansions: [...state.chosen], side })
       : await client.rpc("join_table", { code: l.found.code, side });
     l.busy = false;
-    if (error) { l.error = errorText(error, "Couldn't open the table. Try again."); return render(); }
+    if (error) { l.error = errorText(error, t("Couldn’t open the table. Try again.")); return render(); }
     if (act === "table-join") {
-      if (!scripts[data.game]) { l.error = "This game isn't in Ordir yet."; return render(); }
+      if (!scripts[data.game]) { l.error = t("This game isn’t in Ordir yet."); return render(); }
       state.script = scripts[data.game];  // joining from Home: the table's game is now the one being played
     }
     l.found = null; l.joinSide = null; l.code = "";
@@ -1374,7 +1540,7 @@ async function onlineAction(act, el) {
 // a checklist, picture or menu that just opened; the new step's title; or the control they used.
 // Whatever an overlay covers is made inert so Tab can't reach it.
 const focusKey = (el) => {
-  for (const name of ["act", "mode", "enlarge", "winner", "mark", "side", "joinside", "askgame", "chat"]) {
+  for (const name of ["act", "mode", "enlarge", "winner", "mark", "side", "joinside", "askgame", "chat", "lang"]) {
     if (el.dataset[name] !== undefined) return `[data-${name}="${el.dataset[name]}"]${el.dataset.seat ? `[data-seat="${el.dataset.seat}"]` : ""}`;
   }
   return null;
@@ -1386,7 +1552,7 @@ function settleFocus(phone, stepChanged, kept) {
     const overlay = [...half.querySelectorAll(":scope > .overlay")].pop();
     if (overlay) for (const child of half.children) if (child !== overlay) child.inert = true;
   }
-  if (state.menu || (online.ask.open && online.ask.seat === null)) for (const child of phone.children) if (!child.classList.contains("menu")) child.inert = true;
+  if (state.menu || state.tutorial || (online.ask.open && online.ask.seat === null)) for (const child of phone.children) if (!child.classList.contains("menu")) child.inert = true;
   const first = (...selectors) => selectors.map((sel) => sel && phone.querySelector(sel)).find(Boolean);
   const dialog = [...phone.querySelectorAll('[role="dialog"] [tabindex="-1"]')].find((h) => !h.closest("[inert]"));
   // A re-render nobody tapped for (an answer arriving, the other phone moving): keep focus where it was.
@@ -1396,7 +1562,7 @@ function settleFocus(phone, stepChanged, kept) {
   }
   const heading = first(".near .title", ".title", ".handoff h2", ".pane h1");
   // Swapping seats or picking a play mode keeps focus on that control.
-  const stays = /data-act="(swap|tab-)|data-mode|data-state|data-joinside|data-askgame|data-askexp/.test(usedKey);
+  const stays = /data-act="(swap|tab-)|data-mode|data-state|data-joinside|data-askgame|data-askexp|data-lang/.test(usedKey);
   const target = dialog || (stepChanged && !stays ? heading : first(state.returnTo, usedKey) || heading);
   if (!dialog) state.returnTo = null;
   if (target) target.focus();
@@ -1431,7 +1597,7 @@ function render() {
       + `<div class="intro-home">${home(false)}</div>` + intro();
     phone.querySelector(".intro-home").inert = true;
   } else if (state.screen === "home") {
-    phone.className = "phone single home-bg"; phone.innerHTML = home(animate) + ask;
+    phone.className = "phone single home-bg"; phone.innerHTML = home(animate) + ask + tour();
   } else if (!s) {
     phone.className = "phone single"; phone.innerHTML = (online.lobby.open ? lobby() : picker()) + ask;
   } else if (s.finished) {
@@ -1468,7 +1634,9 @@ function render() {
   if (s) state.prevPhase = phaseOf(s).title;
   state.navBack = false;
   state.tabFrom = null;
+  if (state.tutorial) { state.tutorial.enter = false; state.tutorial.turn = 0; }
   settleFocus(phone, animate, kept);
+  armBack();
 }
 
 // ---- Behaviour ----
@@ -1503,7 +1671,7 @@ function run(action) {
 
 // At an own-phone table, any tap that changes the shared position is saved for the other phone.
 document.addEventListener("click", (event) => {
-  const el = event.target.closest("[data-act], [data-enlarge], [data-check], [data-mode], [data-mark], [data-winner], [data-evcheck], [data-side], [data-joinside], [data-askgame], [data-chat]");
+  const el = event.target.closest("[data-act], [data-enlarge], [data-check], [data-mode], [data-mark], [data-winner], [data-evcheck], [data-side], [data-joinside], [data-askgame], [data-chat], [data-lang]");
   if (!el) return;
   const atTable = () => state.mode === "own" && online.table && state.session;
   const before = atTable() ? JSON.stringify(shared()) : null;
@@ -1594,6 +1762,8 @@ function showHome(landed) {
   state.buildHome = !landed && !reducedMotion();
   render();
   setTimeout(() => { state.buildHome = false; }, 2000);
+  // A first visit: the tutorial, once the orb has been built.
+  if (!tourDone()) setTimeout(() => { if (state.screen === "home" && !state.tutorial) openTour(); }, landed || reducedMotion() ? 700 : 1400);
   // Someone signed in before: load their session so Home shows it (no network otherwise).
   try { if (Object.keys(localStorage).some((k) => k.startsWith("sb-") && k.endsWith("-auth-token"))) connect(); } catch {}
 }
@@ -1666,13 +1836,14 @@ document.addEventListener("keydown", (event) => {
 });
 const ONLINE_ACTIONS = ["send-code", "verify-code", "change-email", "sign-out", "ask-send", "ask-start", "table-create", "table-join", "table-find"];
 function connect() {
-  backend().then(render, () => { online.ready = true; online.signIn.error = "Can't reach Ordir right now. Check your connection and try again."; render(); });
+  backend().then(render, () => { online.ready = true; online.signIn.error = t("Can’t reach Ordir right now. Check your connection and try again."); render(); });
 }
 function handleClick(el) {
   const s = cur();
   state.usedKey = focusKey(el);
   if (el.dataset.enlarge || ["done", "end-loop", "menu", "ask-here"].includes(el.dataset.act)) state.returnTo = state.usedKey;
   if (el.dataset.mode) { state.mode = el.dataset.mode; render(); return; }
+  if (el.dataset.lang) { setLang(el.dataset.lang); return; }
   if (el.dataset.side) { online.lobby.side = el.dataset.side; render(); return; }
   if (el.dataset.joinside) { online.lobby.joinSide = el.dataset.joinside; online.lobby.error = ""; render(); return; }
   if (el.dataset.askgame) {
@@ -1687,7 +1858,7 @@ function handleClick(el) {
     state.returnTo = state.usedKey; render(); return;
   }
   if (ONLINE_ACTIONS.includes(el.dataset.act)) {
-    onlineAction(el.dataset.act, el).catch((error) => { online.signIn.busy = online.ask.busy = online.lobby.busy = false; online.ask.error = online.lobby.error = errorText(error, "Something went wrong. Try again."); render(); });
+    onlineAction(el.dataset.act, el).catch((error) => { online.signIn.busy = online.ask.busy = online.lobby.busy = false; online.ask.error = online.lobby.error = errorText(error, t("Something went wrong. Try again.")); render(); });
     return;
   }
   if (el.dataset.mark) { setGameState(s, el.dataset.mark, true); render(); return; }
@@ -1750,12 +1921,16 @@ function handleClick(el) {
     case "event-done": s.pendingEvent = null; render(); break;
     case "next-phrase": {
       phraseIndex = (phraseIndex + 1) % PHRASES.length;
-      el.textContent = PHRASES[phraseIndex];
-      el.setAttribute("aria-label", `${PHRASES[phraseIndex]} (tap for another)`);
+      el.textContent = t(PHRASES[phraseIndex]);
+      el.setAttribute("aria-label", t("{0} (tap for another)", t(PHRASES[phraseIndex])));
       el.classList.remove("build", "pop"); void el.offsetWidth; el.classList.add("pop");
       break;
     }
     case "layout-info": showLayoutInfo(!layoutInfo.on); render(); break;
+    case "tutorial": openTour(); break;
+    case "tour-next": turnTour(1); break;
+    case "tour-back": turnTour(-1); break;
+    case "tour-skip": closeTour(); break;
   }
 }
 // Enter in a sign-in or table field submits it; in a question, Enter asks (Shift-Enter starts a new line).
@@ -1791,14 +1966,80 @@ document.addEventListener("input", (event) => {
   const field = fields[event.target.id];
   if (field) field[0][field[1]] = event.target.value;
 });
-// Escape closes the game list, the rules chat, the picture, the Game menu, or the turn-change checklist (in that order).
+// ---- Going back ----
+// What closes first: the tutorial, the rules chat, the picture, the Game menu, or the turn-change checklist.
+const closeAct = () => (state.tutorial ? (state.tutorial.i === TOUR.length - 1 ? "tour-next" : "tour-skip") : online.ask.open ? "ask-close" : state.enlarged ? "close-enlarged"
+  : state.menu ? "menu-close" : state.pending ? "not-yet" : null);
+// What going back does: close that, or leave a game's setup (or the table lobby, or the end of the game).
+// A running guide has no "back" here: brushing the phone on the table never leaves a game.
+function backAct() {
+  if (state.tutorial) return state.tutorial.i ? "tour-back" : null;
+  const close = closeAct();
+  if (close) return close;
+  const s = cur();
+  if (state.screen !== "game" || (s && !s.finished)) return null;
+  return !s ? (online.lobby.open ? "close" : "home") : s.isBattle ? "leave-battle" : "close";
+}
+const tap = (act) => { const b = act && document.querySelector(`[data-act="${act}"]:not([disabled])`); if (b) b.click(); return !!b; };
+
+// Escape closes the game list, then whatever closeAct names.
 document.addEventListener("keydown", (event) => {
   if (event.key !== "Escape") return;
   if (online.ask.picking) { event.preventDefault(); setPicking(false); $("#ask-game")?.focus(); return; }
-  const act = online.ask.open ? "ask-close" : state.enlarged ? "close-enlarged" : state.menu ? "menu-close" : state.pending ? "not-yet" : null;
-  const button = act && document.querySelector(`[data-act="${act}"]`);
-  if (button) { event.preventDefault(); button.click(); }
+  if (tap(closeAct())) event.preventDefault();
 });
+
+// The browser's Back (and Android's back button) goes back the same way: whenever there's somewhere to go
+// back to, one history entry is kept for it.
+let backArmed = false;
+function armBack() { if (!backArmed && backAct()) { history.pushState({ ordir: true }, ""); backArmed = true; } }
+window.addEventListener("popstate", () => { backArmed = false; tap(backAct()); armBack(); });
+
+// Swipes. Left to right goes back (as above); right to left turns the tutorial's page. Down closes the chat,
+// a sheet, the Game menu, a picture or the checklist; the panel follows the finger and springs back if let go
+// early. On the far half of the split screen (turned round) the directions turn round too. In a browser tab
+// the screen's left edge is left to the browser's own back swipe, which arrives as Back above.
+const standalone = () => navigator.standalone || matchMedia("(display-mode: standalone)").matches;
+let swipe = null;
+document.addEventListener("touchstart", (event) => {
+  swipe = null;
+  if (event.touches.length !== 1 || state.screen === "intro") return;
+  const touch = event.touches[0], target = event.target;
+  if (!standalone() && touch.clientX < 24) return;
+  const panel = target.closest(".overlay");
+  const closer = panel && panel.querySelector('[data-act="ask-close"], [data-act="menu-close"], [data-act="close-enlarged"], [data-act="not-yet"], [data-act="tour-skip"]');
+  const scroller = target.closest(".scroll, .thread");
+  swipe = { x: touch.clientX, y: touch.clientY, far: !!target.closest(".half.far"), axis: null, dx: 0, dy: 0,
+    panel: closer ? panel : null, closer, atTop: !scroller || scroller.scrollTop <= 0,
+    sideways: !!target.closest(".pics, input, textarea, .search-box") };
+}, { passive: true });
+document.addEventListener("touchmove", (event) => {
+  if (!swipe) return;
+  const touch = event.touches[0];
+  let dx = touch.clientX - swipe.x, dy = touch.clientY - swipe.y;
+  if (swipe.far) { dx = -dx; dy = -dy; }
+  if (!swipe.axis && Math.hypot(dx, dy) > 10) swipe.axis = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+  swipe.dx = dx; swipe.dy = dy;
+  if (swipe.axis === "y" && swipe.panel && swipe.atTop && dy > 0 && !swipe.panel.classList.contains("tour")) {
+    swipe.panel.style.transition = "none";
+    swipe.panel.style.transform = `translateY(${dy}px)`;
+  }
+}, { passive: true });
+document.addEventListener("touchend", () => {
+  const g = swipe;
+  swipe = null;
+  if (!g || !g.axis) return;
+  const { dx, dy, panel } = g;
+  if (panel && panel.style.transform) {
+    if (dy > 100) { panel.style.transition = ""; tap(g.closer.dataset.act); return; }
+    panel.style.transition = reducedMotion() ? "none" : "transform .25s ease";
+    panel.style.transform = "";
+  }
+  if (g.axis !== "x" || g.sideways || Math.abs(dx) < 70 || Math.abs(dy) > Math.abs(dx) * 0.6) return;
+  if (state.tutorial) tap(dx < 0 ? "tour-next" : "tour-back");
+  else if (dx > 0) tap(backAct());
+});
+document.addEventListener("touchcancel", () => { if (swipe?.panel) swipe.panel.style.transform = ""; swipe = null; });
 document.addEventListener("change", (event) => {
   const stateId = event.target.dataset && event.target.dataset.state;
   if (stateId) { state.usedKey = `[data-state="${stateId}"]`; setGameState(cur(), stateId, event.target.checked); render(); return; }
@@ -1817,9 +2058,8 @@ setInterval(() => {
 render();
 if (layoutInfo.on) showLayoutInfo(true);
 if (reducedMotion()) introTimer = setTimeout(showHome, 900); else requestAnimationFrame(startIntro);
-Promise.all(PLAYABLE.map((g) => fetch(`scripts/${g.script}.json`)
-  .then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
-  .then((script) => { scripts[g.script] = script; styleSides(script); })))
+document.documentElement.lang = state.lang;
+loadScripts()
   .then(render)
-  .catch((error) => { $("#phone").innerHTML = `<div class="pane done-pane"><h1>Couldn’t load the game guides</h1><p>${esc(error.message)}. Reload the page to try again.</p></div>`; });
+  .catch((error) => { $("#phone").innerHTML = `<div class="pane done-pane"><h1>${t("Couldn’t load the game guides")}</h1><p>${t("{0}. Reload the page to try again.", esc(error.message))}</p></div>`; });
 </script>

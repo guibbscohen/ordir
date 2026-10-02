@@ -19,8 +19,17 @@ struct HomeView: View {
     var orbBuildStart: Date?
     /// Reports where the header's orb is on screen (global coordinates): the opening's line ends there.
     var onOrbFrame: (CGRect) -> Void = { _ in }
+    /// The opening has finished: on a first launch, the tutorial follows.
+    var openingDone = true
 
     @State private var phraseIndex = Int.random(in: 0..<HomeView.phrases.count)
+    /// Each game's bundled turn guide in the current language; games without one show as "Coming soon".
+    /// The app rebuilds Home when the language changes, so this is loaded again.
+    @State private var scripts = HomeView.loadScripts()
+    @State private var showsSettings = false
+    @State private var showsTutorial = false
+    /// Set once the tutorial has been seen or skipped (`-OrdirTourDone YES` at launch for tests).
+    private var tourDone: Bool { UserDefaults.standard.bool(forKey: "OrdirTourDone") }
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
@@ -34,8 +43,37 @@ struct HomeView: View {
                 .padding(.bottom, 32)
             }
             .background { ambience.ignoresSafeArea() }
+            .overlay(alignment: .topTrailing) {
+                Button { showsSettings = true } label: {
+                    Image(systemName: "gearshape")
+                        .font(.ordir(.title3))
+                        .foregroundStyle(.secondary)
+                        .frame(width: 44, height: 44)
+                }
+                .accessibilityLabel(tr("Settings"))
+                .accessibilityHint(tr("Language and tutorial"))
+                .padding(.trailing, 12)
+            }
+            .sheet(isPresented: $showsSettings) {
+                SettingsView {
+                    showsSettings = false
+                    showsTutorial = true
+                }
+            }
+            .fullScreenCover(isPresented: $showsTutorial) {
+                TutorialView {
+                    UserDefaults.standard.set(true, forKey: "OrdirTourDone")
+                    showsTutorial = false
+                }
+            }
+            .task(id: openingDone) {
+                // A first launch: the tutorial, once the opening has built Home's orb.
+                guard openingDone, !tourDone, path.isEmpty else { return }
+                try? await Task.sleep(for: .milliseconds(reduceMotion ? 300 : 800))
+                if !Task.isCancelled, !tourDone { showsTutorial = true }
+            }
             .navigationDestination(for: OrdirGame.self) { game in
-                if let script = TurnScript.bundled(for: game) {
+                if let script = scripts[game] {
                     TurnGuideView(
                         script: script,
                         mode: UserDefaults.standard.string(forKey: "OrdirPlayMode") == "pass" ? .pass : .table,
@@ -83,7 +121,7 @@ struct HomeView: View {
             Text("Ordir")
                 .font(.ordir(.title).weight(.semibold))
                 .accessibilityAddTraits(.isHeader)
-            Text(Self.phrases[phraseIndex])
+            Text(tr(Self.phrases[phraseIndex]))
                 .font(.ordir(.subheadline))
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 18)
@@ -99,7 +137,7 @@ struct HomeView: View {
                 .contentShape(Rectangle())
                 .onTapGesture { phraseIndex = (phraseIndex + 1) % Self.phrases.count }
                 .accessibilityAddTraits(.isButton)
-                .accessibilityHint("Shows another line.")
+                .accessibilityHint(tr("Shows another line."))
                 .animation(reduceMotion ? nil : .spring(duration: 0.3, bounce: 0.3), value: phraseIndex)
         }
     }
@@ -141,27 +179,26 @@ struct HomeView: View {
 
     private var gameList: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Choose a game")
+            Text(tr("Choose a game"))
                 .font(.ordir(.headline))
                 .accessibilityAddTraits(.isHeader)
-            ForEach(OrdirGame.allCases.filter { Self.scripts[$0] != nil }) { game in
+            ForEach(OrdirGame.allCases.filter { scripts[$0] != nil }) { game in
                 NavigationLink(value: game) {
-                    GameCard(game: game, script: Self.scripts[game]!)
+                    GameCard(game: game, script: scripts[game]!)
                 }
                 .buttonStyle(PressableCardStyle())
             }
             LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
-                ForEach(OrdirGame.allCases.filter { Self.scripts[$0] == nil }) { game in
+                ForEach(OrdirGame.allCases.filter { scripts[$0] == nil }) { game in
                     ComingSoonTile(game: game)
                 }
             }
         }
     }
 
-    /// Each game's bundled turn guide, loaded once; games without one show as "Coming soon".
-    private static let scripts: [OrdirGame: TurnScript] = Dictionary(
-        uniqueKeysWithValues: OrdirGame.allCases.compactMap { game in TurnScript.bundled(for: game).map { (game, $0) } }
-    )
+    private static func loadScripts() -> [OrdirGame: TurnScript] {
+        Dictionary(uniqueKeysWithValues: OrdirGame.allCases.compactMap { game in TurnScript.bundled(for: game).map { (game, $0) } })
+    }
 }
 
 /// Cards shrink a little under the finger and spring back.
@@ -209,11 +246,11 @@ private struct GameCard: View {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(game.displayName)
                         .font(.ordir(.headline))
-                    Text("Turn guide, step by step")
+                    Text(tr("Turn guide, step by step"))
                         .font(.ordir(.subheadline))
                         .foregroundStyle(.secondary)
                     if let cover {
-                        Text("Cover art: \(script.label(for: cover))")
+                        Text(tr("Cover art: {0}", script.label(for: cover)))
                             .font(.ordir(.caption))
                             .foregroundStyle(.secondary)
                     }
@@ -250,7 +287,7 @@ private struct ComingSoonTile: View {
                         .opacity(0.35)
                 }
                 .overlay(alignment: .topLeading) {
-                    Text("Coming soon")
+                    Text(tr("Coming soon"))
                         .font(.ordir(.caption).weight(.semibold))
                         .padding(.horizontal, 10)
                         .padding(.vertical, 3)
@@ -269,7 +306,7 @@ private struct ComingSoonTile: View {
         .background(.quaternary.opacity(0.25))
         .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(game.displayName), coming soon")
+        .accessibilityLabel(tr("{0}, coming soon", game.displayName))
     }
 }
 
@@ -280,7 +317,7 @@ private struct GamePlaceholderView: View {
     var body: some View {
         VStack(spacing: 24) {
             OrdirThinkingIndicator(game: game)
-            Text("Turn guides for \(game.displayName) are on the way.")
+            Text(tr("Turn guides for {0} are on the way.", game.displayName))
                 .font(.ordir(.footnote))
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)

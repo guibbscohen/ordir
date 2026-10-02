@@ -1,0 +1,593 @@
+{
+  "language": "es-419",
+  "title": "War of the Ring",
+  "sides": {
+    "freePeoples": "Pueblos Libres",
+    "shadow": "Sombra"
+  },
+  "victory": "La Sombra gana de inmediato si los Portadores del Anillo llegan a 12 de Corrupción, o al final de un turno controlando Asentamientos de los Pueblos Libres que valgan 10 puntos. Los Pueblos Libres ganan de inmediato si el Anillo llega a la Grieta del Destino, o al final de un turno controlando Asentamientos de la Sombra que valgan 4 puntos.",
+  "sources": {
+    "rulebook": {
+      "title": "Reglamento (Segunda Edición)",
+      "shortTitle": "Reglamento"
+    },
+    "faq": {
+      "title": "FAQ (versión 1.2, septiembre de 2014)",
+      "shortTitle": "FAQ"
+    },
+    "lordsOfMiddleEarth": {
+      "title": "Reglamento de Señores de la Tierra Media",
+      "shortTitle": "Señores de la Tierra Media"
+    },
+    "warriorsOfMiddleEarth": {
+      "title": "Reglamento de Guerreros de la Tierra Media",
+      "shortTitle": "Guerreros de la Tierra Media"
+    }
+  },
+  "expansions": {
+    "lordsOfMiddleEarth": {
+      "title": "Señores de la Tierra Media",
+      "summary": "Elrond, Galadriel, el Balrog y Gothmog con sus dados especiales, Sméagol y el Concilio de Rivendel opcional."
+    },
+    "warriorsOfMiddleEarth": {
+      "title": "Guerreros de la Tierra Media",
+      "summary": "Facciones: los Muertos, las Águilas y los Ents para los Pueblos Libres; Corsarios, Dunlendinos y Arañas para la Sombra."
+    }
+  },
+  "images": {
+    "cover": "Arte de la caja",
+    "game-board": "Tablero (dos mitades)",
+    "figures": "Miniaturas de plástico",
+    "action-dice": "Dados de Acción (azules de los Pueblos Libres, rojos de la Sombra) y dados de Combate",
+    "event-cards": "Cartas de Evento",
+    "hunt-tiles": "Fichas de Cacería: estándar, especiales de la Comunidad y de la Sombra, reverso",
+    "elven-rings": "Marcadores de los Anillos Élficos (anverso y reverso)",
+    "fellowship-counters": "Marcadores de Compañero y marcador de Progreso de la Comunidad",
+    "political-counters": "Marcadores Políticos de las Naciones",
+    "control-markers": "Marcadores de Control de Asentamiento y de Puntos de Victoria",
+    "minion-figures": "Secuaces y Nazgûl",
+    "shadow-units": "Unidades de Ejército de la Sombra",
+    "fellowship-figures": "Los Portadores del Anillo y los Compañeros",
+    "fp-units": "Unidades y Líderes de los Pueblos Libres",
+    "nations-map": "Las Naciones",
+    "fp-event-boxes": "Espacios de las cartas de Evento de los Pueblos Libres",
+    "hunt-box": "Casilla de la Cacería",
+    "vp-track": "Registro de Puntos de Victoria",
+    "fellowship-track": "Registro de la Comunidad",
+    "fellowship-boxes": "Espacios de la Comunidad del Anillo y del Guía de la Comunidad",
+    "political-track": "Registro Político",
+    "mordor-track": "Registro de Mordor",
+    "shadow-event-boxes": "Espacios de las cartas de Evento de la Sombra",
+    "setup-fp-list": "Preparación de los ejércitos de los Pueblos Libres",
+    "setup-map-west": "Preparación de los ejércitos (oeste)",
+    "setup-map-east": "Preparación de los ejércitos (este)",
+    "setup-shadow-list": "Preparación de los ejércitos de la Sombra",
+    "action-dice-icons": "Íconos de los dados de Acción",
+    "character-cards": "Cartas de Compañero y de Secuaz",
+    "lome-smeagol-tiles": "Fichas de Cacería de Sméagol",
+    "lome-elven-rings": "Marcadores de los Anillos Élficos con sus Guardianes",
+    "lome-action-tokens": "Fichas de Acción de la Sombra",
+    "lome-figures": "Nuevos Personajes",
+    "lome-dice": "Dados de los Guardianes y de los Secuaces Menores",
+    "wome-figures": "Miniaturas de las Facciones",
+    "wome-faction-dice": "Dados de Facción",
+    "wome-reference-cards": "Cartas de referencia de las Facciones",
+    "wome-cards": "Cartas de Evento de Facción, de Llamada a la Batalla y de Evento",
+    "wome-die-results": "Resultados del dado de Facción"
+  },
+  "battle": "Batalla",
+  "phases": {
+    "setup": {
+      "title": "Preparación"
+    },
+    "recover": {
+      "title": "1 · Recuperar y robar"
+    },
+    "fellowship": {
+      "title": "2 · Comunidad"
+    },
+    "hunt": {
+      "title": "3 · Asignación de la Cacería"
+    },
+    "roll": {
+      "title": "4 · Tirada de Acción"
+    },
+    "actions": {
+      "title": "5 · Resolución de Acciones",
+      "loop": {
+        "endLabel": "Todos los dados usados",
+        "note": "Túrnense, un dado cada uno, hasta que los dos hayan usado todos sus dados. Si a uno se le acaban antes, el otro usa los que le quedan, uno tras otro."
+      }
+    },
+    "end": {
+      "title": "6 · Comprobación de victoria"
+    },
+    "battle-start": {
+      "title": "Antes de la batalla"
+    },
+    "battle-rounds": {
+      "title": "Ronda de combate",
+      "loop": {
+        "endLabel": "Fin de la batalla",
+        "note": "La batalla termina cuando el atacante se detiene, el defensor se retira o un Ejército es eliminado."
+      }
+    },
+    "battle-end": {
+      "title": "Después de la batalla"
+    }
+  },
+  "steps": {
+    "setup-board": {
+      "title": "Bandos y tablero",
+      "instruction": "Decidan quién juega con los Pueblos Libres y quién con la Sombra, y abran el tablero.",
+      "bullets": [
+        "Dejen espacio a los lados para las cartas descartadas, las piezas eliminadas y las tiradas de dados."
+      ],
+      "components": [
+        "Tablero (dos mitades)"
+      ]
+    },
+    "setup-fellowship": {
+      "title": "La Comunidad",
+      "instruction": "Prepara a los Portadores del Anillo y a sus Compañeros:",
+      "bullets": [
+        "Miniatura de los Portadores del Anillo (Frodo y Sam): en Rivendel.",
+        "Marcador de Progreso de la Comunidad: casilla 0 del Registro de la Comunidad, con el lado Oculta hacia arriba. Marcador de Corrupción: también en la casilla 0.",
+        "Cartas de Compañero: en el espacio del Guía de la Comunidad, con Gandalf el Gris encima (empieza como Guía).",
+        "Miniaturas y marcadores de Compañero: en el espacio de la Comunidad del Anillo.",
+        "Aparta a Aragorn – Heredero de Isildur, Gandalf el Blanco y Gollum (las cartas y la miniatura de Gollum)."
+      ],
+      "components": [
+        "Miniatura de los Portadores del Anillo",
+        "Marcador de Progreso de la Comunidad",
+        "Marcador de Corrupción",
+        "Cartas, miniaturas y marcadores de Compañero"
+      ],
+      "additions": [
+        {
+          "text": "Trancos o Gandalf el Gris (cualquier versión) puede empezar como Guía."
+        },
+        {
+          "text": "Opcional, Concilio de Rivendel: puedes cambiar cualquier Compañero por su carta alternativa de esta caja.",
+          "bullets": [
+            "Tus elecciones quedan ocultas para la Sombra, salvo el Guía."
+          ]
+        }
+      ]
+    },
+    "setup-rings": {
+      "title": "Anillos Élficos",
+      "instruction": "Pon los tres marcadores de los Anillos Élficos en tu espacio de los Anillos Élficos, con el lado del Anillo hacia arriba.",
+      "components": [
+        "Marcadores de los Anillos Élficos (3)"
+      ],
+      "additions": [
+        {
+          "text": "Usa los marcadores de los Anillos Élficos de esta caja: cada uno muestra al Guardián de su Anillo."
+        }
+      ]
+    },
+    "setup-minions": {
+      "title": "Secuaces",
+      "instruction": "Aparta al Rey Brujo, a Saruman y a la Boca de Sauron, cartas y miniaturas: entran en juego más tarde.",
+      "components": [
+        "Cartas de Secuaz (3)",
+        "Miniaturas de Secuaz (3)"
+      ]
+    },
+    "setup-events": {
+      "title": "Mazos de Evento",
+      "instruction": "Separa tus cartas de Evento en un mazo de Personaje y uno de Estrategia según su reverso, baraja cada uno y ponlos en sus espacios.",
+      "components": [
+        "Cartas de Evento"
+      ],
+      "additions": [
+        {
+          "text": "Agrega las 13 cartas de Evento de esta caja antes de barajar:",
+          "bullets": [
+            "Sombra: “A Balrog is Come!” reemplaza la carta n.º 17 “Balrog of Moria” en el mazo de Personaje.",
+            "Las otras 12: 4 en cada mazo de Personaje y 2 en cada mazo de Estrategia."
+          ]
+        },
+        {
+          "text": "Cambia cartas antes de barajar y arma un tercer mazo:",
+          "bullets": [
+            "Pueblos Libres: quiten las cartas de Personaje n.º 15, 18, 19, 20, 21 y 22.",
+            "Sombra: quita las cartas de Estrategia n.º 10 y 11 y la carta de Personaje n.º 1.",
+            "Agreguen las nuevas cartas de Evento de esta caja a los mazos correspondientes.",
+            "Baraja tu mazo de Evento de Facción y ponlo junto a los otros dos."
+          ]
+        }
+      ]
+    },
+    "setup-hunt": {
+      "title": "Reserva de la Cacería",
+      "instruction": "Pon las fichas de Cacería estándar (beige) en un vaso u otro recipiente opaco: esta es la Reserva de la Cacería.",
+      "bullets": [
+        "Aparta las fichas especiales (azules y rojas) para después."
+      ],
+      "components": [
+        "Fichas de Cacería",
+        "Un vaso"
+      ],
+      "additions": [
+        {
+          "text": "Pon 2 de las 4 fichas de Sméagol en la Reserva de la Cacería."
+        }
+      ]
+    },
+    "setup-dice": {
+      "title": "Dados de Acción",
+      "instruction": "Pueblos Libres: tomen 4 dados de Acción azules. Sombra: toma 7 rojos.",
+      "bullets": [
+        "Aparten los demás dados de Acción y los 5 dados de Combate."
+      ],
+      "components": [
+        "Dados de Acción",
+        "Dados de Combate (5)"
+      ],
+      "additions": [
+        {
+          "text": "Aparta los dados de Facción, las miniaturas de las Facciones y las cartas de Llamada a la Batalla.",
+          "bullets": [
+            "Pon tus 3 cartas de referencia de Facción con la imagen hacia arriba, para que se vean sus requisitos de entrada.",
+            "Toma una hoja de referencia de los dados de Acción de Facción."
+          ]
+        }
+      ]
+    },
+    "setup-politics": {
+      "title": "Registro Político",
+      "instruction": "Pongan el marcador Político de cada Nación en el Registro Político:",
+      "bullets": [
+        "Espacio de arriba: Rohan, el Norte, Elfos, Enanos.",
+        "Segundo espacio: Gondor, Sureños y Orientales.",
+        "Tercer espacio, justo encima de “En Guerra”: Sauron, Isengard.",
+        "Lado Pasivo hacia arriba: todas las Naciones de los Pueblos Libres, salvo los Elfos. Activo: los Elfos y todas las Naciones de la Sombra."
+      ],
+      "components": [
+        "Marcadores Políticos (8)"
+      ]
+    },
+    "setup-armies-fp": {
+      "title": "Tus ejércitos",
+      "instruction": "Pon tus unidades y Líderes iniciales:",
+      "bullets": [
+        "Enanos: Erebor 1 Regular, 2 Élite, 1 Líder · Ered Luin 1 Regular · Colinas de Hierro 1 Regular.",
+        "Elfos: Puertos Grises 1 Regular, 1 Élite, 1 Líder · Rivendel 2 Élite, 1 Líder · Reino del Bosque 1 Regular, 1 Élite, 1 Líder · Lórien 1 Regular, 2 Élite, 1 Líder.",
+        "Gondor: Minas Tirith 3 Regular, 1 Élite, 1 Líder · Dol Amroth 3 Regular · Osgiliath 2 Regular · Pelargir 1 Regular.",
+        "El Norte: Bree 1 Regular · la Carroca 1 Regular · Valle 1 Regular, 1 Líder · Quebradas del Norte 1 Élite · La Comarca 1 Regular.",
+        "Rohan: Edoras 1 Regular, 1 Élite · Vados del Isen 2 Regular, 1 Líder · Abismo de Helm 1 Regular.",
+        "El resto son refuerzos: guárdalos aparte de las piezas eliminadas."
+      ],
+      "components": [
+        "Unidades de Ejército azules",
+        "Líderes grises"
+      ]
+    },
+    "setup-armies-shadow": {
+      "title": "Tus ejércitos",
+      "instruction": "Pon tus unidades y Nazgûl iniciales:",
+      "bullets": [
+        "Isengard: Orthanc 4 Regular, 1 Élite · Tierra Parda del Norte 1 Regular · Tierra Parda del Sur 1 Regular.",
+        "Sauron: Barad-dûr 4 Regular, 1 Élite, 1 Nazgûl · Dol Guldur 5 Regular, 1 Élite, 1 Nazgûl · Gorgoroth 3 Regular · Minas Morgul 5 Regular, 1 Nazgûl · Moria 2 Regular · Monte Gundabad 2 Regular · Nurn 2 Regular · Morannon 5 Regular, 1 Nazgûl.",
+        "Sureños y Orientales: Lejano Harad 3 Regular, 1 Élite · Cercano Harad 3 Regular, 1 Élite · Rhûn del Norte 2 Regular · Rhûn del Sur 3 Regular, 1 Élite · Umbar 3 Regular.",
+        "El resto son refuerzos. Aparta los marcadores de Ejército."
+      ],
+      "components": [
+        "Unidades de Ejército rojas",
+        "Nazgûl"
+      ]
+    },
+    "recover": {
+      "title": "Recuperar dados, robar cartas",
+      "instruction": "Recuperen todos los dados de Acción que usaron el turno anterior (incluidos los de la Casilla de la Cacería) y roben 1 carta de cada uno de sus mazos de Evento.",
+      "bullets": [
+        "¿Un Personaje entró o salió del juego el turno anterior? Agrega o quita su dado ahora.",
+        "Límite de 6 en la mano: roba las dos cartas primero y luego descarta hasta quedarte con 6, boca abajo (FAQ).",
+        "Un mazo vacío no se vuelve a barajar: roba solo del otro."
+      ],
+      "components": [
+        "Dados de Acción",
+        "Mazos de Evento"
+      ],
+      "additions": [
+        {
+          "text": "Dados de los Guardianes y de los Secuaces Menores:",
+          "bullets": [
+            "Recupéralos también, usados o no.",
+            "Quita el dado de un Personaje eliminado el turno anterior."
+          ]
+        },
+        {
+          "text": "Roba también 1 carta de Evento de Facción.",
+          "bullets": [
+            "Las cartas de Facción no cuentan para el límite de 6; puedes tener hasta 4 de ellas.",
+            "¿Tu primera Facción entró en juego el turno anterior? Agrega tu dado de Facción ahora (quítalo cuando ya no tengas Facciones)."
+          ]
+        }
+      ]
+    },
+    "fellowship": {
+      "title": "Fase de la Comunidad",
+      "instruction": "Puedes, en este orden:",
+      "bullets": [
+        "Declarar la Comunidad (si está Oculta): mueve a los Portadores del Anillo hasta tantas regiones como marque el Registro de la Comunidad y vuelve a ponerlo en 0.",
+        "¿Declarada en una Ciudad o Fortaleza de los Pueblos Libres que no esté bajo control enemigo? Cura 1 de Corrupción y activa esa Nación si está Pasiva.",
+        "Cambiar el Guía: solo por un Compañero del Nivel más alto.",
+        "¿En Minas Morgul o Morannon? Entrar en Mordor: Portadores del Anillo en la primera casilla del Registro de Mordor; devuelve a la Reserva de la Cacería las fichas de Ojo robadas y las fichas especiales en juego."
+      ],
+      "components": [
+        "Miniatura de los Portadores del Anillo",
+        "Marcador de Progreso de la Comunidad",
+        "Marcador de Corrupción",
+        "Espacio del Guía de la Comunidad"
+      ],
+      "additions": [
+        {
+          "text": "Concilio de Rivendel, solo en el primer turno: puedes declarar Compañeros fuera de la Comunidad.",
+          "bullets": [
+            "Ponlos en los lugares iniciales que indican sus cartas.",
+            "Uno quedó fuera: la Sombra toma 1 Ficha de Acción a su elección. Más de uno: las dos fichas."
+          ]
+        }
+      ]
+    },
+    "hunt-allocation": {
+      "title": "Asignación de la Cacería",
+      "instruction": "Pon cuantos dados de Acción quieras en la Casilla de la Cacería. No se tiran este turno.",
+      "bullets": [
+        "Al menos 1 si los Pueblos Libres recuperaron un dado de la Casilla de la Cacería este turno.",
+        "Como máximo 1 por Compañero en la Comunidad (los Portadores del Anillo no cuentan), pero siempre puedes poner 1."
+      ],
+      "components": [
+        "Dados de Acción",
+        "Casilla de la Cacería"
+      ],
+      "additions": [
+        {
+          "text": "Un dado de Guardián que sacó Ojo, recuperado de la Casilla de la Cacería, no obliga al mínimo de 1."
+        }
+      ]
+    },
+    "action-roll": {
+      "title": "Tirada de Acción",
+      "instruction": "Tiren sus dados de Acción. La Sombra no tira los dados que ya están en la Casilla de la Cacería.",
+      "bullets": [
+        "Sombra: pon en la Casilla de la Cacería cada Ojo que saques."
+      ],
+      "components": [
+        "Dados de Acción"
+      ],
+      "additions": [
+        {
+          "text": "Tira tus dados de Guardián o de Secuaz Menor junto con los demás:",
+          "bullets": [
+            "¿Más de un dado especial? Quédate con un resultado y aparta los demás hasta el próximo turno.",
+            "¿Algún Ojo entre ellos? Tienes que quedarte con un Ojo, y va a la Casilla de la Cacería (incluso el de los Pueblos Libres).",
+            "Quien tiró más dados elige primero (los Pueblos Libres, en caso de empate)."
+          ]
+        },
+        {
+          "text": "Tira también tu dado de Facción, si está en tu reserva.",
+          "bullets": [
+            "Sus resultados solo sirven para cartas y miniaturas de Facción.",
+            "Sombra: un Ojo de Sauron va a la Casilla de la Cacería."
+          ]
+        }
+      ]
+    },
+    "action-fp": {
+      "title": "Tu acción",
+      "instruction": "Usa un dado de Acción. Elige uno:",
+      "bullets": [
+        "Personaje: un Ejército con Líder se mueve o ataca · jugar una carta de Evento de Personaje · mover la Comunidad 1 casilla · ocultar la Comunidad · separar o mover Compañeros.",
+        "Ejército: mover hasta dos Ejércitos a regiones adyacentes · atacar con un Ejército · jugar una carta de Evento de Ejército.",
+        "Reclutamiento: avanzar una Nación 1 casilla en el Registro Político · jugar una carta de Evento de Reclutamiento · reclutar en Asentamientos amigos y libres de una Nación “En Guerra”.",
+        "Evento: robar una carta de cualquier mazo · jugar cualquier carta de Evento.",
+        "Voluntad de Occidente: úsala como cualquier otro resultado, o trae a Gandalf el Blanco o a Aragorn (mira sus cartas).",
+        "Antes de elegir, puedes usar un Anillo Élfico para cambiar un dado (una vez por turno). También puedes descartar un dado sin efecto, o pasar si te quedan menos dados."
+      ],
+      "components": [
+        "Dados de Acción",
+        "Cartas de Evento",
+        "Marcador de Progreso de la Comunidad"
+      ],
+      "additions": [
+        {
+          "text": "Dados de los Guardianes y los Anillos Élficos:",
+          "bullets": [
+            "Robar Carta: roba 1 carta de Evento de cualquier mazo.",
+            "Un Anillo Élfico no puede cambiar un dado de Guardián.",
+            "La habilidad especial del Anillo de un Guardián no cuenta para el uso de un Anillo por turno."
+          ]
+        },
+        {
+          "text": "Facciones:",
+          "bullets": [
+            "¿Se cumple la condición de una Facción en su carta de referencia? Un resultado de Reclutamiento (o Reclutar Facción) la pone en juego.",
+            "Dado de Facción: Reclutar Facción, o jugar o robar una carta de Evento de Facción.",
+            "Un resultado de Evento también roba o juega cartas de Evento de Facción."
+          ]
+        }
+      ],
+      "reminders": [
+        "¿Moviste la Comunidad? La Sombra hace la Cacería: 1 dado por dado de la Sombra en la Casilla de la Cacería (máx. 5), cada 6 es éxito, +1 por dado de los Pueblos Libres ahí.",
+        "Repeticiones de la Cacería: 1 dado fallido por cada Fortaleza de la Sombra, unidades de Ejército de la Sombra y Nazgûl en la región de los Portadores del Anillo.",
+        "¿La Cacería tuvo éxito? Roba una ficha. Reduce el daño con una carta o la habilidad del Guía, o pierde un Compañero (el Guía o uno al azar); el resto es Corrupción.",
+        "El dado que movió la Comunidad va a la Casilla de la Cacería (no si la movió una carta de Evento).",
+        "En el Registro de Mordor: sin tirada de Cacería. Cada movimiento roba una ficha; un ícono de Alto significa no avanzar.",
+        "12 de Corrupción: la Sombra gana de inmediato. Portadores del Anillo en la Grieta del Destino con menos: los Pueblos Libres ganan de inmediato.",
+        "¿Más de 6 cartas de Evento en la mano? Descarta las que sobran de inmediato, boca abajo."
+      ]
+    },
+    "action-shadow": {
+      "title": "Tu acción",
+      "instruction": "Usa un dado de Acción. Elige uno:",
+      "bullets": [
+        "Personaje: un Ejército con Líder (un Nazgûl) se mueve o ataca · jugar una carta de Evento de Personaje · mover a todos los Nazgûl y Secuaces.",
+        "Ejército: mover hasta dos Ejércitos a regiones adyacentes · atacar con un Ejército · jugar una carta de Evento de Ejército.",
+        "Reclutamiento: avanzar una Nación 1 casilla en el Registro Político · jugar una carta de Evento de Reclutamiento · reclutar en Asentamientos amigos y libres de una Nación “En Guerra”.",
+        "Evento: robar una carta de cualquier mazo · jugar cualquier carta de Evento.",
+        "Reclutamiento también puede poner un Secuaz en juego (mira su carta).",
+        "¿Recibiste un Anillo Élfico de los Pueblos Libres? Úsalo una vez para cambiar un dado (un Ojo va a la Casilla de la Cacería). También puedes descartar un dado sin efecto, o pasar si te quedan menos dados."
+      ],
+      "components": [
+        "Dados de Acción",
+        "Cartas de Evento",
+        "Nazgûl y Secuaces"
+      ],
+      "additions": [
+        {
+          "text": "Dados de los Secuaces Menores y Fichas de Acción:",
+          "bullets": [
+            "Robar Carta: roba 1 carta de Evento de cualquier mazo.",
+            "Fichas del Concilio de Rivendel: usa una en lugar de un dado; cada una una vez por partida, una por turno."
+          ]
+        },
+        {
+          "text": "Facciones:",
+          "bullets": [
+            "¿Se cumple la condición de una Facción en su carta de referencia? Un resultado de Reclutamiento (o Reclutar Facción) la pone en juego.",
+            "Dado de Facción: Reclutar Facción, jugar o robar una carta de Evento de Facción; el Comodín elige cualquiera de ellos."
+          ]
+        }
+      ],
+      "reminders": [
+        "¿Capturaste una Ciudad (+1) o Fortaleza (+2) de los Pueblos Libres? Pon un marcador de Control de Asentamiento y avanza tu marcador de Puntos de Victoria.",
+        "¿Más de 6 cartas de Evento en la mano? Descarta las que sobran de inmediato, boca abajo.",
+        "Tus bajas de la Sombra vuelven a tus refuerzos."
+      ]
+    },
+    "end-mordor": {
+      "title": "¿En el Registro de Mordor?",
+      "instruction": "Si no intentaste mover ni ocultar la Comunidad en el Registro de Mordor este turno, agrega 1 de Corrupción.",
+      "bullets": [
+        "¿Todavía no está en Mordor? No hay nada que hacer."
+      ],
+      "components": [
+        "Marcador de Corrupción"
+      ]
+    },
+    "victory-check": {
+      "title": "Comprobación de victoria",
+      "instruction": "Revisen el Registro de Puntos de Victoria:",
+      "bullets": [
+        "La Sombra controla Asentamientos de los Pueblos Libres que valen 10+ puntos: la Sombra gana.",
+        "Los Pueblos Libres controlan Asentamientos de la Sombra que valen 4+ puntos: los Pueblos Libres ganan.",
+        "Cada Ciudad enemiga vale 1, cada Fortaleza enemiga 2. ¿Nadie ganó? Empiecen un nuevo turno."
+      ],
+      "components": [
+        "Marcadores de Puntos de Victoria",
+        "Marcadores de Control de Asentamiento"
+      ]
+    },
+    "battle-attack": {
+      "title": "Ataque",
+      "instruction": "Elige el Ejército atacante. Su Nación tiene que estar “En Guerra”.",
+      "bullets": [
+        "Dado de Ejército: un Ejército ataca una región adyacente, o empieza una batalla de asedio o una salida.",
+        "Dado de Personaje: el Ejército necesita un Líder o un Personaje.",
+        "Puedes dejar una retaguardia (al menos 1 unidad de Ejército de cada lado). Las piezas que no estén “En Guerra” tienen que quedarse en ella.",
+        "Tus unidades se quedan en su región hasta ganar la batalla."
+      ],
+      "components": [
+        "Tu Ejército",
+        "Dado de Acción"
+      ]
+    },
+    "battle-call": {
+      "title": "Llamada a la Batalla",
+      "instruction": "Toma las 2 cartas de Llamada a la Batalla de cada Facción tuya en juego que cumpla su condición para esta batalla.",
+      "components": [
+        "Cartas de Llamada a la Batalla"
+      ]
+    },
+    "battle-stronghold": {
+      "title": "¿Defiendes una Fortaleza o Ciudad?",
+      "instruction": "En una Fortaleza: antes de cada ronda, combate en campo abierto o retírate a un asedio.",
+      "bullets": [
+        "Asedio: como máximo 5 unidades de Ejército dentro (las que sobran se retiran). El atacante puede entrar en la región, y la batalla termina.",
+        "Ciudad o Fortificación: en la primera ronda el atacante solo impacta con 6.",
+        "¿Ninguna de las dos? No hay nada que elegir."
+      ],
+      "components": [
+        "Tu Ejército"
+      ]
+    },
+    "round-cards": {
+      "title": "Cartas de combate",
+      "instruction": "Primero el atacante, luego el defensor: puedes elegir una carta de Evento para jugarla como carta de Combate. Revélenlas juntas.",
+      "bullets": [
+        "Los efectos duran esta ronda; descarten las cartas después.",
+        "¿No queda claro el orden? Primero el número de iniciativa más bajo; si empatan, el del defensor."
+      ],
+      "components": [
+        "Cartas de Evento"
+      ],
+      "additions": [
+        {
+          "text": "Puedes jugar una carta de Llamada a la Batalla en su lugar; recupérala al final de la ronda."
+        }
+      ]
+    },
+    "round-roll": {
+      "title": "Tirada de combate y repetición de Líder",
+      "instruction": "Tira 1 dado de Combate por unidad de Ejército (máx. 5). Cada 5 o 6 impacta.",
+      "bullets": [
+        "Luego repite los fallos hasta tu Liderazgo (Líderes, Nazgûl y el Liderazgo de los Personajes; máx. 5).",
+        "Un 1 siempre falla; un 6 siempre impacta.",
+        "Batalla de asedio: el atacante solo impacta con 6."
+      ],
+      "components": [
+        "Dados de Combate"
+      ]
+    },
+    "round-casualties": {
+      "title": "Bajas",
+      "instruction": "Primero el atacante. Por cada impacto recibido, retira un Regular o cambia un Élite por un Regular. Dos impactos pueden retirar un Élite.",
+      "bullets": [
+        "¿Se eliminaron todas las unidades de Ejército? Sus Líderes y Personajes también salen.",
+        "Las bajas de los Pueblos Libres salen del juego; las de la Sombra vuelven a los refuerzos."
+      ],
+      "components": [
+        "Unidades de Ejército"
+      ]
+    },
+    "round-cease": {
+      "title": "¿Continuar?",
+      "instruction": "Detén el ataque o sigue combatiendo.",
+      "bullets": [
+        "Detenerte: tus unidades se quedan donde empezaron.",
+        "Batalla de asedio: termina después de esta ronda, salvo que reduzcas uno de tus Élites a Regular."
+      ],
+      "components": [
+        "Tu Ejército"
+      ]
+    },
+    "round-retreat": {
+      "title": "¿Retirarse?",
+      "instruction": "El ataque sigue. Puedes retirar todo tu Ejército a una región libre adyacente, o combatir otra ronda.",
+      "bullets": [
+        "¿Sin región libre adyacente, o bajo asedio? No puedes retirarte.",
+        "Un Personaje de Nivel 0 se queda atrás."
+      ],
+      "components": [
+        "Tu Ejército"
+      ]
+    },
+    "battle-advance": {
+      "title": "Avanzar",
+      "instruction": "¿El defensor fue eliminado o se retiró? Puedes mover todo o parte de tu Ejército a la región.",
+      "bullets": [
+        "¿Fortaleza enemiga con unidades dentro? Ahora está bajo asedio.",
+        "¿Capturaste una Ciudad (+1) o Fortaleza (+2)? Pon un marcador de Control de Asentamiento y avanza tu marcador de Puntos de Victoria."
+      ],
+      "components": [
+        "Tu Ejército",
+        "Marcadores de Control de Asentamiento",
+        "Marcador de Puntos de Victoria"
+      ]
+    }
+  }
+}

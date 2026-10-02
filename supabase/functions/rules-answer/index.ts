@@ -1,6 +1,7 @@
 // rules-answer: answers a rules question from a game's official sources, citing source and page.
 //
-// POST { game, expansions: string[], question, followUp? } with a signed-in player's access token.
+// POST { game, expansions: string[], question, followUp?, language? } with a signed-in player's access token.
+// language ("en", "pt-BR" or "es-419", default English) is the language of the answer and of any error message.
 // With followUp, the player's last few questions on that game (from rules_questions, never from the
 // client) come first as earlier turns, so "and with Smugglers?" makes sense.
 // Returns { answer: [{ text, citations: [{ source, page, quote }] }], refused, questionsLeft }.
@@ -64,6 +65,34 @@ const SYSTEM = `You are Ordir's rules referee for board games. Answer the player
 
 Format: one short sentence that answers the question, then up to five short bullet points with the details, each on its own line starting with "- ". No headings and no long paragraphs.`;
 
+/** How each language Ordir speaks is asked for, and its error messages. */
+const LANGUAGES: Record<string, { answerIn: string; errors: Record<string, string> }> = {
+  en: {
+    answerIn: "",
+    errors: {
+      signIn: "Sign in to ask rules questions.", game: "Unknown game.", length: "Ask in 3 to 500 characters.",
+      limit: "That's {n} questions today. Try again tomorrow.", loading: "The rules aren't loaded yet. Try again later.",
+      busy: "Busy right now. Try again in a minute.", failed: "Couldn't get an answer. Try again.", refused: "I can't answer that one.",
+    },
+  },
+  "pt-BR": {
+    answerIn: "Write your answer in Brazilian Portuguese. Keep each game's own terms recognisable (you may add the English term in parentheses the first time).",
+    errors: {
+      signIn: "Entre para perguntar regras.", game: "Jogo desconhecido.", length: "Pergunte com 3 a 500 caracteres.",
+      limit: "Você já fez {n} perguntas hoje. Tente de novo amanhã.", loading: "As regras ainda não foram carregadas. Tente mais tarde.",
+      busy: "Muito movimento agora. Tente de novo em um minuto.", failed: "Não deu para obter uma resposta. Tente de novo.", refused: "Não posso responder essa.",
+    },
+  },
+  "es-419": {
+    answerIn: "Write your answer in Latin American Spanish. Keep each game's own terms recognisable (you may add the English term in parentheses the first time).",
+    errors: {
+      signIn: "Inicia sesión para preguntar reglas.", game: "Juego desconocido.", length: "Pregunta con 3 a 500 caracteres.",
+      limit: "Ya hiciste {n} preguntas hoy. Inténtalo mañana.", loading: "Las reglas todavía no están cargadas. Inténtalo más tarde.",
+      busy: "Hay mucha demanda ahora. Inténtalo en un minuto.", failed: "No se pudo obtener una respuesta. Inténtalo de nuevo.", refused: "No puedo responder esa.",
+    },
+  },
+};
+
 const cors = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -116,22 +145,25 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   if (req.method !== "POST") return json({ error: "Use POST." }, 405);
 
-  // A signed-in player (not a guest or the bare anon key).
-  const token = (req.headers.get("Authorization") ?? "").replace(/^Bearer\s+/i, "");
-  const { data: auth } = await supabase.auth.getUser(token);
-  const user = auth?.user;
-  if (!user || user.is_anonymous) return json({ error: "Sign in to ask rules questions." }, 401);
-
-  let body: { game?: string; expansions?: string[]; question?: string; followUp?: boolean };
+  let body: { game?: string; expansions?: string[]; question?: string; followUp?: boolean; language?: string };
   try {
     body = await req.json();
   } catch {
     return json({ error: "Send JSON." }, 400);
   }
+  const language = LANGUAGES[body.language ?? ""] ?? LANGUAGES.en;
+  const errors = language.errors;
+
+  // A signed-in player (not a guest or the bare anon key).
+  const token = (req.headers.get("Authorization") ?? "").replace(/^Bearer\s+/i, "");
+  const { data: auth } = await supabase.auth.getUser(token);
+  const user = auth?.user;
+  if (!user || user.is_anonymous) return json({ error: errors.signIn }, 401);
+
   const game = GAMES[body.game ?? ""];
   const question = (body.question ?? "").trim();
-  if (!game) return json({ error: "Unknown game." }, 400);
-  if (question.length < 3 || question.length > 500) return json({ error: "Ask in 3 to 500 characters." }, 400);
+  if (!game) return json({ error: errors.game }, 400);
+  if (question.length < 3 || question.length > 500) return json({ error: errors.length }, 400);
   const expansions = [...new Set(body.expansions ?? [])].filter((id) => id in game.sources && !game.base.includes(id));
 
   const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
@@ -141,14 +173,14 @@ Deno.serve(async (req) => {
     .eq("user_id", user.id)
     .gte("created_at", since);
   if ((count ?? 0) >= DAILY_QUESTIONS) {
-    return json({ error: `That's ${DAILY_QUESTIONS} questions today. Try again tomorrow.` }, 429);
+    return json({ error: errors.limit.replace("{n}", String(DAILY_QUESTIONS)) }, 429);
   }
 
   // Base sources first, then expansions in the game's order, so the cached prefix is stable.
   const sourceIds = Object.keys(game.sources).filter((id) => game.base.includes(id) || expansions.includes(id));
   const documents = await Promise.all(sourceIds.map(async (id) => ({ id, passages: await passagesFor(body.game!, id) })));
   if (documents.some((d) => d.passages.length === 0)) {
-    return json({ error: "The rules aren't loaded yet. Try again later." }, 503);
+    return json({ error: errors.loading }, 503);
   }
 
   const content: Anthropic.Beta.BetaContentBlockParam[] = documents.map((doc, index) => ({
@@ -191,24 +223,24 @@ Deno.serve(async (req) => {
       model: MODEL,
       max_tokens: 16000,
       output_config: { effort: "medium" },
-      system: SYSTEM,
+      system: language.answerIn ? `${SYSTEM}\n\n${language.answerIn}` : SYSTEM,
       messages,
       // On a safety decline, the API retries on a suitable fallback model within the same call.
       betas: ["server-side-fallback-2026-07-01"],
       fallbacks: "default",
     });
   } catch (error) {
-    if (error instanceof Anthropic.RateLimitError) return json({ error: "Busy right now. Try again in a minute." }, 503);
+    if (error instanceof Anthropic.RateLimitError) return json({ error: errors.busy }, 503);
     if (error instanceof Anthropic.APIError) {
       console.error("Anthropic API error", error.status, error.message);
-      return json({ error: "Couldn't get an answer. Try again." }, 502);
+      return json({ error: errors.failed }, 502);
     }
     throw error;
   }
 
   const refused = response.stop_reason === "refusal";
   const answer = refused
-    ? [{ text: "I can't answer that one.", citations: [] }]
+    ? [{ text: errors.refused, citations: [] }]
     : response.content.flatMap((block) => {
         if (block.type !== "text") return [];
         const citations = (block.citations ?? []).flatMap((c) => {

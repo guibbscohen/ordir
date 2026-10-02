@@ -84,9 +84,9 @@ enum OrdirMascotMode: Equatable {
 
     var accessibilityValue: String {
         switch self {
-        case .idle: "Waiting"
-        case .speaking: "Speaking"
-        case .thinking: "Thinking"
+        case .idle: tr("Waiting")
+        case .speaking: tr("Speaking")
+        case .thinking: tr("Thinking")
         }
     }
 }

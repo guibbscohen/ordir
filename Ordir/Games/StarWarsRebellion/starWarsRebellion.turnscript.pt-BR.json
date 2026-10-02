@@ -1,0 +1,585 @@
+{
+  "language": "pt-BR",
+  "title": "Star Wars: Rebellion",
+  "sides": {
+    "rebel": "Rebeldes",
+    "imperial": "Império"
+  },
+  "victory": "O Império vence na hora com unidades no sistema da base Rebelde revelada e nenhuma unidade Rebelde lá; os Rebeldes vencem na hora quando o marcador de reputação encontra o marcador de tempo.",
+  "sources": {
+    "learnToPlay": {
+      "title": "Aprenda a Jogar",
+      "shortTitle": "Aprenda a Jogar"
+    },
+    "rulesReference": {
+      "title": "Referência de Regras",
+      "shortTitle": "Referência de Regras"
+    },
+    "faq": {
+      "title": "FAQ e errata (v2.1, maio de 2019)",
+      "shortTitle": "FAQ"
+    },
+    "riseOfTheEmpire": {
+      "title": "Folha de regras de Rise of the Empire",
+      "shortTitle": "Rise of the Empire"
+    }
+  },
+  "expansions": {
+    "riseOfTheEmpire": {
+      "title": "Rise of the Empire",
+      "summary": "Líderes de Rogue One, novas unidades e missões, e combate cinematográfico com cartas de tática avançadas."
+    }
+  },
+  "images": {
+    "cover": "Arte da caixa",
+    "game-board": "Tabuleiro (2 metades)",
+    "objective-cards": "Cartas de objetivo",
+    "leaders": "Líderes com bases",
+    "faction-sheets": "Folhas de facção",
+    "mission-cards": "Cartas de missão",
+    "loyalty-markers": "Marcadores de lealdade e de subjugação",
+    "damage-markers": "Marcadores de dano",
+    "time-reputation": "Marcadores de tempo e de reputação",
+    "probe-cards": "Cartas de sonda",
+    "dice": "Dados personalizados (5 pretos, 5 vermelhos)",
+    "tactic-cards": "Cartas de tática espacial e terrestre",
+    "miniatures": "Miniaturas de plástico",
+    "action-cards": "Cartas de ação",
+    "setup-components": "Componentes do jogador Imperial",
+    "setup-leader-pool": "Reserva de líderes e ícone de recrutamento",
+    "setup-time-track": "Trilha do tempo com os marcadores de tempo e de reputação",
+    "setup-objective-deck": "Montando o baralho de objetivos",
+    "setup-action-deck": "Baralho de ação ao lado da folha de facção",
+    "setup-tactics": "Baralhos de tática, marcadores e dados",
+    "setup-missions": "Missões iniciais, projetos e o baralho de missões",
+    "setup-starting-units": "Lealdade e unidades iniciais",
+    "setup-base": "Escondendo a base Rebelde",
+    "setup-hand": "Mão inicial de missões",
+    "assign-leaders": "Líderes designados para missões",
+    "activate-system": "Ativando um sistema",
+    "mission-example": "Revelando uma missão",
+    "build-example": "Construindo unidades",
+    "build-queue": "Fila de construção Imperial",
+    "rebel-base-space": "Unidades Rebeldes no espaço da Base Rebelde",
+    "combat-example": "Um combate",
+    "rote-green-dice": "Dados verdes",
+    "rote-jabba": "Líder com habilidades menores",
+    "rote-tactic-card": "Carta de tática avançada",
+    "rote-mission-icons": "Ícones dos conjuntos de missões"
+  },
+  "battle": "Combate",
+  "phases": {
+    "setup": {
+      "title": "Preparação"
+    },
+    "assignment": {
+      "title": "Fase de Designação"
+    },
+    "command": {
+      "title": "Fase de Comando",
+      "loop": {
+        "endLabel": "Os dois passaram",
+        "note": "A Fase de Comando termina quando os dois jogadores passaram."
+      }
+    },
+    "refresh": {
+      "title": "Fase de Renovação"
+    },
+    "combat-start": {
+      "title": "Antes do combate"
+    },
+    "combat-rounds": {
+      "title": "Rodada de combate",
+      "loop": {
+        "endLabel": "Fim do combate",
+        "note": "O combate termina quando, depois de uma rodada, as duas facções não têm mais unidades no mesmo teatro."
+      }
+    },
+    "combat-end": {
+      "title": "Depois do combate"
+    }
+  },
+  "steps": {
+    "setup-factions": {
+      "title": "Escolham os lados",
+      "instruction": "Decidam quem joga com o Império e quem joga com os Rebeldes (tirem cara ou coroa se não houver acordo).",
+      "bullets": [
+        "Cada jogador pega as miniaturas, os líderes, os marcadores de lealdade, a folha de facção, as cartas de missão e as cartas de ação da sua facção."
+      ],
+      "components": [
+        "Miniaturas, líderes e marcadores de lealdade das duas facções",
+        "Folhas de facção",
+        "Cartas de missão e de ação"
+      ],
+      "additions": [
+        {
+          "text": "Coloque sua folha de referência de unidades abaixo da folha de facção; você pode construir as unidades listadas nela."
+        }
+      ]
+    },
+    "setup-leaders": {
+      "title": "Líderes iniciais",
+      "instruction": "Coloque seus 4 líderes sem ícone de recrutamento no espaço Reserva de Líderes da sua folha de facção.",
+      "bullets": [
+        "Líderes com ícone de recrutamento esperam ao lado do tabuleiro até serem recrutados."
+      ],
+      "components": [
+        "Líderes com bases",
+        "Folha de facção"
+      ]
+    },
+    "setup-board": {
+      "title": "Tabuleiro e trilha do tempo",
+      "instruction": "Juntem as duas metades do tabuleiro no meio da mesa.",
+      "bullets": [
+        "Marcador de tempo: casa 1 da trilha do tempo.",
+        "Marcador de reputação: casa 14."
+      ],
+      "components": [
+        "Tabuleiro (2 metades)",
+        "Marcador de tempo",
+        "Marcador de reputação"
+      ]
+    },
+    "setup-objectives": {
+      "title": "Baralho de objetivos",
+      "instruction": "Separe as cartas de objetivo pelo número no verso (I, II, III) e embaralhe cada pilha.",
+      "bullets": [
+        "Empilhe-as no espaço Objetivos: III embaixo, depois II, e I por cima.",
+        "Compre 1 carta de objetivo e mantenha-a em segredo do Império."
+      ],
+      "components": [
+        "Cartas de objetivo"
+      ],
+      "additions": [
+        {
+          "text": "Monte o baralho de objetivos assim:",
+          "bullets": [
+            "Estágio III: 1 “Death Star Plans” + 4 cartas aleatórias do estágio III, embaralhadas.",
+            "Estágio II: 1 “Death Star Plans” + 4 cartas aleatórias do estágio II, embaralhadas, por cima.",
+            "Estágio I: 5 cartas aleatórias do estágio I por cima. Os objetivos que sobram voltam para a caixa sem serem vistos.",
+            "Você ainda compra 1 carta de objetivo (FAQ)."
+          ]
+        }
+      ]
+    },
+    "setup-action-decks": {
+      "title": "Baralhos de ação",
+      "instruction": "Embaralhe suas cartas de ação com ícone de recrutamento para formar seu baralho de ação, virado para baixo ao lado da folha de facção.",
+      "components": [
+        "Cartas de ação",
+        "Folha de facção"
+      ]
+    },
+    "setup-tactics": {
+      "title": "Baralhos de tática, marcadores e dados",
+      "instruction": "Embaralhem separadamente os baralhos de tática espacial e terrestre e deixem-nos ao alcance dos dois.",
+      "bullets": [
+        "Deixem os outros marcadores e os dados por perto."
+      ],
+      "components": [
+        "Cartas de tática espacial",
+        "Cartas de tática terrestre",
+        "Marcadores",
+        "Dados"
+      ],
+      "additions": [
+        {
+          "text": "Retirem as cartas de tática originais. Cada um usa os próprios baralhos de tática avançados (Combate Cinematográfico)."
+        }
+      ]
+    },
+    "setup-missions": {
+      "title": "Cartas de missão",
+      "instruction": "Separe suas cartas de missão:",
+      "bullets": [
+        "Missões iniciais (seta na parte de baixo): separe suas 4.",
+        "Projetos (estrela branca em um círculo azul): o Império os embaralha no espaço Projetos.",
+        "O resto: embaralhe no seu baralho de missões, virado para baixo ao lado da folha de facção."
+      ],
+      "components": [
+        "Cartas de missão",
+        "Cartas de projeto"
+      ],
+      "additions": [
+        {
+          "text": "Embaralhem as cartas de missão da expansão nos seus baralhos, e as cartas de projeto dela no baralho de projetos.",
+          "bullets": [
+            "Primeira partida com a expansão: monte seu baralho de missões só com cartas que têm ícone de Darth Vader ou ícone de líder.",
+            "Partidas seguintes: cada um escolhe em segredo uma carta do seu baralho de missões e vocês revelam juntos. Ícone de Darth Vader: usem o conjunto de Rise of the Empire. Ícone de líder ou nenhum ícone: usem o conjunto base.",
+            "Missões iniciais e projetos são sempre usados."
+          ]
+        }
+      ]
+    },
+    "setup-loyalty": {
+      "title": "Lealdade inicial",
+      "instruction": "Embaralhem o baralho de sondas e revelem cartas até aparecerem 3 sistemas Rebeldes e 5 sistemas Imperiais.",
+      "bullets": [
+        "Um marcador de lealdade Rebelde em cada um dos 3 sistemas Rebeldes.",
+        "Um marcador de subjugação em cada um dos 2 primeiros sistemas Imperiais; um marcador de lealdade Imperial nos outros 3.",
+        "As 5 cartas de sonda Imperiais voltam para a caixa; embaralhem o resto de volta no baralho de sondas."
+      ],
+      "components": [
+        "Cartas de sonda",
+        "Marcadores de lealdade Rebelde",
+        "Marcadores de lealdade e de subjugação Imperiais"
+      ]
+    },
+    "setup-imperial-units": {
+      "title": "Unidades iniciais do Império",
+      "instruction": "Coloque suas unidades iniciais em sistemas com marcador de lealdade Imperial ou de subjugação:",
+      "bullets": [
+        "3 Destróieres Estelares, 3 Porta-naves de Assalto, 12 Caças TIE.",
+        "12 Stormtroopers, 5 AT-STs, 1 AT-AT, 1 Estrela da Morte.",
+        "Pelo menos 1 unidade terrestre em cada sistema Imperial."
+      ],
+      "components": [
+        "3 Destróieres Estelares",
+        "3 Porta-naves de Assalto",
+        "12 Caças TIE",
+        "12 Stormtroopers",
+        "5 AT-STs",
+        "1 AT-AT",
+        "1 Estrela da Morte"
+      ],
+      "additions": [
+        {
+          "text": "Se os dois concordarem em usar as unidades iniciais de Rise of the Empire, em vez disso:",
+          "bullets": [
+            "1 Estrela da Morte na casa 3 da sua fila de construção.",
+            "Qualquer sistema remoto: 4 Caças TIE, 1 Stormtrooper, 1 Estrela da Morte em Construção. Retire do jogo a carta de sonda desse sistema.",
+            "Depois 8 Caças TIE, 3 Porta-naves de Assalto, 3 Destróieres Estelares, 2 TIE Strikers, 12 Stormtroopers, 4 AT-STs, 2 Tanques de Assalto e 1 AT-AT em sistemas Imperiais ou no sistema da Estrela da Morte em Construção."
+          ]
+        }
+      ]
+    },
+    "setup-rebel-units": {
+      "title": "Unidades iniciais dos Rebeldes",
+      "instruction": "Coloque suas unidades iniciais no espaço da Base Rebelde e/ou em qualquer um sistema sem unidades Imperiais:",
+      "bullets": [
+        "1 Corveta Corelliana, 1 Transporte Rebelde, 2 X-wings, 2 Y-wings.",
+        "6 Soldados Rebeldes, 2 Airspeeders.",
+        "O FAQ permite qualquer um sistema sem unidades Imperiais (a Referência de Regras dizia um sistema Rebelde ou neutro)."
+      ],
+      "components": [
+        "1 Corveta Corelliana",
+        "1 Transporte Rebelde",
+        "2 X-wings",
+        "2 Y-wings",
+        "6 Soldados Rebeldes",
+        "2 Airspeeders"
+      ],
+      "additions": [
+        {
+          "text": "Se os dois concordaram em usar as unidades iniciais de Rise of the Empire, pegue estas:",
+          "bullets": [
+            "1 X-wing, 1 Y-wing, 1 U-wing, 1 Transporte Rebelde, 1 Corveta Corelliana.",
+            "5 Soldados Rebeldes, 2 Airspeeders, 1 Vanguarda Rebelde."
+          ]
+        }
+      ]
+    },
+    "setup-starting-actions": {
+      "title": "Cartas de ação iniciais",
+      "instruction": "Compre 2 cartas de ação iniciais aleatórias (as sem ícone de recrutamento) e deixe-as viradas para baixo ao lado da folha de facção.",
+      "bullets": [
+        "Devolva as outras cartas de ação iniciais à caixa sem olhar."
+      ],
+      "components": [
+        "Cartas de ação iniciais"
+      ]
+    },
+    "setup-base": {
+      "title": "Esconda a base Rebelde",
+      "instruction": "Escolha em segredo uma carta do baralho de sondas e coloque-a virada para baixo sob o espaço Localização da base Rebelde.",
+      "bullets": [
+        "Depois embaralhe o baralho de sondas no espaço Baralho de Sondas."
+      ],
+      "components": [
+        "Baralho de sondas",
+        "Tabuleiro"
+      ]
+    },
+    "setup-hand": {
+      "title": "Mão inicial",
+      "instruction": "Pegue suas 4 missões iniciais e compre 2 cartas do seu baralho de missões. Mantenha sua mão em segredo.",
+      "components": [
+        "Missões iniciais",
+        "Baralho de missões"
+      ]
+    },
+    "assign-rebel": {
+      "title": "Designe líderes",
+      "instruction": "Designe líderes para missões:",
+      "bullets": [
+        "Coloque uma carta de missão virada para baixo ao lado da folha de facção e 1 ou 2 líderes da sua reserva sobre ela.",
+        "Repita para quantas missões quiser; as missões ficam escondidas.",
+        "Os líderes que você não designar ficam na reserva para a Fase de Comando."
+      ],
+      "components": [
+        "Cartas de missão na mão",
+        "Líderes na sua reserva"
+      ]
+    },
+    "assign-imperial": {
+      "title": "Designe líderes",
+      "instruction": "Agora designe seus líderes para missões:",
+      "bullets": [
+        "Coloque uma carta de missão virada para baixo ao lado da folha de facção e 1 ou 2 líderes da sua reserva sobre ela.",
+        "Os líderes que você não designar ficam na reserva para a Fase de Comando."
+      ],
+      "components": [
+        "Cartas de missão na mão",
+        "Líderes na sua reserva"
+      ]
+    },
+    "command-rebel": {
+      "title": "Vez de comando",
+      "instruction": "Faça uma vez. Escolha um:",
+      "bullets": [
+        "Vai revelar sua base por escolha? Só no começo da sua vez (FAQ).",
+        "Ativar um sistema: coloque um líder com valores de tática da sua reserva em um sistema, mova unidades dos sistemas adjacentes para lá e resolva o combate se as duas facções estiverem lá.",
+        "Revelar uma missão: vire uma missão com seus líderes designados, escolha o sistema dela e coloque esses líderes lá.",
+        "Passar: você não faz mais vezes nesta fase."
+      ],
+      "components": [
+        "Líderes na sua reserva",
+        "Cartas de missão",
+        "Suas unidades"
+      ],
+      "reminders": [
+        "Unidades não podem sair de um sistema que tenha um dos seus líderes.",
+        "Unidades terrestres Imperiais entraram em um sistema: os Rebeldes dizem se a base está lá.",
+        "Uma unidade terrestre Imperial em um sistema sem lealdade Imperial: coloque um marcador de subjugação."
+      ]
+    },
+    "command-imperial": {
+      "title": "Vez de comando",
+      "instruction": "Faça uma vez. Escolha um:",
+      "bullets": [
+        "Ativar um sistema: coloque um líder com valores de tática da sua reserva em um sistema, mova unidades dos sistemas adjacentes para lá e resolva o combate se as duas facções estiverem lá.",
+        "Revelar uma missão: vire uma missão com seus líderes designados, escolha o sistema dela e coloque esses líderes lá.",
+        "Passar: você não faz mais vezes nesta fase."
+      ],
+      "components": [
+        "Líderes na sua reserva",
+        "Cartas de missão",
+        "Suas unidades"
+      ],
+      "reminders": [
+        "Unidades não podem sair de um sistema que tenha um dos seus líderes.",
+        "Unidades terrestres Imperiais entraram em um sistema: os Rebeldes dizem se a base está lá.",
+        "Uma unidade terrestre Imperial em um sistema sem lealdade Imperial: coloque um marcador de subjugação."
+      ]
+    },
+    "refresh-leaders": {
+      "title": "Recolha os líderes",
+      "instruction": "Devolva todos os seus líderes do tabuleiro para a sua reserva de líderes.",
+      "bullets": [
+        "Líderes ainda sobre uma carta de missão também voltam; a carta volta para a sua mão.",
+        "Rebeldes: joguem antes um objetivo de “Início da Fase de Renovação”, se o cumprirem."
+      ],
+      "components": [
+        "Líderes"
+      ]
+    },
+    "refresh-missions": {
+      "title": "Comprar missões",
+      "instruction": "Compre 2 cartas de missão e descarte até ficar com 10, se tiver mais.",
+      "bullets": [
+        "Projetos contam para o limite; cartas de objetivo não.",
+        "Missões iniciais não podem ser descartadas."
+      ],
+      "components": [
+        "Baralho de missões"
+      ]
+    },
+    "refresh-probes": {
+      "title": "Lance droides sonda",
+      "instruction": "Compre 2 cartas de sonda e mantenha-as em segredo. Cada uma mostra um sistema onde a base Rebelde não está.",
+      "components": [
+        "Baralho de sondas"
+      ]
+    },
+    "refresh-objective": {
+      "title": "Compre um objetivo",
+      "instruction": "Compre 1 carta de objetivo e mantenha-a em segredo.",
+      "components": [
+        "Baralho de objetivos"
+      ],
+      "additions": [
+        {
+          "text": "Um objetivo “Imediato” é revelado e resolvido assim que você o compra."
+        }
+      ]
+    },
+    "refresh-time": {
+      "title": "Avance o marcador de tempo",
+      "instruction": "Avance o marcador de tempo 1 casa. Se ele chegar ao marcador de reputação, os Rebeldes vencem na hora.",
+      "bullets": [
+        "Ícone de recrutamento: compre 2 cartas de ação, recrute 1 (o líder dela entra na sua reserva) e coloque a outra embaixo do seu baralho.",
+        "Ícone de construção: para cada ícone de recurso nos seus sistemas leais e subjugados, coloque essa unidade na sua fila de construção no número indicado (sistemas subjugados: só o ícone mais à esquerda).",
+        "Não se constrói a partir de um sistema com unidade inimiga."
+      ],
+      "components": [
+        "Marcador de tempo",
+        "Baralho de ação",
+        "Fila de construção"
+      ],
+      "additions": [
+        {
+          "text": "Mais de 8 líderes na reserva? Fique com 8 e elimine o resto. Na construção, os Rebeldes escolhem primeiro."
+        }
+      ]
+    },
+    "refresh-deploy-rebel": {
+      "title": "Posicione unidades",
+      "instruction": "Desça cada unidade da sua fila de construção 1 casa. As unidades que saem da casa 1 são posicionadas.",
+      "bullets": [
+        "Coloque-as nos seus sistemas leais ou no espaço da Base Rebelde (enquanto escondida), no máximo 2 por sistema.",
+        "Não em sistemas com unidades Imperiais ou marcador de sabotagem; unidades que não puderem ser colocadas voltam para a casa 1."
+      ],
+      "components": [
+        "Fila de construção",
+        "Unidades"
+      ]
+    },
+    "refresh-deploy-imperial": {
+      "title": "Posicione unidades",
+      "instruction": "Desça cada unidade da sua fila de construção 1 casa. As unidades que saem da casa 1 são posicionadas.",
+      "bullets": [
+        "Coloque-as nos seus sistemas leais ou subjugados, no máximo 2 por sistema.",
+        "Não em sistemas com unidades Rebeldes ou marcador de sabotagem; unidades que não puderem ser colocadas voltam para a casa 1."
+      ],
+      "components": [
+        "Fila de construção",
+        "Unidades"
+      ]
+    },
+    "combat-leader": {
+      "title": "Acrescente um líder",
+      "instruction": "Nenhum líder com valores de tática no sistema? Você pode acrescentar um da sua reserva de líderes.",
+      "bullets": [
+        "Quem está na vez decide primeiro.",
+        "Depois, a partir do atacante, joguem cartas de ação de “Início do Combate”."
+      ],
+      "components": [
+        "Líderes na sua reserva"
+      ]
+    },
+    "combat-tactics": {
+      "title": "Compre cartas de tática",
+      "instruction": "Compre cartas de tática espacial e terrestre iguais aos valores de tática espacial e terrestre do seu líder (seu melhor líder em cada teatro).",
+      "bullets": [
+        "Cartas espaciais só se as duas facções tiverem naves lá; terrestres só se as duas tiverem unidades terrestres.",
+        "O atacante compra primeiro."
+      ],
+      "components": [
+        "Cartas de tática espacial",
+        "Cartas de tática terrestre",
+        "Líderes"
+      ],
+      "additions": [
+        {
+          "text": "Combate Cinematográfico: não comprem. Peguem os próprios baralhos de tática avançados; o valor de tática do seu líder agora é uma re-rolagem."
+        }
+      ]
+    },
+    "combat-space-attacker": {
+      "title": "Batalha espacial: seu ataque",
+      "instruction": "Ataque com todas as suas naves (só se as duas facções tiverem naves aqui):",
+      "bullets": [
+        "Role os dados dos valores de ataque das suas naves (máx. 5 pretos e 5 vermelhos).",
+        "Ações de combate: gaste um resultado especial para comprar uma carta de tática, ou jogue cartas de tática espacial.",
+        "Atribua o dano: acertos vermelhos em unidades de vida vermelha, pretos em unidades de vida preta, acertos diretos em qualquer uma.",
+        "O oponente pode bloquear dano com cartas de tática; unidades com dano igual à vida são destruídas no fim do passo."
+      ],
+      "components": [
+        "Dados",
+        "Cartas de tática espacial",
+        "Marcadores de dano"
+      ],
+      "additions": [
+        {
+          "text": "Combate Cinematográfico, antes de cada rodada de batalha espacial:",
+          "bullets": [
+            "Cada um escolhe 1 carta de tática espacial virada para baixo e vocês revelam juntos; o atacante resolve primeiro a habilidade de cima ou a de baixo.",
+            "Resultados especiais removem 1 dano de uma unidade sua em vez de comprar cartas.",
+            "As unidades são destruídas no fim da rodada de batalha, não depois de cada ataque."
+          ]
+        }
+      ]
+    },
+    "combat-space-defender": {
+      "title": "Batalha espacial: seu ataque",
+      "instruction": "Agora ataque com todas as suas naves do mesmo jeito:",
+      "bullets": [
+        "Role, faça ações de combate, atribua o dano; o atacante pode bloquear.",
+        "Naves destruídas ainda atacaram nesta rodada."
+      ],
+      "components": [
+        "Dados",
+        "Cartas de tática espacial",
+        "Marcadores de dano"
+      ]
+    },
+    "combat-ground-attacker": {
+      "title": "Batalha terrestre: seu ataque",
+      "instruction": "Ataque com todas as suas unidades terrestres (só se as duas facções tiverem unidades terrestres aqui):",
+      "bullets": [
+        "Role os dados dos valores de ataque das suas unidades terrestres (máx. 5 pretos e 5 vermelhos).",
+        "Jogue cartas de tática terrestre; atribua o dano; o oponente pode bloquear."
+      ],
+      "components": [
+        "Dados",
+        "Cartas de tática terrestre",
+        "Marcadores de dano"
+      ],
+      "additions": [
+        {
+          "text": "Combate Cinematográfico: cada um escolhe e revela antes 1 carta de tática terrestre, como no espaço."
+        }
+      ]
+    },
+    "combat-ground-defender": {
+      "title": "Batalha terrestre: seu ataque",
+      "instruction": "Agora ataque com todas as suas unidades terrestres do mesmo jeito:",
+      "bullets": [
+        "Role, jogue cartas de tática, atribua o dano; o atacante pode bloquear."
+      ],
+      "components": [
+        "Dados",
+        "Cartas de tática terrestre",
+        "Marcadores de dano"
+      ]
+    },
+    "combat-retreat": {
+      "title": "Recuar?",
+      "instruction": "A partir do atacante, cada um pode recuar uma vez neste combate:",
+      "bullets": [
+        "Mova um líder para um sistema adjacente com suas unidades ou sua lealdade (nunca um com unidades inimigas) e depois mova suas unidades para lá.",
+        "Todas as suas naves precisam sair; unidades terrestres e Caças TIE podem ficar.",
+        "Os Rebeldes não podem recuar para o espaço da Base Rebelde; o Império não pode recuar com uma Estrela da Morte no combate.",
+        "Transportes Rebeldes sozinhos no espaço precisam recuar ou são destruídos."
+      ],
+      "components": [
+        "Líderes",
+        "Unidades"
+      ]
+    },
+    "combat-cleanup": {
+      "title": "Fim do combate",
+      "instruction": "Descartem as cartas de tática da mão e embaralhem-nas de volta nos baralhos. Removam todos os marcadores de dano.",
+      "components": [
+        "Cartas de tática",
+        "Marcadores de dano"
+      ],
+      "additions": [
+        {
+          "text": "Combate Cinematográfico: as cartas de tática avançadas usadas ficam nos seus descartes; só voltam quando um baralho acaba."
+        }
+      ]
+    }
+  }
+}

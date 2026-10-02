@@ -180,7 +180,7 @@ struct TurnScript: Decodable {
     }
 
     func name(of side: Side) -> String {
-        side == .both ? "Both players" : sides.first { $0.id == side }?.name ?? side.rawValue.capitalized
+        side == .both ? tr("Both players") : sides.first { $0.id == side }?.name ?? side.rawValue.capitalized
     }
 
     /// The other side; for "both" (or an unknown side), the first side.
@@ -201,7 +201,7 @@ struct TurnScript: Decodable {
             if pages[title] == nil { order.append(title) }
             if !(pages[title] ?? []).contains(citation.page) { pages[title, default: []].append(citation.page) }
         }
-        return order.map { title in "\(title) " + (pages[title] ?? []).map { "p. \($0)" }.joined(separator: ", ") }
+        return order.map { title in "\(title) " + (pages[title] ?? []).map { tr("p. {0}", $0) }.joined(separator: ", ") }
             .joined(separator: "; ")
     }
 
@@ -228,19 +228,91 @@ struct TurnScript: Decodable {
 
     func label(for image: SourceImage) -> String {
         let source = sources.first { $0.id == image.source }?.shortTitle ?? image.source
-        return "\(source), page \(image.page)"
+        return tr("{0}, page {1}", source, image.page)
     }
 
-    /// The script bundled for `game`, or nil if the game has none yet.
-    static func bundled(for game: OrdirGame) -> TurnScript? {
+    /// The script bundled for `game` in `language` (its translation laid over the English), or nil if
+    /// the game has none yet.
+    static func bundled(for game: OrdirGame, language: OrdirLanguage = .current) -> TurnScript? {
         guard let url = Bundle.main.url(forResource: "\(game.rawValue).turnscript", withExtension: "json") else {
             return nil
         }
         do {
-            return try JSONDecoder().decode(TurnScript.self, from: Data(contentsOf: url))
+            var data = try Data(contentsOf: url)
+            if language != .english,
+               let translation = Bundle.main.url(forResource: "\(game.rawValue).turnscript.\(language.rawValue)", withExtension: "json") {
+                data = try localized(data, with: Data(contentsOf: translation))
+            }
+            return try JSONDecoder().decode(TurnScript.self, from: data)
         } catch {
             assertionFailure("Invalid turn script for \(game): \(error)")
             return nil
         }
+    }
+
+    /// A script's JSON with a translation's wording laid over it (<game>.turnscript.<lang>.json, checked
+    /// complete by tools/validate_turn_scripts.py). Ids, pictures and citations, quoted from the English
+    /// rulebook with their pages, stay as they are. The preview does the same (localize in index.html).
+    static func localized(_ script: Data, with translation: Data) throws -> Data {
+        guard var json = try JSONSerialization.jsonObject(with: script) as? [String: Any],
+              let words = try JSONSerialization.jsonObject(with: translation) as? [String: Any] else { return script }
+        func table(_ key: String) -> [String: Any] { words[key] as? [String: Any] ?? [:] }
+        func put(_ object: inout [String: Any], _ from: Any?, _ keys: [String]) {
+            guard let from = from as? [String: Any] else { return }
+            for key in keys { if let value = from[key] { object[key] = value } }
+        }
+        func eachByID(_ key: String, in object: inout [String: Any], _ apply: (inout [String: Any], String) -> Void) {
+            guard var list = object[key] as? [[String: Any]] else { return }
+            for index in list.indices { if let id = list[index]["id"] as? String { apply(&list[index], id) } }
+            object[key] = list
+        }
+        func phases(in object: inout [String: Any]) {
+            eachByID("phases", in: &object) { phase, id in
+                if let words = table("phases")[id] as? [String: Any] {
+                    put(&phase, words, ["title"])
+                    if var loop = phase["loop"] as? [String: Any] {
+                        put(&loop, words["loop"], ["endLabel", "note"])
+                        phase["loop"] = loop
+                    }
+                }
+                eachByID("steps", in: &phase) { step, id in
+                    guard let words = table("steps")[id] as? [String: Any] else { return }
+                    put(&step, words, ["title", "instruction", "bullets", "components"])
+                    if var additions = step["additions"] as? [[String: Any]], let texts = words["additions"] as? [Any] {
+                        for index in additions.indices where index < texts.count { put(&additions[index], texts[index], ["text", "bullets"]) }
+                        step["additions"] = additions
+                    }
+                    if var reminders = step["reminders"] as? [[String: Any]], let texts = words["reminders"] as? [String] {
+                        for index in reminders.indices where index < texts.count { reminders[index]["text"] = texts[index] }
+                        step["reminders"] = reminders
+                    }
+                }
+            }
+        }
+
+        put(&json, words, ["title"])
+        eachByID("sides", in: &json) { side, id in if let name = table("sides")[id] { side["name"] = name } }
+        if let note = words["victory"], var victory = json["victory"] as? [String: Any] {
+            victory["note"] = note
+            json["victory"] = victory
+        }
+        eachByID("sources", in: &json) { source, id in put(&source, table("sources")[id], ["title", "shortTitle"]) }
+        eachByID("expansions", in: &json) { expansion, id in put(&expansion, table("expansions")[id], ["title", "summary"]) }
+        eachByID("images", in: &json) { image, id in if let caption = table("images")[id] { image["caption"] = caption } }
+        eachByID("states", in: &json) { state, id in
+            guard let words = table("states")[id] as? [String: Any] else { return }
+            put(&state, words, ["title", "markLabel", "trigger"])
+            if var event = state["event"] as? [String: Any] {
+                put(&event, words["event"], ["title", "bullets"])
+                state["event"] = event
+            }
+        }
+        phases(in: &json)
+        if var battle = json["battle"] as? [String: Any] {
+            if let title = words["battle"] { battle["title"] = title }
+            phases(in: &battle)
+            json["battle"] = battle
+        }
+        return try JSONSerialization.data(withJSONObject: json)
     }
 }

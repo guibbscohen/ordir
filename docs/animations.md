@@ -56,6 +56,9 @@ Status key:
 | Coming-soon tile tap | Gentle shake and an "On the way" toast | Toast only | SwiftUI / CSS | New |
 | Orb, idle | Sparkles twinkle; the face blinks every ~4.6 s | Static | Canvas / CSS | Built |
 | Orb tap → Ask | The orb pulses, then Ask grows out from it | Crossfade | SwiftUI / CSS | New |
+| Tutorial (first launch, or from Account / Settings) | Opens over Home once the orb is built; each card slides in from the side it came from (Next from the right, Back from the left); a swipe turns the page; the dots follow | Fade between cards | SwiftUI (page TabView) / CSS | Built |
+| Swipe back (left to right) | Goes back like the Back button (setup to Home; closes the chat, a sheet, the menu, a picture or the checklist); the browser's Back does the same. Not in a running guide | Same, no motion added | System (navigation) / touch events | Built |
+| Swipe down on a panel | The chat, a sheet, the Game menu, a picture or the checklist follows the finger down; past ~100 pt it closes, otherwise it springs back | No spring, snaps back | System sheets / SwiftUI drag (checklist) / CSS transform | Built |
 
 ### Setup
 

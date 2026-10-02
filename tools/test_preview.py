@@ -207,6 +207,90 @@ def play(page, url, problems, mode="table", expansions=(), fights_battle=False, 
     return steps
 
 
+def swipe(page, x0, y0, x1, y1, steps=8):
+    """A one-finger swipe, as touch events (needs a touch-enabled page)."""
+    cdp = page.context.new_cdp_session(page)
+    point = lambda x, y: [{"x": x, "y": y}]
+    cdp.send("Input.dispatchTouchEvent", {"type": "touchStart", "touchPoints": point(x0, y0)})
+    for i in range(1, steps + 1):
+        cdp.send("Input.dispatchTouchEvent", {"type": "touchMove", "touchPoints": point(x0 + (x1 - x0) * i / steps, y0 + (y1 - y0) * i / steps)})
+    cdp.send("Input.dispatchTouchEvent", {"type": "touchEnd", "touchPoints": []})
+    cdp.detach()
+    page.wait_for_timeout(350)
+
+
+def tour_gestures_languages(page, url, problems):
+    """First visit: the tutorial (buttons, swipes, Escape, replay from Account); swipe-back and browser Back;
+    swipe-down closing a picture; no swipe-back in a running guide; switching to Portuguese and Spanish."""
+    a11y = Accessibility(page, problems)
+    # Offline for this test: a sign-in library still loading can stall the emulated touches.
+    page.route("**/cdn.jsdelivr.net/npm/@supabase/**", lambda route: route.abort())
+    page.goto(url)
+    page.keyboard.press("Enter")
+    page.wait_for_selector(".overlay.tour", timeout=6000)
+    check(focused(page, ".tour h2"), "focus did not move to the tutorial")
+    a11y.scan("tutorial")
+    step = lambda: page.text_content(".tour .hint")
+    page.click("[data-act=tour-next]")
+    check("2 of" in step(), "Next did not turn the tutorial's page")
+    swipe(page, 330, 500, 90, 500)
+    check("3 of" in step(), "a right-to-left swipe did not turn the page")
+    swipe(page, 90, 500, 330, 500)
+    check("2 of" in step(), "a left-to-right swipe did not go back a page")
+    page.click("[data-act=tour-skip]")
+    check(not page.query_selector(".overlay.tour"), "Skip did not close the tutorial")
+    page.reload()
+    page.keyboard.press("Enter")
+    page.wait_for_selector("[data-act=game-dune]:not([disabled])")
+    page.wait_for_timeout(1800)
+    check(not page.query_selector(".overlay.tour"), "the tutorial came back after it was skipped")
+    page.click("[data-act=tab-account]")
+    page.click("[data-act=tutorial]")
+    check(page.query_selector(".overlay.tour"), "Account did not replay the tutorial")
+    page.keyboard.press("Escape")
+    check(not page.query_selector(".overlay.tour") and focused(page, "[data-act=tutorial]"), "Escape did not close the tutorial back to its button")
+
+    # Swipe-back and the browser's Back leave a game's setup; a running guide ignores swipe-back.
+    page.click("[data-act=tab-games]")
+    page.click("[data-act=game-dune]")
+    page.wait_for_selector("[data-act=start]")
+    swipe(page, 60, 500, 330, 520)
+    check(page.query_selector("[data-act=game-dune]"), "swiping right did not go back to Home")
+    page.click("[data-act=game-dune]")
+    page.wait_for_selector("[data-act=start]")
+    page.go_back()
+    page.wait_for_selector("[data-act=game-dune]")
+    page.click("[data-act=game-dune]")
+    page.click("[data-mode=pass]")
+    page.click("[data-act=start]")
+    page.wait_for_selector(".title")
+    swipe(page, 60, 500, 330, 520)
+    check(page.query_selector(".title"), "swiping right left a running guide")
+    page.click("[data-enlarge] >> nth=0")
+    page.wait_for_selector(".overlay.enlarged")
+    swipe(page, 200, 300, 205, 600)
+    check(not page.query_selector(".overlay.enlarged"), "swiping down did not close the picture")
+    page.click("[data-act=menu]")
+    page.click("[data-act=close]")
+    page.click("[data-act=home]")
+
+    # Languages: Account switches them, and the choice sticks.
+    for lang, account, games in (("pt-BR", "Conta", "Escolha um jogo"), ("es-419", "Cuenta", "Elige un juego")):
+        page.click("[data-act=tab-account]")
+        page.click(f"[data-lang={lang}]")
+        page.wait_for_function(f"document.documentElement.lang === '{lang}'")
+        check(account in page.text_content(".pane h1"), f"{lang}: Account is not translated")
+        a11y.scan(f"account in {lang}")
+        page.click("[data-act=tab-games]")
+        check(games in page.text_content("#phone"), f"{lang}: Home is not translated")
+    page.reload()
+    page.keyboard.press("Enter")
+    page.wait_for_selector("[data-act=game-dune]:not([disabled])")
+    check("Elige un juego" in page.text_content("#phone"), "the language choice did not survive a reload")
+    page.click("[data-act=tab-account]")
+    page.click("[data-lang=en]")
+
+
 def main():
     check_dist = DIST / "index.html"
     if not check_dist.exists():
@@ -232,6 +316,7 @@ def main():
                                     args=os.environ.get("CHROMIUM_ARGS", "").split())
         for number, (name, options) in enumerate(games, 1):
             page = browser.new_page(viewport={"width": 430, "height": 900})
+            page.add_init_script("try { localStorage.setItem('ordir-tour-done', '1') } catch {}")  # tour_gestures_languages covers the tour
             problems = []
             page.on("pageerror", lambda e: problems.append(f"page error: {e}"))
             page.on("requestfailed", lambda r: problems.append(f"request failed: {r.url}"))
@@ -245,6 +330,21 @@ def main():
                 page.screenshot(path=str(DIST / f"failure-{number}.png"))
                 print(f"FAIL {name}: {error}")
             page.close()
+        # A phone with a touch screen, on its first visit.
+        context = browser.new_context(viewport={"width": 390, "height": 844}, has_touch=True, is_mobile=True)
+        page = context.new_page()
+        problems = []
+        page.on("pageerror", lambda e: problems.append(f"page error: {e}"))
+        page.on("response", lambda r: r.status >= 400 and problems.append(f"HTTP {r.status}: {r.url}"))
+        try:
+            tour_gestures_languages(page, url, problems)
+            check(not problems, "; ".join(dict.fromkeys(problems)))
+            print("ok   tutorial, gestures and languages; no accessibility issues")
+        except Failed as error:
+            failed = True
+            page.screenshot(path=str(DIST / "failure-tour.png"))
+            print(f"FAIL tutorial, gestures and languages: {error}")
+        context.close()
         browser.close()
     server.shutdown()
     sys.exit(1 if failed else 0)
