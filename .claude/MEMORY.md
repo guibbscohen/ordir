@@ -146,8 +146,10 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
 - 2026-10-02: Rules-answer guardrails: Claude Haiku 4.5 screens each question (rules / off_topic / manipulation); screened
   out ones get a short translated refusal, count against the daily cap and are flagged; 5 flags in a day pause that
   player until tomorrow. Answers are capped at 4,000 tokens with one retry at 16,000, never shown cut off.
-- 2026-10-02: The paid tier is "Ordir Pro". Its face is "The cooler Ordi": the same orb mascot wearing sunglasses (white
-  frames that match the orb's line, mirrored blue-to-violet lenses, never black lenses, which vanish on black), used on the
+- 2026-10-02: The paid tier is "Ordir Pro". Its face is "The cooler Ordi": the same orb mascot wearing sunglasses (one
+  angular wraparound visor, like Squirtle's "cool" shades: pointed swept-up tips, a notch at the nose, two diagonal light
+  stripes per lens; solid violet-blue #6F5BFF with a #4A3CC9 edge and #D4CCFF stripes, kept apart from the sparkles'
+  blue and the white outline; never black, which vanishes on black), used on the
   Free vs Pro comparison, the plans screen, the welcome screen and the Account Pro card (proposals in the private "Ordir
   Pro proposals" claude.ai canvas). Free Ordi stays without shades. Pro perks: more rules questions, new games early, the
   shades mascot and app icon; turn guides, tables and expansions stay free. Plans: yearly, monthly and a one-off Game
