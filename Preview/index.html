@@ -572,7 +572,7 @@ html, body { overscroll-behavior-x: none; }
   Play with one phone on the table (split screen) or pass the phone between players.
   Logo: “Magic Ball” by Ziyad Aljunaidi, Noun Project (CC BY 3.0). Type: Google Sans Flex (SIL OFL 1.1). Rules © CMON / Gale Force Nine.</p></footer>
 
-<script src="strings.js"></script>
+<script src="strings.js?v=__COMMIT__"></script>
 <script>
 "use strict";
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -639,7 +639,8 @@ function styleSides(script) {
 
 // The English turn scripts as loaded, and each one's translation per language (null: none).
 const baseScripts = {}, translations = {};
-const getJSON = (url) => fetch(url).then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); });
+// Data files carry the build's commit (stamped by tools/build_preview.py), so a cached copy from an older build is never used.
+const getJSON = (url) => fetch(`${url}?v=__COMMIT__`).then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); });
 /** Loads every playable game's script (and, in Portuguese or Spanish, its translation) into `scripts`. */
 async function loadScripts() {
   await Promise.all(PLAYABLE.map(async (g) => {
@@ -1817,6 +1818,23 @@ document.addEventListener("focusout", () => setTimeout(resetPageScroll, 120));
 window.visualViewport?.addEventListener("resize", () => setTimeout(resetPageScroll, 120));
 // The build, stamped by tools/build_preview.py (commit and date), so a phone can show which version it runs.
 const BUILD = "__BUILD__";
+// A Home Screen app can open the copy of the page its browser cached (GitHub Pages allows 10 minutes), so right
+// after an update it would open the version before. At launch, and when the app comes back to the front on
+// Home, the page asks the server for the live build, bypassing the cache (which that request also refreshes),
+// and reloads once if it's newer. Never during a game: a reload would lose it.
+async function checkForUpdate() {
+  if (!["intro", "home"].includes(state.screen) || location.protocol === "file:") return;
+  try {
+    const page = await fetch(location.href.split("#")[0], { cache: "reload" }).then((r) => (r.ok ? r.text() : ""));
+    const live = page.match(/const BUILD = "([^"]+)"/)?.[1];
+    if (!live || live === BUILD || !["intro", "home"].includes(state.screen)) return;
+    if (sessionStorage.getItem("ordir-updated-to") === live) return;  // tried once already: never loop
+    sessionStorage.setItem("ordir-updated-to", live);
+    location.reload();
+  } catch {}
+}
+checkForUpdate();
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") checkForUpdate(); });
 // Layout info: a small live readout of the screen, safe-area insets and the opening's measurements. It stays on
 // across launches (so it can watch the opening) until switched off on the Account tab.
 const introLog = [];

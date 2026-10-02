@@ -58,7 +58,10 @@ def main():
     shutil.rmtree(DIST, ignore_errors=True)
     DIST.mkdir(parents=True)
     # Stamp the version (commit and date) that the Account tab shows, so a phone can tell which build it runs.
-    (DIST / "index.html").write_text((ROOT / "Preview" / "index.html").read_text().replace("__BUILD__", build_stamp()))
+    # Its data files are fetched with the commit as a version (__COMMIT__), so a phone never mixes in an older build's.
+    stamp = build_stamp()
+    (DIST / "index.html").write_text((ROOT / "Preview" / "index.html").read_text()
+                                     .replace("__BUILD__", stamp).replace("__COMMIT__", stamp.split(" ")[0]))
     shutil.copytree(ROOT / "Preview" / "fonts", DIST / "fonts")
     shutil.copytree(ROOT / "Preview" / "email", DIST / "email")  # images for the sign-in email (docs/email)
     shutil.copytree(ROOT / "Preview" / "icons", DIST / "icons")  # Home Screen and tab icons (rendered from icons/icon.svg)

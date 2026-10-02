@@ -10,6 +10,7 @@ on:
       - "Preview/**"
       - "Ordir/Games/**"
       - "Ordir/Assets.xcassets/**"
+      - "Ordir/Localization/**"
       - "tools/build_preview.py"
       - ".github/workflows/preview-pages.yml"
   workflow_dispatch:
