@@ -25,9 +25,9 @@ struct OpeningView: View {
 
     /// How long the logo rests before the line starts and the camera moves.
     static let hold = 1.5
-    static let length = hold + 3.7
+    static let length = hold + 3.55
     /// When Home's orb starts being built: as the line runs round its rim.
-    static let buildDelay = hold + 3.15
+    static let buildDelay = hold + 3.08
     private static let orbHeight: CGFloat = 88
     private static let violet = Color(red: 0.49, green: 0.36, blue: 1)
     private static let deepBlue = Color(red: 0.15, green: 0.33, blue: 0.84)
@@ -75,13 +75,13 @@ struct OpeningView: View {
                         .stroke(Color.ordirSparkle, style: StrokeStyle(lineWidth: 2.5, lineCap: .round))
                     if let rimLine {
                         rimLine.path
-                            .trim(from: 0, to: Self.smooth((t - Self.hold - 2.9) / 0.4))
+                            .trim(from: 0, to: Self.smooth((t - Self.hold - 2.9) / 0.3))
                             .stroke(Color.ordirSparkle, style: StrokeStyle(lineWidth: 2.5, lineCap: .round))
                     }
                 }
                 .shadow(color: Color.ordirSparkle.opacity(0.9), radius: 3)
                 .shadow(color: Self.violet.opacity(0.7), radius: 10)
-                .opacity(1 - Self.smooth((t - Self.hold - 3.35) / 0.35))
+                .opacity(1 - Self.smooth((t - Self.hold - 3.25) / 0.3))
             }
 
             OrdirMascotView()

@@ -299,6 +299,9 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
    Tap to skip; Reduce Motion gets a short fade. Positions and timing are set from script (startIntro). */
 .intro { position: absolute; inset: 0; z-index: 5; overflow: hidden; cursor: pointer; }
 .intro-track { position: absolute; left: 0; top: 0; width: 100%; height: 200%; }
+/* The layers the camera moves are on their own compositing layers from the first frame, so starting the move
+   doesn't re-render them (on iPhone that made the glowing line flicker as the camera set off). */
+.intro-track, .intro-backdrop, .intro-home { will-change: transform; backface-visibility: hidden; }
 .intro-scene { height: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 6px; padding: 24px; text-align: center; }
 /* The world behind the opening and Home, two screens tall: Home's light is centred on the boundary, so it
@@ -363,13 +366,13 @@ button.bubble { font: inherit; font-size: 15px; color: var(--fg); cursor: pointe
 .bubble.pop { animation: bubble-in .3s cubic-bezier(.3, 1.4, .5, 1) both; transform-origin: var(--tail) 0; }
 /* First arrival on Home: the opening's line builds the orb (traces its outline, fills it, sparkles pop, the
    face appears), then "Ask me a rules question" is conjured and the orb says its phrase of the day. */
-.brand.build .orb { animation: fill-in .25s ease both; }
-.brand.build .sp { animation: sparkle-in .3s .12s cubic-bezier(.2, .8, .2, 1) both, twinkle 3.2s .45s ease-in-out infinite; }
-.brand.build .sp2 { animation-delay: .19s, 1.2s; }
-.brand.build .sp3 { animation-delay: .26s, 2s; }
-.brand.build .face { animation: fade .2s .28s ease both; }
-.brand.build .ask-link { animation: conjure .35s .38s cubic-bezier(.2, .8, .2, 1) both; }
-.bubble.build { animation: bubble-in .35s .5s cubic-bezier(.3, 1.4, .5, 1) both; transform-origin: var(--tail) 0; }
+.brand.build .orb { animation: fill-in .18s ease both; }
+.brand.build .sp { animation: sparkle-in .22s .08s cubic-bezier(.2, .8, .2, 1) both, twinkle 3.2s .35s ease-in-out infinite; }
+.brand.build .sp2 { animation-delay: .13s, 1.1s; }
+.brand.build .sp3 { animation-delay: .18s, 1.9s; }
+.brand.build .face { animation: fade .15s .2s ease both; }
+.brand.build .ask-link { animation: conjure .28s .26s cubic-bezier(.2, .8, .2, 1) both; }
+.bubble.build { animation: bubble-in .28s .34s cubic-bezier(.3, 1.4, .5, 1) both; transform-origin: var(--tail) 0; }
 @keyframes fade-out { to { opacity: 0; } }
 @keyframes fill-in { from { fill-opacity: 0; } to { fill-opacity: 1; } }
 @keyframes conjure { from { opacity: 0; filter: blur(6px); transform: translateY(4px); } to { opacity: 1; filter: none; transform: none; } }
@@ -1614,8 +1617,8 @@ function startIntro() {
   // Hidden until it starts drawing: a not-yet-drawn line would still show its round cap as a dot.
   const draw = [{ strokeDashoffset: 1, opacity: 0 }, { strokeDashoffset: 0.995, opacity: 1, offset: 0.01 }, { strokeDashoffset: 0, opacity: 1 }];
   $(".intro-line .approach").animate(draw, { duration: 2300, delay: HOLD + 600, easing: "cubic-bezier(.4, 0, .25, 1)", fill: "both" });
-  $(".intro-line .rim").animate(draw, { duration: 400, delay: HOLD + 2900, easing: "cubic-bezier(.3, 0, .2, 1)", fill: "both" });
-  $(".intro-line").animate([{ opacity: 1 }, { opacity: 0 }], { duration: 350, delay: HOLD + 3350, fill: "forwards" });
+  $(".intro-line .rim").animate(draw, { duration: 300, delay: HOLD + 2900, easing: "cubic-bezier(.3, 0, .2, 1)", fill: "both" });
+  $(".intro-line").animate([{ opacity: 1 }, { opacity: 0 }], { duration: 300, delay: HOLD + 3250, fill: "forwards" });
   // The track and backdrop are two screens tall, so -50% is one screen; Home's layer is one screen tall.
   $(".intro-track").animate([{ transform: "translateY(0)" }, { transform: "translateY(-50%)" }], camera);
   $(".intro-backdrop").animate([{ transform: "translateY(0)" }, { transform: "translateY(-50%)" }], camera);
@@ -1627,8 +1630,8 @@ function startIntro() {
     state.buildHome = true;
     $(".intro-home .brand")?.classList.add("build");
     $(".intro-home .bubble")?.classList.add("build");
-  }, HOLD + 3150);
-  introTimer = setTimeout(() => showHome(true), HOLD + 4000);
+  }, HOLD + 3080);
+  introTimer = setTimeout(() => showHome(true), HOLD + 3750);
 }
 document.addEventListener("keydown", (event) => {
   if (state.screen === "intro" && ["Enter", " ", "Escape"].includes(event.key)) { event.preventDefault(); showHome(); }
