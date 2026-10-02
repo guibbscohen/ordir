@@ -124,3 +124,5 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   Dune: Imperium is 3–4 players for now (no House Hagal solo/2-player).
 - 2026-10-02: "Each on our own phone" works for every game. Two-sided games seat players by side; games without fixed
   sides seat up to 4 as Player 1–4, every phone shows the player on turn's step and anyone at the table can tap Done.
+- 2026-10-02: Going back (swipe, Back, tab bar) returns to where the player was: Home keeps each tab's scroll
+  position instead of jumping to the top.

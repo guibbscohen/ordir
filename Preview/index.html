@@ -1629,6 +1629,13 @@ function settleFocus(phone, stepChanged, kept) {
   if (target) target.focus();
 }
 
+// Home remembers how far down each tab was scrolled, so coming back to it (Back, a swipe, the tab bar, a re-sort)
+// lands where the player left off instead of at the top.
+const homeScroll = {};
+document.addEventListener("scroll", (event) => {
+  if (state.screen === "home" && event.target.matches?.(".home > .scroll")) homeScroll[state.tab] = event.target.scrollTop;
+}, true);
+
 function render() {
   const phone = $("#phone");
   const s = cur();
@@ -1698,6 +1705,8 @@ function render() {
   state.tabFrom = null;
   if (state.tutorial) { state.tutorial.enter = false; state.tutorial.turn = 0; }
   settleFocus(phone, animate, kept);
+  const homeScroller = state.screen === "home" && phone.querySelector(".home > .scroll");
+  if (homeScroller) homeScroller.scrollTop = homeScroll[state.tab] || 0;
   armBack();
 }
 
