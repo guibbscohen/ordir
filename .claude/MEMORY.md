@@ -115,8 +115,10 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   steps (per-game translation files, still citing the English rulebook pages) and rules answers. Citation quotes stay
   in the source's language. Every new string or step ships in all three languages.
 - 2026-10-02: The orb mascot is called Ordi. Home has a search box at the top; while typing it shows one filtered list
-  of games (favorites hidden). With the box empty, Home shows "Ordi's Current Favorites" (Dune: War for Arrakis,
-  Star Wars: Rebellion, War of the Ring 2E), then every game in a list sortable A–Z or Most recently added.
+  of games (favorites hidden). With the box empty, Home shows "Ordi's Newest Meeples" (the newest game as a large
+  card with a "New" badge; now Terraforming Mars), then "Ordi's Current Favorites" (Dune: War for Arrakis large, Star
+  Wars: Rebellion and War of the Ring 2E as two smaller cards side by side), then every game in a list sortable A–Z or
+  Most recently added.
 - 2026-10-02: Next games: Dune: Imperium (with Rise of Ix, Immortality and Bloodlines), Brass: Birmingham (base game)
   and Knarr (base game).
 - 2026-10-02: Games for 3+ players with no fixed sides (Dune: Imperium, Brass, Knarr) are played on one phone by
