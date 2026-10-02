@@ -19,11 +19,20 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
+      - name: Keep the downloaded rulebooks between runs
+        uses: actions/cache@v4
+        with:
+          path: Sources/**/*.pdf
+          key: sources-${{ hashFiles('Ordir/Games/**/*.turnscript.json') }}
+          restore-keys: sources-
+
       - name: Extract the official sources page by page
+        env:
+          SUPABASE_SOURCES_KEY: ${{ secrets.SUPABASE_SOURCES_KEY }}  # the private backup of the rulebooks
         run: |
           python3 -m venv .venv
           .venv/bin/pip install --quiet pypdf cryptography fonttools
-          .venv/bin/python tools/fetch_sources.py
+          .venv/bin/python -u tools/fetch_sources.py
           .venv/bin/python tools/rules_corpus.py
 
       - name: Replace the pages in Supabase
