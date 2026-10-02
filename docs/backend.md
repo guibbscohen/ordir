@@ -49,8 +49,13 @@ The database, the `rules-answer` Edge Function and the table functions are alrea
 - Rules cache: each game's base rules stay in Claude's 1-hour prompt cache, shared by every player,
   language and expansion set (the answer language goes after the question, not in the system prompt).
   The `rules-keep-warm` cron job (every 10 minutes) calls `rules-answer` with `{ keepWarm: true }`, which
-  re-reads (max_tokens 0) the rules of any game unread for 45 minutes; `claim_rules_cache_warm` lets each
-  game through at most once per 45 minutes. All seven games' base rules cost about $1.25 a day to keep warm.
+  re-reads (max_tokens 0) the rules of any game asked about in the last 3 hours but unread for 45 minutes;
+  `claim_rules_cache_warm` lets each game through at most once per 45 minutes. Idle games cost nothing.
   To pause it: `select cron.unschedule('rules-keep-warm');`.
+- Guardrails: Claude Haiku 4.5 screens each question first. Off-topic questions and attempts to change
+  Ordir's instructions get a short refusal, count against the daily cap and are saved with `flag`; 5 flags in
+  24 hours pause that player's questions until the next day. Answers are capped at 4,000 output tokens; one
+  that reaches it is retried at 16,000 (`flag` retried_long), and a second cut-off gets a "too involved"
+  reply (`flag` too_long).
 - `tools/rules_corpus.py` and `.github/workflows/rules-corpus.yml`: extract the official PDFs page by
   page and load them.
