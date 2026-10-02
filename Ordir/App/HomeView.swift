@@ -20,6 +20,9 @@ struct HomeView: View {
     /// Reports where the header's orb is on screen (global coordinates): the opening's line ends there.
     var onOrbFrame: (CGRect) -> Void = { _ in }
 
+    @State private var phraseIndex = Int.random(in: 0..<HomeView.phrases.count)
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     var body: some View {
         NavigationStack(path: $path) {
             ScrollView {
@@ -80,7 +83,7 @@ struct HomeView: View {
             Text("Ordir")
                 .font(.ordir(.title).weight(.semibold))
                 .accessibilityAddTraits(.isHeader)
-            Text(Self.phraseOfDay)
+            Text(Self.phrases[phraseIndex])
                 .font(.ordir(.subheadline))
                 .multilineTextAlignment(.center)
                 .padding(.horizontal, 18)
@@ -93,24 +96,48 @@ struct HomeView: View {
                         .offset(y: -8)
                 }
                 .padding(.top, 8)
+                .contentShape(Rectangle())
+                .onTapGesture { phraseIndex = (phraseIndex + 1) % Self.phrases.count }
+                .accessibilityAddTraits(.isButton)
+                .accessibilityHint("Shows another line.")
+                .animation(reduceMotion ? nil : .spring(duration: 0.3, bounce: 0.3), value: phraseIndex)
         }
     }
 
-    /// What the orb says on Home, one a day (the preview uses the same list).
-    private static let phrases = [
+    /// What the orb says on Home: a new line each launch and another on tap. Board-game humour, kept short; the
+    /// preview has the same list (PHRASES in Preview/index.html).
+    static let phrases = [
         "What shall we play today?",
-        "Ready for your next turn?",
-        "Set up the board, I’ll walk you through it.",
-        "Got a rules question? I’m all ears.",
-        "Who’s going first today?",
-        "A new game, a fresh start.",
-        "Let’s learn a turn together.",
         "Shuffle up. I’ll keep the rules straight.",
+        "The box says 60 minutes. The box lies.",
+        "One more game? It’s always one more game.",
+        "The dice are innocent. Probably.",
+        "Read the rules? I read them so you don’t have to.",
+        "Let’s settle that argument. With page numbers.",
+        "I don’t take sides. Unless you have snacks.",
+        "Rolled ones again? I see clouds in your future.",
+        "Analysis paralysis? Take your time. I’m a ball.",
+        "Whose turn is it? I know. Do you?",
+        "A house rule? Let’s check that before it becomes law.",
+        "Setup takes longer than the game. Tradition.",
+        "Still finding pieces under the couch?",
+        "I promise not to peek at your hand.",
+        "Kingmaker spotted. Just kidding. Maybe.",
+        "The FAQ wins. The FAQ always wins.",
+        "I foresee a long game and a lost card.",
+        "Can’t trade that. Probably. Let’s look it up.",
+        "No table flipping. I’m fragile.",
+        "Someone’s counting victory points twice. Not naming names.",
+        "Sleeved cards, sorted bits, inner peace.",
+        "Who’s the first player? Whoever last saw a sandworm.",
+        "I have no hands, so I can’t cheat. Can you say the same?",
+        "Ready for your next turn?",
+        "Got a rules question? I’m all ears. Well, all orb.",
+        "The rulebook is long. My patience is longer.",
+        "Snacks off the board, please. The board thanks you.",
+        "Let’s learn a turn before anyone loses a friend.",
+        "Every game night needs a referee. Hi.",
     ]
-    private static var phraseOfDay: String {
-        let day = Calendar.current.ordinality(of: .day, in: .era, for: .now) ?? 0
-        return phrases[day % phrases.count]
-    }
 
     private var gameList: some View {
         VStack(alignment: .leading, spacing: 12) {

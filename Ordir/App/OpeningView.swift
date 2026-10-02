@@ -2,8 +2,8 @@
 //  OpeningView.swift
 //  Ordir
 //
-//  The launch animation (~3 s), the same camera move as the browser preview's, inspired by Ripplix's
-//  "Happier" splash:
+//  The launch animation (~5 s: the logo rests 1.5 s, then the move), the same camera move as the browser
+//  preview's, inspired by Ripplix's "Happier" splash:
 //  - The orb and name sit on black, above a deep blue and violet glow that flows on into Home's own.
 //  - A glowing line draws itself from the orb down the screen.
 //  - The view glides down through the glow to Home, which waits one screen below (OrdirApp slides it up
@@ -23,16 +23,18 @@ struct OpeningView: View {
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    static let length = 3.95
-    /// When Home's orb starts being built: as the line reaches it.
-    static let buildDelay = 3.3
+    /// How long the logo rests before the line starts and the camera moves.
+    static let hold = 1.5
+    static let length = hold + 3.7
+    /// When Home's orb starts being built: as the line runs round its rim.
+    static let buildDelay = hold + 3.15
     private static let orbHeight: CGFloat = 88
     private static let violet = Color(red: 0.49, green: 0.36, blue: 1)
     private static let deepBlue = Color(red: 0.15, green: 0.33, blue: 0.84)
 
     /// How far the view has moved down, 0 (opening) to 1 (Home), `t` seconds in.
     static func camera(at t: Double) -> Double {
-        easeInOutCubic((t - 1.3) / 1.6)
+        easeInOutCubic((t - hold - 1.3) / 1.6)
     }
 
     var body: some View {
@@ -69,17 +71,17 @@ struct OpeningView: View {
                 let rimLine = rim()
                 ZStack(alignment: .topLeading) {
                     approach(from: CGPoint(x: orb.x + 40, y: orb.y + 10), to: rimLine?.start, size: size)
-                        .trim(from: 0, to: Self.smooth((t - 0.6) / 2.3))
+                        .trim(from: 0, to: Self.smooth((t - Self.hold - 0.6) / 2.3))
                         .stroke(Color.ordirSparkle, style: StrokeStyle(lineWidth: 2.5, lineCap: .round))
                     if let rimLine {
                         rimLine.path
-                            .trim(from: 0, to: Self.smooth((t - 2.9) / 0.55))
+                            .trim(from: 0, to: Self.smooth((t - Self.hold - 2.9) / 0.4))
                             .stroke(Color.ordirSparkle, style: StrokeStyle(lineWidth: 2.5, lineCap: .round))
                     }
                 }
                 .shadow(color: Color.ordirSparkle.opacity(0.9), radius: 3)
                 .shadow(color: Self.violet.opacity(0.7), radius: 10)
-                .opacity(1 - Self.smooth((t - 3.5) / 0.45))
+                .opacity(1 - Self.smooth((t - Self.hold - 3.35) / 0.35))
             }
 
             OrdirMascotView()

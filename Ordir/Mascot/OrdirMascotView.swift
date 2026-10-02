@@ -381,11 +381,11 @@ private struct MascotBuild {
     var sparkles = [1.0, 1.0, 1.0]
 
     init(time t: Double?) {
-        guard let t, t < 1.2 else { return }
+        guard let t, t < 0.8 else { return }
         func smooth(_ x: Double) -> Double { let x = min(1, max(0, x)); return x * x * (3 - 2 * x) }
-        fill = smooth(t / 0.35)
-        face = smooth((t - 0.45) / 0.25)
-        sparkles = (0..<3).map { smooth((t - 0.2 - 0.1 * Double($0)) / 0.4) }
+        fill = smooth(t / 0.25)
+        face = smooth((t - 0.28) / 0.2)
+        sparkles = (0..<3).map { smooth((t - 0.12 - 0.07 * Double($0)) / 0.3) }
     }
 }
 
