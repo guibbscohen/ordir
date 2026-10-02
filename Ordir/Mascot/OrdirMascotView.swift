@@ -24,9 +24,11 @@ import SwiftUI
 ///     .frame(width: 96, height: 96)
 /// ```
 /// When both flags are true, speaking wins (Ordir is already answering).
+/// `isCool` draws the cooler Ordi (Ordir Pro): a glow-violet wraparound visor over the eyes.
 struct OrdirMascotView: View {
     var isSpeaking: Bool
     var isThinking: Bool
+    var isCool: Bool
     var sparkleColor: Color
     /// When set, the orb is built from that moment: it fills in, the sparkles pop and the face appears
     /// (Home's orb, as the opening's line closes round its rim). Hidden until then.
@@ -35,9 +37,11 @@ struct OrdirMascotView: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var transition = ModeTransition(from: .idle, start: .distantPast)
 
-    init(isSpeaking: Bool = false, isThinking: Bool = false, sparkleColor: Color = .ordirSparkle, buildStart: Date? = nil) {
+    init(isSpeaking: Bool = false, isThinking: Bool = false, isCool: Bool = false, sparkleColor: Color = .ordirSparkle,
+         buildStart: Date? = nil) {
         self.isSpeaking = isSpeaking
         self.isThinking = isThinking
+        self.isCool = isCool
         self.sparkleColor = sparkleColor
         self.buildStart = buildStart
     }
@@ -59,22 +63,27 @@ struct OrdirMascotView: View {
             )
             let build = MascotBuild(time: reduceMotion ? nil : buildStart.map { timeline.date.timeIntervalSince($0) })
             Canvas { context, size in
-                OrdirMascotRenderer.draw(frame, build: build, in: &context, size: size, sparkleColor: sparkleColor)
+                OrdirMascotRenderer.draw(frame, build: build, in: &context, size: size, sparkleColor: sparkleColor, cool: isCool)
             }
         }
-        .aspectRatio(OrdirMascotGeometry.viewBox.width / OrdirMascotGeometry.viewBox.height, contentMode: .fit)
+        .aspectRatio(viewBox.width / viewBox.height, contentMode: .fit)
         .onChange(of: mode) { oldMode, _ in
             transition = ModeTransition(from: oldMode, start: .now)
         }
         .accessibilityElement()
-        .accessibilityLabel("Ordir")
+        .accessibilityLabel(isCool ? tr("The cooler Ordi") : "Ordir")
         .accessibilityValue(mode.accessibilityValue)
     }
+
+    private var viewBox: CGRect { isCool ? OrdirMascotGeometry.coolViewBox : OrdirMascotGeometry.viewBox }
 }
 
 extension Color {
     /// Sparkle tint from the asset catalog, with light and dark variants for contrast.
     static let ordirSparkle = Color("Sparkle")
+    /// The cooler Ordi's visor (Ordir Pro), glow violet, and its stripes, a lighter tint of it.
+    static let ordirVisor = Color(red: 0x78 / 255, green: 0x46 / 255, blue: 0xC8 / 255)
+    static let ordirVisorStripe = Color(red: 0xC9 / 255, green: 0xB5 / 255, blue: 0xE9 / 255)
 }
 
 // MARK: - State
@@ -133,6 +142,35 @@ enum OrdirMascotGeometry {
     static let mouthControl = CGPoint(x: 175.715, y: 186.465)
     static let mouthEnd = CGPoint(x: 192.715, y: 168.465)
     static let mouthWidth: CGFloat = 8
+
+    // The cooler Ordi (Ordir Pro). The preview draws the same shapes (Preview/index.html, VISOR).
+    /// Taller than `viewBox` at the top: the big sparkle sits 40 higher, clear of the visor.
+    static let coolViewBox = CGRect(x: 20, y: -8, width: 285, height: 333)
+    /// How far each sparkle moves up on the cooler Ordi (outer, medium, tiny).
+    static let coolSparkleLift: [CGFloat] = [40, 8, 0]
+    /// One angular wraparound visor: two equal lenses mirrored round the bridge, pointed swept-up tips.
+    static let visor: Path = {
+        var p = Path()
+        p.addLines([
+            CGPoint(x: 48.215, y: 134.665), CGPoint(x: 135.115, y: 137.765), CGPoint(x: 150.715, y: 144.065),
+            CGPoint(x: 166.315, y: 137.765), CGPoint(x: 253.215, y: 134.665), CGPoint(x: 241.315, y: 169.065),
+            CGPoint(x: 207.015, y: 200.265), CGPoint(x: 172.615, y: 197.165), CGPoint(x: 150.715, y: 178.365),
+            CGPoint(x: 128.815, y: 197.165), CGPoint(x: 94.515, y: 200.265), CGPoint(x: 60.115, y: 169.065),
+        ])
+        p.closeSubpath()
+        return p
+    }()
+    /// Two diagonal light stripes per lens (a wide one and a thin one), clipped to the visor.
+    static let visorStripes: [(from: CGPoint, to: CGPoint, width: CGFloat)] = [
+        (CGPoint(x: 69.515, y: 215.865), CGPoint(x: 100.715, y: 119.065), 17.5),
+        (CGPoint(x: 97.615, y: 215.865), CGPoint(x: 128.815, y: 119.065), 7.5),
+        (CGPoint(x: 175.715, y: 215.865), CGPoint(x: 207.015, y: 119.065), 17.5),
+        (CGPoint(x: 203.815, y: 215.865), CGPoint(x: 235.115, y: 119.065), 7.5),
+    ]
+    /// The simple smile, moved under the visor.
+    static let coolMouthStart = CGPoint(x: 132.715, y: 218.465)
+    static let coolMouthControl = CGPoint(x: 151.715, y: 231.465)
+    static let coolMouthEnd = CGPoint(x: 168.715, y: 213.465)
 
     // outerSparkle: centre (225.988, 104.436), size 123.0×116.0
     static let outerSparkle: Path = {
@@ -392,10 +430,11 @@ private struct MascotBuild {
 // MARK: - Rendering
 
 private enum OrdirMascotRenderer {
-    static func draw(_ frame: MascotFrame, build: MascotBuild, in context: inout GraphicsContext, size: CGSize, sparkleColor: Color) {
+    static func draw(_ frame: MascotFrame, build: MascotBuild, in context: inout GraphicsContext, size: CGSize, sparkleColor: Color,
+                     cool: Bool) {
         typealias G = OrdirMascotGeometry
         // Aspect-fit the viewBox into the canvas, centred. All drawing below is in points.
-        let box = G.viewBox
+        let box = cool ? G.coolViewBox : G.viewBox
         let unit = min(size.width / box.width, size.height / box.height)
         let offset = CGPoint(
             x: (size.width - box.width * unit) / 2 - box.minX * unit,
@@ -425,10 +464,23 @@ private enum OrdirMascotRenderer {
         globe.fill(G.frame.applying(toCanvas), with: .foreground)
 
         // Face: eyes squash to blink and drift up-right to glance; the smile's depth follows the mode.
+        // The cooler Ordi's visor covers the eyes, and its smile sits under the visor.
         var face = context
         face.opacity = build.face
         let gaze = CGSize(width: 4 * frame.glance * unit, height: -5 * frame.glance * unit)
-        for eye in G.eyes {
+        if cool {
+            let visor = G.visor.applying(toCanvas)
+            face.fill(visor, with: .color(.ordirVisor))
+            var stripes = face
+            stripes.clip(to: visor)
+            for stripe in G.visorStripes {
+                var line = Path()
+                line.move(to: point(stripe.from))
+                line.addLine(to: point(stripe.to))
+                stripes.stroke(line, with: .color(.ordirVisorStripe), lineWidth: stripe.width * unit)
+            }
+        }
+        for eye in G.eyes where !cool {
             let c = point(eye.center)
             let width = eye.radius * unit, height = width * (1 - 0.9 * frame.blink)
             face.fill(
@@ -437,7 +489,8 @@ private enum OrdirMascotRenderer {
                 with: .foreground
             )
         }
-        let start = point(G.mouthStart), end = point(G.mouthEnd), control = point(G.mouthControl)
+        let start = point(cool ? G.coolMouthStart : G.mouthStart), end = point(cool ? G.coolMouthEnd : G.mouthEnd)
+        let control = point(cool ? G.coolMouthControl : G.mouthControl)
         var mouth = Path()
         mouth.move(to: start)
         mouth.addQuadCurve(to: end, control: CGPoint(x: control.x, y: start.y + (control.y - start.y) * frame.smile))
@@ -445,7 +498,8 @@ private enum OrdirMascotRenderer {
 
         // Sparkles: scale and rotate around their own centres, then place.
         for (index, (spec, state)) in zip(G.sparkles, frame.sparkles).enumerated() {
-            let center = point(spec.center)
+            let lift = cool ? G.coolSparkleLift[index] : 0
+            let center = point(CGPoint(x: spec.center.x, y: spec.center.y - lift))
             let popped = build.sparkles[index]
             let transform = CGAffineTransform(scaleX: unit * state.scale * popped, y: unit * state.scale * popped)
                 .concatenating(CGAffineTransform(rotationAngle: state.rotation * .pi / 180))
@@ -485,6 +539,7 @@ private struct OrdirMascotPreviewHarness: View {
                 labelled("Idle", OrdirMascotView())
                 labelled("Speaking", OrdirMascotView(isSpeaking: true))
                 labelled("Thinking", OrdirMascotView(isThinking: true))
+                labelled("Cool", OrdirMascotView(isCool: true))
             }
         }
         .padding()

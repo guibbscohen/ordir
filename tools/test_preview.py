@@ -426,6 +426,19 @@ def tester_feedback(page, url, problems):
     check(report["context"]["view"] == "home-account" and report["context"]["recent"], f"the report's context is incomplete: {report['context']}")
     page.click(".report [data-act=report-close] >> nth=0")
     check(focused(page, "[data-act=report-open]"), "focus did not return to Report a problem")
+    # Ordir Pro, coming soon: the card opens Free next to the cooler Ordi, nothing is for sale, Escape closes it.
+    check("Free plan · 5 rules questions a month" in page.text_content(".pro-card"), "the Account card lost its free-plan line")
+    page.click("[data-act=pro-open]")
+    check(focused(page, "#pro-title"), "focus did not move to the Ordir Pro screen")
+    check(page.locator(".pro .mascot.cool .visor").count() == 1, "the cooler Ordi has no shades")
+    check(page.locator(".pro .plan .soon").count() == 3 and page.is_disabled(".pro-foot .primary"), "the plans are not all marked Coming soon")
+    a11y.scan("Ordir Pro")
+    page.keyboard.press("Escape")
+    check(page.locator(".overlay.pro").count() == 0 and focused(page, "[data-act=pro-open]"), "Escape did not close Ordir Pro back to its card")
+    with page.expect_request("**/rest/v1/events"):
+        page.evaluate("flushEvents()")
+    page.wait_for_timeout(200)
+    check(any(e["name"] == "pro_open" and e["props"].get("from") == "account" for e in sent["events"]), "no pro_open event was sent")
     # Switching usage data off stops the events.
     page.click("label[for=share-usage]")
     before = len(sent["events"])
@@ -523,7 +536,7 @@ def main():
         try:
             tester_feedback(page, url, problems)
             check(not problems, "; ".join(dict.fromkeys(problems)))
-            print("ok   tester feedback: milestones, rating, bug report with a screenshot, usage switch; no accessibility issues")
+            print("ok   tester feedback: milestones, rating, bug report with a screenshot, Ordir Pro, usage switch; no accessibility issues")
         except Failed as error:
             failed = True
             page.screenshot(path=str(DIST / "failure-feedback.png"))

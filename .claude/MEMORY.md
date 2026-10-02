@@ -139,3 +139,24 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   The tester dashboard is a private claude.ai artifact that queries them through the Supabase connector.
 - 2026-10-02: Terraforming Mars ships with Prelude, Venus Next, Colonies and Turmoil as expansions and the Hellas & Elysium
   maps as options; 2–5 players (no solo or draft variant for now), played by passing the phone like the other no-sides games.
+- 2026-10-02: Rules answers keep each game's base rules in Claude's 1-hour cache, shared by every player, language and
+  expansion set (nothing player- or language-specific before the base rules). The rules-keep-warm cron job keeps only
+  games asked about in the last 3 hours warm (the user's Claude credits are limited: idle games must cost nothing).
+  Keep this in mind for any change to the rules-answer request.
+- 2026-10-02: Rules-answer guardrails: Claude Haiku 4.5 screens each question (rules / off_topic / manipulation); screened
+  out ones get a short translated refusal, count against the daily cap and are flagged; 5 flags in a day pause that
+  player until tomorrow. Answers are capped at 4,000 tokens with one retry at 16,000, never shown cut off.
+- 2026-10-02: The paid tier is "Ordir Pro". Its face is "The cooler Ordi": the same orb mascot wearing sunglasses (one
+  angular wraparound visor, like Squirtle's "cool" shades: pointed swept-up tips, a notch at the nose, two diagonal light
+  stripes per lens; very large, wrapping the whole face edge to edge (its left tip may cross Ordi's outline); two lenses the
+  same size, mirrored around the bridge; on Pro the big and top-left sparkles sit higher so the visor never touches
+  them; one solid glow violet #7846C8 with no separate outline, stripes a lighter tint of it; never black, which
+  vanishes on black). The cooler Ordi keeps Ordi's simple one-line smile, under the visor (no :D grin), used on the
+  Free vs Pro comparison, the plans screen, the welcome screen and the Account Pro card (proposals in the private "Ordir
+  Pro proposals" claude.ai canvas). Free Ordi stays without shades. Pro perks: more rules questions, new games early, the
+  shades mascot and app icon; turn guides, tables and expansions stay free. Plans: yearly, monthly and a one-off Game
+  Night pass. The comparison shows the free questions left this month.
+- 2026-10-02: Ordir Pro ships as "Coming soon" (no App Store yet), in the preview and the app: the Pro screen, the Account
+  (app: Settings) card and the chat's "x of 5 free questions left this month" line, with every plan marked Coming soon and
+  no purchase. The free limit (5 a month) is shown, never enforced, until the user says otherwise. "Pro" is always a white
+  rounded tag with the word knocked out in bold (see-through letters), next to "Ordir".
