@@ -20,7 +20,7 @@ final class AccessibilityAuditTests: XCTestCase {
         // The opening plays first, then Home.
         XCTAssertTrue(app.staticTexts["Choose a game"].waitForExistence(timeout: 20))
         let comingSoon = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] %@", "coming soon"))
-        XCTAssertEqual(comingSoon.count, 2, "Home should list two coming-soon games")
+        XCTAssertEqual(comingSoon.count, 0, "Every game on Home has a turn guide now")
         try audit(app)
     }
 

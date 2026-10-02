@@ -22,7 +22,7 @@ jobs:
       - name: Extract the official sources page by page
         run: |
           python3 -m venv .venv
-          .venv/bin/pip install --quiet pypdf
+          .venv/bin/pip install --quiet pypdf cryptography fonttools
           .venv/bin/python tools/fetch_sources.py
           .venv/bin/python tools/rules_corpus.py
 

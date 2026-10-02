@@ -1,0 +1,2234 @@
+{
+  "game": "warOfTheRing2E",
+  "title": "War of the Ring",
+  "version": 1,
+  "scope": "Setup, then turns until someone wins; 2 players (Free Peoples vs Shadow) on one phone; optional Lords of Middle-earth and Warriors of Middle-earth expansions",
+  "sides": [
+    {
+      "id": "freePeoples",
+      "name": "Free Peoples",
+      "color": "#7fb2ff"
+    },
+    {
+      "id": "shadow",
+      "name": "Shadow",
+      "color": "#ff6b5e"
+    }
+  ],
+  "victory": {
+    "note": "The Shadow wins at once if the Ring-bearers reach 12 Corruption, or at a turn\u2019s end holding Free Peoples Settlements worth 10 points. The Free Peoples win at once if the Ring reaches the Crack of Doom, or at a turn\u2019s end holding Shadow Settlements worth 4 points.",
+    "citations": [
+      {
+        "source": "rulebook",
+        "page": 44,
+        "excerpt": "If the Ring-bearers have 12 or more Corruption points, they failed their quest."
+      },
+      {
+        "source": "rulebook",
+        "page": 44,
+        "excerpt": "If the Ring-bearers figure is on the \u201cCrack of Doom\u201d step on the Mordor Track and the Ring-bearers have fewer than 12 Corruption points, the Ring is destroyed."
+      },
+      {
+        "source": "rulebook",
+        "page": 44,
+        "excerpt": "If the Shadow player controls Free Peoples Settlements worth 10 or more Victory points, he wins."
+      },
+      {
+        "source": "rulebook",
+        "page": 44,
+        "excerpt": "If the Free Peoples player controls Shadow Settlements worth 4 or more Victory points, he wins."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "rulebook",
+      "title": "Rulebook (Second Edition)",
+      "shortTitle": "Rulebook",
+      "url": "https://warofthering.eu/WotR_2nd_Edition_Rules.pdf",
+      "file": "Sources/warOfTheRing2E/WotR_2nd_Edition_Rules.pdf",
+      "sha256": "696181ef27ea6da267b24aab7174b9f773fec57c1b27adca5b379511543804f6"
+    },
+    {
+      "id": "faq",
+      "title": "FAQ (version 1.2, September 2014)",
+      "shortTitle": "FAQ",
+      "url": "https://warofthering.eu/WotR_2nd_Ed_FAQ.pdf",
+      "file": "Sources/warOfTheRing2E/WotR_2nd_Ed_FAQ.pdf",
+      "sha256": "27bb5005d8495d74f601914f3da20e9826e75870d6f6a70dc23a9176df42582f"
+    },
+    {
+      "id": "lordsOfMiddleEarth",
+      "title": "Lords of Middle-earth rulebook",
+      "shortTitle": "Lords of Middle-earth",
+      "url": "https://warofthering.eu/LOME_rules.pdf",
+      "file": "Sources/warOfTheRing2E/expansions/LOME_rules.pdf",
+      "sha256": "a929dceef1e077a6314a464ab78e17aad615a328adc42f5a9b5dc29342b80651"
+    },
+    {
+      "id": "warriorsOfMiddleEarth",
+      "title": "Warriors of Middle-earth rulebook",
+      "shortTitle": "Warriors of Middle-earth",
+      "url": "https://warofthering.eu/WoMe_rules.pdf",
+      "file": "Sources/warOfTheRing2E/expansions/WoMe_rules.pdf",
+      "sha256": "010b2e2ff767ca503162caf05d67c09c8ff0ac4fc153f8ff356a1645bb7d86ca"
+    }
+  ],
+  "expansions": [
+    {
+      "id": "lordsOfMiddleEarth",
+      "title": "Lords of Middle-earth",
+      "summary": "Elrond, Galadriel, the Balrog and Gothmog with their special dice, Sm\u00e9agol, and the optional Council of Rivendell."
+    },
+    {
+      "id": "warriorsOfMiddleEarth",
+      "title": "Warriors of Middle-earth",
+      "summary": "Factions: the Dead Men, Eagles and Ents for the Free Peoples; Corsairs, Dunlendings and Spiders for the Shadow."
+    }
+  ],
+  "images": [
+    {
+      "id": "cover",
+      "caption": "Box art",
+      "source": "rulebook",
+      "page": 1,
+      "crop": [
+        0.0,
+        0.03,
+        1.0,
+        0.86
+      ]
+    },
+    {
+      "id": "game-board",
+      "caption": "Game board (two halves)",
+      "source": "rulebook",
+      "page": 5,
+      "crop": [
+        0.37,
+        0.345,
+        0.63,
+        0.49
+      ]
+    },
+    {
+      "id": "figures",
+      "caption": "Plastic figures",
+      "source": "rulebook",
+      "page": 5,
+      "crop": [
+        0.29,
+        0.6,
+        0.7,
+        0.69
+      ]
+    },
+    {
+      "id": "action-dice",
+      "caption": "Action dice (blue Free Peoples, red Shadow) and Combat dice",
+      "source": "rulebook",
+      "page": 5,
+      "crop": [
+        0.19,
+        0.71,
+        0.8,
+        0.765
+      ]
+    },
+    {
+      "id": "event-cards",
+      "caption": "Event cards",
+      "source": "rulebook",
+      "page": 5,
+      "crop": [
+        0.7,
+        0.785,
+        0.87,
+        0.87
+      ]
+    },
+    {
+      "id": "hunt-tiles",
+      "caption": "Hunt tiles: standard, Fellowship and Shadow special, back",
+      "source": "rulebook",
+      "page": 6,
+      "crop": [
+        0.08,
+        0.195,
+        0.93,
+        0.3
+      ]
+    },
+    {
+      "id": "elven-rings",
+      "caption": "Elven Ring counters (front and back)",
+      "source": "rulebook",
+      "page": 6,
+      "crop": [
+        0.08,
+        0.465,
+        0.62,
+        0.555
+      ]
+    },
+    {
+      "id": "fellowship-counters",
+      "caption": "Companion counters and Fellowship Progress counter",
+      "source": "rulebook",
+      "page": 6,
+      "crop": [
+        0.08,
+        0.58,
+        0.93,
+        0.665
+      ]
+    },
+    {
+      "id": "political-counters",
+      "caption": "Nation Political counters",
+      "source": "rulebook",
+      "page": 6,
+      "crop": [
+        0.08,
+        0.7,
+        0.93,
+        0.8
+      ]
+    },
+    {
+      "id": "control-markers",
+      "caption": "Settlement Control and Victory Point markers",
+      "source": "rulebook",
+      "page": 6,
+      "crop": [
+        0.08,
+        0.83,
+        0.65,
+        0.93
+      ]
+    },
+    {
+      "id": "minion-figures",
+      "caption": "Minions and Nazg\u00fbl",
+      "source": "rulebook",
+      "page": 7,
+      "crop": [
+        0.2,
+        0.215,
+        0.8,
+        0.305
+      ]
+    },
+    {
+      "id": "shadow-units",
+      "caption": "Shadow Army units",
+      "source": "rulebook",
+      "page": 7,
+      "crop": [
+        0.08,
+        0.33,
+        0.93,
+        0.435
+      ]
+    },
+    {
+      "id": "fellowship-figures",
+      "caption": "The Ring-bearers and the Companions",
+      "source": "rulebook",
+      "page": 7,
+      "crop": [
+        0.08,
+        0.47,
+        0.93,
+        0.69
+      ]
+    },
+    {
+      "id": "fp-units",
+      "caption": "Free Peoples units and Leaders",
+      "source": "rulebook",
+      "page": 7,
+      "crop": [
+        0.08,
+        0.7,
+        0.93,
+        0.93
+      ]
+    },
+    {
+      "id": "nations-map",
+      "caption": "The Nations",
+      "source": "rulebook",
+      "page": 9,
+      "crop": [
+        0.08,
+        0.31,
+        0.92,
+        0.92
+      ]
+    },
+    {
+      "id": "fp-event-boxes",
+      "caption": "Free Peoples Event card boxes",
+      "source": "rulebook",
+      "page": 12,
+      "crop": [
+        0.29,
+        0.21,
+        0.52,
+        0.36
+      ]
+    },
+    {
+      "id": "hunt-box",
+      "caption": "Hunt Box",
+      "source": "rulebook",
+      "page": 12,
+      "crop": [
+        0.29,
+        0.78,
+        0.5,
+        0.91
+      ]
+    },
+    {
+      "id": "vp-track",
+      "caption": "Victory Points track",
+      "source": "rulebook",
+      "page": 12,
+      "crop": [
+        0.49,
+        0.85,
+        0.91,
+        0.9
+      ]
+    },
+    {
+      "id": "fellowship-track",
+      "caption": "Fellowship Track",
+      "source": "rulebook",
+      "page": 13,
+      "crop": [
+        0.0,
+        0.22,
+        0.5,
+        0.27
+      ]
+    },
+    {
+      "id": "fellowship-boxes",
+      "caption": "Fellowship of the Ring and Guide of the Fellowship boxes",
+      "source": "rulebook",
+      "page": 13,
+      "crop": [
+        0.5,
+        0.21,
+        0.73,
+        0.34
+      ]
+    },
+    {
+      "id": "political-track",
+      "caption": "Political Track",
+      "source": "rulebook",
+      "page": 13,
+      "crop": [
+        0.6,
+        0.43,
+        0.71,
+        0.72
+      ]
+    },
+    {
+      "id": "mordor-track",
+      "caption": "Mordor Track",
+      "source": "rulebook",
+      "page": 13,
+      "crop": [
+        0.34,
+        0.6,
+        0.58,
+        0.74
+      ]
+    },
+    {
+      "id": "shadow-event-boxes",
+      "caption": "Shadow Event card boxes",
+      "source": "rulebook",
+      "page": 13,
+      "crop": [
+        0.48,
+        0.77,
+        0.72,
+        0.92
+      ]
+    },
+    {
+      "id": "setup-fp-list",
+      "caption": "Free Peoples army setup",
+      "source": "rulebook",
+      "page": 16,
+      "crop": [
+        0.07,
+        0.185,
+        0.3,
+        0.925
+      ]
+    },
+    {
+      "id": "setup-map-west",
+      "caption": "Army setup (west)",
+      "source": "rulebook",
+      "page": 16,
+      "crop": [
+        0.28,
+        0.205,
+        1.0,
+        0.91
+      ]
+    },
+    {
+      "id": "setup-map-east",
+      "caption": "Army setup (east)",
+      "source": "rulebook",
+      "page": 17,
+      "crop": [
+        0.0,
+        0.205,
+        0.72,
+        0.91
+      ]
+    },
+    {
+      "id": "setup-shadow-list",
+      "caption": "Shadow army setup",
+      "source": "rulebook",
+      "page": 17,
+      "crop": [
+        0.72,
+        0.185,
+        0.95,
+        0.735
+      ]
+    },
+    {
+      "id": "action-dice-icons",
+      "caption": "Action dice icons",
+      "source": "rulebook",
+      "page": 19,
+      "crop": [
+        0.08,
+        0.165,
+        0.93,
+        0.365
+      ]
+    },
+    {
+      "id": "character-cards",
+      "caption": "Companion and Minion cards",
+      "source": "rulebook",
+      "page": 25,
+      "crop": [
+        0.08,
+        0.205,
+        0.82,
+        0.475
+      ]
+    },
+    {
+      "id": "lome-smeagol-tiles",
+      "caption": "Sm\u00e9agol Hunt tiles",
+      "source": "lordsOfMiddleEarth",
+      "page": 4,
+      "crop": [
+        0.33,
+        0.235,
+        0.67,
+        0.335
+      ]
+    },
+    {
+      "id": "lome-elven-rings",
+      "caption": "Elven Ring counters with their Keepers",
+      "source": "lordsOfMiddleEarth",
+      "page": 4,
+      "crop": [
+        0.12,
+        0.49,
+        0.88,
+        0.615
+      ]
+    },
+    {
+      "id": "lome-action-tokens",
+      "caption": "Shadow Action tokens",
+      "source": "lordsOfMiddleEarth",
+      "page": 4,
+      "crop": [
+        0.15,
+        0.81,
+        0.87,
+        0.91
+      ]
+    },
+    {
+      "id": "lome-figures",
+      "caption": "New Characters",
+      "source": "lordsOfMiddleEarth",
+      "page": 5,
+      "crop": [
+        0.12,
+        0.235,
+        0.9,
+        0.545
+      ]
+    },
+    {
+      "id": "lome-dice",
+      "caption": "Keeper dice and Lesser Minion dice",
+      "source": "lordsOfMiddleEarth",
+      "page": 5,
+      "crop": [
+        0.15,
+        0.66,
+        0.87,
+        0.89
+      ]
+    },
+    {
+      "id": "wome-figures",
+      "caption": "Faction figures",
+      "source": "warriorsOfMiddleEarth",
+      "page": 4,
+      "crop": [
+        0.12,
+        0.235,
+        0.9,
+        0.585
+      ]
+    },
+    {
+      "id": "wome-faction-dice",
+      "caption": "Faction dice",
+      "source": "warriorsOfMiddleEarth",
+      "page": 4,
+      "crop": [
+        0.2,
+        0.64,
+        0.78,
+        0.715
+      ]
+    },
+    {
+      "id": "wome-reference-cards",
+      "caption": "Faction reference cards",
+      "source": "warriorsOfMiddleEarth",
+      "page": 4,
+      "crop": [
+        0.13,
+        0.78,
+        0.88,
+        0.89
+      ]
+    },
+    {
+      "id": "wome-cards",
+      "caption": "Faction Event, Call to Battle and Event cards",
+      "source": "warriorsOfMiddleEarth",
+      "page": 5,
+      "crop": [
+        0.15,
+        0.23,
+        0.82,
+        0.7
+      ]
+    },
+    {
+      "id": "wome-die-results",
+      "caption": "Faction die results",
+      "source": "warriorsOfMiddleEarth",
+      "page": 8,
+      "crop": [
+        0.12,
+        0.6,
+        0.88,
+        0.87
+      ]
+    }
+  ],
+  "phases": [
+    {
+      "id": "setup",
+      "part": "setup",
+      "title": "Setup",
+      "steps": [
+        {
+          "id": "setup-board",
+          "side": "both",
+          "title": "Sides and board",
+          "instruction": "Decide who plays the Free Peoples and who plays the Shadow, then open the board.",
+          "bullets": [
+            "Leave room along the sides for discarded cards, eliminated pieces and dice rolls."
+          ],
+          "components": [
+            "Game board (two halves)"
+          ],
+          "images": [
+            "game-board",
+            "nations-map"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 14,
+              "excerpt": "Before you start playing, you should decide who will play the Free Peoples and who will play the Shadow."
+            },
+            {
+              "source": "rulebook",
+              "page": 14,
+              "excerpt": "possibly large enough to leave some room along the sides of the board"
+            }
+          ]
+        },
+        {
+          "id": "setup-fellowship",
+          "side": "freePeoples",
+          "title": "The Fellowship",
+          "instruction": "Set up the Ring-bearers and their Companions:",
+          "bullets": [
+            "Ring-bearers figure (Frodo and Sam): on Rivendell.",
+            "Fellowship Progress counter: step 0 of the Fellowship Track, Hidden side up. Corruption counter: step 0 too.",
+            "Companion cards: in the Guide of the Fellowship Box, Gandalf the Grey on top (he starts as the Guide).",
+            "Companion figures and counters: in the Fellowship of the Ring Box.",
+            "Set aside Aragorn \u2013 Heir to Isildur, Gandalf the White and Gollum (cards, and Gollum\u2019s figure)."
+          ],
+          "components": [
+            "Ring-bearers figure",
+            "Fellowship Progress counter",
+            "Corruption counter",
+            "Companion cards, figures and counters"
+          ],
+          "images": [
+            "fellowship-figures",
+            "fellowship-track",
+            "fellowship-boxes"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 14,
+              "excerpt": "Place the Ring-bearers figure on Rivendell, its starting point."
+            },
+            {
+              "source": "rulebook",
+              "page": 14,
+              "excerpt": "Place the Fellowship Progress counter on Step 0 of the Fellowship Track, with the \u201cHidden\u201d side up. The Corruption counter is also placed on Step 0 of the same track."
+            },
+            {
+              "source": "rulebook",
+              "page": 14,
+              "excerpt": "Place all Companion cards in the Guide of the Fellowship Box, with the Gandalf the Grey Character card on top"
+            },
+            {
+              "source": "rulebook",
+              "page": 14,
+              "excerpt": "Set aside the cards for Aragorn \u2013 Heir to Isildur, Gandalf the White, and Gollum for later use."
+            },
+            {
+              "source": "rulebook",
+              "page": 14,
+              "excerpt": "Place all the Companion figures and their counters in the The Fellowship of the Ring Box."
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "lordsOfMiddleEarth",
+              "text": "Either Strider or Gandalf the Grey (either version) may start as the Guide.",
+              "images": [
+                "lome-figures"
+              ],
+              "citations": [
+                {
+                  "source": "lordsOfMiddleEarth",
+                  "page": 3,
+                  "excerpt": "Either Strider or Gandalf the Grey (either version) may be chosen as the starting Guide of the Fellowship."
+                }
+              ]
+            },
+            {
+              "expansion": "lordsOfMiddleEarth",
+              "text": "Optional, Council of Rivendell: you may swap any Companion for its alternate card from this box.",
+              "bullets": [
+                "Your choices stay hidden from the Shadow, except the Guide."
+              ],
+              "images": [
+                "lome-figures"
+              ],
+              "citations": [
+                {
+                  "source": "lordsOfMiddleEarth",
+                  "page": 30,
+                  "excerpt": "During setup, the Free Peoples player may replace any or all of the Fellowship Characters included in War of the Ring with the matching Character from this expansion."
+                },
+                {
+                  "source": "lordsOfMiddleEarth",
+                  "page": 30,
+                  "excerpt": "The choice of Companions is not revealed to the Shadow player, except that the Guide is always visible."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "setup-rings",
+          "side": "freePeoples",
+          "title": "Elven Rings",
+          "instruction": "Put the three Elven Ring counters in your Elven Rings Box, Ring side up.",
+          "components": [
+            "Elven Ring counters (3)"
+          ],
+          "images": [
+            "elven-rings",
+            "fp-event-boxes"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 14,
+              "excerpt": "Place the three Elven Ring counters in the Free Peoples\u2019 Elven Rings Box of the game board with the \u201cRing\u201d side up."
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "lordsOfMiddleEarth",
+              "text": "Use this box\u2019s Elven Ring counters instead: each shows the Keeper of its Ring.",
+              "images": [
+                "lome-elven-rings"
+              ],
+              "citations": [
+                {
+                  "source": "lordsOfMiddleEarth",
+                  "page": 3,
+                  "excerpt": "Use the new Elven Ring counters to replace the Elven Ring counters included in War of the Ring."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "setup-minions",
+          "side": "shadow",
+          "title": "Minions",
+          "instruction": "Set aside the Witch-king, Saruman and the Mouth of Sauron, cards and figures: they enter play later.",
+          "components": [
+            "Minion cards (3)",
+            "Minion figures (3)"
+          ],
+          "images": [
+            "minion-figures",
+            "character-cards"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 14,
+              "excerpt": "Set aside all Shadow Minion cards (the Witch-king, Saruman, and the Mouth of Sauron) and the corresponding figures for later use."
+            }
+          ]
+        },
+        {
+          "id": "setup-events",
+          "side": "both",
+          "title": "Event decks",
+          "instruction": "Split your Event cards into a Character deck and a Strategy deck by their backs, shuffle each, and put them on their boxes.",
+          "components": [
+            "Event cards"
+          ],
+          "images": [
+            "event-cards",
+            "fp-event-boxes",
+            "shadow-event-boxes"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 14,
+              "excerpt": "Separate the Free Peoples and Shadow Event cards into Character and Strategy decks according to the back of each card, shuffle them separately, and place them on the corresponding areas of the game board."
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "lordsOfMiddleEarth",
+              "text": "Add this box\u2019s 13 Event cards before shuffling:",
+              "bullets": [
+                "Shadow: \u201cA Balrog is Come!\u201d replaces card #17 \u201cBalrog of Moria\u201d in the Character deck.",
+                "The other 12: 4 into each Character deck and 2 into each Strategy deck."
+              ],
+              "images": [
+                "lome-figures"
+              ],
+              "citations": [
+                {
+                  "source": "lordsOfMiddleEarth",
+                  "page": 3,
+                  "excerpt": "One of the Shadow Event Cards (\u201cA Balrog is Come!\u201d) must replace the card with the same number (# 17, \u201cBalrog of Moria\u201d) in the War of the Ring Shadow Character Event deck."
+                },
+                {
+                  "source": "lordsOfMiddleEarth",
+                  "page": 3,
+                  "excerpt": "four cards each for the Free Peoples and Shadow Character Event decks, and two each for the Free Peoples and Shadow Strategy Event decks"
+                }
+              ]
+            },
+            {
+              "expansion": "warriorsOfMiddleEarth",
+              "text": "Swap cards before shuffling, then make a third deck:",
+              "bullets": [
+                "Free Peoples: remove Character cards #15, #18, #19, #20, #21 and #22.",
+                "Shadow: remove Strategy cards #10 and #11, and Character card #1.",
+                "Add this box\u2019s new Event cards to the matching decks.",
+                "Shuffle your Faction Event deck and put it beside the other two."
+              ],
+              "images": [
+                "wome-cards"
+              ],
+              "citations": [
+                {
+                  "source": "warriorsOfMiddleEarth",
+                  "page": 3,
+                  "excerpt": "Remove the following Event cards from the Free Peoples Character Event deck: \u201cGwaihir the Windlord\u201d (#15), \u201cThe Eagles are Coming!\u201d (#18), \u201cThe Ents Awake: Treebeard\u201d (#19), \u201cThe Ents Awake: Huorns\u201d (#20), \u201cThe Ents Awake: Entmoot\u201d (#21), \u201cDead Men of Dunharrow\u201d (#22)."
+                },
+                {
+                  "source": "warriorsOfMiddleEarth",
+                  "page": 3,
+                  "excerpt": "from the Shadow Strategy Event deck, \u201cCorsairs of Umbar\u201d (#10), \u201cRage of the Dunlendings\u201d (#11); from the Shadow Character Event deck, \u201cShelob\u2019s Lair\u201d (#1)."
+                },
+                {
+                  "source": "warriorsOfMiddleEarth",
+                  "page": 3,
+                  "excerpt": "Add the new Event cards to the appropriate Event decks."
+                },
+                {
+                  "source": "warriorsOfMiddleEarth",
+                  "page": 3,
+                  "excerpt": "Each player shuffles his Faction Event deck and sets it beside his other Event decks."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "setup-hunt",
+          "side": "shadow",
+          "title": "Hunt Pool",
+          "instruction": "Put the standard (beige) Hunt tiles in a cup or other opaque container: this is the Hunt Pool.",
+          "bullets": [
+            "Set aside the special tiles (blue and red) for later."
+          ],
+          "components": [
+            "Hunt tiles",
+            "A cup"
+          ],
+          "images": [
+            "hunt-tiles",
+            "hunt-box"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 14,
+              "excerpt": "Put the standard Hunt tiles (beige) in a cup or other opaque container: this is the Hunt Pool."
+            },
+            {
+              "source": "rulebook",
+              "page": 14,
+              "excerpt": "Set aside the special Hunt tiles (blue and red) for later use."
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "lordsOfMiddleEarth",
+              "text": "Add 2 of the 4 Sm\u00e9agol tiles to the Hunt Pool.",
+              "images": [
+                "lome-smeagol-tiles"
+              ],
+              "citations": [
+                {
+                  "source": "lordsOfMiddleEarth",
+                  "page": 3,
+                  "excerpt": "At the beginning of the game, place two of the four Sm\u00e9agol Tiles in the Hunt Pool, in addition to the Standard Hunt Tiles."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "setup-dice",
+          "side": "both",
+          "title": "Action dice",
+          "instruction": "Free Peoples: take 4 blue Action dice. Shadow: take 7 red ones.",
+          "bullets": [
+            "Set aside the other Action dice and the 5 Combat dice."
+          ],
+          "components": [
+            "Action dice",
+            "Combat dice (5)"
+          ],
+          "images": [
+            "action-dice",
+            "action-dice-icons"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 14,
+              "excerpt": "Give seven red Shadow Action dice to the Shadow player and four blue Free Peoples Action dice to the Free Peoples player."
+            },
+            {
+              "source": "rulebook",
+              "page": 14,
+              "excerpt": "Set aside the remaining Action dice for later use. Set aside the five Combat dice."
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "warriorsOfMiddleEarth",
+              "text": "Set aside the Faction dice, Faction figures and Call to Battle cards.",
+              "bullets": [
+                "Put your 3 Faction reference cards image side up, so their entry requirements show.",
+                "Take a Faction Action Dice reference sheet."
+              ],
+              "images": [
+                "wome-reference-cards",
+                "wome-faction-dice"
+              ],
+              "citations": [
+                {
+                  "source": "warriorsOfMiddleEarth",
+                  "page": 3,
+                  "excerpt": "Set aside the Faction dice, the Faction figures, and the Call to Battle cards for later use."
+                },
+                {
+                  "source": "warriorsOfMiddleEarth",
+                  "page": 3,
+                  "excerpt": "Each player takes the three Faction reference cards of his factions, and places them on the table, image side up, so the entry requirements of the Faction are visible."
+                },
+                {
+                  "source": "warriorsOfMiddleEarth",
+                  "page": 3,
+                  "excerpt": "Each player takes a Faction Action Dice reference sheet."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "setup-politics",
+          "side": "both",
+          "title": "Political Track",
+          "instruction": "Put each Nation\u2019s Political counter on the Political Track:",
+          "bullets": [
+            "Top box: Rohan, the North, Elves, Dwarves.",
+            "Second box: Gondor, Southrons & Easterlings.",
+            "Third box, just above \u201cAt War\u201d: Sauron, Isengard.",
+            "Passive side up: every Free Peoples Nation except the Elves. Active: the Elves and all Shadow Nations."
+          ],
+          "components": [
+            "Political counters (8)"
+          ],
+          "images": [
+            "political-track",
+            "political-counters"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 14,
+              "excerpt": "place the Rohan, the North, the Elven, and the Dwarven Nations\u2019 Political counters in the top box"
+            },
+            {
+              "source": "rulebook",
+              "page": 14,
+              "excerpt": "place the Gondor and Southron/Easterling Political counters in the second box from the top"
+            },
+            {
+              "source": "rulebook",
+              "page": 14,
+              "excerpt": "place the Sauron and Isengard Political counters in the third box from the top\u2014immediately above the \u201cAt War\u201d box."
+            },
+            {
+              "source": "rulebook",
+              "page": 14,
+              "excerpt": "All of the Free Peoples Nations\u2019 Political counters except for that of the Elves are placed with the \u201cPassive\u201d side up."
+            }
+          ]
+        },
+        {
+          "id": "setup-armies-fp",
+          "side": "freePeoples",
+          "title": "Your armies",
+          "instruction": "Place your starting units and Leaders:",
+          "bullets": [
+            "Dwarves: Erebor 1 Regular, 2 Elite, 1 Leader \u00b7 Ered Luin 1 Regular \u00b7 Iron Hills 1 Regular.",
+            "Elves: Grey Havens 1 Regular, 1 Elite, 1 Leader \u00b7 Rivendell 2 Elite, 1 Leader \u00b7 Woodland Realm 1 Regular, 1 Elite, 1 Leader \u00b7 L\u00f3rien 1 Regular, 2 Elite, 1 Leader.",
+            "Gondor: Minas Tirith 3 Regular, 1 Elite, 1 Leader \u00b7 Dol Amroth 3 Regular \u00b7 Osgiliath 2 Regular \u00b7 Pelargir 1 Regular.",
+            "The North: Bree 1 Regular \u00b7 Carrock 1 Regular \u00b7 Dale 1 Regular, 1 Leader \u00b7 North Downs 1 Elite \u00b7 The Shire 1 Regular.",
+            "Rohan: Edoras 1 Regular, 1 Elite \u00b7 Fords of Isen 2 Regular, 1 Leader \u00b7 Helm\u2019s Deep 1 Regular.",
+            "The rest are reinforcements: keep them apart from eliminated pieces."
+          ],
+          "components": [
+            "Blue Army units",
+            "Grey Leaders"
+          ],
+          "images": [
+            "setup-map-west",
+            "setup-fp-list",
+            "fp-units"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 14,
+              "excerpt": "follow the Army Setup diagram on pages 16-17 to place each Nation\u2019s initial Army units and Leaders"
+            },
+            {
+              "source": "rulebook",
+              "page": 16,
+              "excerpt": "Erebor: 1 Regular, 2 Elite, 1 Leader."
+            },
+            {
+              "source": "rulebook",
+              "page": 16,
+              "excerpt": "Minas Tirith: 3 Regular, 1 Elite, 1 Leader."
+            },
+            {
+              "source": "rulebook",
+              "page": 16,
+              "excerpt": "Fords of Isen: 2 Regular, 1 Leader."
+            },
+            {
+              "source": "rulebook",
+              "page": 14,
+              "excerpt": "Set aside any remaining figures to use as reinforcements, paying attention not to mix them with pieces eliminated from play"
+            }
+          ]
+        },
+        {
+          "id": "setup-armies-shadow",
+          "side": "shadow",
+          "title": "Your armies",
+          "instruction": "Place your starting units and Nazg\u00fbl:",
+          "bullets": [
+            "Isengard: Orthanc 4 Regular, 1 Elite \u00b7 North Dunland 1 Regular \u00b7 South Dunland 1 Regular.",
+            "Sauron: Barad-d\u00fbr 4 Regular, 1 Elite, 1 Nazg\u00fbl \u00b7 Dol Guldur 5 Regular, 1 Elite, 1 Nazg\u00fbl \u00b7 Gorgoroth 3 Regular \u00b7 Minas Morgul 5 Regular, 1 Nazg\u00fbl \u00b7 Moria 2 Regular \u00b7 Mount Gundabad 2 Regular \u00b7 Nurn 2 Regular \u00b7 Morannon 5 Regular, 1 Nazg\u00fbl.",
+            "Southrons & Easterlings: Far Harad 3 Regular, 1 Elite \u00b7 Near Harad 3 Regular, 1 Elite \u00b7 North Rh\u00fbn 2 Regular \u00b7 South Rh\u00fbn 3 Regular, 1 Elite \u00b7 Umbar 3 Regular.",
+            "The rest are reinforcements. Set aside the Army counters."
+          ],
+          "components": [
+            "Red Army units",
+            "Nazg\u00fbl"
+          ],
+          "images": [
+            "setup-map-east",
+            "setup-shadow-list",
+            "shadow-units"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 14,
+              "excerpt": "follow the Army Setup diagram on pages 16-17 to place each Nation\u2019s initial Army units and Leaders"
+            },
+            {
+              "source": "rulebook",
+              "page": 17,
+              "excerpt": "Reinforcements: 8 Regular, 4 Elite, 4 Nazg\u00fbl."
+            },
+            {
+              "source": "rulebook",
+              "page": 14,
+              "excerpt": "Set aside the Army counters for use later in the game."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "recover",
+      "part": "round",
+      "title": "1 \u00b7 Recover and draw",
+      "steps": [
+        {
+          "id": "recover",
+          "side": "both",
+          "title": "Recover dice, draw cards",
+          "instruction": "Take back all the Action dice you used last turn (including any in the Hunt Box), then draw 1 card from each of your Event decks.",
+          "bullets": [
+            "A Character entered or left play last turn? Add or remove its die now.",
+            "Hand limit 6: draw both cards first, then discard down to 6, facedown (FAQ).",
+            "An empty deck isn\u2019t reshuffled: draw only from the other one."
+          ],
+          "components": [
+            "Action dice",
+            "Event decks"
+          ],
+          "images": [
+            "action-dice",
+            "event-cards"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 18,
+              "excerpt": "Each player recovers the Action dice he used in the previous turn, plus any dice which were added to the Action Dice Pool and minus any dice which were removed from the pool. Then, each player draws 2 cards, one from each of their respective Event decks."
+            },
+            {
+              "source": "rulebook",
+              "page": 19,
+              "excerpt": "the die is added to, or removed from, the dice pool during the Recover Action Dice and Draw Event Cards phase of the following turn"
+            },
+            {
+              "source": "faq",
+              "page": 1,
+              "excerpt": "All draws are completed before a player needs to discard Event card from his hand, down to the hand limit of six cards",
+              "entry": "Page 22: Drawing Event Cards"
+            },
+            {
+              "source": "rulebook",
+              "page": 22,
+              "excerpt": "If a deck is depleted during the game, the discarded cards are not reshuffled."
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "lordsOfMiddleEarth",
+              "text": "Keeper and Lesser Minion dice:",
+              "bullets": [
+                "Recover them too, used or not.",
+                "Remove a die whose Character was eliminated last turn."
+              ],
+              "images": [
+                "lome-dice"
+              ],
+              "citations": [
+                {
+                  "source": "lordsOfMiddleEarth",
+                  "page": 10,
+                  "excerpt": "During the Recover Action Dice phase, both used and unused Keeper Dice in play are recovered."
+                },
+                {
+                  "source": "lordsOfMiddleEarth",
+                  "page": 11,
+                  "excerpt": "During the Recover Action Dice phase, both used and unused Lesser Minion Dice in play are recovered."
+                },
+                {
+                  "source": "lordsOfMiddleEarth",
+                  "page": 8,
+                  "excerpt": "A Special Action Die is removed during the Recover Action Dice phase, if the character associated with it was eliminated from the game during the previous turn."
+                }
+              ]
+            },
+            {
+              "expansion": "warriorsOfMiddleEarth",
+              "text": "Draw 1 Faction Event card as well.",
+              "bullets": [
+                "Faction cards don\u2019t count toward the 6-card limit; you may hold up to 4 of them.",
+                "Your first Faction entered play last turn? Add your Faction die now (remove it once you have no Factions left)."
+              ],
+              "images": [
+                "wome-cards",
+                "wome-faction-dice"
+              ],
+              "citations": [
+                {
+                  "source": "warriorsOfMiddleEarth",
+                  "page": 6,
+                  "excerpt": "One Faction Event card is drawn from the Faction Event deck at the beginning of each turn, including the first."
+                },
+                {
+                  "source": "warriorsOfMiddleEarth",
+                  "page": 7,
+                  "excerpt": "Faction Event cards are not counted against the hand limit of six."
+                },
+                {
+                  "source": "warriorsOfMiddleEarth",
+                  "page": 7,
+                  "excerpt": "There is a limit of four Faction Event cards in the player\u2019s hand."
+                },
+                {
+                  "source": "warriorsOfMiddleEarth",
+                  "page": 8,
+                  "excerpt": "When the first Faction of a player enters play, that player adds the Faction die to his Action Dice pool at the beginning of the following turn."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fellowship",
+      "part": "round",
+      "title": "2 \u00b7 Fellowship",
+      "steps": [
+        {
+          "id": "fellowship",
+          "side": "freePeoples",
+          "title": "Fellowship phase",
+          "instruction": "You may, in this order:",
+          "bullets": [
+            "Declare the Fellowship (if Hidden): move the Ring-bearers up to as many regions as the Fellowship Track shows, then reset it to 0.",
+            "Declared in a Free Peoples City or Stronghold not under enemy control? Heal 1 Corruption, and activate that Nation if it\u2019s Passive.",
+            "Change the Guide: only to a Companion with the highest Level.",
+            "In Minas Morgul or Morannon? Enter Mordor: Ring-bearers on the first step of the Mordor Track; put the drawn Eye tiles and any special tiles in play back in the Hunt Pool."
+          ],
+          "components": [
+            "Ring-bearers figure",
+            "Fellowship Progress counter",
+            "Corruption counter",
+            "Guide of the Fellowship Box"
+          ],
+          "images": [
+            "fellowship-track",
+            "fellowship-boxes",
+            "mordor-track"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 38,
+              "excerpt": "When the Fellowship is declared, the Free Peoples player may immediately move the Ring-bearers figure a number of regions (from its last known position), equal to or less than the number on the Fellowship Track"
+            },
+            {
+              "source": "rulebook",
+              "page": 38,
+              "excerpt": "Then, the Free Peoples player resets the Fellowship Progress counter, moving it back to the \u20180\u2019 step of the Fellowship Track."
+            },
+            {
+              "source": "rulebook",
+              "page": 39,
+              "excerpt": "if during the Fellowship phase the Fellowship is declared in a region that contains a Free Peoples City or Stronghold not under enemy control, one point of Corruption is immediately removed"
+            },
+            {
+              "source": "rulebook",
+              "page": 18,
+              "excerpt": "If the Fellowship is declared in a City or Stronghold of a Free Peoples Nation, that Nation is activated"
+            },
+            {
+              "source": "rulebook",
+              "page": 37,
+              "excerpt": "The Free Peoples player may nominate a new Guide at the end of each Fellowship phase"
+            },
+            {
+              "source": "rulebook",
+              "page": 43,
+              "excerpt": "If the Fellowship is in Minas Morgul or Morannon during a Fellowship phase, the Free Peoples player may decide to enter Mordor."
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "lordsOfMiddleEarth",
+              "text": "Council of Rivendell, first turn only: you may declare Companions outside the Fellowship.",
+              "bullets": [
+                "Place them at the starting locations on their cards.",
+                "One left out: the Shadow takes 1 Action Token of their choice. More than one: both tokens."
+              ],
+              "images": [
+                "lome-action-tokens"
+              ],
+              "citations": [
+                {
+                  "source": "lordsOfMiddleEarth",
+                  "page": 31,
+                  "excerpt": "During the Fellowship Phase of the first turn, the Free Peoples player may declare one or more of these Companions to be outside the Fellowship."
+                },
+                {
+                  "source": "lordsOfMiddleEarth",
+                  "page": 31,
+                  "excerpt": "one Action Token of his choice, if only one Companion is outside the Fellowship;"
+                },
+                {
+                  "source": "lordsOfMiddleEarth",
+                  "page": 31,
+                  "excerpt": "both Action Tokens, if more than one Companion is outside the Fellowship."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hunt",
+      "part": "round",
+      "title": "3 \u00b7 Hunt allocation",
+      "steps": [
+        {
+          "id": "hunt-allocation",
+          "side": "shadow",
+          "title": "Hunt allocation",
+          "instruction": "Put any number of your Action dice in the Hunt Box. They won\u2019t be rolled this turn.",
+          "bullets": [
+            "At least 1 if the Free Peoples took a die back from the Hunt Box this turn.",
+            "At most 1 per Companion in the Fellowship (the Ring-bearers don\u2019t count), but you may always place 1."
+          ],
+          "components": [
+            "Action dice",
+            "Hunt Box"
+          ],
+          "images": [
+            "hunt-box",
+            "action-dice"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 19,
+              "excerpt": "If one or more Fellowship Action dice were in the Hunt Box at the end of the previous turn, he must place a minimum of 1 die in the Hunt Box."
+            },
+            {
+              "source": "rulebook",
+              "page": 19,
+              "excerpt": "The maximum number of dice he can place in the Hunt Box is equal to the number of Companions currently in the Fellowship"
+            },
+            {
+              "source": "rulebook",
+              "page": 19,
+              "excerpt": "However, the Shadow player may always place at least one die in the Hunt Box, even if all the Companions have left the Fellowship."
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "lordsOfMiddleEarth",
+              "text": "A Keeper die that rolled an Eye, taken back from the Hunt Box, doesn\u2019t force the minimum of 1.",
+              "images": [
+                "lome-dice"
+              ],
+              "citations": [
+                {
+                  "source": "lordsOfMiddleEarth",
+                  "page": 10,
+                  "excerpt": "do not apply if the die recovered from the Hunt Box is a Keeper\u2019s die that rolled an Eye result."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "roll",
+      "part": "round",
+      "title": "4 \u00b7 Action roll",
+      "steps": [
+        {
+          "id": "action-roll",
+          "side": "both",
+          "title": "Action roll",
+          "instruction": "Roll your Action dice. The Shadow doesn\u2019t roll the dice already in the Hunt Box.",
+          "bullets": [
+            "Shadow: move every Eye you roll into the Hunt Box."
+          ],
+          "components": [
+            "Action dice"
+          ],
+          "images": [
+            "action-dice-icons",
+            "hunt-box"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 18,
+              "excerpt": "Players roll their Action dice (except the dice already in the Hunt Box). Then, the Shadow player immediately takes all the rolled dice showing the \u201cEye\u201d result and adds them to the Hunt Box."
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "lordsOfMiddleEarth",
+              "text": "Roll your Keeper or Lesser Minion dice with the others:",
+              "bullets": [
+                "More than one special die? Keep one result; set the rest aside until next turn.",
+                "Any Eye among them? You must keep an Eye, and it goes in the Hunt Box (even the Free Peoples\u2019).",
+                "Whoever rolled more dice chooses first (Free Peoples on a tie)."
+              ],
+              "images": [
+                "lome-dice"
+              ],
+              "citations": [
+                {
+                  "source": "lordsOfMiddleEarth",
+                  "page": 7,
+                  "excerpt": "If a player rolls multiple Special Dice he must choose one of the rolled results and discard the others for this turn, before proceeding to the Action Resolution phase."
+                },
+                {
+                  "source": "lordsOfMiddleEarth",
+                  "page": 7,
+                  "excerpt": "If one or more of a player\u2019s special action dice rolls is an Eye result, the choice must be an Eye."
+                },
+                {
+                  "source": "lordsOfMiddleEarth",
+                  "page": 7,
+                  "excerpt": "the player who rolls the highest total number of dice must choose first (in the case of a tie, the Free Peoples player must choose first)"
+                },
+                {
+                  "source": "lordsOfMiddleEarth",
+                  "page": 8,
+                  "excerpt": "The chosen die is placed in the Hunt Box, and treated just like an Eye die result placed or rolled by the Shadow player."
+                }
+              ]
+            },
+            {
+              "expansion": "warriorsOfMiddleEarth",
+              "text": "Roll your Faction die too, if it\u2019s in your pool.",
+              "bullets": [
+                "Its results only work on Faction cards and Faction figures.",
+                "Shadow: an Eye of Sauron goes in the Hunt Box."
+              ],
+              "images": [
+                "wome-die-results"
+              ],
+              "citations": [
+                {
+                  "source": "warriorsOfMiddleEarth",
+                  "page": 8,
+                  "excerpt": "The results of a Faction die are specific to Factions, and can only be used on Faction cards and Faction figures"
+                },
+                {
+                  "source": "warriorsOfMiddleEarth",
+                  "page": 9,
+                  "excerpt": "Eye of Sauron: Placed in the Hunt Box, just like the same result of a normal Action Die, and with the same effects."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "actions",
+      "part": "round",
+      "title": "5 \u00b7 Action resolution",
+      "loop": {
+        "endLabel": "All dice used",
+        "note": "Take turns, one die each, until both of you have used every die. If one runs out first, the other takes the rest one after another.",
+        "citations": [
+          {
+            "source": "rulebook",
+            "page": 21,
+            "excerpt": "If a player runs out of actions before his opponent has done the same, the opponent executes his remaining actions one after the other."
+          }
+        ]
+      },
+      "steps": [
+        {
+          "id": "action-fp",
+          "side": "freePeoples",
+          "title": "Your action",
+          "instruction": "Use one Action die. Choose one:",
+          "bullets": [
+            "Character: an Army with a Leader moves or attacks \u00b7 play a Character Event card \u00b7 move the Fellowship 1 step \u00b7 hide the Fellowship \u00b7 separate or move Companions.",
+            "Army: move up to two Armies to adjacent regions \u00b7 attack with one Army \u00b7 play an Army Event card.",
+            "Muster: move a Nation 1 step on the Political Track \u00b7 play a Muster Event card \u00b7 recruit in friendly, free Settlements of a Nation \u201cAt War\u201d.",
+            "Event: draw a card from either deck \u00b7 play any Event card.",
+            "Will of the West: use it as any other result, or bring in Gandalf the White or Aragorn (see their cards).",
+            "Before choosing, you may use an Elven Ring to change a die (once per turn). You may also discard a die without effect, or pass if you have fewer dice left."
+          ],
+          "components": [
+            "Action dice",
+            "Event cards",
+            "Fellowship Progress counter"
+          ],
+          "images": [
+            "action-dice-icons",
+            "fellowship-track"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 19,
+              "excerpt": "Starting with the Free Peoples, players alternate actions selecting one of their Action dice and immediately taking the action made available by the specific die result."
+            },
+            {
+              "source": "rulebook",
+              "page": 20,
+              "excerpt": "Fellowship Progress. Move the Fellowship Progress counter one step forward on the Fellowship Track. Resolve the Hunt for the Ring, and then place the used Action die in the Hunt Box."
+            },
+            {
+              "source": "rulebook",
+              "page": 20,
+              "excerpt": "Move Armies. Move up to two different Armies from their region(s) to adjacent region(s)"
+            },
+            {
+              "source": "rulebook",
+              "page": 20,
+              "excerpt": "Diplomatic Action. Move the Political Track of one friendly Nation one step forward"
+            },
+            {
+              "source": "rulebook",
+              "page": 21,
+              "excerpt": "Before taking an action, the Free Peoples player may change a Will of the West result into any other Action die result"
+            },
+            {
+              "source": "rulebook",
+              "page": 21,
+              "excerpt": "Only one Elven Ring may be used by the same player during the course of a single turn."
+            },
+            {
+              "source": "rulebook",
+              "page": 19,
+              "excerpt": "If a player has fewer unused Action dice than his opponent (typically the Free Peoples player will have fewer Action dice than the Shadow player), he can pass instead of taking an action"
+            }
+          ],
+          "opensBattle": true,
+          "reminders": [
+            {
+              "text": "Moved the Fellowship? The Shadow Hunts: 1 die per Shadow die in the Hunt Box (max 5), each 6 succeeds, +1 per Free Peoples die there.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 41,
+                  "excerpt": "Then, the Shadow player makes a Hunt roll by rolling a number of Combat dice equal to the Hunt Level. Each result of \u20186\u2019 is a success."
+                },
+                {
+                  "source": "rulebook",
+                  "page": 41,
+                  "excerpt": "For every Action die that the Free Peoples player has placed in the Hunt Box (a Free Peoples Action die is placed here after every movement of the Fellowship, see Moving the Fellowship, page 37), the Shadow player adds +1 to each Hunt roll die result."
+                }
+              ]
+            },
+            {
+              "text": "Hunt re-rolls: 1 failed die each for a Shadow Stronghold, Shadow Army units and Nazg\u00fbl in the Ring-bearers\u2019 region.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 41,
+                  "excerpt": "the Shadow player can, after the Hunt roll, re-roll one failed Hunt roll die for each of these conditions that apply."
+                }
+              ]
+            },
+            {
+              "text": "Hunt succeeded? Draw a tile. Reduce it with a card or the Guide\u2019s ability, or lose a Companion (the Guide or a random one); the rest is Corruption.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 41,
+                  "excerpt": "If the Shadow player rolls at least one success on his Hunt roll (including re-rolls), the Hunt is successful and the Shadow player draws one tile from the Hunt Pool."
+                },
+                {
+                  "source": "rulebook",
+                  "page": 42,
+                  "excerpt": "Any remaining Hunt damage must be dealt with by using the Ring (see below), increasing the Corruption of the Ring-bearers."
+                }
+              ]
+            },
+            {
+              "text": "The die that moved the Fellowship goes in the Hunt Box (not when an Event card moved it).",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 37,
+                  "excerpt": "every time that an Action die is used to move the Fellowship, that die is added to the Hunt Box after the Hunt has been completed"
+                },
+                {
+                  "source": "rulebook",
+                  "page": 37,
+                  "excerpt": "When the Free Peoples player moves the Fellowship using an Event card, the Action die used to play the card is not added to the Hunt Box."
+                }
+              ]
+            },
+            {
+              "text": "On the Mordor Track: no Hunt roll. Each move draws a tile; a Stop icon means no step forward.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 43,
+                  "excerpt": "When the Free Peoples player tries to move the Fellowship during the Action Resolution phase, do not roll the Hunt dice. Instead, automatically draw one tile from the Hunt Pool."
+                },
+                {
+                  "source": "rulebook",
+                  "page": 43,
+                  "excerpt": "if the tile shows a Stop icon, the Fellowship remains on the same step and does not move forward."
+                }
+              ]
+            },
+            {
+              "text": "12 Corruption: the Shadow wins at once. The Ring-bearers on the Crack of Doom with less: the Free Peoples win at once.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 44,
+                  "excerpt": "If the Ring-bearers have 12 or more Corruption points, they failed their quest."
+                },
+                {
+                  "source": "rulebook",
+                  "page": 44,
+                  "excerpt": "If the Ring-bearers figure is on the \u201cCrack of Doom\u201d step on the Mordor Track and the Ring-bearers have fewer than 12 Corruption points, the Ring is destroyed."
+                }
+              ]
+            },
+            {
+              "text": "Over 6 Event cards in hand? Discard the extra at once, facedown.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 22,
+                  "excerpt": "Players may hold a maximum of six cards in their hand at any time and must immediately discard those in excess as soon as the maximum number is exceeded."
+                }
+              ]
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "lordsOfMiddleEarth",
+              "text": "Keeper dice and the Elven Rings:",
+              "bullets": [
+                "Card Draw: draw 1 Event card from either deck.",
+                "An Elven Ring can\u2019t change a Keeper die.",
+                "A Keeper\u2019s special Ring ability doesn\u2019t count toward the one Ring use per turn."
+              ],
+              "images": [
+                "lome-dice",
+                "lome-elven-rings"
+              ],
+              "citations": [
+                {
+                  "source": "lordsOfMiddleEarth",
+                  "page": 7,
+                  "excerpt": "The Card Draw result allows a player to draw one Event Card from either one of his Event decks."
+                },
+                {
+                  "source": "lordsOfMiddleEarth",
+                  "page": 14,
+                  "excerpt": "An Elven Ring cannot be used to change the result of a Keeper Die or a Lesser Minion Die."
+                },
+                {
+                  "source": "lordsOfMiddleEarth",
+                  "page": 14,
+                  "excerpt": "Any use of Elven Rings by the Free Peoples player to activate the special abilities of the Keepers is in addition to the limit of one normal Ring use per turn."
+                }
+              ]
+            },
+            {
+              "expansion": "warriorsOfMiddleEarth",
+              "text": "Factions:",
+              "bullets": [
+                "A Faction\u2019s condition on its reference card is met? A Muster result (or Recruit Faction) brings it into play.",
+                "Faction die: Recruit Faction, or play or draw a Faction Event card.",
+                "An Event result can also draw or play Faction Event cards."
+              ],
+              "images": [
+                "wome-die-results",
+                "wome-reference-cards"
+              ],
+              "citations": [
+                {
+                  "source": "warriorsOfMiddleEarth",
+                  "page": 9,
+                  "excerpt": "When this condition is fulfilled, a Muster result of a normal Action die (or a Recruit Faction result of the Faction die) can be used to bring the Faction into play."
+                },
+                {
+                  "source": "warriorsOfMiddleEarth",
+                  "page": 7,
+                  "excerpt": "A normal \u201cEvent\u201d Action die result can be used to draw from the Faction Event deck or play any Faction Event card."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "action-shadow",
+          "side": "shadow",
+          "title": "Your action",
+          "instruction": "Use one Action die. Choose one:",
+          "bullets": [
+            "Character: an Army with a Leader (a Nazg\u00fbl) moves or attacks \u00b7 play a Character Event card \u00b7 move all Nazg\u00fbl and Minions.",
+            "Army: move up to two Armies to adjacent regions \u00b7 attack with one Army \u00b7 play an Army Event card.",
+            "Muster: move a Nation 1 step on the Political Track \u00b7 play a Muster Event card \u00b7 recruit in friendly, free Settlements of a Nation \u201cAt War\u201d.",
+            "Event: draw a card from either deck \u00b7 play any Event card.",
+            "Muster can also bring a Minion into play (see its card).",
+            "Got an Elven Ring from the Free Peoples? Use it once to change a die (an Eye goes to the Hunt Box). You may also discard a die without effect, or pass if you have fewer dice left."
+          ],
+          "components": [
+            "Action dice",
+            "Event cards",
+            "Nazg\u00fbl and Minions"
+          ],
+          "images": [
+            "action-dice-icons",
+            "minion-figures"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 20,
+              "excerpt": "Move Minions. Move all Nazg\u00fbl (including the Witch\u2013king) anywhere on the map"
+            },
+            {
+              "source": "rulebook",
+              "page": 20,
+              "excerpt": "Bring one Character into play according to the rules on his Character card."
+            },
+            {
+              "source": "rulebook",
+              "page": 21,
+              "excerpt": "The Shadow player can use an Elven Ring to change a die result into an \u201cEye\u201d result (that die is immediately moved to the Hunt Box)."
+            },
+            {
+              "source": "rulebook",
+              "page": 19,
+              "excerpt": "If a player has fewer unused Action dice than his opponent (typically the Free Peoples player will have fewer Action dice than the Shadow player), he can pass instead of taking an action"
+            }
+          ],
+          "opensBattle": true,
+          "reminders": [
+            {
+              "text": "Captured a Free Peoples City (+1) or Stronghold (+2)? Place a Settlement Control marker and move your Victory Point marker.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 32,
+                  "excerpt": "Advance the Victory Point marker of the capturing player on the Victory Point Track by one step for a captured City, or two steps for a captured Stronghold."
+                }
+              ]
+            },
+            {
+              "text": "Over 6 Event cards in hand? Discard the extra at once, facedown.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 22,
+                  "excerpt": "Players may hold a maximum of six cards in their hand at any time and must immediately discard those in excess as soon as the maximum number is exceeded."
+                }
+              ]
+            },
+            {
+              "text": "Your Shadow casualties go back to your reinforcements.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 30,
+                  "excerpt": "Shadow casualties may therefore be placed back with the available reinforcements."
+                }
+              ]
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "lordsOfMiddleEarth",
+              "text": "Lesser Minion dice and Action Tokens:",
+              "bullets": [
+                "Card Draw: draw 1 Event card from either deck.",
+                "Council of Rivendell tokens: use one instead of a die; once per game each, one per turn."
+              ],
+              "images": [
+                "lome-dice",
+                "lome-action-tokens"
+              ],
+              "citations": [
+                {
+                  "source": "lordsOfMiddleEarth",
+                  "page": 7,
+                  "excerpt": "The Card Draw result allows a player to draw one Event Card from either one of his Event decks."
+                },
+                {
+                  "source": "lordsOfMiddleEarth",
+                  "page": 31,
+                  "excerpt": "The Shadow player may use an Action Token during Action Resolution, in place of using an Action Die result."
+                },
+                {
+                  "source": "lordsOfMiddleEarth",
+                  "page": 31,
+                  "excerpt": "Each Action Token can only be used once during the game and can only be used for its specific effect."
+                },
+                {
+                  "source": "lordsOfMiddleEarth",
+                  "page": 31,
+                  "excerpt": "Only one Action Token can be used in a turn."
+                }
+              ]
+            },
+            {
+              "expansion": "warriorsOfMiddleEarth",
+              "text": "Factions:",
+              "bullets": [
+                "A Faction\u2019s condition on its reference card is met? A Muster result (or Recruit Faction) brings it into play.",
+                "Faction die: Recruit Faction, play or draw a Faction Event card; Wild picks any of those."
+              ],
+              "images": [
+                "wome-die-results",
+                "wome-reference-cards"
+              ],
+              "citations": [
+                {
+                  "source": "warriorsOfMiddleEarth",
+                  "page": 9,
+                  "excerpt": "When this condition is fulfilled, a Muster result of a normal Action die (or a Recruit Faction result of the Faction die) can be used to bring the Faction into play."
+                },
+                {
+                  "source": "warriorsOfMiddleEarth",
+                  "page": 9,
+                  "excerpt": "Wild Die: Choose either Recruit Faction, Play Faction Event, or Draw Faction Event."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "end",
+      "part": "round",
+      "title": "6 \u00b7 Victory check",
+      "steps": [
+        {
+          "id": "end-mordor",
+          "side": "freePeoples",
+          "title": "On the Mordor Track?",
+          "instruction": "If you didn\u2019t try to move or hide the Fellowship on the Mordor Track this turn, add 1 Corruption.",
+          "bullets": [
+            "Not in Mordor yet? Nothing to do."
+          ],
+          "components": [
+            "Corruption counter"
+          ],
+          "images": [
+            "mordor-track",
+            "fellowship-track"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 43,
+              "excerpt": "If, at the end of the Action Resolution phase, the Free Peoples player has not attempted to move or hide the Fellowship on the Mordor Track during that turn, one Corruption is automatically added to the Ring-bearers."
+            }
+          ]
+        },
+        {
+          "id": "victory-check",
+          "side": "both",
+          "title": "Victory check",
+          "instruction": "Check the Victory Point track:",
+          "bullets": [
+            "Shadow controls Free Peoples Settlements worth 10+ points: the Shadow wins.",
+            "Free Peoples control Shadow Settlements worth 4+ points: the Free Peoples win.",
+            "Each enemy City is worth 1, each enemy Stronghold 2. No winner? Start a new turn."
+          ],
+          "components": [
+            "Victory Point markers",
+            "Settlement Control markers"
+          ],
+          "images": [
+            "vp-track",
+            "control-markers"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 44,
+              "excerpt": "If the Shadow player controls Free Peoples Settlements worth 10 or more Victory points, he wins."
+            },
+            {
+              "source": "rulebook",
+              "page": 44,
+              "excerpt": "If the Free Peoples player controls Shadow Settlements worth 4 or more Victory points, he wins."
+            },
+            {
+              "source": "rulebook",
+              "page": 44,
+              "excerpt": "Each enemy City a player controls is worth 1 Victory point, while each enemy Stronghold a player controls is worth 2 Victory points."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "battle": {
+    "title": "Battle",
+    "phases": [
+      {
+        "id": "battle-start",
+        "part": "setup",
+        "title": "Before the battle",
+        "steps": [
+          {
+            "id": "battle-attack",
+            "side": "attacker",
+            "title": "Attack",
+            "instruction": "Choose the attacking Army. Its Nation must be \u201cAt War\u201d.",
+            "bullets": [
+              "Army die: one Army attacks an adjacent region, or starts a siege battle or sortie.",
+              "Character die: the Army needs a Leader or Character.",
+              "You may leave a rearguard behind (at least 1 Army unit on each side). Figures not \u201cAt War\u201d must stay in it.",
+              "Your units stay in their region until the battle is won."
+            ],
+            "components": [
+              "Your Army",
+              "Action die"
+            ],
+            "images": [
+              "figures",
+              "action-dice-icons"
+            ],
+            "citations": [
+              {
+                "source": "rulebook",
+                "page": 28,
+                "excerpt": "Only Armies belonging to a Nation \u201cAt War\u201d on the Political Track can start a battle."
+              },
+              {
+                "source": "rulebook",
+                "page": 28,
+                "excerpt": "an Army Action die result can only activate a single Army for the purpose of attacking."
+              },
+              {
+                "source": "rulebook",
+                "page": 28,
+                "excerpt": "An Army using a Character Action die result to make an attack must contain at least one Leader or Character."
+              },
+              {
+                "source": "rulebook",
+                "page": 28,
+                "excerpt": "Each of the two newly-created Armies must contain at least one Army unit"
+              },
+              {
+                "source": "rulebook",
+                "page": 28,
+                "excerpt": "If the attacking Army includes one or more figures belonging to Nations not \u201cAt War,\u201d then it is mandatory to split the Army"
+              }
+            ]
+          },
+          {
+            "id": "battle-call",
+            "side": "both",
+            "title": "Call to Battle",
+            "instruction": "Take the 2 Call to Battle cards of each of your Factions in play that meets its condition for this battle.",
+            "components": [
+              "Call to Battle cards"
+            ],
+            "images": [
+              "wome-cards",
+              "wome-reference-cards"
+            ],
+            "citations": [
+              {
+                "source": "warriorsOfMiddleEarth",
+                "page": 10,
+                "excerpt": "two cards (one Character Call to Battle card and one Strategy Call to Battle card) for each Faction in play that satisfies the requisite conditions to be called to that battle."
+              },
+              {
+                "source": "warriorsOfMiddleEarth",
+                "page": 11,
+                "excerpt": "The player adds these cards to his hand at the start of the battle."
+              }
+            ],
+            "expansion": "warriorsOfMiddleEarth"
+          },
+          {
+            "id": "battle-stronghold",
+            "side": "defender",
+            "title": "Defending a Stronghold or City?",
+            "instruction": "In a Stronghold: before every round, fight a field battle or retreat into a siege.",
+            "bullets": [
+              "Siege: at most 5 Army units inside (any extra are removed). The attacker may move in, and the battle ends.",
+              "City or Fortification: in the first round the attacker hits only on 6.",
+              "Neither? Nothing to choose."
+            ],
+            "components": [
+              "Your Army"
+            ],
+            "images": [
+              "nations-map"
+            ],
+            "citations": [
+              {
+                "source": "rulebook",
+                "page": 31,
+                "excerpt": "before every combat round, the defender must choose to either fight a field battle or retreat into a siege."
+              },
+              {
+                "source": "rulebook",
+                "page": 31,
+                "excerpt": "A Stronghold under siege can contain a maximum of five Army units (and any number of Leaders)."
+              },
+              {
+                "source": "rulebook",
+                "page": 31,
+                "excerpt": "during the first round of combat only the attacker hits on a result of \u20186\u2019 or higher"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "battle-rounds",
+        "part": "setup",
+        "title": "Combat round",
+        "loop": {
+          "endLabel": "Battle over",
+          "note": "The battle ends when the attacker ceases, the defender retreats, or an Army is wiped out.",
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 31,
+              "excerpt": "A battle ends when the attacker ceases to fight, the defender retreats, or when one or both Armies are completely eliminated."
+            }
+          ]
+        },
+        "steps": [
+          {
+            "id": "round-cards",
+            "side": "both",
+            "title": "Combat cards",
+            "instruction": "Attacker first, then defender: you may choose one Event card to play as a Combat card. Reveal them together.",
+            "bullets": [
+              "Effects last this round; discard the cards after it.",
+              "Unclear timing? The lower initiative number goes first; on a tie, the defender\u2019s."
+            ],
+            "components": [
+              "Event cards"
+            ],
+            "images": [
+              "event-cards"
+            ],
+            "citations": [
+              {
+                "source": "rulebook",
+                "page": 29,
+                "excerpt": "First, the attacker declares whether he wants to use a Combat card and chooses the card. Then, the defender declares if he wants to use a Combat card and chooses the card."
+              },
+              {
+                "source": "rulebook",
+                "page": 29,
+                "excerpt": "Cards are chosen secretly, then revealed simultaneously."
+              },
+              {
+                "source": "rulebook",
+                "page": 29,
+                "excerpt": "the initiative number in the bottom left corner of the card indicates which card must be applied first"
+              },
+              {
+                "source": "rulebook",
+                "page": 29,
+                "excerpt": "If the two cards have the same initiative, the effects of the defender\u2019s card are always applied first."
+              }
+            ],
+            "additions": [
+              {
+                "expansion": "warriorsOfMiddleEarth",
+                "text": "You may play a Call to Battle card instead; take it back at the end of the round.",
+                "images": [
+                  "wome-cards"
+                ],
+                "citations": [
+                  {
+                    "source": "warriorsOfMiddleEarth",
+                    "page": 11,
+                    "excerpt": "At the beginning of each round, each player may choose to play one of these cards, instead of playing an Event card from his hand for its Combat Card effect."
+                  },
+                  {
+                    "source": "warriorsOfMiddleEarth",
+                    "page": 11,
+                    "excerpt": "they are taken back by the players at the end of each round."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "round-roll",
+            "side": "both",
+            "title": "Combat roll and Leader re-roll",
+            "instruction": "Roll 1 Combat die per Army unit (max 5). Each 5 or 6 hits.",
+            "bullets": [
+              "Then re-roll misses up to your Leadership (Leaders, Nazg\u00fbl and Characters\u2019 ratings; max 5).",
+              "A 1 always misses; a 6 always hits.",
+              "Siege battle: the attacker hits only on 6."
+            ],
+            "components": [
+              "Combat dice"
+            ],
+            "images": [
+              "action-dice"
+            ],
+            "citations": [
+              {
+                "source": "rulebook",
+                "page": 30,
+                "excerpt": "each player rolls a number of Combat dice equal to the Combat Strength of their respective Armies (up to a maximum of five dice)."
+              },
+              {
+                "source": "rulebook",
+                "page": 30,
+                "excerpt": "Each die rolled scores a hit on a result of \u20185\u2019 or \u20186.\u2019"
+              },
+              {
+                "source": "rulebook",
+                "page": 30,
+                "excerpt": "both players can re\u2013roll a number of failed die rolls equal to their Leadership (up to a maximum of five dice)."
+              },
+              {
+                "source": "rulebook",
+                "page": 29,
+                "excerpt": "The Leadership of an Army is equal to the number of Leaders (or Nazg\u00fbl), plus the Leadership ratings of all participating Characters"
+              },
+              {
+                "source": "rulebook",
+                "page": 30,
+                "excerpt": "A roll of a \u20181\u2019 is always a miss, and a roll of a \u20186\u2019 is always a hit, regardless of any modifiers."
+              },
+              {
+                "source": "rulebook",
+                "page": 32,
+                "excerpt": "During a siege battle, the attacker hits only on a result of \u20186\u2019 or higher, while the defender hits on a result of \u20185\u2019 or higher as normal."
+              }
+            ]
+          },
+          {
+            "id": "round-casualties",
+            "side": "both",
+            "title": "Casualties",
+            "instruction": "Attacker first. For each hit you took, remove a Regular or swap an Elite for a Regular. Two hits can remove an Elite instead.",
+            "bullets": [
+              "All Army units gone? Its Leaders and Characters go too.",
+              "Free Peoples losses leave the game; Shadow losses go back to reinforcements."
+            ],
+            "components": [
+              "Army units"
+            ],
+            "images": [
+              "fp-units",
+              "shadow-units"
+            ],
+            "citations": [
+              {
+                "source": "rulebook",
+                "page": 30,
+                "excerpt": "The attacker decides first how to remove his units"
+              },
+              {
+                "source": "rulebook",
+                "page": 30,
+                "excerpt": "For every two hits, the player can remove casualties as above, twice, or can simply remove one Elite unit."
+              },
+              {
+                "source": "rulebook",
+                "page": 30,
+                "excerpt": "If all the Army units involved in a battle are eliminated, then all Leaders (including Characters) that were part of that Army are also immediately removed from play."
+              },
+              {
+                "source": "rulebook",
+                "page": 30,
+                "excerpt": "casualties taken among the Free Peoples units are placed aside and are considered out of the game."
+              }
+            ]
+          },
+          {
+            "id": "round-cease",
+            "side": "attacker",
+            "title": "Continue?",
+            "instruction": "Cease the attack, or fight on.",
+            "bullets": [
+              "Cease: your units stay where they started.",
+              "Siege battle: it ends after this round unless you reduce one of your Elites to a Regular."
+            ],
+            "components": [
+              "Your Army"
+            ],
+            "images": [
+              "figures"
+            ],
+            "citations": [
+              {
+                "source": "rulebook",
+                "page": 30,
+                "excerpt": "At the end of each Combat round, the attacking player has the option to cease the attack."
+              },
+              {
+                "source": "rulebook",
+                "page": 32,
+                "excerpt": "a siege battle only lasts for one Combat round, unless the attacker decides to voluntarily reduce one of his participating Elite units to a Regular unit."
+              }
+            ]
+          },
+          {
+            "id": "round-retreat",
+            "side": "defender",
+            "title": "Retreat?",
+            "instruction": "The attack goes on. You may retreat your whole Army to an adjacent free region, or fight another round.",
+            "bullets": [
+              "No free adjacent region, or besieged? You can\u2019t retreat.",
+              "A Level 0 Character stays behind."
+            ],
+            "components": [
+              "Your Army"
+            ],
+            "images": [
+              "figures"
+            ],
+            "citations": [
+              {
+                "source": "rulebook",
+                "page": 30,
+                "excerpt": "If the attacker chooses to continue the battle, however, then the defender has the option to retreat."
+              },
+              {
+                "source": "rulebook",
+                "page": 31,
+                "excerpt": "his entire Army must immediately retreat to an adjacent free region."
+              },
+              {
+                "source": "rulebook",
+                "page": 31,
+                "excerpt": "A besieged Army cannot retreat."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "battle-end",
+        "part": "setup",
+        "title": "After the battle",
+        "steps": [
+          {
+            "id": "battle-advance",
+            "side": "attacker",
+            "title": "Advance",
+            "instruction": "Defender wiped out or retreated? You may move all or part of your Army into the region.",
+            "bullets": [
+              "Enemy Stronghold with units inside? It\u2019s now besieged.",
+              "Captured a City (+1) or Stronghold (+2)? Place a Settlement Control marker and move your Victory Point marker."
+            ],
+            "components": [
+              "Your Army",
+              "Settlement Control markers",
+              "Victory Point marker"
+            ],
+            "images": [
+              "control-markers",
+              "vp-track"
+            ],
+            "citations": [
+              {
+                "source": "rulebook",
+                "page": 31,
+                "excerpt": "If the defending Army is eliminated or retreats, the attacker may immediately move all or part of the attacking Army into the embattled region."
+              },
+              {
+                "source": "rulebook",
+                "page": 31,
+                "excerpt": "If an embattled region invaded by a successful attacker contains an enemy Stronghold, and that Stronghold contains enemy units, the Stronghold becomes besieged"
+              },
+              {
+                "source": "rulebook",
+                "page": 32,
+                "excerpt": "The capturing player places a Settlement Control marker on the region to indicate his control."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

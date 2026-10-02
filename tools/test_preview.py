@@ -220,6 +220,9 @@ def main():
         ("Rebellion: table, Rise of the Empire, with combat", dict(game="starWarsRebellion", script="starWarsRebellion",
                                                                    expansions=("riseOfTheEmpire",), fights_battle=True)),
         ("Rebellion: pass the phone, base game", dict(mode="pass", game="starWarsRebellion", script="starWarsRebellion")),
+        ("War of the Ring: table, both expansions, with a battle", dict(game="warOfTheRing2E", script="warOfTheRing2E",
+                                                                     expansions=("lordsOfMiddleEarth", "warriorsOfMiddleEarth"), fights_battle=True)),
+        ("War of the Ring: pass the phone, base game", dict(mode="pass", game="warOfTheRing2E", script="warOfTheRing2E")),
     ]
     failed = False
     with sync_playwright() as p:
