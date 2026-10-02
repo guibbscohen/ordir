@@ -256,6 +256,19 @@ def tour_gestures_languages(page, url, problems):
     page.keyboard.press("Escape")
     check(not page.query_selector(".overlay.tour") and focused(page, "[data-act=tutorial]"), "Escape did not close the tutorial back to its button")
 
+    # Coming back to Home lands where the player left off, not at the top.
+    page.click("[data-act=tab-games]")
+    page.evaluate("document.querySelector('.home > .scroll').scrollTop = 2000")
+    page.wait_for_timeout(100)
+    before = page.evaluate("document.querySelector('.home > .scroll').scrollTop")
+    page.click("#home-browse [data-act=game-knarr]")
+    page.wait_for_selector("[data-act=start]")
+    swipe(page, 60, 500, 330, 520)
+    page.wait_for_selector("#home-browse")
+    after = page.evaluate("document.querySelector('.home > .scroll').scrollTop")
+    check(before > 300 and abs(after - before) < 2, f"Home went back to {after}px instead of {before}px")
+    page.evaluate("document.querySelector('.home > .scroll').scrollTop = 0")
+
     # Swipe-back and the browser's Back leave a game's setup; a running guide ignores swipe-back.
     page.click("[data-act=tab-games]")
     page.click("[data-act=game-dune]:visible")
