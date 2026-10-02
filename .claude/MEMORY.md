@@ -148,9 +148,9 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   player until tomorrow. Answers are capped at 4,000 tokens with one retry at 16,000, never shown cut off.
 - 2026-10-02: The paid tier is "Ordir Pro". Its face is "The cooler Ordi": the same orb mascot wearing sunglasses (one
   angular wraparound visor, like Squirtle's "cool" shades: pointed swept-up tips, a notch at the nose, two diagonal light
-  stripes per lens; large, covering most of the face; one solid colour with no separate outline, stripes a lighter tint
-  of it; colour still being chosen, default glow violet #7846C8; kept apart from the sparkles' blue and the white outline;
-  never black, which vanishes on black), used on the
+  stripes per lens; large, filling the face like Squirtle's; two lenses the same size, mirrored around the bridge, kept
+  below the big sparkle, never touching it; one solid glow violet #7846C8 with no separate outline, stripes a lighter
+  tint of it; never black, which vanishes on black), used on the
   Free vs Pro comparison, the plans screen, the welcome screen and the Account Pro card (proposals in the private "Ordir
   Pro proposals" claude.ai canvas). Free Ordi stays without shades. Pro perks: more rules questions, new games early, the
   shades mascot and app icon; turn guides, tables and expansions stay free. Plans: yearly, monthly and a one-off Game
