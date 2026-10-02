@@ -374,6 +374,26 @@ def own_phone_seats(page, url, problems):
     a11y.scan("own-phone step")
 
 
+def stale_copy_updates(page, url, problems):
+    """A Home Screen app that opens an older cached copy finds the live build at launch and reloads into it, once."""
+    live = (DIST / "index.html").read_text()
+    loads = []
+    def first_load_is_old(route):
+        loads.append(route.request.url)
+        if len(loads) == 1:  # the cached copy: the build before
+            route.fulfill(status=200, content_type="text/html", body=live.replace('const BUILD = "', 'const BUILD = "old ', 1))
+        else:
+            route.continue_()
+    page.route(url, first_load_is_old)
+    navigations = []
+    page.on("framenavigated", lambda frame: frame == page.main_frame and navigations.append(frame.url))
+    page.goto(url)
+    page.wait_for_function("() => performance.getEntriesByType('navigation')[0].type === 'reload'", timeout=5000)
+    page.wait_for_timeout(800)  # the reloaded page checks again, finds the same build and stays
+    check(page.evaluate("BUILD").split(" ")[0] != "old", "the page did not reload into the live build")
+    check(len(navigations) == 2, f"expected the old copy and one reload, got {len(navigations)} page loads")
+
+
 def main():
     check_dist = DIST / "index.html"
     if not check_dist.exists():
@@ -433,6 +453,17 @@ def main():
             page.screenshot(path=str(DIST / "failure-tour.png"))
             print(f"FAIL tutorial, gestures and languages: {error}")
         context.close()
+        page = browser.new_page(viewport={"width": 430, "height": 900})
+        problems = []
+        page.on("pageerror", lambda e: problems.append(f"page error: {e}"))
+        try:
+            stale_copy_updates(page, url, problems)
+            check(not problems, "; ".join(dict.fromkeys(problems)))
+            print("ok   an older cached copy reloads into the live build, once")
+        except Failed as error:
+            failed = True
+            print(f"FAIL an older cached copy reloads into the live build: {error}")
+        page.close()
         page = browser.new_page(viewport={"width": 430, "height": 900})
         page.add_init_script("try { localStorage.setItem('ordir-tour-done', '1') } catch {}")
         problems = []

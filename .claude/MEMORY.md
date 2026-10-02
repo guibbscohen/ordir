@@ -128,3 +128,5 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   position instead of jumping to the top.
 - 2026-10-02: The opening shows a small, low-opacity "App by DevOcto" credit centred under the slogan, with the DevOcto
   logo (Preview/icons/devocto.svg, the DevOcto imageset in the app) on its left. "App by" is translated.
+- 2026-10-02: The online preview updates itself: at launch (and on returning to Home) it checks the live build past the
+  cache and reloads once if newer, never mid-game. Data files are fetched with the build's commit as a version.
