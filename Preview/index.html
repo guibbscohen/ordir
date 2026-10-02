@@ -159,6 +159,13 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 .waiting .mascot { height: 64px; width: 64px; }
 .waiting p { margin: 0; font-size: 20px; line-height: 1.3; }
 .waiting b { font-weight: 600; }
+.waiting p.wait-help { font-size: 15px; line-height: 1.4; color: var(--muted); max-width: 320px; }
+/* Own phones: how a table works, the table's code to share, and who has sat down. */
+.how { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 8px; color: var(--muted); font-size: 15px; line-height: 1.4; }
+.table-code { font-size: 40px; font-weight: 700; letter-spacing: .18em; text-align: center; padding: 16px 0 16px .18em; background: var(--surface); border-radius: 16px; }
+.seat-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; background: var(--surface-2); border-radius: 14px; padding: 14px 16px; min-height: 48px; box-sizing: border-box; }
+.seat-row span { color: var(--muted); font-size: 15px; }
+.seat-row span.in { color: var(--on); }
 .timer { font-size: 24px; color: var(--muted); font-variant-numeric: tabular-nums; }
 
 /* Game menu covers the whole phone */
@@ -205,7 +212,7 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 .pane { display: flex; flex-direction: column; min-height: 0; min-width: 0; }
 .pane .scroll { padding-top: 28px; display: flex; flex-direction: column; gap: 28px; }
 .pane h1 { margin: 0; font-size: 20px; font-weight: 600; text-wrap: balance; }
-.toggle { display: flex; align-items: center; gap: 12px; background: var(--surface-2); border-radius: 14px; padding: 16px; cursor: pointer; }
+.toggle { position: relative; display: flex; align-items: center; gap: 12px; background: var(--surface-2); border-radius: 14px; padding: 16px; cursor: pointer; }
 .toggle div { flex: 1; min-width: 0; }
 .toggle strong { display: block; font-size: 16px; }
 .toggle span { color: var(--muted); font-size: 15px; line-height: 1.35; }
@@ -959,9 +966,16 @@ function stepCard(s, seat, animate) {
 
 function waiting(s, seat) {
   const st = stepOf(s);
+  // On your own phone, say what's going on: the other player acts on their phone (or hasn't joined yet).
+  const own = state.mode === "own" && online.table && st.side !== "both";
+  const missing = own && online.seated && !online.seated.includes(st.side);
+  const help = !own ? "" : missing
+    ? `<p class="wait-help">${t("No one has joined as the {0} yet. Send them the invite.", esc(sideName(st.side)))}</p>
+       <button class="textbtn" data-act="table-share">${online.copied ? t("Invite copied") : t("Share invite · {0}", esc(online.table.code))}</button>`
+    : `<p class="wait-help">${t("Whoever plays the {0} follows this step on their phone and taps Done there. Yours moves on by itself.", esc(sideName(st.side)))}</p>`;
     return `<div class="waiting"><button class="orb-btn" data-act="ask-here" data-seat="${seat}" aria-label="${t("Ask Ordir a rules question")}">${mascot("thinking")}</button>
     <p>${st.side === "both" ? t("Both players are on {0}", `<b>${esc(stepTitle(s))}</b>`) : t("The {0} is on {1}", esc(sideName(st.side)), `<b>${esc(stepTitle(s))}</b>`)}</p>
-    <div class="timer" data-timer>${fmt(Date.now() - s.startedAt)}</div></div>`;
+    ${help}<div class="timer" data-timer>${fmt(Date.now() - s.startedAt)}</div></div>`;
 }
 
 function overlayFor(seat, animate) {
@@ -1261,7 +1275,8 @@ const inGame = () => state.screen === "game" && !!state.session;
 const askGame = () => (inGame() ? state.script.game : online.ask.game);
 const askExpansions = () => (inGame() ? [...state.session.expansions] : [...online.ask.expansions]);
 
-const joinPage = () => `<h1 tabindex="-1">${t("Join a table")}</h1>${lobbyBody(true)}`;
+const joinPage = () => `<h1 tabindex="-1">${t("Join a table")}</h1>
+  <p class="hint" style="font-size:15px">${t("Enter the code from the friend who started the table. To start your own, open a game and choose Each on our own phone.")}</p>${lobbyBody(true)}`;
 
 function accountPage() {
   return `<h1 tabindex="-1">${t("Account")}</h1>
@@ -1301,7 +1316,7 @@ const TOUR = [
   { art: () => mascot("thinking"), title: "Ask the orb",
     text: "Tap the orb any time for a rules question. Answers come only from the official rules, with the page." },
   { art: () => `<span class="tour-icon">${TAB_ICONS.join}</span>`, title: "Play together",
-    text: "Join a friend’s table with a code. In Account you can change the language or replay this tour." },
+    text: "Each on your own phone: one of you starts a table from a game and shares its code, the others tap Join a table. In Account you can change the language or replay this tour." },
 ];
 function tour() {
   if (!state.tutorial) return "";
@@ -1617,7 +1632,7 @@ const online = {
   client: null,
   session: null,
   ready: false,
-  signIn: { email: "", code: "", sent: false, busy: false, error: "" },
+  signIn: { email: (() => { try { return localStorage.getItem("ordir-email") || ""; } catch { return ""; } })(), code: "", sent: false, busy: false, error: "" },
   ask: { open: false, seat: null,  // open: the chat (full screen, or the sheet over seat's side in a game)
     question: "", busy: null, error: "",  // busy: { question } while the rules are checked
     game: PLAYABLE[0].script, expansions: new Set(),  // from Home: the game (and expansions) a question is about
@@ -1796,12 +1811,54 @@ function lobbyBody(joinOnly) {
 
 function lobby() {
   return `<div class="pane"><div class="scroll">
-    <div class="head">${mascot("idle")}<h1 tabindex="-1">${t("Each on our own phone")}</h1></div>${lobbyBody(false)}</div>
+    <div class="head">${mascot("idle")}<h1 tabindex="-1">${t("Each on our own phone")}</h1></div>
+    <ol class="how"><li>${t("Pick your side and start a table.")}</li><li>${t("Share the invite: a link with the table’s 6-letter code.")}</li>
+      <li>${t("The others open it, or open Ordir, tap Join a table and enter the code. Then everyone follows their own side.")}</li></ol>
+    ${lobbyBody(false)}</div>
     <div class="actions"><button class="textbtn" data-act="close">${t("Back")}</button></div></div>`;
 }
 
 function tableStrip() {
   return `<div class="strip"><span>${t("Table {0}", `<b>${esc(online.table.code)}</b>`)}</span><span>${youAre(online.mySide)}</span></div>`;
+}
+
+// Right after starting a table: its code, an invite to share, and who has sat down. The guide starts when the host
+// says; anyone who joins later lands on the step the table is on.
+function waitingRoom() {
+  const code = online.table.code, seated = online.seated || [online.mySide];
+  return `<div class="pane"><div class="scroll">
+    <div class="head">${mascot("idle")}<h1 tabindex="-1">${t("Your table is ready")}</h1></div>
+    <p style="margin:0">${t("Send the invite to the other players. On their phones they open it, or open Ordir, tap Join a table and enter this code.")}</p>
+    <div class="table-code" role="img" aria-label="${t("Table code {0}", code.split("").join(" "))}">${esc(code)}</div>
+    <button class="primary" style="flex:none" data-act="table-share">${online.copied ? t("Invite copied") : t("Share invite")}</button>
+    <div class="group"><h2>${takesTurns() ? t("Seats") : t("Sides")}</h2>
+      ${seatsOf().map(({ id, name }) => {
+        const on = seated.includes(id);
+        return `<div class="seat-row"><strong class="side-${id}">${esc(name)}</strong><span class="${on ? "in" : ""}">${id === online.mySide ? t("You") : on ? t("Joined") : t("Waiting…")}</span></div>`;
+      }).join("")}</div>
+    <p class="hint">${t("You can start now: anyone who joins later lands on the step you’re on.")}</p></div>
+    <div class="actions"><button class="primary" data-act="table-go">${t("Start the guide")}</button></div></div>`;
+}
+const inviteLink = (code) => `${location.origin}${location.pathname}?table=${code}`;
+/** Shares the table's invite (the phone's share sheet), or copies it where there's none. */
+async function shareTable() {
+  const code = online.table.code, url = inviteLink(code);
+  const text = t("Join my {0} table on Ordir. Code: {1}", gameOf(state.script.game)?.title || "", code);
+  track("table_share", { game: state.script.game, native: !!navigator.share });
+  if (navigator.share) {
+    try { await navigator.share({ title: "Ordir", text, url }); return; } catch (error) { if (error.name === "AbortError") return; }
+  }
+  try { await navigator.clipboard.writeText(`${text}\n${url}`); } catch { return; }
+  online.copied = true; render();
+  setTimeout(() => { online.copied = false; render(); }, 2500);
+}
+/** Which sides (or seats) have someone sitting at this table; checked until every one is taken. */
+async function refreshSeated() {
+  if (!online.table || !online.client) return;
+  const { data } = await online.client.from("table_players").select("side").eq("table_id", online.table.id);
+  if (!Array.isArray(data)) return;
+  const seated = data.map((r) => r.side).sort();
+  if (seated.join() !== (online.seated || []).join()) { online.seated = seated; render(); }
 }
 
 // The shared guide position, as stored in game_tables.state.
@@ -1858,7 +1915,10 @@ async function sitAt(row, side) {
   // Safety net for networks that block Realtime: check every 3 s, or every 15 s while live.
   clearInterval(online.poll);
   let tick = 0;
+  online.seated = null;
+  refreshSeated();
   online.poll = setInterval(async () => {
+    if (online.table && (!online.seated || online.seated.length < seatsOf().length)) refreshSeated();
     if (!online.table || (online.live && ++tick % 5)) return;
     const { data } = await online.client.from("game_tables").select("*")
       .eq("id", online.table.id).gt("version", online.version).maybeSingle();
@@ -1871,6 +1931,7 @@ function leaveTable() {
   if (online.channel) online.client.removeChannel(online.channel);
   clearInterval(online.poll);
   online.channel = null; online.poll = null; online.live = false; online.table = null; online.mySide = null;
+  online.seated = null; online.waitingRoom = false;
 }
 
 async function onlineAction(act, el) {
@@ -1882,6 +1943,7 @@ async function onlineAction(act, el) {
     f.busy = true; f.error = ""; render();
     const { error } = await client.auth.signInWithOtp({ email: f.email, options: { shouldCreateUser: true } });
     f.busy = false; f.sent = !error; f.error = error ? errorText(error, t("Couldn’t send the code. Try again.")) : "";
+    if (!error) try { localStorage.setItem("ordir-email", f.email); } catch {}  // next time, the address is already there
     render(); $("#signin-code")?.focus();
   } else if (act === "verify-code") {
     f.code = ($("#signin-code")?.value || f.code).replace(/\s+/g, "");  // pasted codes may carry spaces
@@ -1956,7 +2018,10 @@ async function onlineAction(act, el) {
       state.script = scripts[data.game];  // joining from Home: the table's game is now the one being played
     }
     l.found = null; l.joinSide = null; l.code = "";
+    try { sessionStorage.removeItem("ordir-invite"); } catch {}
     track(act === "table-create" ? "table_create" : "table_join", { game: state.script.game });
+    online.waitingRoom = act === "table-create";
+    state.usedKey = "[data-none]";  // focus the new screen's heading (the button that was tapped is gone)
     await sitAt(data, side);
   }
 }
@@ -1987,19 +2052,26 @@ function settleFocus(phone, stepChanged, kept) {
   const home = state.screen === "home";
   const opener = home && state.homeOpener ? phone.querySelector(state.homeOpener) : null;
   if (home) state.homeOpener = null;
-  const focus = (el) => el?.focus({ preventScroll: home });
+  const stays = /data-act="(swap|tab-)|data-mode|data-state|data-joinside|data-askgame|data-askexp|data-lang/.test(usedKey || "");
+  const focus = (el) => el?.focus({ preventScroll: home || stays });
   // A re-render nobody tapped for (an answer arriving, the other phone moving): keep focus where it was.
   if (!usedKey) {
     if (kept) focus(phone.querySelector(kept) || dialog || opener || first(".near .title", ".title", ".handoff h2", ".pane h1"));
     return;
   }
   const heading = first(".near .title", ".title", ".handoff h2", ".pane h1");
-  // Swapping seats or picking a play mode keeps focus on that control.
-  const stays = /data-act="(swap|tab-)|data-mode|data-state|data-joinside|data-askgame|data-askexp|data-lang/.test(usedKey);
+  // Swapping seats or picking a play mode keeps focus on that control (and the page where it was).
   const target = dialog || opener || (stepChanged && !stays ? heading : first(state.returnTo, usedKey) || heading);
   if (!dialog) state.returnTo = null;
   focus(target);
 }
+
+// The app frame never scrolls, only the panes inside it. A browser that scrolls it anyway to show a focused field
+// (Android Chrome did, with a hidden checkbox) would leave the screen stuck; put it straight back.
+document.addEventListener("scroll", (event) => {
+  const el = event.target;
+  if (el.id === "phone" && (el.scrollTop || el.scrollLeft)) { el.scrollTop = 0; el.scrollLeft = 0; }
+}, true);
 
 // Home remembers how far down each tab was scrolled, so coming back to it (Back, a swipe, the tab bar, a re-sort)
 // lands where the player left off instead of at the top.
@@ -2030,6 +2102,8 @@ function render() {
   if (view !== tracking.view && state.screen !== "intro") { tracking.view = view; track("screen_view", { view, game: state.screen === "game" ? state.script?.game : undefined }); }
   if (signedIn() && online.client && online.ask.loadedFor !== online.session.user.id && (state.tab === "ask" || online.ask.open)) loadThreads();
   const threadTop = phone.querySelector(".thread")?.scrollTop;
+  // Redrawing the same screen (picking a play mode) keeps the page where the player had it.
+  const paneTop = !animate ? phone.querySelector(":scope > .pane > .scroll")?.scrollTop : undefined;
   // The step that's leaving: copy each half's step so it can lift away over the new one.
   const ghosts = animate && state.screen === "game" && s && !reducedMotion()
     ? [...phone.querySelectorAll(":scope > .half")].map((h) => {
@@ -2051,6 +2125,8 @@ function render() {
     phone.className = "phone single"; phone.innerHTML = (online.lobby.open ? lobby() : picker()) + ask;
   } else if (s.finished) {
     phone.className = "phone single"; phone.innerHTML = (s.isBattle ? battleOver() : finished()) + ask;
+  } else if (state.mode === "own" && online.table && online.waitingRoom) {
+    phone.className = "phone single"; phone.innerHTML = waitingRoom() + ask;
   } else if (state.mode === "own" && online.table) {
     // Own phone: only this player's side, with the table code under the bar. Without fixed sides every phone
     // shows the player on turn's step, and anyone at the table can move it on.
@@ -2081,6 +2157,8 @@ function render() {
   const thread = phone.querySelector(".thread");
   if (thread) thread.scrollTop = online.ask.toBottom || threadTop == null ? thread.scrollHeight : threadTop;
   online.ask.toBottom = false;
+  const pane = paneTop !== undefined && phone.querySelector(":scope > .pane > .scroll");
+  if (pane) pane.scrollTop = paneTop;
   if (s) state.prevPhase = phaseOf(s).title;
   state.navBack = false;
   state.tabFrom = null;
@@ -2240,6 +2318,8 @@ function showHome(landed) {
   setTimeout(() => { state.buildHome = false; }, 2000);
   // A first visit: the tutorial, once the orb has been built.
   if (!tourDone()) setTimeout(() => { if (state.screen === "home" && !state.tutorial) openTour(); }, landed || reducedMotion() ? 700 : 1400);
+  // Opened from a table invite: straight to Join a table, the code filled in.
+  if (online.lobby.code) { state.tab = "join"; state.lastKey = null; render(); connect(); }
   // Someone signed in before: load their session so Home shows it (no network otherwise).
   try { if (Object.keys(localStorage).some((k) => k.startsWith("sb-") && k.endsWith("-auth-token"))) connect(); } catch {}
 }
@@ -2389,6 +2469,8 @@ function handleClick(el) {
     case "skip-intro": showHome(); break;
     case "report-open": openReport(); break;
     case "pro-open": openPro(); break;
+    case "table-share": shareTable(); break;
+    case "table-go": online.waitingRoom = false; state.lastKey = null; render(); break;
     case "pro-close": state.pro = null; render(); break;
     case "report-close": state.report = null; render(); break;
     case "report-unshot": state.report.shot = null; state.report.enter = false; render(); $("#report-shot")?.focus(); break;
@@ -2582,6 +2664,13 @@ setInterval(() => {
   document.querySelectorAll("[data-timer]").forEach((t) => { t.textContent = fmt(Date.now() - s.startedAt); });
 }, 1000);
 
+// A table invite (…?table=CODE): keep the code for the Join tab (also across the update reload) and tidy the address.
+{
+  let invite = new URLSearchParams(location.search).get("table");
+  try { if (invite) sessionStorage.setItem("ordir-invite", invite); else invite = sessionStorage.getItem("ordir-invite"); } catch {}
+  if (invite && /^[A-HJ-NP-Z2-9]{6}$/i.test(invite)) online.lobby.code = invite.toUpperCase();
+  if (new URLSearchParams(location.search).has("table")) history.replaceState(history.state, "", location.pathname);
+}
 render();
 track("session_start", { launch_ms: Math.round(performance.now()), screen: screenSize(), insets: insets(), dpr: devicePixelRatio,
   ios: (navigator.userAgent.match(/OS (\d+)_(\d+)/) || []).slice(1).join(".") || null, returning: (() => { try { return !!localStorage.getItem("ordir-tour-done"); } catch { return null; } })() });

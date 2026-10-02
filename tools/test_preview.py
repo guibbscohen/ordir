@@ -368,14 +368,45 @@ def own_phone_seats(page, url, problems):
     seats = [el.text_content().strip() for el in page.query_selector_all("[data-side]")]
     check(seats == ["Player 1", "Player 2", "Player 3", "Player 4"], f"the lobby offered {seats}")
     a11y.scan("own-phone lobby")
+    check(page.locator(".how li").count() == 3, "the lobby does not explain how a table works")
     page.click("[data-side=seat3]")
     page.click("[data-act=table-create]")
+    # The waiting room: the code to share and who has sat down, then the guide when the host starts it.
+    page.wait_for_selector(".table-code")
+    check(page.text_content(".table-code") == "ABC234" and focused(page, ".pane h1"), "the waiting room does not show the table's code")
+    rows = [el.text_content() for el in page.query_selector_all(".seat-row")]
+    check(len(rows) == 4 and "You" in rows[2] and "Waiting" in rows[0], f"the waiting room's seats read {rows}")
+    a11y.scan("waiting room")
+    page.click("[data-act=table-go]")
     page.wait_for_selector(".strip")
     check("You’re Player 3" in page.text_content(".strip"), "the table strip does not name the seat")
     check(page.query_selector("[data-act=done]"), "an own phone at a game without sides has no Done")
     seats5 = page.evaluate("seatsOf(scripts.terraformingMars).map((x) => x.name)")
     check(seats5 == ["Player 1", "Player 2", "Player 3", "Player 4", "Player 5"], f"Terraforming Mars seats {seats5}")
     a11y.scan("own-phone step")
+
+
+def setup_scroll_and_invite(page, url, problems):
+    """On a phone: picking a play mode keeps the setup page where it was, ticking an expansion never shifts the whole
+    screen (Android Chrome scrolled the app frame to a hidden checkbox and left it stuck), and a table invite link
+    opens Join a table with its code filled in."""
+    page.goto(url)
+    page.keyboard.press("Enter")
+    page.locator("[data-act=game-dune]:visible").first.tap()
+    page.wait_for_selector("[data-mode=own]")
+    page.evaluate("document.querySelector('.pane > .scroll').scrollTop = 120")
+    page.tap("[data-mode=pass]")
+    top = page.evaluate("document.querySelector('.pane > .scroll').scrollTop")
+    check(top == 120, f"picking a play mode moved the page to {top}")
+    page.tap("label[for=exp-smugglers]")
+    page.wait_for_timeout(200)
+    frame = page.evaluate("document.querySelector('#phone').scrollTop")
+    check(frame == 0 and page.is_checked("#exp-smugglers"), f"ticking an expansion shifted the screen by {frame}")
+    page.goto(url + "?table=abc234")
+    page.keyboard.press("Enter")
+    page.wait_for_selector("[data-act=tab-join][aria-current=page], [data-act=tab-join][aria-selected=true]")
+    page.wait_for_timeout(300)
+    check("?table" not in page.url, "the invite code stayed in the address")
 
 
 def tester_feedback(page, url, problems):
@@ -566,6 +597,20 @@ def main():
             page.screenshot(path=str(DIST / "failure-own.png"))
             print(f"FAIL own phones at a game without sides: {error}")
         page.close()
+        context = browser.new_context(viewport={"width": 360, "height": 740}, has_touch=True, is_mobile=True)
+        page = context.new_page()
+        page.add_init_script("try { localStorage.setItem('ordir-tour-done', '1') } catch {}")
+        problems = []
+        page.on("pageerror", lambda e: problems.append(f"page error: {e}"))
+        try:
+            setup_scroll_and_invite(page, url, problems)
+            check(not problems, "; ".join(dict.fromkeys(problems)))
+            print("ok   setup keeps its place, expansions never shift the screen, invite links open Join a table")
+        except Failed as error:
+            failed = True
+            page.screenshot(path=str(DIST / "failure-setup.png"))
+            print(f"FAIL setup scroll and invites: {error}")
+        context.close()
         browser.close()
     server.shutdown()
     sys.exit(1 if failed else 0)

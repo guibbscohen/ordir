@@ -160,3 +160,8 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   (app: Settings) card and the chat's "x of 5 free questions left this month" line, with every plan marked Coming soon and
   no purchase. The free limit (5 a month) is shown, never enforced, until the user says otherwise. "Pro" is always a white
   rounded tag with the word knocked out in bold (see-through letters), next to "Ordir".
+- 2026-10-02: Own-phone tables explain themselves: the lobby lists the three steps (start a table, share the invite, the
+  others join with the code); starting a table opens a waiting room (big code, Share invite via the phone's share sheet
+  or copy, who has joined per side or seat, Start the guide); invites are links (?table=CODE) that open Join a table with
+  the code filled in; on your own phone the waiting screen says the other player acts on their phone and taps Done there,
+  or that nobody has joined that side yet, with the invite. Sign-in stays on the phone (remembered session and email).
