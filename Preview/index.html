@@ -350,6 +350,11 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 .intro-orb .mascot .sp3 { animation-delay: .65s, 1.15s; }
 .intro h1 { margin: 0; font-size: 30px; font-weight: 600; letter-spacing: -.01em; animation: rise .6s .4s cubic-bezier(.2, .8, .2, 1) both; }
 .intro p { margin: 0; color: var(--muted); font-size: 15px; animation: rise .6s .55s cubic-bezier(.2, .8, .2, 1) both; }
+/* The maker's credit: small and quiet under the slogan, the DevOcto logo on its left. */
+.intro .credit { display: flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 12px; opacity: .6;
+  animation: rise-credit .6s .7s cubic-bezier(.2, .8, .2, 1) both; }
+.intro .credit img { width: 16px; height: 16px; }
+@keyframes rise-credit { from { opacity: 0; transform: translateY(16px); } to { opacity: .6; transform: none; } }
 .intro .skip { position: absolute; left: 50%; translate: -50% 0; bottom: calc(12px + env(safe-area-inset-bottom)); color: var(--muted); }
 @keyframes orb-in { from { opacity: 0; transform: scale(.8) translateY(10px); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
 @keyframes sparkle-in { from { opacity: 0; transform: scale(0) rotate(-60deg); } to { opacity: 1; transform: none; } }
@@ -538,6 +543,7 @@ html, body { overscroll-behavior-x: none; }
   .game-row:not(:disabled):active { transform: none; }
   .tabbar button { transition: none; }
   .intro-orb .mascot, .intro h1, .intro p { animation: fade .3s ease both !important; }
+  .intro .credit { animation: none !important; }
   .intro-line { display: none; }
   .brand.build *, .bubble.build, .bubble.pop { animation: none !important; }
 
@@ -973,7 +979,8 @@ const TABS = [["games", "Games"], ["ask", "Ask"], ["join", "Join"], ["account", 
 function intro() {
   return `<div class="intro" data-act="skip-intro">
     <div class="intro-track">
-      <div class="intro-scene"><div class="intro-orb">${mascot("idle")}</div><h1>Ordir</h1><p>${t("Learn any turn, step by step.")}</p></div>
+      <div class="intro-scene"><div class="intro-orb">${mascot("idle")}</div><h1>Ordir</h1><p>${t("Learn any turn, step by step.")}</p>
+        <p class="credit"><img src="icons/devocto.svg" alt="">${t("App by DevOcto")}</p></div>
       <svg class="intro-line" aria-hidden="true"><path class="approach" pathLength="1"/><path class="rim" pathLength="1"/></svg>
     </div>
     <button class="textbtn skip" data-act="skip-intro">${t("Skip")}</button></div>`;

@@ -126,3 +126,5 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   sides seat up to 4 as Player 1–4, every phone shows the player on turn's step and anyone at the table can tap Done.
 - 2026-10-02: Going back (swipe, Back, tab bar) returns to where the player was: Home keeps each tab's scroll
   position instead of jumping to the top.
+- 2026-10-02: The opening shows a small, low-opacity "App by DevOcto" credit centred under the slogan, with the DevOcto
+  logo (Preview/icons/devocto.svg, the DevOcto imageset in the app) on its left. "App by" is translated.
