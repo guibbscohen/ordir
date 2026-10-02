@@ -9,6 +9,7 @@
 //  - The view glides down through the glow to Home, which waits one screen below (OrdirApp slides it up
 //    with `camera(at:)`). The line drops into Home's orb (`target`) from above, runs round its rim, the orb
 //    is built under it (`buildDelay`), and the line fades.
+//  Under the name and slogan, a quiet "App by DevOcto" credit with the DevOcto logo.
 //  A tap skips it; Reduce Motion shows the orb and name, then fades to Home.
 //
 
@@ -49,7 +50,7 @@ struct OpeningView: View {
         .contentShape(Rectangle())
         .onTapGesture(perform: onFinish)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel(tr("Ordir. Learn any turn, step by step."))
+        .accessibilityLabel(tr("Ordir. Learn any turn, step by step. App by DevOcto."))
         .accessibilityAddTraits(.isButton)
         .accessibilityHint(tr("Skips the opening."))
         .accessibilityAction { onFinish() }
@@ -101,9 +102,23 @@ struct OpeningView: View {
                     .foregroundStyle(.secondary)
                     .opacity(reduceMotion ? 1 : Self.smooth((t - 0.55) / 0.6))
                     .offset(y: reduceMotion ? 0 : 16 * (1 - Self.smooth((t - 0.55) / 0.6)))
+                // The maker's credit: small and quiet, the DevOcto logo on its left.
+                HStack(spacing: 6) {
+                    Image("DevOcto")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 16, height: 16)
+                    Text(tr("App by DevOcto"))
+                        .font(.ordir(.caption))
+                }
+                .foregroundStyle(.secondary)
+                .padding(.top, 10)
+                .opacity(0.6 * (reduceMotion ? 1 : Self.smooth((t - 0.7) / 0.6)))
+                .offset(y: reduceMotion ? 0 : 16 * (1 - Self.smooth((t - 0.7) / 0.6)))
             }
             .multilineTextAlignment(.center)
-            .position(x: orb.x, y: orb.y + Self.orbHeight / 2 + 48)
+            // The credit adds a row below, so the block sits lower to keep the name and slogan where they were.
+            .position(x: orb.x, y: orb.y + Self.orbHeight / 2 + 64)
         }
         .frame(width: size.width, height: size.height * 2, alignment: .topLeading)
     }
