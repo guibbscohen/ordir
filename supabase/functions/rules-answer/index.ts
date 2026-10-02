@@ -33,6 +33,16 @@ const GAMES: Record<string, { title: string; sources: Record<string, string>; ba
       spacingGuild: "The Spacing Guild expansion rulebook",
     },
   },
+  starWarsRebellion: {
+    title: "Star Wars: Rebellion",
+    base: ["learnToPlay", "rulesReference", "faq"],
+    sources: {
+      learnToPlay: "Star Wars: Rebellion Learn to Play",
+      rulesReference: "Star Wars: Rebellion Rules Reference",
+      faq: "Star Wars: Rebellion FAQ and errata v2.1 (May 2019)",
+      riseOfTheEmpire: "Rise of the Empire expansion rulesheet",
+    },
+  },
 };
 
 const SYSTEM = `You are Ordir's rules referee for board games. Answer the player's question using only the official documents provided: the game's rulebook, the publisher's FAQ, and the rulebooks of the expansions in play.
