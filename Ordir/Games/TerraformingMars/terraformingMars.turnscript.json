@@ -1,0 +1,1718 @@
+{
+  "game": "terraformingMars",
+  "version": 1,
+  "title": "Terraforming Mars",
+  "scope": "Setup, then generations of actions and production until temperature, oxygen and oceans all reach their goals; 2–5 players on one phone; optional Prelude, Venus Next, Colonies, Turmoil and the Hellas & Elysium maps",
+  "sides": [
+    {
+      "id": "player",
+      "name": "Player on turn",
+      "color": "#e0703c"
+    }
+  ],
+  "victory": {
+    "note": "When temperature, oxygen and oceans are all at their goals, the game ends after that generation’s production: everyone may turn plants into greenery once more (in player order), then score TR, awards, milestones, greeneries and cities, and cards. Most VP wins; ties go to the most M€.",
+    "citations": [
+      {
+        "source": "rulebook",
+        "page": 12,
+        "excerpt": "When all three global parameters (ocean, temperature, and oxygen) have reached their goals, the game ends at the end of that generation."
+      },
+      {
+        "source": "rulebook",
+        "page": 12,
+        "excerpt": "players have one extra chance to convert plants into greenery tiles (in player order"
+      },
+      {
+        "source": "rulebook",
+        "page": 12,
+        "excerpt": "Gives the leading player in that category 5 VPs and the runner-up 2 VPs (except in a 2-player game)."
+      },
+      {
+        "source": "rulebook",
+        "page": 12,
+        "excerpt": "Each claimed Milestone is worth 5 VPs."
+      },
+      {
+        "source": "rulebook",
+        "page": 12,
+        "excerpt": "Each greenery tile is worth 1 VP and each city tile is worth 1 VP for each greenery adjacent to it"
+      },
+      {
+        "source": "rulebook",
+        "page": 12,
+        "excerpt": "The player with the highest total score is the winner! Any ties are won by having the most M€."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "rulebook",
+      "title": "Rules",
+      "shortTitle": "Rules",
+      "url": "https://fryxgames.se/wp-content/uploads/2023/04/TMRULESFINAL.pdf",
+      "file": "Sources/terraformingMars/TMRULESFINAL.pdf",
+      "sha256": "87b27f8741ed4e77ca6d029c224c8113e1d2227dc7541eb487f2a46ba12c5255"
+    },
+    {
+      "id": "prelude",
+      "title": "Prelude rules",
+      "shortTitle": "Prelude",
+      "url": "https://fryxgames.se/wp-content/uploads/2023/07/TM_PRELUDE_ENG_RULESi.pdf",
+      "file": "Sources/terraformingMars/expansions/TM_PRELUDE_ENG_RULESi.pdf",
+      "sha256": "d4ff38e399a768b3cb9ce5aaed32df87e8238597b17ea02caed44490efb357aa"
+    },
+    {
+      "id": "venusNext",
+      "title": "Venus Next rules",
+      "shortTitle": "Venus Next",
+      "url": "https://fryxgames.se/wp-content/uploads/2023/07/TM_VENUS_ENG_RULESi.pdf",
+      "file": "Sources/terraformingMars/expansions/TM_VENUS_ENG_RULESi.pdf",
+      "sha256": "d155e44338d61cfe069210cd7741a9814a51ad0f1d5594d34460e22021339ff1"
+    },
+    {
+      "id": "colonies",
+      "title": "Colonies rules",
+      "shortTitle": "Colonies",
+      "url": "https://fryxgames.se/wp-content/uploads/2023/07/TM_COLONIES_ENG_RULESi.pdf",
+      "file": "Sources/terraformingMars/expansions/TM_COLONIES_ENG_RULESi.pdf",
+      "sha256": "b2fc79bd62627d6d569f4a8fb4c840a2d21e5e71fbc6381bd2d157dc3a3dac3d"
+    },
+    {
+      "id": "turmoil",
+      "title": "Turmoil rules",
+      "shortTitle": "Turmoil",
+      "url": "https://fryxgames.se/wp-content/uploads/2023/07/TM_TURMOIL_ENG_RULESi.pdf",
+      "file": "Sources/terraformingMars/expansions/TM_TURMOIL_ENG_RULESi.pdf",
+      "sha256": "eb63b5175741178bf0b203b72fabfaced3a6f20b5842f30d9831a17ec9c79a46"
+    },
+    {
+      "id": "hellasElysium",
+      "title": "Hellas & Elysium rules",
+      "shortTitle": "Hellas & Elysium",
+      "url": "https://fryxgames.se/wp-content/uploads/2023/07/TM_HE_WRAP_ENGi.pdf",
+      "file": "Sources/terraformingMars/expansions/TM_HE_WRAP_ENGi.pdf",
+      "sha256": "50282d9cd2829f68aadd517f052c7f95051ad98d31f9a480f1da14658b7b1b1a"
+    }
+  ],
+  "expansions": [
+    {
+      "id": "prelude",
+      "title": "Prelude",
+      "summary": "Prelude cards at setup for a faster start, plus 7 project cards and 5 corporations."
+    },
+    {
+      "id": "venusNext",
+      "title": "Venus Next",
+      "summary": "The Venus board and scale, Air Scrapping, floaters, and World Government terraforming each generation."
+    },
+    {
+      "id": "colonies",
+      "title": "Colonies",
+      "summary": "Colony tiles and trade fleets: build colonies and trade with them."
+    },
+    {
+      "id": "turmoil",
+      "title": "Turmoil",
+      "summary": "The Terraforming Committee: delegates, ruling parties, Global Events and a TR revision each generation."
+    },
+    {
+      "id": "hellasElysium",
+      "title": "Hellas or Elysium map",
+      "summary": "Play on the Hellas or Elysium board instead of Tharsis, with its own bonuses, milestones and awards."
+    }
+  ],
+  "images": [
+    {
+      "id": "cover",
+      "caption": "Rulebook cover",
+      "source": "rulebook",
+      "page": 1,
+      "crop": [
+        0.0,
+        0.08,
+        1.0,
+        0.7
+      ]
+    },
+    {
+      "id": "board",
+      "caption": "Game board",
+      "source": "rulebook",
+      "page": 4,
+      "crop": [
+        0.16,
+        0.1,
+        0.8,
+        0.52
+      ]
+    },
+    {
+      "id": "standard-projects",
+      "caption": "Standard projects",
+      "source": "rulebook",
+      "page": 4,
+      "crop": [
+        0.185,
+        0.32,
+        0.305,
+        0.465
+      ]
+    },
+    {
+      "id": "milestones-awards",
+      "caption": "Milestones and awards",
+      "source": "rulebook",
+      "page": 4,
+      "crop": [
+        0.19,
+        0.46,
+        0.8,
+        0.52
+      ]
+    },
+    {
+      "id": "ocean-tile",
+      "caption": "Ocean tile",
+      "source": "rulebook",
+      "page": 5,
+      "crop": [
+        0.065,
+        0.278,
+        0.137,
+        0.355
+      ]
+    },
+    {
+      "id": "greenery-tile",
+      "caption": "Greenery tile",
+      "source": "rulebook",
+      "page": 5,
+      "crop": [
+        0.065,
+        0.426,
+        0.137,
+        0.503
+      ]
+    },
+    {
+      "id": "city-tile",
+      "caption": "City tile",
+      "source": "rulebook",
+      "page": 5,
+      "crop": [
+        0.515,
+        0.227,
+        0.585,
+        0.306
+      ]
+    },
+    {
+      "id": "resource-cubes",
+      "caption": "Resource cubes: 1, 5 and 10",
+      "source": "rulebook",
+      "page": 5,
+      "crop": [
+        0.72,
+        0.625,
+        0.94,
+        0.68
+      ]
+    },
+    {
+      "id": "first-player",
+      "caption": "First player marker",
+      "source": "rulebook",
+      "page": 5,
+      "crop": [
+        0.82,
+        0.85,
+        0.94,
+        0.95
+      ]
+    },
+    {
+      "id": "player-board",
+      "caption": "Player board",
+      "source": "rulebook",
+      "page": 6,
+      "crop": [
+        0.53,
+        0.1,
+        0.89,
+        0.31
+      ]
+    },
+    {
+      "id": "corporation",
+      "caption": "Corporation card",
+      "source": "rulebook",
+      "page": 6,
+      "crop": [
+        0.06,
+        0.51,
+        0.34,
+        0.69
+      ]
+    },
+    {
+      "id": "project-card",
+      "caption": "Project card",
+      "source": "rulebook",
+      "page": 6,
+      "crop": [
+        0.08,
+        0.69,
+        0.32,
+        0.95
+      ]
+    },
+    {
+      "id": "research-card",
+      "caption": "A project card bought in research",
+      "source": "rulebook",
+      "page": 8,
+      "crop": [
+        0.5,
+        0.27,
+        0.675,
+        0.465
+      ]
+    },
+    {
+      "id": "card-types",
+      "caption": "Project cards: green, red and blue",
+      "source": "rulebook",
+      "page": 9,
+      "crop": [
+        0.07,
+        0.74,
+        0.95,
+        0.95
+      ]
+    },
+    {
+      "id": "card-placement",
+      "caption": "Where played cards go",
+      "source": "rulebook",
+      "page": 10,
+      "crop": [
+        0.05,
+        0.7,
+        0.5,
+        0.98
+      ]
+    },
+    {
+      "id": "hoverlord",
+      "caption": "Hoverlord milestone tile",
+      "source": "venusNext",
+      "page": 3,
+      "crop": [
+        0.08,
+        0.065,
+        0.25,
+        0.125
+      ]
+    },
+    {
+      "id": "venuphile",
+      "caption": "Venuphile award tile",
+      "source": "venusNext",
+      "page": 3,
+      "crop": [
+        0.08,
+        0.165,
+        0.26,
+        0.25
+      ]
+    },
+    {
+      "id": "solar-phase",
+      "caption": "The Solar Phase",
+      "source": "venusNext",
+      "page": 3,
+      "crop": [
+        0.06,
+        0.31,
+        0.94,
+        0.7
+      ]
+    },
+    {
+      "id": "trade-fleets",
+      "caption": "Trade Fleets tile",
+      "source": "colonies",
+      "page": 2,
+      "crop": [
+        0.08,
+        0.15,
+        0.38,
+        0.29
+      ]
+    },
+    {
+      "id": "colony-tile",
+      "caption": "Colony tile",
+      "source": "colonies",
+      "page": 2,
+      "crop": [
+        0.08,
+        0.53,
+        0.43,
+        0.68
+      ]
+    },
+    {
+      "id": "committee",
+      "caption": "Terraforming Committee board",
+      "source": "turmoil",
+      "page": 3,
+      "crop": [
+        0.29,
+        0.02,
+        0.91,
+        0.49
+      ]
+    },
+    {
+      "id": "global-events",
+      "caption": "Global Event board",
+      "source": "turmoil",
+      "page": 3,
+      "crop": [
+        0.13,
+        0.52,
+        0.91,
+        0.92
+      ]
+    },
+    {
+      "id": "maps",
+      "caption": "Hellas and Elysium boards",
+      "source": "hellasElysium",
+      "page": 1,
+      "crop": [
+        0.34,
+        0.17,
+        0.69,
+        0.43
+      ]
+    }
+  ],
+  "phases": [
+    {
+      "id": "setup",
+      "part": "setup",
+      "title": "Setup",
+      "steps": [
+        {
+          "id": "setup-board",
+          "side": "both",
+          "title": "Board",
+          "instruction": "Place the game board in the middle of the table, then:",
+          "bullets": [
+            "Put the 9 ocean tiles on their reserved space.",
+            "Temperature and oxygen markers on their starting spaces; the generation marker on 1 on the TR track.",
+            "Resource cubes and the other tiles within everyone’s reach."
+          ],
+          "components": [
+            "Game board",
+            "Ocean tiles",
+            "Temperature, oxygen and generation markers",
+            "Resource cubes",
+            "Greenery, city and special tiles"
+          ],
+          "images": [
+            "board",
+            "ocean-tile",
+            "resource-cubes"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 7,
+              "excerpt": "Place the 9 ocean tiles on their reserved space."
+            },
+            {
+              "source": "rulebook",
+              "page": 7,
+              "excerpt": "Place the temperature and oxygen markers on their starting positions."
+            },
+            {
+              "source": "rulebook",
+              "page": 7,
+              "excerpt": "Also place the generation marker on ’1’ on the TR track."
+            },
+            {
+              "source": "rulebook",
+              "page": 7,
+              "excerpt": "Resource cubes and remaining tiles are placed so that everyone can reach them."
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "hellasElysium",
+              "text": "Playing on Hellas or Elysium? Use that board instead of Tharsis. It has its own placement bonuses, ocean areas, milestones and awards:",
+              "bullets": [
+                "Hellas: the south pole costs 6 M€ to place a tile on, and gives you an ocean tile (with its TR) to place on any ocean area.",
+                "Hellas has no volcanos or Noctis region: Noctis City and Lava Flows tiles may go on any non-ocean area.",
+                "Elysium has no Noctis region either, so Noctis City has no restriction. Lava Flows may go on Arsia Mons, Olympus Mons, Elysium Mons or Hecates Tholus."
+              ],
+              "images": [
+                "maps"
+              ],
+              "citations": [
+                {
+                  "source": "hellasElysium",
+                  "page": 1,
+                  "excerpt": "Any of these two game boards can be used instead of the ordinary game board."
+                },
+                {
+                  "source": "hellasElysium",
+                  "page": 1,
+                  "excerpt": "requiring you to pay 6 megacredits for placing a tile here, but giving you an ocean tile"
+                },
+                {
+                  "source": "hellasElysium",
+                  "page": 1,
+                  "excerpt": "so the tiles from the cards Noctis City and Lava Flows lose their placement restrictions and may be placed on any non-ocean area."
+                },
+                {
+                  "source": "hellasElysium",
+                  "page": 1,
+                  "excerpt": "four volcanic sites where the Lava Flows tile can be placed: Arsia Mons, Olympus Mons, Elysium Mons, and Hecates Tholus."
+                }
+              ]
+            },
+            {
+              "expansion": "venusNext",
+              "text": "Place the Venus board next to the game board:",
+              "bullets": [
+                "White marker on 0% of the Venus scale.",
+                "Hoverlord milestone tile over the Milestones headline, Venuphile award tile over the Awards headline: 3 of 6 can now be claimed or funded."
+              ],
+              "images": [
+                "hoverlord",
+                "venuphile"
+              ],
+              "citations": [
+                {
+                  "source": "venusNext",
+                  "page": 2,
+                  "excerpt": "During setup, the Venus board is placed next to the game board, with a white marker on 0%, at the start of the Venus scale."
+                },
+                {
+                  "source": "venusNext",
+                  "page": 3,
+                  "excerpt": "so that 3 out of 6 Milestones may be claimed."
+                },
+                {
+                  "source": "venusNext",
+                  "page": 3,
+                  "excerpt": "Place this tile so that it covers the Awards headline on the game board."
+                }
+              ]
+            },
+            {
+              "expansion": "colonies",
+              "text": "Place the Trade Fleets tile next to the game board, then:",
+              "bullets": [
+                "Draw colony tiles: the number of players plus 2 (5 with 2 players).",
+                "Put a white cube on the highlighted second step of each colony track.",
+                "Titan, Enceladus and Miranda: the cube starts on the moon picture, and moves to the second step once any card in play can collect their resource. No colonies or trade there until then."
+              ],
+              "images": [
+                "trade-fleets",
+                "colony-tile"
+              ],
+              "citations": [
+                {
+                  "source": "colonies",
+                  "page": 2,
+                  "excerpt": "Place the Trade Fleets Tile next to the game board."
+                },
+                {
+                  "source": "colonies",
+                  "page": 2,
+                  "excerpt": "draw tiles equal to the number of players plus 2"
+                },
+                {
+                  "source": "colonies",
+                  "page": 2,
+                  "excerpt": "use 5 tiles if playing a 2 player game."
+                },
+                {
+                  "source": "colonies",
+                  "page": 2,
+                  "excerpt": "Place a white cube on the highlighted second step of each Colony Tile track."
+                },
+                {
+                  "source": "colonies",
+                  "page": 2,
+                  "excerpt": "TITAN, ENCELADUS, and MIRANDA start with their white marker on the moon picture itself"
+                }
+              ]
+            },
+            {
+              "expansion": "turmoil",
+              "text": "Place the Terraforming Committee board and the Global Event board next to the game board:",
+              "bullets": [
+                "On Tharsis, cover the Terraformer milestone with the new tile (TR 26).",
+                "A gray neutral delegate in the Chairman seat; the other neutral delegates in the Neutral Reserve.",
+                "Shuffle the Global Event cards onto their space. Draw one as the Coming Global Event and put a neutral delegate as Party Leader of the party at its top left: that party is Dominant (Dominance marker in its delegate area).",
+                "Turn the next card face up as the Distant Global Event and add a neutral delegate to its top-left party (in the delegate area if that party already has a leader).",
+                "Stack the six Policy tiles with Greens on top: Greens rule the first generation, which has no Current Global Event."
+              ],
+              "images": [
+                "committee",
+                "global-events"
+              ],
+              "citations": [
+                {
+                  "source": "turmoil",
+                  "page": 2,
+                  "excerpt": "Place the Terraforming Committee board and Global Event board next to the main game board."
+                },
+                {
+                  "source": "turmoil",
+                  "page": 2,
+                  "excerpt": "replace the Terraformer milestone with the new tile, requiring only TR 26."
+                },
+                {
+                  "source": "turmoil",
+                  "page": 2,
+                  "excerpt": "Place a gray neutral delegate in the Chairman seat"
+                },
+                {
+                  "source": "turmoil",
+                  "page": 2,
+                  "excerpt": "Shuffle the Global Event cards and place the deck on the reserved space on the Global Event board."
+                },
+                {
+                  "source": "turmoil",
+                  "page": 2,
+                  "excerpt": "Place a neutral delegate as Party Leader in the party indicated at the top left of the card."
+                },
+                {
+                  "source": "turmoil",
+                  "page": 2,
+                  "excerpt": "If it is in the same party as the other neutral delegate, place it in the area for delegates instead."
+                },
+                {
+                  "source": "turmoil",
+                  "page": 2,
+                  "excerpt": "Place all six Policy tiles in a pile at their designated place on the Terraforming Committee board, with GREENS on top."
+                },
+                {
+                  "source": "turmoil",
+                  "page": 2,
+                  "excerpt": "There is no CURRENT Global Event to execute the first generation."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "setup-decks",
+          "side": "both",
+          "title": "Decks",
+          "instruction": "Build the decks:",
+          "bullets": [
+            "Standard game: take every Corporate Era card (red and white icon, lower left) out of the project cards and the corporations.",
+            "Shuffle the project deck and put it next to the board, with room for a discard pile."
+          ],
+          "components": [
+            "Project cards",
+            "Corporation cards"
+          ],
+          "images": [
+            "project-card",
+            "card-types"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 7,
+              "excerpt": "Make sure you have no Corporate Era cards in the project deck or among the corporation cards."
+            },
+            {
+              "source": "rulebook",
+              "page": 7,
+              "excerpt": "Shuffle the project cards and place the project deck next to the board."
+            }
+          ],
+          "additions": [
+            {
+              "title": "Corporate Era",
+              "text": "Playing the extended game? Keep every Corporate Era card, including its 2 corporations. Players then start without the extra production.",
+              "images": [
+                "project-card"
+              ],
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 13,
+                  "excerpt": "To play the extended game, simply add all cards marked with a red and white icon"
+                },
+                {
+                  "source": "rulebook",
+                  "page": 13,
+                  "excerpt": "Players start with no extra production of resources"
+                }
+              ]
+            },
+            {
+              "expansion": "prelude",
+              "text": "Shuffle Prelude’s 7 project cards into the project deck and its 5 corporations into the corporations. Shuffle the other 35 cards, the Prelude cards, into a deck of their own.",
+              "images": [
+                "project-card"
+              ],
+              "citations": [
+                {
+                  "source": "prelude",
+                  "page": 2,
+                  "excerpt": "you shuffle the 7 project cards into the main project card deck, and the 5 corporations into the corporation deck."
+                },
+                {
+                  "source": "prelude",
+                  "page": 2,
+                  "excerpt": "The remaining 35 cards are referred to as Prelude cards, and are shuffled into a deck of their own."
+                }
+              ]
+            },
+            {
+              "expansion": "venusNext",
+              "text": "Shuffle the 49 Venus project cards and 5 Venus corporations into their decks.",
+              "images": [
+                "project-card"
+              ],
+              "citations": [
+                {
+                  "source": "venusNext",
+                  "page": 2,
+                  "excerpt": "The various projects in this expansion are represented by 49 new project cards, as well as 5 new corporations to choose from."
+                },
+                {
+                  "source": "venusNext",
+                  "page": 2,
+                  "excerpt": "Shuffle these into the respective decks before dealing cards and corporations"
+                }
+              ]
+            },
+            {
+              "expansion": "colonies",
+              "text": "Shuffle the Colonies project cards and corporations into their decks.",
+              "images": [
+                "colony-tile"
+              ],
+              "citations": [
+                {
+                  "source": "colonies",
+                  "page": 2,
+                  "excerpt": "Shuffle the project cards together with the main game project cards, and the Colony corporation cards together with the other corporation cards."
+                }
+              ]
+            },
+            {
+              "expansion": "turmoil",
+              "text": "Shuffle the 16 Turmoil project cards into the project deck.",
+              "images": [
+                "committee"
+              ],
+              "citations": [
+                {
+                  "source": "turmoil",
+                  "page": 2,
+                  "excerpt": "Shuffle the 16 new Turmoil project cards into the main project card deck."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "setup-players",
+          "side": "both",
+          "title": "Players",
+          "instruction": "Choose who goes first, then each player:",
+          "bullets": [
+            "The player who most recently won Terraforming Mars takes the first player marker.",
+            "Choose a color; take its player markers and a player board.",
+            "Standard game: 1 production of every resource (a marker on 1 on all six tracks).",
+            "One marker on 20 on the TR track."
+          ],
+          "components": [
+            "Player boards",
+            "Player markers",
+            "First player marker"
+          ],
+          "images": [
+            "player-board",
+            "first-player"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 7,
+              "excerpt": "The player who most recently won a game of Terraforming Mars is given the first player marker."
+            },
+            {
+              "source": "rulebook",
+              "page": 7,
+              "excerpt": "Players choose their colors and take the corresponding player markers and a player board."
+            },
+            {
+              "source": "rulebook",
+              "page": 7,
+              "excerpt": "You start with 1 production of each resource on the player board"
+            },
+            {
+              "source": "rulebook",
+              "page": 7,
+              "excerpt": "Each player also places one marker at the starting position (20) of the TR track."
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "colonies",
+              "text": "Each player puts a trade fleet on the Trade Fleets tile, with a player marker inside it.",
+              "images": [
+                "trade-fleets"
+              ],
+              "citations": [
+                {
+                  "source": "colonies",
+                  "page": 2,
+                  "excerpt": "and place it on the Trade Fleets Tile, with your player marker inside it"
+                }
+              ]
+            },
+            {
+              "expansion": "turmoil",
+              "text": "Each player puts 1 of their 7 delegates in the Lobby and the other 6 in the Delegate Reserve.",
+              "images": [
+                "committee"
+              ],
+              "citations": [
+                {
+                  "source": "turmoil",
+                  "page": 2,
+                  "excerpt": "Each player takes their seven delegate markers and places one in the Lobby of the Terraforming Committee board and the other six in the Delegate Reserve."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "setup-deal",
+          "side": "both",
+          "title": "Deal cards",
+          "instruction": "Deal to each player:",
+          "bullets": [
+            "New players: a Beginner Corporation, which gives 42 M€ and 10 project cards straight to their hand. They skip the rest of setup’s choices.",
+            "Everyone else: 2 corporations (without the Corporate Era ones in a standard game) and 10 project cards."
+          ],
+          "components": [
+            "Corporation cards",
+            "Project cards"
+          ],
+          "images": [
+            "corporation",
+            "project-card"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 7,
+              "excerpt": "Players new to Terraforming Mars each get a Beginner Corporation card"
+            },
+            {
+              "source": "rulebook",
+              "page": 7,
+              "excerpt": "to get 42 MegaCredits and draw 10 project cards to form their starting hand."
+            },
+            {
+              "source": "rulebook",
+              "page": 7,
+              "excerpt": "Shuffle the 10 standard corporation cards (excluding the 2 Corporate Era corporations) and deal 2 to each remaining player."
+            },
+            {
+              "source": "rulebook",
+              "page": 7,
+              "excerpt": "Deal 10 cards to each remaining player."
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "prelude",
+              "text": "Also deal 4 Prelude cards to each player.",
+              "images": [
+                "project-card"
+              ],
+              "citations": [
+                {
+                  "source": "prelude",
+                  "page": 2,
+                  "excerpt": "you also deal 4 Prelude cards to each player."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "setup-choose",
+          "side": "both",
+          "title": "Choose and reveal",
+          "instruction": "Everyone chooses at once, then reveals in player order:",
+          "bullets": [
+            "Pick 1 corporation and which of the 10 project cards to keep.",
+            "Discard the rest face down (corporations go back in the box).",
+            "In player order: reveal your corporation, take its starting resources and production, then pay 3 M€ for each card you keep."
+          ],
+          "components": [
+            "Corporation cards",
+            "Project cards",
+            "Player boards"
+          ],
+          "images": [
+            "corporation",
+            "player-board"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 7,
+              "excerpt": "Players choose which of the corporations they want to play, and which of the 10 project cards they want to keep for their starting hand."
+            },
+            {
+              "source": "rulebook",
+              "page": 7,
+              "excerpt": "cards are always discarded face down!"
+            },
+            {
+              "source": "rulebook",
+              "page": 7,
+              "excerpt": "In player order, players then reveal their chosen corporation, get their starting resources and production (if any), and then pay 3 M€ for each project card they keep."
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "prelude",
+              "text": "Also keep 2 of your 4 Prelude cards, for free. Once everyone has paid, play your 2 Preludes in player order and discard the other 2. They work like green cards.",
+              "images": [
+                "card-types"
+              ],
+              "citations": [
+                {
+                  "source": "prelude",
+                  "page": 2,
+                  "excerpt": "The players choose 2 Prelude cards to keep at the same time as choosing corporations and project cards"
+                },
+                {
+                  "source": "prelude",
+                  "page": 2,
+                  "excerpt": "The Prelude cards do not cost anything to keep."
+                },
+                {
+                  "source": "prelude",
+                  "page": 2,
+                  "excerpt": "each player plays their pair of picked Prelude cards in player order, and discards their remaining 2 Prelude cards."
+                },
+                {
+                  "source": "prelude",
+                  "page": 2,
+                  "excerpt": "They work like green cards, and stay in play with their tags visible."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "setup-start",
+          "side": "both",
+          "title": "Generation 1",
+          "instruction": "Generation 1 has no Player Order or Research phase: the first player starts the action phase.",
+          "components": [
+            "First player marker"
+          ],
+          "images": [
+            "first-player"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 7,
+              "excerpt": "The first generation starts without a player order phase and without a research phase"
+            },
+            {
+              "source": "rulebook",
+              "page": 7,
+              "excerpt": "so the first player just starts the action phase."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "actions",
+      "part": "round",
+      "title": "Action phase",
+      "loop": {
+        "endLabel": "Everyone has passed",
+        "note": "Clockwise from the first player. Take 1 or 2 actions, or pass: once you pass, you’re out until the next generation.",
+        "citations": [
+          {
+            "source": "rulebook",
+            "page": 8,
+            "excerpt": "Play proceeds clockwise around the table until all players have passed."
+          },
+          {
+            "source": "rulebook",
+            "page": 8,
+            "excerpt": "If you take no action at all (pass), you are out of the round and may not take any anymore actions this generation."
+          }
+        ]
+      },
+      "steps": [
+        {
+          "id": "turn",
+          "side": "player",
+          "title": "1 or 2 actions",
+          "instruction": "Take 1 or 2 actions, in any combination, or pass:",
+          "bullets": [
+            "Play a card: meet its requirement and pay its cost (steel is worth 2 M€ on building tags, titanium 3 M€ on space tags), then do its effects.",
+            "Standard project: Sell patents (discard cards for 1 M€ each), Power plant 11 M€, Asteroid 14 M€, Aquifer 18 M€, Greenery 23 M€, City 25 M€.",
+            "Claim a milestone you qualify for: 8 M€, worth 5 VP. Only 3 can be claimed.",
+            "Fund an award: 8, then 14, then 20 M€. Only 3 can be funded.",
+            "Use the action on a blue card, once a generation.",
+            "Turn 8 plants into a greenery tile (raises oxygen), or 8 heat into a temperature step."
+          ],
+          "components": [
+            "Project cards",
+            "Standard projects",
+            "Milestones and awards",
+            "Player board"
+          ],
+          "images": [
+            "card-types",
+            "standard-projects",
+            "milestones-awards",
+            "player-board"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 8,
+              "excerpt": "Players take 1 or 2 actions each turn, or pass."
+            },
+            {
+              "source": "rulebook",
+              "page": 9,
+              "excerpt": "In order to play a card you must meet its requirements and be able to perform the effects"
+            },
+            {
+              "source": "rulebook",
+              "page": 6,
+              "excerpt": "Steel: Is only used to pay for cards with a building tag and is worth 2 M€/cube."
+            },
+            {
+              "source": "rulebook",
+              "page": 6,
+              "excerpt": "Titanium: Is only used to pay for cards with a space tag and is worth 3 M€/cube"
+            },
+            {
+              "source": "rulebook",
+              "page": 10,
+              "excerpt": "Sell patents: You may discard a number of cards from hand to gain the same number of M€."
+            },
+            {
+              "source": "rulebook",
+              "page": 10,
+              "excerpt": "Power plant: For 11 M€ you get to increase your energy production 1 step."
+            },
+            {
+              "source": "rulebook",
+              "page": 10,
+              "excerpt": "Asteroid: For 14 M€ you get to increase temperature 1 step"
+            },
+            {
+              "source": "rulebook",
+              "page": 10,
+              "excerpt": "Aquifer: For 18 M€ you get to place an ocean tile"
+            },
+            {
+              "source": "rulebook",
+              "page": 10,
+              "excerpt": "Greenery: For 23 M€ you get to place a greenery tile"
+            },
+            {
+              "source": "rulebook",
+              "page": 10,
+              "excerpt": "City: For 25 M€ you get to place a city tile"
+            },
+            {
+              "source": "rulebook",
+              "page": 10,
+              "excerpt": "only 3 of the 5 milestones may be claimed in total"
+            },
+            {
+              "source": "rulebook",
+              "page": 10,
+              "excerpt": "Each claimed milestone is worth 5 VPs at the end of the game."
+            },
+            {
+              "source": "rulebook",
+              "page": 11,
+              "excerpt": "The first player to fund an award pays 8 M€ and places a player marker on it."
+            },
+            {
+              "source": "rulebook",
+              "page": 11,
+              "excerpt": "The next player to fund an award pays 14 M€, the last pays 20 M€."
+            },
+            {
+              "source": "rulebook",
+              "page": 11,
+              "excerpt": "Each such action card may be used once each generation."
+            },
+            {
+              "source": "rulebook",
+              "page": 11,
+              "excerpt": "8 plant resources may be turned into a greenery tile"
+            },
+            {
+              "source": "rulebook",
+              "page": 11,
+              "excerpt": "8 heat resources may be spent to increase temperature 1 step"
+            }
+          ],
+          "additions": [
+            {
+              "title": "Placing tiles",
+              "text": "When you place a tile:",
+              "bullets": [
+                "Take the bonus printed on its area, plus 2 M€ for each ocean next to it.",
+                "Oceans only on ocean areas; never a city next to another city; a greenery next to one of your tiles if you can.",
+                "Raising temperature, oxygen or oceans raises your TR too, except once that parameter has reached its goal."
+              ],
+              "images": [
+                "ocean-tile",
+                "greenery-tile",
+                "city-tile"
+              ],
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 5,
+                  "excerpt": "When you place the tile, you receive the placement bonus printed on that area (if any)."
+                },
+                {
+                  "source": "rulebook",
+                  "page": 5,
+                  "excerpt": "Each ocean tile on the board provides a 2 M€ placement bonus for any player later placing a tile"
+                },
+                {
+                  "source": "rulebook",
+                  "page": 5,
+                  "excerpt": "Ocean tiles may only be placed on areas reserved for ocean"
+                },
+                {
+                  "source": "rulebook",
+                  "page": 5,
+                  "excerpt": "May not be placed next to another city"
+                },
+                {
+                  "source": "rulebook",
+                  "page": 5,
+                  "excerpt": "If possible, greenery tiles must be placed next to another tile that you own."
+                },
+                {
+                  "source": "rulebook",
+                  "page": 3,
+                  "excerpt": "Whenever you raise one of them, your terraform rating also increases by that much"
+                },
+                {
+                  "source": "rulebook",
+                  "page": 3,
+                  "excerpt": "When a global parameter has reached its goal, it can’t be raised any further, and so does not increase your TR."
+                }
+              ]
+            },
+            {
+              "expansion": "venusNext",
+              "text": "Venus Next:",
+              "bullets": [
+                "Air Scrapping (standard project): 15 M€ to raise Venus 1 step, and your TR.",
+                "Venus bonuses: draw a card at 8%, an extra TR at 16%.",
+                "Hoverlord milestone: 7 floaters on your cards. Venuphile award: most Venus tags."
+              ],
+              "images": [
+                "hoverlord",
+                "venuphile"
+              ],
+              "citations": [
+                {
+                  "source": "venusNext",
+                  "page": 2,
+                  "excerpt": "A new standard project, Air Scrapping, allows players to increase the Venus scale one step for 15 M€, gaining a TR as normal."
+                },
+                {
+                  "source": "venusNext",
+                  "page": 2,
+                  "excerpt": "When increasing Venus to 8%, you get to draw a card for free."
+                },
+                {
+                  "source": "venusNext",
+                  "page": 2,
+                  "excerpt": "When increasing Venus to 16%, you get an extra TR."
+                },
+                {
+                  "source": "venusNext",
+                  "page": 3,
+                  "excerpt": "To claim Hoverlord, you need a total of at least 7 floater resources on your cards."
+                },
+                {
+                  "source": "venusNext",
+                  "page": 3,
+                  "excerpt": "Venuphile Award is a contest for most Venus tags in play."
+                }
+              ]
+            },
+            {
+              "expansion": "colonies",
+              "text": "Colonies actions:",
+              "bullets": [
+                "Build a colony (standard project, 17 M€): your marker on the lowest free spot of a colony track; take its placement bonus. At most 3 colonies per tile, and 1 of yours.",
+                "Trade: pay 9 M€, 3 energy or 3 titanium and move your trade fleet onto a colony tile with no fleet. Take the trade income at the white marker; colony owners there get their colony bonus. Then slide the white marker left, next to the colonies."
+              ],
+              "images": [
+                "colony-tile",
+                "trade-fleets"
+              ],
+              "citations": [
+                {
+                  "source": "colonies",
+                  "page": 2,
+                  "excerpt": "This is a standard project that costs 17 M€"
+                },
+                {
+                  "source": "colonies",
+                  "page": 2,
+                  "excerpt": "Only 3 colonies total per Colony Tile are allowed"
+                },
+                {
+                  "source": "colonies",
+                  "page": 2,
+                  "excerpt": "Each player may only have one colony per Colony Tile"
+                },
+                {
+                  "source": "colonies",
+                  "page": 2,
+                  "excerpt": "Pay the cost: 9 M€, or 3 energy, or 3 titanium"
+                },
+                {
+                  "source": "colonies",
+                  "page": 2,
+                  "excerpt": "A Colony Tile may only hold 1 trade fleet at a time."
+                },
+                {
+                  "source": "colonies",
+                  "page": 3,
+                  "excerpt": "Directly after trading you move the white marker as far left as possible, stopping next to the player colonies"
+                }
+              ]
+            },
+            {
+              "expansion": "turmoil",
+              "text": "Turmoil:",
+              "bullets": [
+                "Lobbying, any number of times: move a delegate from the Lobby (free) or your Delegate Reserve (5 M€) into a party.",
+                "More delegates in a party than its leader makes you Party Leader; the party with the most delegates is Dominant.",
+                "The ruling party’s policy works during the action phase.",
+                "A card with a party requirement needs that party ruling, or 2 of your delegates in it."
+              ],
+              "images": [
+                "committee"
+              ],
+              "citations": [
+                {
+                  "source": "turmoil",
+                  "page": 4,
+                  "excerpt": "Move one of your delegates from the Delegate Reserve (costs 5 M€), or from the Lobby (for free!), into the Delegate Area of your desired party"
+                },
+                {
+                  "source": "turmoil",
+                  "page": 4,
+                  "excerpt": "they replace the Party Leader marker with one of their own from that party."
+                },
+                {
+                  "source": "turmoil",
+                  "page": 4,
+                  "excerpt": "The party with the most delegates is the Dominant party"
+                },
+                {
+                  "source": "turmoil",
+                  "page": 4,
+                  "excerpt": "The effect or action on the Policy tile is active only during the Action phase."
+                },
+                {
+                  "source": "turmoil",
+                  "page": 5,
+                  "excerpt": "that card is playable only if that party is currently ruling"
+                },
+                {
+                  "source": "turmoil",
+                  "page": 5,
+                  "excerpt": "OR if you have at least 2 delegates in that party."
+                }
+              ]
+            }
+          ],
+          "reminders": [
+            {
+              "text": "Used a blue card’s action? Leave a player marker on it.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 11,
+                  "excerpt": "place a player marker on the card to indicate that it has been used this generation."
+                }
+              ]
+            },
+            {
+              "text": "Raised a parameter? Move your TR up too, and take any bonus printed on that step of the track.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 3,
+                  "excerpt": "Whenever you raise one of them, your terraform rating also increases by that much"
+                },
+                {
+                  "source": "rulebook",
+                  "page": 4,
+                  "excerpt": "If you raise the parameter to this point, you also get the attached bonus."
+                }
+              ]
+            },
+            {
+              "text": "Took no action? Then you’ve passed: you’re out until the next generation.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 8,
+                  "excerpt": "If you take no action at all (pass), you are out of the round and may not take any anymore actions this generation."
+                }
+              ]
+            },
+            {
+              "expansion": "colonies",
+              "text": "Traded? Your fleet stays on that colony tile until the end of the generation.",
+              "citations": [
+                {
+                  "source": "colonies",
+                  "page": 3,
+                  "excerpt": "When the generation ends, all trade fleets move back from the Colony Tiles to the Trade Fleets Tile"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "production",
+      "part": "round",
+      "title": "Production",
+      "steps": [
+        {
+          "id": "production",
+          "side": "both",
+          "title": "Production",
+          "instruction": "Everyone at once:",
+          "bullets": [
+            "Turn all energy into heat (move the cubes to the heat box).",
+            "Gain M€ equal to your TR plus your M€ production (which may be negative).",
+            "Gain every other resource you produce.",
+            "Take the player markers off used action cards."
+          ],
+          "components": [
+            "Player boards",
+            "Resource cubes"
+          ],
+          "images": [
+            "player-board",
+            "resource-cubes"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 8,
+              "excerpt": "First, all energy is converted into heat"
+            },
+            {
+              "source": "rulebook",
+              "page": 8,
+              "excerpt": "Players get M€ according to their terraform rating plus any M€ production (which may be negative!)"
+            },
+            {
+              "source": "rulebook",
+              "page": 8,
+              "excerpt": "then the players also get any other resources they have production of according to the player board."
+            },
+            {
+              "source": "rulebook",
+              "page": 8,
+              "excerpt": "Finally, remove player markers from used action cards"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "solar",
+      "part": "round",
+      "title": "End of generation",
+      "steps": [
+        {
+          "id": "end-check",
+          "side": "both",
+          "title": "Is Mars terraformed?",
+          "instruction": "Are temperature (+8 °C), oxygen (14%) and all 9 oceans at their goals?",
+          "bullets": [
+            "Yes: the game ends. In player order, everyone may turn plants into greenery tiles once more, then score. End the game from the Game menu.",
+            "No: carry on with the generation."
+          ],
+          "components": [
+            "Temperature track",
+            "Oxygen track",
+            "Ocean tiles"
+          ],
+          "images": [
+            "board"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 12,
+              "excerpt": "When all three global parameters (ocean, temperature, and oxygen) have reached their goals, the game ends at the end of that generation."
+            },
+            {
+              "source": "rulebook",
+              "page": 12,
+              "excerpt": "players have one extra chance to convert plants into greenery tiles (in player order"
+            },
+            {
+              "source": "rulebook",
+              "page": 3,
+              "excerpt": "The game ends when there is enough oxygen to breathe (14 %), oceans enough to allow Earth-like weather (9), and the temperature is well above freezing (+8"
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "venusNext",
+              "text": "The Venus scale doesn’t need to be finished for the game to end.",
+              "images": [
+                "hoverlord",
+                "venuphile"
+              ],
+              "citations": [
+                {
+                  "source": "venusNext",
+                  "page": 2,
+                  "excerpt": "But the Venus scale is not an end game condition"
+                }
+              ]
+            },
+            {
+              "expansion": "turmoil",
+              "text": "If the game ends, skip Turmoil. In the final scoring, each Party Leader and the Chairman is worth 1 VP to its owner.",
+              "images": [
+                "committee"
+              ],
+              "citations": [
+                {
+                  "source": "turmoil",
+                  "page": 6,
+                  "excerpt": "When the game ends, the Turmoil step is not performed."
+                },
+                {
+                  "source": "turmoil",
+                  "page": 6,
+                  "excerpt": "all Party Leaders and the Chairman are worth 1 VP for the respective player."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "solar-wg",
+          "expansion": "venusNext",
+          "side": "both",
+          "title": "World Government terraforming",
+          "instruction": "The first player (the order hasn’t shifted yet) raises one global parameter that isn’t at its goal by 1 step, or places an ocean tile, for the World Government:",
+          "bullets": [
+            "No TR or bonuses for the first player.",
+            "Cards may still trigger, such as Arctic Algae or Aphrodite."
+          ],
+          "components": [
+            "Venus board",
+            "Global parameter tracks"
+          ],
+          "images": [
+            "solar-phase"
+          ],
+          "citations": [
+            {
+              "source": "venusNext",
+              "page": 3,
+              "excerpt": "The first player (player order hasn’t yet shifted) now acts as the WG, and chooses a non-maxed global parameter and increases that track one step, or places an ocean tile."
+            },
+            {
+              "source": "venusNext",
+              "page": 3,
+              "excerpt": "All bonuses go to the WG, and therefore no TR or other bonuses are given to the first player."
+            }
+          ]
+        },
+        {
+          "id": "solar-colonies",
+          "expansion": "colonies",
+          "side": "both",
+          "title": "Colony production",
+          "instruction": "On every colony tile:",
+          "bullets": [
+            "Return the trade fleets to the Trade Fleets tile.",
+            "Move the white marker 1 step up the colony track."
+          ],
+          "components": [
+            "Colony tiles",
+            "Trade fleets"
+          ],
+          "images": [
+            "colony-tile",
+            "trade-fleets"
+          ],
+          "citations": [
+            {
+              "source": "colonies",
+              "page": 3,
+              "excerpt": "Return all Trade Fleets from the Colony Tiles to the Trade Fleets Tile."
+            },
+            {
+              "source": "colonies",
+              "page": 3,
+              "excerpt": "Move the white marker one step up the Colony track on each Colony Tile."
+            }
+          ]
+        },
+        {
+          "id": "turmoil-event",
+          "expansion": "turmoil",
+          "side": "both",
+          "title": "TR revision and Global Event",
+          "instruction": "Turmoil, first:",
+          "bullets": [
+            "Everyone loses 1 TR.",
+            "Resolve the Current Global Event (there’s none in generation 1). Anything it counts stops at 5, then add each player’s influence: 1 each for the Chairman, the leader of the Dominant party, and other delegates in the Dominant party."
+          ],
+          "components": [
+            "Global Event cards",
+            "Terraforming Committee board"
+          ],
+          "images": [
+            "global-events"
+          ],
+          "citations": [
+            {
+              "source": "turmoil",
+              "page": 6,
+              "excerpt": "after the Production phase, ALL players lose 1 TR"
+            },
+            {
+              "source": "turmoil",
+              "page": 7,
+              "excerpt": "Perform the Current Global Event, taking influence into account"
+            },
+            {
+              "source": "turmoil",
+              "page": 5,
+              "excerpt": "can only count up to a maximum of 5"
+            },
+            {
+              "source": "turmoil",
+              "page": 5,
+              "excerpt": "Owning the Chairman gives 1 influence."
+            },
+            {
+              "source": "turmoil",
+              "page": 5,
+              "excerpt": "Owning the leader of the Dominant party gives 1 influence."
+            },
+            {
+              "source": "turmoil",
+              "page": 5,
+              "excerpt": "Owning 1 or more non-leader delegates in the Dominant party gives 1 influence."
+            }
+          ]
+        },
+        {
+          "id": "turmoil-government",
+          "expansion": "turmoil",
+          "side": "both",
+          "title": "New Government",
+          "instruction": "The Dominant party takes over:",
+          "bullets": [
+            "Its Policy tile goes on top: it rules the next generation.",
+            "Everyone gets its Ruling Bonus.",
+            "Return the old Chairman and the party’s other delegates to their reserves.",
+            "Its Party Leader becomes Chairman, and that player gains 1 TR.",
+            "Move the Dominance marker to the party with the most delegates (ties: the next one clockwise).",
+            "Refill the Lobby: 1 delegate per player from their reserve."
+          ],
+          "components": [
+            "Policy tiles",
+            "Delegates",
+            "Dominance marker"
+          ],
+          "images": [
+            "committee"
+          ],
+          "citations": [
+            {
+              "source": "turmoil",
+              "page": 7,
+              "excerpt": "The Dominant party now becomes ruling. Change Policy tile."
+            },
+            {
+              "source": "turmoil",
+              "page": 7,
+              "excerpt": "Resolve the Ruling Bonus (affects all players)."
+            },
+            {
+              "source": "turmoil",
+              "page": 7,
+              "excerpt": "Return the former Chairman and all non-leader delegates from Dominant party to reserve."
+            },
+            {
+              "source": "turmoil",
+              "page": 7,
+              "excerpt": "Party Leader from the Dominant party becomes new Chairman, earning 1 TR."
+            },
+            {
+              "source": "turmoil",
+              "page": 7,
+              "excerpt": "Dominance marker goes to new Dominant party (or clockwise in case of tie)."
+            },
+            {
+              "source": "turmoil",
+              "page": 7,
+              "excerpt": "Fill the lobby from the reserve so that each player has 1 delegate there."
+            }
+          ]
+        },
+        {
+          "id": "turmoil-times",
+          "expansion": "turmoil",
+          "side": "both",
+          "title": "Changing Times",
+          "instruction": "Move the Global Events along:",
+          "bullets": [
+            "The Coming Global Event goes onto the Current one; add the neutral delegate shown at its middle right.",
+            "The Distant Global Event becomes the Coming one.",
+            "Turn the top card face up as the Distant Global Event, add its top-left neutral delegate and read its flavor text."
+          ],
+          "components": [
+            "Global Event cards",
+            "Neutral delegates"
+          ],
+          "images": [
+            "global-events"
+          ],
+          "citations": [
+            {
+              "source": "turmoil",
+              "page": 7,
+              "excerpt": "Place the Coming Global Event on top of the Current Global Event."
+            },
+            {
+              "source": "turmoil",
+              "page": 7,
+              "excerpt": "Add the neutral delegate indicated at the mid-right on that card."
+            },
+            {
+              "source": "turmoil",
+              "page": 7,
+              "excerpt": "Move the Distant Global Event into the Coming Global Event space."
+            },
+            {
+              "source": "turmoil",
+              "page": 7,
+              "excerpt": "Turn the top card of the Global Event deck face up, add the top-left neutral delegate, and read the flavor text."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "next",
+      "part": "round",
+      "title": "Next generation",
+      "steps": [
+        {
+          "id": "player-order",
+          "side": "both",
+          "title": "Player order",
+          "instruction": "Pass the first player marker 1 step clockwise and move the generation marker up 1.",
+          "components": [
+            "First player marker",
+            "Generation marker"
+          ],
+          "images": [
+            "first-player"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 8,
+              "excerpt": "The first player marker shifts 1 step clockwise and the generation marker is moved up 1 step."
+            }
+          ]
+        },
+        {
+          "id": "research",
+          "side": "both",
+          "title": "Research",
+          "instruction": "Everyone draws 4 cards and buys the ones they want:",
+          "bullets": [
+            "3 M€ for each card you keep (0–4).",
+            "Discard the rest face down.",
+            "There’s no hand limit."
+          ],
+          "components": [
+            "Project cards"
+          ],
+          "images": [
+            "research-card"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 8,
+              "excerpt": "Each player draws 4 cards and decides which of them he wants to buy to his hand."
+            },
+            {
+              "source": "rulebook",
+              "page": 8,
+              "excerpt": "Each card costs 3 M€ to buy to the hand, and you may buy 0-4 cards."
+            },
+            {
+              "source": "rulebook",
+              "page": 8,
+              "excerpt": "The rest of the 4 drawn cards are discarded face down on the discard pile. There is no hand limit."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

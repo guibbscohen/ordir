@@ -105,6 +105,15 @@ enum OrdirSpinnerVerbs {
                 "Deploying troops",
                 "Buying from the Imperium Row",
             ]
+        case .terraformingMars:
+            [
+                "Raising the temperature",
+                "Placing an ocean",
+                "Planting greenery",
+                "Funding an award",
+                "Claiming a milestone",
+                "Researching projects",
+            ]
         }
     }
 }

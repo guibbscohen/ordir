@@ -1,0 +1,431 @@
+{
+  "language": "es-419",
+  "title": "Terraforming Mars",
+  "sides": {
+    "player": "Jugador en turno"
+  },
+  "victory": "Cuando la temperatura, el oxígeno y los océanos llegan a su meta, el juego termina después de la producción de esa generación: todos pueden convertir plantas en vegetación una vez más (en orden de jugadores) y luego puntúan TR, recompensas, hitos, vegetaciones y ciudades, y cartas. Gana quien tenga más PV; los empates los gana quien tenga más M€.",
+  "sources": {
+    "rulebook": {
+      "title": "Reglas",
+      "shortTitle": "Reglas"
+    },
+    "prelude": {
+      "title": "Reglas de Preludio",
+      "shortTitle": "Preludio"
+    },
+    "venusNext": {
+      "title": "Reglas de Venus Next",
+      "shortTitle": "Venus Next"
+    },
+    "colonies": {
+      "title": "Reglas de Colonias",
+      "shortTitle": "Colonias"
+    },
+    "turmoil": {
+      "title": "Reglas de Agitación",
+      "shortTitle": "Agitación"
+    },
+    "hellasElysium": {
+      "title": "Reglas de Hellas y Elysium",
+      "shortTitle": "Hellas y Elysium"
+    }
+  },
+  "expansions": {
+    "prelude": {
+      "title": "Preludio",
+      "summary": "Cartas de Preludio en la preparación para un comienzo más rápido, más 7 cartas de proyecto y 5 corporaciones."
+    },
+    "venusNext": {
+      "title": "Venus Next",
+      "summary": "El tablero y la escala de Venus, el Raspado de Aire, los flotadores y la terraformación del Gobierno Mundial en cada generación."
+    },
+    "colonies": {
+      "title": "Colonias",
+      "summary": "Losetas de colonia y flotas comerciales: construye colonias y comercia con ellas."
+    },
+    "turmoil": {
+      "title": "Agitación",
+      "summary": "El Comité de Terraformación: delegados, partidos en el poder, Eventos Globales y una revisión de TR en cada generación."
+    },
+    "hellasElysium": {
+      "title": "Mapa de Hellas o Elysium",
+      "summary": "Juega en el tablero de Hellas o Elysium en lugar de Tharsis, con sus propios bonos, hitos y recompensas."
+    }
+  },
+  "images": {
+    "cover": "Portada del reglamento",
+    "board": "Tablero",
+    "standard-projects": "Proyectos estándar",
+    "milestones-awards": "Hitos y recompensas",
+    "ocean-tile": "Loseta de océano",
+    "greenery-tile": "Loseta de vegetación",
+    "city-tile": "Loseta de ciudad",
+    "resource-cubes": "Cubos de recurso: 1, 5 y 10",
+    "first-player": "Marcador de jugador inicial",
+    "player-board": "Tablero de jugador",
+    "corporation": "Carta de corporación",
+    "project-card": "Carta de proyecto",
+    "research-card": "Una carta de proyecto comprada en la investigación",
+    "card-types": "Cartas de proyecto: verdes, rojas y azules",
+    "card-placement": "Dónde van las cartas jugadas",
+    "hoverlord": "Loseta del hito Hoverlord",
+    "venuphile": "Loseta de la recompensa Venuphile",
+    "solar-phase": "La Fase Solar",
+    "trade-fleets": "Loseta de Flotas Comerciales",
+    "colony-tile": "Loseta de colonia",
+    "committee": "Tablero del Comité de Terraformación",
+    "global-events": "Tablero de Eventos Globales",
+    "maps": "Tableros de Hellas y Elysium"
+  },
+  "phases": {
+    "setup": {
+      "title": "Preparación"
+    },
+    "actions": {
+      "title": "Fase de acciones",
+      "loop": {
+        "endLabel": "Todos pasaron",
+        "note": "En sentido horario desde el jugador inicial. Haz 1 o 2 acciones, o pasa: quien pasa queda fuera hasta la siguiente generación."
+      }
+    },
+    "production": {
+      "title": "Producción"
+    },
+    "solar": {
+      "title": "Fin de la generación"
+    },
+    "next": {
+      "title": "Siguiente generación"
+    }
+  },
+  "steps": {
+    "setup-board": {
+      "title": "Tablero",
+      "instruction": "Coloca el tablero en el centro de la mesa y luego:",
+      "bullets": [
+        "Pon las 9 losetas de océano en su espacio reservado.",
+        "Marcadores de temperatura y oxígeno en sus espacios iniciales; el marcador de generación en el 1 del track de TR.",
+        "Cubos de recurso y las demás losetas al alcance de todos."
+      ],
+      "components": [
+        "Tablero",
+        "Losetas de océano",
+        "Marcadores de temperatura, oxígeno y generación",
+        "Cubos de recurso",
+        "Losetas de vegetación, ciudad y especiales"
+      ],
+      "additions": [
+        {
+          "text": "¿Juegan en Hellas o Elysium? Usen ese tablero en lugar de Tharsis. Tiene sus propios bonos de colocación, áreas de océano, hitos y recompensas:",
+          "bullets": [
+            "Hellas: colocar una loseta en el polo sur cuesta 6 M€ y te da una loseta de océano (con su TR) para colocar en cualquier área de océano.",
+            "Hellas no tiene volcanes ni la región de Noctis: las losetas de Noctis City y Lava Flows pueden ir en cualquier área que no sea de océano.",
+            "Elysium tampoco tiene la región de Noctis, así que Noctis City no tiene restricción. Lava Flows puede ir en Arsia Mons, Olympus Mons, Elysium Mons o Hecates Tholus."
+          ]
+        },
+        {
+          "text": "Coloca el tablero de Venus junto al tablero:",
+          "bullets": [
+            "Marcador blanco en el 0% de la escala de Venus.",
+            "Loseta del hito Hoverlord sobre el título Hitos y loseta de la recompensa Venuphile sobre el título Recompensas: ahora se pueden reclamar o financiar 3 de 6."
+          ]
+        },
+        {
+          "text": "Coloca la loseta de Flotas Comerciales junto al tablero y luego:",
+          "bullets": [
+            "Roba losetas de colonia: el número de jugadores más 2 (5 con 2 jugadores).",
+            "Pon un cubo blanco en el segundo espacio resaltado del track de cada colonia.",
+            "Titan, Enceladus y Miranda: el cubo empieza sobre la imagen de la luna y pasa al segundo espacio en cuanto alguna carta en juego pueda recolectar su recurso. Hasta entonces, nadie coloniza ni comercia allí."
+          ]
+        },
+        {
+          "text": "Coloca el tablero del Comité de Terraformación y el tablero de Eventos Globales junto al tablero:",
+          "bullets": [
+            "En Tharsis, cubre el hito Terraformer con la loseta nueva (TR 26).",
+            "Un delegado neutral gris en el asiento del Presidente; los demás delegados neutrales en la Reserva Neutral.",
+            "Baraja las cartas de Evento Global en su espacio. Roba una como Evento Global Próximo y pon un delegado neutral como Líder del partido indicado arriba a la izquierda: ese partido es el Dominante (marcador de Dominancia en su área de delegados).",
+            "Voltea la siguiente carta como Evento Global Lejano y añade un delegado neutral a su partido de arriba a la izquierda (en el área de delegados si ese partido ya tiene líder).",
+            "Apila las seis losetas de Política con Greens arriba: los Greens gobiernan la primera generación, que no tiene Evento Global Actual."
+          ]
+        }
+      ]
+    },
+    "setup-decks": {
+      "title": "Mazos",
+      "instruction": "Arma los mazos:",
+      "bullets": [
+        "Juego estándar: retira todas las cartas de la Era Corporativa (ícono rojo y blanco, abajo a la izquierda) de las cartas de proyecto y de las corporaciones.",
+        "Baraja el mazo de proyectos y ponlo junto al tablero, con espacio para una pila de descarte."
+      ],
+      "components": [
+        "Cartas de proyecto",
+        "Cartas de corporación"
+      ],
+      "additions": [
+        {
+          "title": "Era Corporativa",
+          "text": "¿Juegan la partida extendida? Dejen todas las cartas de la Era Corporativa, incluidas sus 2 corporaciones. Los jugadores empiezan entonces sin la producción extra."
+        },
+        {
+          "text": "Baraja las 7 cartas de proyecto de Preludio en el mazo de proyectos y sus 5 corporaciones con las corporaciones. Las otras 35, las cartas de Preludio, forman su propio mazo, barajado."
+        },
+        {
+          "text": "Baraja las 49 cartas de proyecto y las 5 corporaciones de Venus en sus mazos."
+        },
+        {
+          "text": "Baraja las cartas de proyecto y las corporaciones de Colonias en sus mazos."
+        },
+        {
+          "text": "Baraja las 16 cartas de proyecto de Agitación en el mazo de proyectos."
+        }
+      ]
+    },
+    "setup-players": {
+      "title": "Jugadores",
+      "instruction": "Elijan quién empieza y luego cada jugador:",
+      "bullets": [
+        "Quien ganó Terraforming Mars más recientemente toma el marcador de jugador inicial.",
+        "Elige un color; toma sus marcadores y un tablero de jugador.",
+        "Juego estándar: producción 1 de cada recurso (un marcador en el 1 de los seis tracks).",
+        "Un marcador en el 20 del track de TR."
+      ],
+      "components": [
+        "Tableros de jugador",
+        "Marcadores de jugador",
+        "Marcador de jugador inicial"
+      ],
+      "additions": [
+        {
+          "text": "Cada jugador pone una flota comercial en la loseta de Flotas Comerciales, con un marcador suyo dentro."
+        },
+        {
+          "text": "Cada jugador pone 1 de sus 7 delegados en el Vestíbulo y los otros 6 en la Reserva de Delegados."
+        }
+      ]
+    },
+    "setup-deal": {
+      "title": "Repartir cartas",
+      "instruction": "Reparte a cada jugador:",
+      "bullets": [
+        "Jugadores nuevos: una Corporación Principiante, que da 42 M€ y 10 cartas de proyecto directo a la mano. Se saltan el resto de las elecciones de la preparación.",
+        "Los demás: 2 corporaciones (sin las de la Era Corporativa en el juego estándar) y 10 cartas de proyecto."
+      ],
+      "components": [
+        "Cartas de corporación",
+        "Cartas de proyecto"
+      ],
+      "additions": [
+        {
+          "text": "Reparte también 4 cartas de Preludio a cada jugador."
+        }
+      ]
+    },
+    "setup-choose": {
+      "title": "Elegir y revelar",
+      "instruction": "Todos eligen a la vez y luego revelan en orden de jugadores:",
+      "bullets": [
+        "Elige 1 corporación y cuáles de las 10 cartas de proyecto conservas.",
+        "Descarta el resto boca abajo (las corporaciones vuelven a la caja).",
+        "En orden de jugadores: revela tu corporación, toma sus recursos y producción iniciales y paga 3 M€ por cada carta que conserves."
+      ],
+      "components": [
+        "Cartas de corporación",
+        "Cartas de proyecto",
+        "Tableros de jugador"
+      ],
+      "additions": [
+        {
+          "text": "Conserva también 2 de tus 4 cartas de Preludio, gratis. Cuando todos hayan pagado, juega tus 2 Preludios en orden de jugadores y descarta los otros 2. Funcionan como cartas verdes."
+        }
+      ]
+    },
+    "setup-start": {
+      "title": "Generación 1",
+      "instruction": "La generación 1 no tiene fases de Orden de Jugadores ni de Investigación: el jugador inicial empieza la fase de acciones.",
+      "components": [
+        "Marcador de jugador inicial"
+      ]
+    },
+    "turn": {
+      "title": "1 o 2 acciones",
+      "instruction": "Haz 1 o 2 acciones, en cualquier combinación, o pasa:",
+      "bullets": [
+        "Jugar una carta: cumple su requisito y paga su costo (el acero vale 2 M€ en etiquetas de construcción, el titanio 3 M€ en etiquetas de espacio) y luego aplica sus efectos.",
+        "Proyecto estándar: Vender patentes (descarta cartas por 1 M€ cada una), Planta de energía 11 M€, Asteroide 14 M€, Acuífero 18 M€, Vegetación 23 M€, Ciudad 25 M€.",
+        "Reclamar un hito que cumplas: 8 M€, vale 5 PV. Solo se pueden reclamar 3.",
+        "Financiar una recompensa: 8, luego 14, luego 20 M€. Solo se pueden financiar 3.",
+        "Usar la acción de una carta azul, una vez por generación.",
+        "Convertir 8 plantas en una loseta de vegetación (sube el oxígeno), u 8 de calor en un paso de temperatura."
+      ],
+      "components": [
+        "Cartas de proyecto",
+        "Proyectos estándar",
+        "Hitos y recompensas",
+        "Tablero de jugador"
+      ],
+      "additions": [
+        {
+          "title": "Colocar losetas",
+          "text": "Al colocar una loseta:",
+          "bullets": [
+            "Toma el bono impreso en su área, más 2 M€ por cada océano vecino.",
+            "Océanos solo en áreas de océano; nunca una ciudad junto a otra ciudad; una vegetación junto a una loseta tuya si puedes.",
+            "Subir temperatura, oxígeno u océanos también sube tu TR, salvo cuando ese parámetro ya llegó a su meta."
+          ]
+        },
+        {
+          "text": "Venus Next:",
+          "bullets": [
+            "Raspado de Aire (proyecto estándar): 15 M€ para subir Venus 1 paso, y tu TR.",
+            "Bonos de Venus: roba una carta en 8%, un TR extra en 16%.",
+            "Hito Hoverlord: 7 flotadores en tus cartas. Recompensa Venuphile: más etiquetas de Venus."
+          ]
+        },
+        {
+          "text": "Acciones de Colonias:",
+          "bullets": [
+            "Construir una colonia (proyecto estándar, 17 M€): tu marcador en el espacio libre más bajo del track de una colonia; toma su bono de colocación. Máximo 3 colonias por loseta, y 1 tuya.",
+            "Comerciar: paga 9 M€, 3 de energía o 3 de titanio y mueve tu flota comercial a una loseta de colonia sin flota. Toma el ingreso comercial que marca el cubo blanco; los dueños de colonias ahí reciben su bono de colonia. Luego desliza el cubo blanco a la izquierda, hasta las colonias."
+          ]
+        },
+        {
+          "text": "Agitación:",
+          "bullets": [
+            "Cabildeo, cuantas veces quieras: mueve un delegado del Vestíbulo (gratis) o de tu Reserva de Delegados (5 M€) a un partido.",
+            "Tener más delegados en un partido que su líder te hace Líder del partido; el partido con más delegados es el Dominante.",
+            "La política del partido en el poder funciona durante la fase de acciones.",
+            "Una carta con requisito de partido necesita ese partido en el poder, o 2 delegados tuyos en él."
+          ]
+        }
+      ],
+      "reminders": [
+        "¿Usaste la acción de una carta azul? Deja un marcador tuyo sobre ella.",
+        "¿Subiste un parámetro? Sube también tu TR y toma el bono impreso en ese paso del track.",
+        "¿No hiciste ninguna acción? Entonces pasaste: quedas fuera hasta la siguiente generación.",
+        "¿Comerciaste? Tu flota se queda en esa loseta de colonia hasta el final de la generación."
+      ]
+    },
+    "production": {
+      "title": "Producción",
+      "instruction": "Todos a la vez:",
+      "bullets": [
+        "Convierte toda la energía en calor (mueve los cubos a la casilla de calor).",
+        "Gana M€ igual a tu TR más tu producción de M€ (que puede ser negativa).",
+        "Gana cada uno de los demás recursos que produces.",
+        "Quita los marcadores de las cartas de acción usadas."
+      ],
+      "components": [
+        "Tableros de jugador",
+        "Cubos de recurso"
+      ]
+    },
+    "end-check": {
+      "title": "¿Marte está terraformado?",
+      "instruction": "¿La temperatura (+8 °C), el oxígeno (14%) y los 9 océanos llegaron a su meta?",
+      "bullets": [
+        "Sí: el juego termina. En orden de jugadores, todos pueden convertir plantas en vegetación una vez más y luego puntúan. Termina el juego desde el menú Juego.",
+        "No: sigan con la generación."
+      ],
+      "components": [
+        "Track de temperatura",
+        "Track de oxígeno",
+        "Losetas de océano"
+      ],
+      "additions": [
+        {
+          "text": "La escala de Venus no necesita estar completa para que termine el juego."
+        },
+        {
+          "text": "Si el juego termina, sáltate Agitación. En la puntuación final, cada Líder de partido y el Presidente valen 1 PV para su dueño."
+        }
+      ]
+    },
+    "solar-wg": {
+      "title": "Terraformación del Gobierno Mundial",
+      "instruction": "El jugador inicial (el orden aún no cambió) sube 1 paso un parámetro global que no haya llegado a su meta, o coloca una loseta de océano, por el Gobierno Mundial:",
+      "bullets": [
+        "Ningún TR ni bono para el jugador inicial.",
+        "Las cartas igual pueden activarse, como Arctic Algae o Aphrodite."
+      ],
+      "components": [
+        "Tablero de Venus",
+        "Tracks de parámetros globales"
+      ]
+    },
+    "solar-colonies": {
+      "title": "Producción de las colonias",
+      "instruction": "En cada loseta de colonia:",
+      "bullets": [
+        "Devuelve las flotas comerciales a la loseta de Flotas Comerciales.",
+        "Sube el cubo blanco 1 espacio en el track de la colonia."
+      ],
+      "components": [
+        "Losetas de colonia",
+        "Flotas comerciales"
+      ]
+    },
+    "turmoil-event": {
+      "title": "Revisión de TR y Evento Global",
+      "instruction": "Agitación, primero:",
+      "bullets": [
+        "Todos pierden 1 TR.",
+        "Resuelve el Evento Global Actual (no hay ninguno en la generación 1). Lo que cuente se detiene en 5; luego suma la influencia de cada jugador: 1 por el Presidente, 1 por el líder del partido Dominante y 1 por otros delegados en el partido Dominante."
+      ],
+      "components": [
+        "Cartas de Evento Global",
+        "Tablero del Comité de Terraformación"
+      ]
+    },
+    "turmoil-government": {
+      "title": "Nuevo Gobierno",
+      "instruction": "El partido Dominante toma el poder:",
+      "bullets": [
+        "Su loseta de Política va arriba: gobierna la siguiente generación.",
+        "Todos reciben su Bono de Gobierno.",
+        "Devuelve al Presidente anterior y a los demás delegados del partido a sus reservas.",
+        "Su Líder de partido se vuelve Presidente, y ese jugador gana 1 TR.",
+        "Mueve el marcador de Dominancia al partido con más delegados (empate: el siguiente en sentido horario).",
+        "Rellena el Vestíbulo: 1 delegado por jugador, de su reserva."
+      ],
+      "components": [
+        "Losetas de Política",
+        "Delegados",
+        "Marcador de Dominancia"
+      ]
+    },
+    "turmoil-times": {
+      "title": "Tiempos de Cambio",
+      "instruction": "Avanza los Eventos Globales:",
+      "bullets": [
+        "El Evento Global Próximo va encima del Actual; añade el delegado neutral indicado a la mitad derecha de esa carta.",
+        "El Evento Global Lejano pasa a ser el Próximo.",
+        "Voltea la carta de arriba como Evento Global Lejano, añade su delegado neutral de arriba a la izquierda y lee su texto de ambientación."
+      ],
+      "components": [
+        "Cartas de Evento Global",
+        "Delegados neutrales"
+      ]
+    },
+    "player-order": {
+      "title": "Orden de jugadores",
+      "instruction": "Pasa el marcador de jugador inicial 1 lugar en sentido horario y sube 1 el marcador de generación.",
+      "components": [
+        "Marcador de jugador inicial",
+        "Marcador de generación"
+      ]
+    },
+    "research": {
+      "title": "Investigación",
+      "instruction": "Todos roban 4 cartas y compran las que quieran conservar:",
+      "bullets": [
+        "3 M€ por cada carta que conserves (0–4).",
+        "Descarta el resto boca abajo.",
+        "No hay límite de mano."
+      ],
+      "components": [
+        "Cartas de proyecto"
+      ]
+    }
+  }
+}
