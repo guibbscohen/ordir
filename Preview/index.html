@@ -445,6 +445,16 @@ button.bubble { font: inherit; font-size: 15px; color: var(--fg); cursor: pointe
 .game strong { font-size: 16px; }
 .game .meta span { color: var(--muted); font-size: 15px; line-height: 1.35; }
 .game .meta .src { font-size: 12px; }
+/* Ordi's favourites after the first: two smaller cards side by side. */
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.game.small .art { aspect-ratio: 1 / 1; }
+.game.small .meta { padding: 10px 12px 12px; }
+.game.small .meta strong { font-size: 15px; line-height: 1.25; }
+.game.small .meta .src { font-size: 11px; }
+/* The newest game's badge, on its cover. */
+.game .art { position: relative; }
+.game .badge { position: absolute; top: 10px; left: 10px; padding: 3px 10px; border-radius: 999px; background: var(--sparkle); color: #000;
+  font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
 /* Cards and options shrink a little under the finger and spring back. */
 .game:not(.soon), .option { transition: transform .25s cubic-bezier(.3, 1.4, .5, 1); }
 .game:not(.soon):active, .option:active { transform: scale(.97); transition-duration: .1s; }
@@ -970,7 +980,8 @@ function handoff(s, animate) {
 }
 
 // Coming-soon games show on Home so players see what's next.
-// In the order they were added (Home's "Most recently added" reverses it); `fav`: Ordi's Current Favorites.
+// In the order they were added (Home's "Most recently added" reverses it); `fav`: Ordi's Current Favorites (the first
+// one large, the rest in pairs); `newest`: Ordi's Newest Meeples, highlighted above them.
 const GAMES = [
   { id: "dune", script: "duneWarForArrakis", title: "Dune: War for Arrakis", detail: "2 players · turn guide and rules questions", cover: "cover", fav: true,
     askExample: "Can a Legion move and leave a Leader behind?" },
@@ -984,7 +995,7 @@ const GAMES = [
     askExample: "Can I build on a location that isn’t in my network?" },
   { id: "duneImperium", script: "duneImperium", title: "Dune: Imperium", detail: "3–4 players · turn guide and rules questions", cover: "cover",
     askExample: "Can I send an Agent to a space another player is on?" },
-  { id: "terraformingMars", script: "terraformingMars", title: "Terraforming Mars", detail: "2–5 players · turn guide and rules questions", cover: "cover", seats: 5,
+  { id: "terraformingMars", script: "terraformingMars", title: "Terraforming Mars", detail: "2–5 players · turn guide and rules questions", cover: "cover", seats: 5, newest: true,
     askExample: "Can I place a greenery if I have no tiles yet?" },
 ];
 // Games with a turn guide and rules (not "Coming soon"), and the one a table or question is about.
@@ -1067,10 +1078,12 @@ function gamesPage() {
   const cover = (g) => coverOf(g);
   const build = state.buildHome ? " build" : "";
   const query = norm(state.homeQuery);
-  const card = (g) => `<button class="game" data-act="game-${g.id}" ${scripts[g.script] ? "" : "disabled"}>
-        <span class="art">${cover(g) ? `<img src="${imgUrl(g.cover, g.script)}" alt="">` : ""}</span>
-        <span class="meta"><div><strong>${esc(g.title)}</strong><span>${esc(t(g.detail))}</span>
-          ${cover(g) ? `<span class="src">${t("Cover art: {0}", esc(imgLabel(cover(g), scripts[g.script])))}</span>` : ""}</div>${CHEVRON}</span></button>`;
+  // A game's card: large (its details and a chevron), or small for a pair side by side. A new game wears a badge.
+  const card = (g, { small = false, isNew = false } = {}) => `<button class="game${small ? " small" : ""}" data-act="game-${g.id}" ${scripts[g.script] ? "" : "disabled"}>
+        <span class="art">${cover(g) ? `<img src="${imgUrl(g.cover, g.script)}" alt="">` : ""}${isNew ? `<span class="badge">${t("New")}</span>` : ""}</span>
+        <span class="meta"><div><strong>${esc(g.title)}</strong>${small ? "" : `<span>${esc(t(g.detail))}</span>`}
+          ${cover(g) ? `<span class="src">${t("Cover art: {0}", esc(imgLabel(cover(g), scripts[g.script])))}</span>` : ""}</div>${small ? "" : CHEVRON}</span></button>`;
+  const favorites = GAMES.filter((g) => g.fav), newest = GAMES.filter((g) => g.newest);
   const row = (g, hidden) => `<button class="game-row" data-act="game-${g.id}" data-title="${esc(norm(g.title))}" ${scripts[g.script] ? "" : "disabled"} ${hidden ? "hidden" : ""}>${thumb(g)}
         <span><strong>${esc(g.title)}</strong><span class="sub">${esc(t(g.detail))}</span></span>${CHEVRON}</button>`;
   const sorted = state.sort === "name" ? [...GAMES].sort((a, b) => a.title.localeCompare(b.title)) : [...GAMES].reverse();
@@ -1085,7 +1098,9 @@ function gamesPage() {
       ${GAMES.map((g) => row(g, !norm(g.title).includes(query))).join("")}
       <p class="hint none" ${GAMES.some((g) => norm(g.title).includes(query)) ? "hidden" : ""}>${t("No games match.")}</p></div>
     <div id="home-browse" ${query ? "hidden" : ""}>
-      <div class="group"><h2>${t("Ordi’s Current Favorites")}</h2>${GAMES.filter((g) => g.fav).map(card).join("")}</div>
+      ${newest.length ? `<div class="group"><h2>${t("Ordi’s Newest Meeples")}</h2>${newest.map((g) => card(g, { isNew: true })).join("")}</div>` : ""}
+      <div class="group"><h2>${t("Ordi’s Current Favorites")}</h2>${favorites.slice(0, 1).map((g) => card(g)).join("")}
+        ${favorites.length > 1 ? `<div class="pair">${favorites.slice(1).map((g) => card(g, { small: true })).join("")}</div>` : ""}</div>
       <div class="group"><h2>${t("All games")}</h2>
         <div class="segmented" role="radiogroup" aria-label="${t("Sort games")}">${sortButton("name", "A–Z")}${sortButton("recent", "Most recently added")}</div>
         ${sorted.map((g) => row(g, false)).join("")}</div></div>`;

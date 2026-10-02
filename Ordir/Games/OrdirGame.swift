@@ -42,4 +42,7 @@ enum OrdirGame: String, CaseIterable, Identifiable, Codable {
 
     /// Ordi's current favourites, shown first on Home.
     static let favorites: [OrdirGame] = [.duneWarForArrakis, .starWarsRebellion, .warOfTheRing2E]
+
+    /// Ordi's newest meeples, highlighted at the top of Home.
+    static let newest: [OrdirGame] = [.terraformingMars]
 }

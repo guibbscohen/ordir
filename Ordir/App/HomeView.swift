@@ -198,15 +198,24 @@ struct HomeView: View {
                     }
                 }
             } else {
+                let newest = OrdirGame.newest.filter { scripts[$0] != nil }
+                if !newest.isEmpty {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text(tr("Ordi’s Newest Meeples"))
+                            .font(.ordir(.headline))
+                            .accessibilityAddTraits(.isHeader)
+                        ForEach(newest) { game in gameCard(game, isNew: true) }
+                    }
+                }
+                // The first favourite large, the others as smaller cards side by side.
+                let favorites = OrdirGame.favorites.filter { scripts[$0] != nil }
                 VStack(alignment: .leading, spacing: 12) {
                     Text(tr("Ordi’s Current Favorites"))
                         .font(.ordir(.headline))
                         .accessibilityAddTraits(.isHeader)
-                    ForEach(OrdirGame.favorites.filter { scripts[$0] != nil }) { game in
-                        NavigationLink(value: game) {
-                            GameCard(game: game, script: scripts[game]!)
-                        }
-                        .buttonStyle(PressableCardStyle())
+                    if let first = favorites.first { gameCard(first) }
+                    HStack(alignment: .top, spacing: 12) {
+                        ForEach(favorites.dropFirst()) { game in gameCard(game, compact: true) }
                     }
                 }
                 VStack(alignment: .leading, spacing: 12) {
@@ -224,6 +233,13 @@ struct HomeView: View {
                 }
             }
         }
+    }
+
+    private func gameCard(_ game: OrdirGame, compact: Bool = false, isNew: Bool = false) -> some View {
+        NavigationLink(value: game) {
+            GameCard(game: game, script: scripts[game]!, compact: compact, isNew: isNew)
+        }
+        .buttonStyle(PressableCardStyle())
     }
 
     private var searching: Bool { !query.trimmingCharacters(in: .whitespaces).isEmpty }
@@ -297,10 +313,13 @@ private struct BubbleTail: Shape {
     }
 }
 
-/// A playable game: its cover art (cropped from the rulebook cover) over the name.
+/// A playable game: its cover art (cropped from the rulebook cover) over the name. Compact cards (a pair side by
+/// side) show a square cover and just the name; a new game wears a "New" badge on its cover.
 private struct GameCard: View {
     let game: OrdirGame
     let script: TurnScript
+    var compact = false
+    var isNew = false
 
     private var cover: TurnScript.SourceImage? { script.pictures(["cover"]).first }
 
@@ -308,36 +327,51 @@ private struct GameCard: View {
         VStack(alignment: .leading, spacing: 0) {
             if let cover {
                 Color.clear
-                    .aspectRatio(5 / 4, contentMode: .fit)
+                    .aspectRatio(compact ? 1 : 5 / 4, contentMode: .fit)
                     .overlay {
                         Image(script.assetName(for: cover))
                             .resizable()
                             .scaledToFill()
                     }
                     .clipped()
-                    .accessibilityHidden(true)
+                    .overlay(alignment: .topLeading) {
+                        if isNew {
+                            Text(tr("New").uppercased())
+                                .font(.ordir(.caption).weight(.bold))
+                                .foregroundStyle(.black)
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 3)
+                                .background(Color.ordirSparkle, in: Capsule())
+                                .padding(10)
+                        }
+                    }
+                    .accessibilityHidden(!isNew)
             }
             HStack(spacing: 12) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(game.displayName)
-                        .font(.ordir(.headline))
-                    Text(tr("Turn guide, step by step"))
-                        .font(.ordir(.subheadline))
-                        .foregroundStyle(.secondary)
+                        .font(.ordir(compact ? .subheadline : .headline).weight(compact ? .semibold : .regular))
+                    if !compact {
+                        Text(tr("Turn guide, step by step"))
+                            .font(.ordir(.subheadline))
+                            .foregroundStyle(.secondary)
+                    }
                     if let cover {
                         Text(tr("Cover art: {0}", script.label(for: cover)))
-                            .font(.ordir(.caption))
+                            .font(.ordir(compact ? .caption2 : .caption))
                             .foregroundStyle(.secondary)
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                Image(systemName: "chevron.right")
-                    .font(.ordir(.footnote).weight(.semibold))
-                    .foregroundStyle(.tertiary)
-                    .accessibilityHidden(true)
+                if !compact {
+                    Image(systemName: "chevron.right")
+                        .font(.ordir(.footnote).weight(.semibold))
+                        .foregroundStyle(.tertiary)
+                        .accessibilityHidden(true)
+                }
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
+            .padding(.horizontal, compact ? 12 : 16)
+            .padding(.vertical, compact ? 10 : 12)
         }
         .background(.quaternary.opacity(0.5))
         .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
