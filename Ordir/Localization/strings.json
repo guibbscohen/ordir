@@ -317,7 +317,16 @@
     "You can start now: anyone who joins later lands on the step you’re on.": "Pode começar agora: quem entrar depois chega no passo em que vocês estão.",
     "Your table is ready": "Sua mesa está pronta",
     "Back to your table": "Voltar para a sua mesa",
-    "Not now": "Agora não"
+    "Not now": "Agora não",
+    "Here’s how I’ll help": "Veja como eu ajudo",
+    "Table setup": "Preparar a mesa",
+    "Step by step, I help you lay out the board, pieces and cards, with pictures from the rulebook.": "Passo a passo, ajudo vocês a montar o tabuleiro, as peças e as cartas, com imagens do livro de regras.",
+    "Setup takes {0} steps.": "A preparação tem {0} passos.",
+    "Every turn": "Cada turno",
+    "Then I guide each round, turn by turn: who acts, what to do, and what to tidy up before passing the turn.": "Depois guio cada rodada, turno a turno: quem joga, o que fazer e o que arrumar antes de passar a vez.",
+    "Tap the orb any time for a rules question.": "Toque no orbe a qualquer momento para tirar uma dúvida de regra.",
+    "Start with setup": "Começar pela preparação",
+    "Skip setup, we’re set up": "Pular a preparação, já está tudo pronto"
   },
   "es-419": {
     "Both players": "Ambos jugadores",
@@ -637,6 +646,15 @@
     "You can start now: anyone who joins later lands on the step you’re on.": "Puedes empezar ya: quien se una después llega al paso en que están.",
     "Your table is ready": "Tu mesa está lista",
     "Back to your table": "Volver a tu mesa",
-    "Not now": "Ahora no"
+    "Not now": "Ahora no",
+    "Here’s how I’ll help": "Así te ayudo",
+    "Table setup": "Preparar la mesa",
+    "Step by step, I help you lay out the board, pieces and cards, with pictures from the rulebook.": "Paso a paso, te ayudo a armar el tablero, las piezas y las cartas, con imágenes del reglamento.",
+    "Setup takes {0} steps.": "La preparación tiene {0} pasos.",
+    "Every turn": "Cada turno",
+    "Then I guide each round, turn by turn: who acts, what to do, and what to tidy up before passing the turn.": "Luego guío cada ronda, turno a turno: quién juega, qué hacer y qué ordenar antes de pasar el turno.",
+    "Tap the orb any time for a rules question.": "Toca el orbe en cualquier momento para hacer una pregunta de reglas.",
+    "Start with setup": "Empezar por la preparación",
+    "Skip setup, we’re set up": "Saltar la preparación, ya está todo listo"
   }
 }

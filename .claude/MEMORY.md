@@ -168,3 +168,6 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
 - 2026-10-02: Coming back to a table: the phone remembers its table for 12 hours (forgotten on sign-out or game over).
   Back in the app it catches up (latest step, fresh Realtime); after a restart, Home shows "Back to your table" (with
   "Not now") to sit down again on the same side.
+- 2026-10-02: Before every guide (preview and app), "Here's how I'll help": Ordir helps with the table setup (step count
+  shown), then every turn; "Start with setup" or "Skip setup, we're set up" (straight to round 1; Back still returns to
+  setup). On own phones only the host sees it, and a skip moves the whole table. Start over shows it again.

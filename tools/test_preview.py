@@ -148,6 +148,11 @@ def play(page, url, problems, mode="table", expansions=(), fights_battle=False, 
         page.click(f"label[for=exp-{expansion}]")
         check(page.is_checked(f"#exp-{expansion}"), f"{expansion} did not switch on")
     page.click("[data-act=start]")
+    # What Ordir does (setup, then every turn), with Skip setup; these runs start with setup.
+    check(focused(page, ".guide-intro h1") and page.query_selector("[data-act=intro-skip]"), "the guide's intro did not show")
+    if not expansions and mode == "table":
+        a11y.scan("guide intro")
+    page.click("[data-act=intro-setup]")
     check(focused(page, ".title"), "focus did not move to the first step's title")
     if expansions:
         # The step's orb opens a short ask sheet; Escape closes it and returns to the orb.
@@ -290,6 +295,15 @@ def tour_gestures_languages(page, url, problems):
     page.click("[data-act=game-dune]:visible")
     page.click("[data-mode=pass]")
     page.click("[data-act=start]")
+    # The guide's intro: swiping back returns to the setup picker; Skip setup goes straight to round 1.
+    page.wait_for_selector("[data-act=intro-skip]")
+    swipe(page, 60, 500, 330, 520)
+    page.wait_for_selector("[data-act=start]")
+    page.click("[data-act=start]")
+    page.click("[data-act=intro-skip]")
+    page.wait_for_selector(".title, [data-act=handoff-ready]")
+    check("Round 1" in page.text_content("#phone"), "Skip setup did not go straight to round 1")
+    tap_if(page, "[data-act=handoff-ready]")  # round 1 may open with the phone passed to its first player
     page.wait_for_selector(".title")
     swipe(page, 60, 500, 330, 520)
     check(page.query_selector(".title"), "swiping right left a running guide")
@@ -379,6 +393,7 @@ def own_phone_seats(page, url, problems):
     check(len(rows) == 4 and "You" in rows[2] and "Waiting" in rows[0], f"the waiting room's seats read {rows}")
     a11y.scan("waiting room")
     page.click("[data-act=table-go]")
+    page.click("[data-act=intro-setup]")
     page.wait_for_selector(".strip")
     check("You’re Player 3" in page.text_content(".strip"), "the table strip does not name the seat")
     check(page.query_selector("[data-act=done]"), "an own phone at a game without sides has no Done")

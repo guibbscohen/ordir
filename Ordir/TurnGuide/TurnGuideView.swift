@@ -26,6 +26,8 @@ struct TurnGuideView: View {
     let script: TurnScript
     @State private var session: TurnGuideSession?
     @State private var mode: PlayMode
+    /// Before the first step: what Ordir does, and the choice to skip setup.
+    @State private var showsIntro = false
 
     /// `startAt` and `expansions` skip the setup picker (CI screenshots use them).
     init(script: TurnScript, mode: PlayMode = .table, startAt stepID: String? = nil, expansions: Set<String>? = nil) {
@@ -43,14 +45,108 @@ struct TurnGuideView: View {
     }
 
     var body: some View {
-        if let session {
+        if let session, showsIntro {
+            GuideIntro(setupSteps: session.setupStepCount) { skip in
+                if skip { session.skipSetup() }
+                showsIntro = false
+            } back: {
+                showsIntro = false
+                self.session = nil
+            }
+        } else if let session {
             TurnGuideRunner(session: session, mode: mode)
         } else {
             SetupPicker(script: script, mode: mode) { chosenMode, chosen in
                 mode = chosenMode
                 session = TurnGuideSession(script: script, expansions: chosen, passesPhone: chosenMode == .pass)
+                showsIntro = true
             }
         }
+    }
+}
+
+// MARK: - Guide intro
+
+/// Between the setup picker and the first step: Ordir helps with the table setup, then every turn. Players who
+/// have already set up skip straight to round 1.
+private struct GuideIntro: View {
+    let setupSteps: Int
+    let start: (_ skipSetup: Bool) -> Void
+    let back: () -> Void
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 20) {
+                HStack(spacing: 14) {
+                    OrdirMascotView(isSpeaking: true)
+                        .frame(width: 48, height: 48)
+                        .accessibilityHidden(true)
+                    Text(tr("Here’s how I’ll help"))
+                        .font(.ordir(.title3).weight(.semibold))
+                        .fixedSize(horizontal: false, vertical: true)
+                        .accessibilityAddTraits(.isHeader)
+                }
+                item(1, title: tr("Table setup"), text: tr("Step by step, I help you lay out the board, pieces and cards, with pictures from the rulebook.")
+                    + " " + tr("Setup takes {0} steps.", setupSteps))
+                item(2, title: tr("Every turn"), text: tr("Then I guide each round, turn by turn: who acts, what to do, and what to tidy up before passing the turn."))
+                Text(tr("Tap the orb any time for a rules question."))
+                    .font(.ordir(.subheadline))
+                    .foregroundStyle(.secondary)
+            }
+            .padding(20)
+        }
+        .safeAreaInset(edge: .bottom) {
+            VStack(spacing: 4) {
+                Button {
+                    start(false)
+                } label: {
+                    Text(tr("Start with setup"))
+                        .font(.ordir(.headline))
+                        .frame(maxWidth: .infinity, minHeight: 54)
+                }
+                .buttonStyle(PrimaryButtonStyle())
+                .accessibilityIdentifier("start-setup")
+                Button {
+                    start(true)
+                } label: {
+                    Text(tr("Skip setup, we’re set up"))
+                        .font(.ordir(.headline))
+                        .foregroundStyle(Color.ordirSparkle)
+                        .frame(maxWidth: .infinity, minHeight: 48)
+                }
+                .accessibilityIdentifier("skip-setup")
+            }
+            .padding(.horizontal, 20)
+            .padding(.bottom, 8)
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button(tr("Back"), action: back)
+            }
+        }
+        .navigationBarBackButtonHidden(true)
+    }
+
+    private func item(_ number: Int, title: String, text: String) -> some View {
+        HStack(alignment: .top, spacing: 14) {
+            Text(verbatim: String(number))
+                .font(.ordir(.headline))
+                .foregroundStyle(Color.ordirSparkle)
+                .frame(width: 32, height: 32)
+                .background(Color(white: 0.08), in: Circle())
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title).font(.ordir(.headline))
+                Text(text)
+                    .font(.ordir(.subheadline))
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
+        .background(Color(white: 0.11), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .accessibilityElement(children: .combine)
     }
 }
 

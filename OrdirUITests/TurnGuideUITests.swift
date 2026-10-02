@@ -47,6 +47,8 @@ final class TurnGuideUITests: XCTestCase {
             XCTAssertTrue(isOn(toggle), "\(id) did not switch on")
         }
         app.buttons["Start guide"].tap()
+        XCTAssertTrue(app.buttons["start-setup"].waitForExistence(timeout: 5), "the guide's intro did not show")
+        app.buttons["start-setup"].tap()
 
         let progress = app.descendants(matching: .any)["guide-progress"]
         XCTAssertTrue(progress.waitForExistence(timeout: 10), "guide did not start")

@@ -112,6 +112,24 @@ final class TurnGuideSessionTests: XCTestCase {
         XCTAssertFalse(session.canGoBack)
     }
 
+    func testSkippingSetupStartsRoundOne() {
+        let session = TurnGuideSession(script: script, expansions: [])
+        XCTAssertTrue(session.isInSetup)
+        XCTAssertGreaterThan(session.setupStepCount, 0)
+        let first = session.step.id
+        session.skipSetup()
+        XCTAssertFalse(session.isInSetup)
+        XCTAssertEqual(session.round, 1)
+        XCTAssertEqual(session.position.step, session.phase.steps.firstIndex { session.applies($0.when) })
+        // Back returns to setup; skipping again from the middle of round 1 does nothing.
+        session.goBack()
+        XCTAssertEqual(session.step.id, first)
+        session.skipSetup()
+        let roundStep = session.step.id
+        session.skipSetup()
+        XCTAssertEqual(session.step.id, roundStep)
+    }
+
     func testRoundsRepeatWithoutSetup() {
         let session = TurnGuideSession(script: script, expansions: [])
         let roundOne = walk(session)

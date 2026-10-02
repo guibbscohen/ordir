@@ -117,6 +117,20 @@ final class TurnGuideSession {
         move(to: next)
     }
 
+    /// Setup steps that apply, for the guide's intro ("Setup takes 15 steps").
+    var setupStepCount: Int {
+        phases.filter { $0.part == .setup }.reduce(0) { count, phase in
+            count + phase.steps.filter { applies($0.when) }.count
+        }
+    }
+
+    /// "Skip setup": straight to round 1's first step. Back still returns to setup.
+    func skipSetup() {
+        guard isInSetup, let index = phases.firstIndex(where: { $0.part == .round }),
+              let step = firstApplicable(in: phases[index], after: -1) else { return }
+        move(to: Position(phase: index, step: step, pass: 1, round: 1))
+    }
+
     /// Leaves a looping phase, e.g. once every Action die is used.
     func endLoop() {
         moveToNextPhase(from: position)
