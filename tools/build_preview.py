@@ -16,9 +16,12 @@ Needs no PDFs. Exits non-zero if a picture is missing.
 import datetime
 import json
 import pathlib
+import re
 import shutil
+import struct
 import subprocess
 import sys
+import zlib
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 SCRIPTS = sorted((ROOT / "Ordir" / "Games").rglob("*.turnscript.json"))
@@ -34,6 +37,23 @@ def build_stamp():
     return f"{commit} · {datetime.datetime.now(datetime.timezone.utc):%Y-%m-%d %H:%M} UTC"
 
 
+
+def black_png(width, height):
+    """A plain black PNG (standard library only): iOS shows it while the Home Screen app opens."""
+    row = b"\x00" + b"\x00\x00\x00" * width
+    def chunk(kind, data):
+        return struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data) & 0xFFFFFFFF)
+    header = struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0)
+    return b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", header) + chunk(b"IDAT", zlib.compress(row * height, 9)) + chunk(b"IEND", b"")
+
+
+def write_launch_screens(folder):
+    """One launch image per apple-touch-startup-image link in index.html (its size is in the file name)."""
+    folder.mkdir(parents=True, exist_ok=True)
+    html = (ROOT / "Preview" / "index.html").read_text()
+    for width, height in re.findall(r'href="icons/startup/(\d+)x(\d+)\.png"', html):
+        (folder / f"{width}x{height}.png").write_bytes(black_png(int(width), int(height)))
+
 def main():
     shutil.rmtree(DIST, ignore_errors=True)
     DIST.mkdir(parents=True)
@@ -42,6 +62,7 @@ def main():
     shutil.copytree(ROOT / "Preview" / "fonts", DIST / "fonts")
     shutil.copytree(ROOT / "Preview" / "email", DIST / "email")  # images for the sign-in email (docs/email)
     shutil.copytree(ROOT / "Preview" / "icons", DIST / "icons")  # Home Screen and tab icons (rendered from icons/icon.svg)
+    write_launch_screens(DIST / "icons" / "startup")
     shutil.copy(ROOT / "Preview" / "manifest.webmanifest", DIST / "manifest.webmanifest")
     # Screen text in Portuguese and Spanish, shared with the app (Ordir/Localization/strings.json).
     strings = (ROOT / "Ordir" / "Localization" / "strings.json").read_text()
