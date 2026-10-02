@@ -317,6 +317,11 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 /* The layers the camera moves are on their own compositing layers from the first frame, so starting the move
    doesn't re-render them (on iPhone that made the glowing line flicker as the camera set off). */
 .intro-track, .intro-backdrop, .intro-home { will-change: transform; backface-visibility: hidden; }
+/* The line stays hidden until it starts drawing (before the script starts, its round cap would show as a dot). */
+.intro-line path { opacity: 0; }
+/* At launch the opening fades in from black, so its first frames match iOS's black launch screen and nothing the
+   browser draws while the page settles shows as a flash. */
+.phone.intro-on { animation: fade .35s ease both; }
 .intro-scene { height: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 6px; padding: 24px; text-align: center; }
 /* The world behind the opening and Home, two screens tall: Home's light is centred on the boundary, so it
