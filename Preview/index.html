@@ -1644,6 +1644,9 @@ document.addEventListener("scroll", (event) => {
 
 function render() {
   const phone = $("#phone");
+  // Read the position straight from the page before it's redrawn: the scroll event can arrive too late.
+  const shownHome = state.shownScreen === "home" && phone.querySelector(":scope > .pane.home > .scroll");
+  if (shownHome) homeScroll[state.shownTab] = shownHome.scrollTop;
   const s = cur();
   const key = state.screen === "home" ? `home-${state.tab}` : state.screen !== "game" ? state.screen : !s ? (online.lobby.open ? "lobby" : "picker") : s.finished ? `done-${s.isBattle}` : `${stepKey(s)}-${s.handoffTo === null}-${state.battle !== null}`;
   const animate = key !== state.lastKey;
@@ -1651,6 +1654,7 @@ function render() {
   // Back on Home from a game: Home is simply there again, where it was (no arrival animation to flash).
   const cameBack = state.screen === "home" && state.shownScreen === "game";
   state.shownScreen = state.screen;
+  state.shownTab = state.tab;
   const active = document.activeElement;
   const kept = active && phone.contains(active) ? (active.id ? `#${active.id}` : focusKey(active) || "[data-none]") : null;
   const menu = s && state.menu ? gameMenu(s) : "";

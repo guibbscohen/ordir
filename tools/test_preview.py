@@ -258,7 +258,8 @@ def tour_gestures_languages(page, url, problems):
 
     # Coming back to Home lands where the player left off, not at the top.
     page.click("[data-act=tab-games]")
-    page.evaluate("document.querySelector('.home > .scroll').scrollTop = 2000")
+    # Scroll and redraw in the same moment (as when a game's guide finishes loading): the place must survive.
+    page.evaluate("document.querySelector('.home > .scroll').scrollTop = 2000; render()")
     page.wait_for_timeout(100)
     before = page.evaluate("document.querySelector('.home > .scroll').scrollTop")
     page.click("#home-browse [data-act=game-knarr]")
