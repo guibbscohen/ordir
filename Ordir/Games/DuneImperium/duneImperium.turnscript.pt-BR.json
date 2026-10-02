@@ -1,0 +1,389 @@
+{
+  "language": "pt-BR",
+  "title": "Dune: Imperium",
+  "sides": {
+    "player": "Jogador da vez"
+  },
+  "victory": "No fim de uma rodada, se alguém tiver 10 ou mais Pontos de Vitória (ou o Baralho de Conflito acabar), o jogo termina: joguem as cartas de Intriga de Fim de Jogo e vence quem tiver mais Pontos de Vitória. Desempate: mais especiaria, depois Solari, água e tropas na guarnição.",
+  "sources": {
+    "rulebook": {
+      "title": "Livro de regras",
+      "shortTitle": "Livro de regras"
+    },
+    "faq": {
+      "title": "Errata e FAQ (13 de janeiro de 2025)",
+      "shortTitle": "FAQ"
+    },
+    "riseOfIx": {
+      "title": "Livro de regras de Rise of Ix",
+      "shortTitle": "Rise of Ix"
+    },
+    "immortality": {
+      "title": "Livro de regras de Immortality",
+      "shortTitle": "Immortality"
+    },
+    "bloodlines": {
+      "title": "Livro de regras de Bloodlines",
+      "shortTitle": "Bloodlines"
+    }
+  },
+  "expansions": {
+    "riseOfIx": {
+      "title": "Rise of Ix",
+      "summary": "Peças de Tecnologia no tabuleiro de Ix, encouraçados e Cargueiros na trilha de Transporte da CHOAM."
+    },
+    "immortality": {
+      "title": "Immortality",
+      "summary": "O tabuleiro Bene Tleilax: trilhas de pesquisa e Tleilaxu, espécimes, cartas Tleilaxu, Enxerto e Atômicas da Família."
+    },
+    "bloodlines": {
+      "title": "Bloodlines",
+      "summary": "Comandantes Sardaukar e suas Habilidades, novos líderes, cartas e Intrigas."
+    }
+  },
+  "images": {
+    "cover": "Capa do livro de regras",
+    "board": "Tabuleiro",
+    "conflict-cards": "Cartas de Conflito",
+    "bank": "Água, Solari e especiaria",
+    "reserve-cards": "Cartas da Reserva",
+    "decks-leaders": "Cartas de Intriga, Baralho do Imperium e Líderes",
+    "mentat-alliances": "Mentat, fichas de Aliança e marcador de Primeiro Jogador",
+    "player-components": "Componentes do jogador",
+    "imperium-row": "Fileira do Imperium",
+    "setup-board": "Preparação do tabuleiro",
+    "player-supply": "A reserva de um jogador",
+    "score-track": "Trilha de pontuação, guarnições e banco",
+    "round-structure": "As cinco fases de uma rodada",
+    "conflict-reveal": "Revelando a carta de Conflito",
+    "card-anatomy": "Anatomia da carta: quadro de Agente e quadro de Revelação",
+    "agent-icons": "Os sete ícones de Agente",
+    "conflict-area": "A área do Conflito entre as guarnições",
+    "harvest": "Colhendo especiaria na Bacia de Hagga",
+    "reveal": "Cartas reveladas",
+    "combat-intrigue": "Uma carta de Intriga de Combate",
+    "conflict-rewards": "Recompensas do Conflito: 1º, 2º e 3º",
+    "makers": "Especiaria bônus num espaço de Criador",
+    "endgame": "Fim de jogo",
+    "ix-components": "Componentes de Rise of Ix",
+    "ix-board": "Tabuleiro de Ix",
+    "choam-overlay": "Sobreposição da CHOAM",
+    "tech-tiles": "Peças de Tecnologia",
+    "shipping-track": "A trilha de Transporte",
+    "dreadnought-control": "Um encouraçado controlando um local",
+    "tleilax-board": "Tabuleiro Bene Tleilax",
+    "immortality-components": "Componentes de Immortality",
+    "immortality-player": "Atômicas da Família, Experimentação e os dois discos",
+    "tleilaxu-track": "A trilha Tleilaxu",
+    "commanders": "Comandantes Sardaukar e Habilidades",
+    "bloodlines-leaders": "Líderes de Bloodlines"
+  },
+  "phases": {
+    "setup": {
+      "title": "Preparação"
+    },
+    "round-start": {
+      "title": "Início da rodada"
+    },
+    "turns": {
+      "title": "Turnos dos jogadores",
+      "loop": {
+        "endLabel": "Todos revelaram",
+        "note": "Em sentido horário a partir do Primeiro Jogador, um turno cada. Depois do seu turno de Revelação, você é pulado até todos revelarem."
+      }
+    },
+    "combat": {
+      "title": "Combate"
+    },
+    "makers": {
+      "title": "Criadores"
+    },
+    "recall": {
+      "title": "Recolher"
+    }
+  },
+  "steps": {
+    "setup-board": {
+      "title": "Tabuleiro",
+      "instruction": "Coloquem o tabuleiro e depois:",
+      "bullets": [
+        "Deitem o Mentat no espaço do Mentat.",
+        "Coloquem as quatro fichas de Aliança nas áreas marcadas das trilhas de Influência (Imperador, Guilda Espacial, Bene Gesserit, Fremen)."
+      ],
+      "components": [
+        "Tabuleiro",
+        "Mentat",
+        "Fichas de Aliança"
+      ],
+      "additions": [
+        {
+          "text": "Coloquem a sobreposição da CHOAM no canto superior direito do tabuleiro (sobre o Landsraad e a CHOAM). Ponham o tabuleiro de Ix ao lado:",
+          "bullets": [
+            "Embaralhem as 18 peças de Tecnologia viradas para baixo em três pilhas de 6 nos seus três espaços e virem para cima a peça do topo de cada uma."
+          ]
+        },
+        {
+          "text": "Coloquem o tabuleiro Bene Tleilax acima da Fileira do Imperium:",
+          "bullets": [
+            "2 especiarias do banco no quarto espaço da trilha Tleilaxu.",
+            "A sobreposição da Estação de Pesquisa sobre o espaço Estação de Pesquisa do tabuleiro."
+          ]
+        },
+        {
+          "text": "Coloquem um Comandante Sardaukar (todos de madeira ou todos de plástico) em cada um destes: Conspirar, Riqueza, Dobra Espacial, Alto Conselho e Reunir Tropas:",
+          "bullets": [
+            "4 jogadores: um sexto no Salão da Oratória. O último vai para o banco.",
+            "Com Rise of Ix completo, a sobreposição da CHOAM cobre dois desses espaços: ponham um Comandante em Encouraçado e, com 4 jogadores, o outro em Negociação de Tecnologia.",
+            "Embaralhem as Habilidades de Comandante Sardaukar sem as duas “Fierce” e revelem quatro."
+          ]
+        }
+      ]
+    },
+    "setup-conflict": {
+      "title": "Baralho de Conflito",
+      "instruction": "Montem o Baralho de Conflito de 10 cartas na área marcada do tabuleiro, de baixo para cima:",
+      "bullets": [
+        "As quatro cartas de Conflito III, embaralhadas.",
+        "Cinco das dez cartas de Conflito II, embaralhadas.",
+        "Uma das quatro cartas de Conflito I no topo. Devolvam o resto à caixa sem olhar."
+      ],
+      "components": [
+        "Cartas de Conflito"
+      ],
+      "additions": [
+        {
+          "text": "Juntem as 4 novas cartas de Conflito antes de montar o baralho. Agora sobra uma carta de Conflito III: devolvam-na à caixa."
+        },
+        {
+          "text": "Com o Dune: Imperium original, não juntem as cartas de Conflito de Bloodlines."
+        }
+      ]
+    },
+    "setup-cards": {
+      "title": "Baralhos e Fileira do Imperium",
+      "instruction": "Ao lado do tabuleiro:",
+      "bullets": [
+        "Baralho de Intriga: embaralhado, virado para baixo.",
+        "Baralho do Imperium: embaralhado, virado para baixo; revelem cinco cartas como a Fileira do Imperium.",
+        "Cartas da Reserva ao lado, em três pilhas: Contato em Arrakis, A Especiaria Deve Fluir e Dobra Espacial."
+      ],
+      "components": [
+        "Cartas de Intriga",
+        "Baralho do Imperium",
+        "Cartas da Reserva"
+      ],
+      "additions": [
+        {
+          "text": "Embaralhem as 17 novas cartas de Intriga e as 35 novas cartas do Imperium nos seus baralhos antes de revelar a Fileira do Imperium."
+        },
+        {
+          "text": "Embaralhem as 30 novas cartas do Imperium (antes da Fileira) e as 15 novas cartas de Intriga. Depois montem a Fileira Tleilaxu:",
+          "bullets": [
+            "Forças Recuperadas à esquerda do tabuleiro Bene Tleilax.",
+            "Embaralhem o Baralho Tleilaxu virado para baixo acima do Baralho do Imperium e revelem duas cartas ao lado de Forças Recuperadas."
+          ]
+        },
+        {
+          "text": "Embaralhem as novas cartas do Imperium e de Intriga, deixando de fora as que são só de Uprising:",
+          "bullets": [
+            "As cartas do Módulo CHOAM.",
+            "Intriga: False Orders, Grasp Arrakis, Insider Information, Ripples in the Sand, Sleeper Unit.",
+            "Imperium: Arrakis Observer, Eliminate Allies, Holy War, Intelligence Training (2), Pointing the Way, Shrouded Counsel.",
+            "O Módulo de Tecnologia (páginas 6–7 de Bloodlines) é opcional."
+          ]
+        }
+      ]
+    },
+    "setup-leaders": {
+      "title": "Líderes",
+      "instruction": "Cada jogador pega um Líder (escolhido ou ao acaso) e o coloca à sua frente.",
+      "bullets": [
+        "Primeira partida: escolham Líderes com um ícone depois do nome: Paul Atreides, Glossu “A Besta” Rabban, Conde Memnon Thorvald ou Conde Ilban Richese."
+      ],
+      "components": [
+        "Líderes"
+      ],
+      "additions": [
+        {
+          "text": "Os 6 novos Líderes se juntam aos outros; qualquer combinação vale."
+        },
+        {
+          "text": "Os novos Líderes se juntam aos outros, exceto Conde Hasimir Fenring, Gaius Helen Mohiam e Liet Kynes (só de Uprising)."
+        }
+      ]
+    },
+    "setup-players": {
+      "title": "Sua cor",
+      "instruction": "Cada jogador escolhe uma cor e pega seus componentes:",
+      "bullets": [
+        "Dois Agentes sobre o seu Líder; o terceiro Agente (Mestre-Espadachim) ao lado do tabuleiro.",
+        "Disco de pontuação no 1 com 4 jogadores, no 0 com 3. Marcador de Combate no 0 da trilha de Combate.",
+        "Um cubo no espaço de baixo de cada uma das quatro trilhas de Influência.",
+        "Três dos seus 12 cubos de tropa na guarnição mais próxima de você; todo o resto na sua reserva, à vista.",
+        "1 água na sua reserva. Solari, especiaria e água formam o banco."
+      ],
+      "components": [
+        "Agentes",
+        "Discos",
+        "Marcador de Combate",
+        "Cubos",
+        "Água"
+      ],
+      "additions": [
+        {
+          "text": "Peguem também seus dois encouraçados (para a reserva) e um disco como seu Cargueiro, no espaço de baixo da trilha de Transporte."
+        },
+        {
+          "text": "Coloquem também seus dois discos novos nos espaços mais à esquerda da trilha Tleilaxu e da trilha de pesquisa, e uma ficha de Atômicas da Família na sua reserva."
+        }
+      ]
+    },
+    "setup-decks": {
+      "title": "Baralhos iniciais e primeiro jogador",
+      "instruction": "Cada jogador embaralha seu baralho inicial de 10 cartas e o coloca virado para baixo à esquerda do seu Líder.",
+      "bullets": [
+        "Sorteiem o primeiro jogador: ele pega o marcador de Primeiro Jogador."
+      ],
+      "components": [
+        "Baralhos iniciais",
+        "Marcador de Primeiro Jogador"
+      ],
+      "additions": [
+        {
+          "text": "Antes de embaralhar, troquem as duas cartas Duna, o Planeta Deserto do baralho inicial por duas cartas Experimentação."
+        }
+      ]
+    },
+    "round-start": {
+      "title": "Conflito e mãos",
+      "instruction": "Revelem a carta do topo do Baralho de Conflito e coloquem-na virada para cima ao lado dele. Depois cada jogador compra cinco cartas do próprio baralho.",
+      "bullets": [
+        "Um Conflito por um espaço que você controla: você pode enviar uma tropa da sua reserva para ele.",
+        "Seu baralho acabou quando precisa comprar? Embaralhe sua pilha de descarte para formar um novo baralho."
+      ],
+      "components": [
+        "Baralho de Conflito",
+        "Seu baralho"
+      ],
+      "additions": [
+        {
+          "text": "Desvirem as peças de Tecnologia que vocês viraram na rodada passada para usar a habilidade de uma vez por rodada."
+        }
+      ]
+    },
+    "turn": {
+      "title": "Turno de Agente ou de Revelação",
+      "instruction": "Faça um turno de Agente enquanto tiver Agentes, ou um turno de Revelação:",
+      "bullets": [
+        "Turno de Agente: jogue 1 carta e envie um Agente do seu Líder a um espaço livre do tabuleiro que mostre um dos ícones de Agente da carta, pagando o custo do espaço.",
+        "Ganhe os efeitos do espaço e do quadro de Agente da carta, em qualquer ordem. Um espaço de Facção também dá 1 de Influência nela.",
+        "Num espaço de Combate, você pode enviar ao Conflito as tropas recrutadas neste turno e até 2 da sua guarnição.",
+        "Turno de Revelação: revele o resto da mão e ganhe os quadros de Revelação. Gaste Persuasão em cartas da Fileira do Imperium ou da Reserva; elas vão para a sua pilha de descarte.",
+        "Defina sua força: 2 por tropa no Conflito mais 1 por espada (0 sem tropa lá). Depois ponha todas as cartas jogadas na pilha de descarte.",
+        "Cartas de Intriga de Trama podem ser jogadas a qualquer momento nos seus turnos."
+      ],
+      "components": [
+        "Cartas",
+        "Agentes",
+        "Tropas",
+        "Marcador de Combate"
+      ],
+      "additions": [
+        {
+          "text": "Ícones de Rise of Ix:",
+          "bullets": [
+            "Encouraçado: comissione um para a sua guarnição (no máximo 2). No Conflito vale 3 de força, mesmo sem tropas.",
+            "Cargueiro: avance um espaço na trilha de Transporte, ou recolha-o para a base e ganhe as recompensas do espaço dele e de todos abaixo.",
+            "Adquirir Tecnologia: compre uma peça de Tecnologia virada para cima pelo custo em especiaria (menos descontos e Negociadores) e vire a próxima."
+          ]
+        },
+        {
+          "text": "Immortality:",
+          "bullets": [
+            "Enxerto: uma carta de Enxerto é jogada junto com exatamente uma outra carta; use o ícone de Agente de qualquer uma e ganhe os efeitos das duas.",
+            "Espécimes vão para os tanques Axolotl; gaste-os em cartas da Fileira Tleilaxu no seu turno de Revelação.",
+            "Ícones de pesquisa e Tleilaxu avançam seus marcadores no tabuleiro Bene Tleilax; ganhe cada bônus ao alcançá-lo.",
+            "Atômicas da Família (uma vez por partida, no seu turno): troque toda a Fileira do Imperium."
+          ]
+        },
+        {
+          "text": "Comandantes Sardaukar:",
+          "bullets": [
+            "Num espaço com um Comandante, você pode pagar 2 Solari para adquiri-lo e recrutá-lo, e pegar uma das Habilidades de Comandante reveladas.",
+            "Uma vez por turno, você pode pagar 2 Solari para recrutar um Comandante da sua reserva (sem nova Habilidade).",
+            "Um Comandante é uma tropa que vale 2 de força. Enquanto houver um no Conflito, todas as suas Habilidades funcionam, uma vez cada por rodada."
+          ]
+        }
+      ],
+      "reminders": [
+        "Fileira do Imperium de volta a cinco cartas, do Baralho do Imperium.",
+        "Suas cartas novas foram para a pilha de descarte, não para a mão.",
+        "Fileira Tleilaxu de volta a duas cartas mais Forças Recuperadas."
+      ]
+    },
+    "combat-intrigue": {
+      "title": "Cartas de Intriga de Combate",
+      "instruction": "Em sentido horário a partir do Primeiro Jogador, cada jogador com tropa no Conflito joga cartas de Intriga de Combate ou passa.",
+      "bullets": [
+        "Passar não impede de jogar depois; resolvam o Combate quando todos os envolvidos passarem em sequência.",
+        "Ajustem os marcadores de Combate sempre que a força mudar. Guardem as cartas “quando você vence um Conflito” para depois de vencer."
+      ],
+      "components": [
+        "Cartas de Intriga",
+        "Marcadores de Combate"
+      ]
+    },
+    "combat-resolve": {
+      "title": "Recompensas",
+      "instruction": "Distribuam as recompensas da carta de Conflito pela força:",
+      "bullets": [
+        "Maior força ganha a recompensa de cima; a segunda maior, a segunda; a terceira maior, a terceira (só com 4 jogadores). Força 0 não ganha nada.",
+        "Empate em primeiro: ninguém vence; cada empatado ganha a segunda recompensa. Empate em segundo: cada um ganha a terceira.",
+        "Conflito por um espaço: o vencedor coloca um marcador de Controle na bandeira abaixo dele.",
+        "Depois todos devolvem suas tropas do Conflito à reserva e voltam o marcador de Combate ao 0."
+      ],
+      "components": [
+        "Carta de Conflito",
+        "Marcadores de Controle",
+        "Marcadores de Combate"
+      ],
+      "additions": [
+        {
+          "text": "Encouraçados:",
+          "bullets": [
+            "Venceu com um encouraçado? Coloque-o na bandeira de Arrakeen, Carthag ou Bacia Imperial (uma sem encouraçado); ele controla esse espaço até o fim do próximo Combate.",
+            "Encouraçados no Conflito voltam para a sua guarnição, não para a reserva.",
+            "Um encouraçado colocado na rodada passada volta agora para a guarnição."
+          ]
+        },
+        {
+          "text": "Comandantes Sardaukar no Conflito voltam para a sua reserva como as outras tropas."
+        }
+      ]
+    },
+    "makers": {
+      "title": "Especiaria bônus",
+      "instruction": "Coloquem 1 especiaria do banco em cada espaço de Criador sem Agente: A Grande Planície, Bacia de Hagga e Bacia Imperial.",
+      "bullets": [
+        "Ela se soma a qualquer especiaria bônus que já esteja lá."
+      ],
+      "components": [
+        "Especiaria"
+      ]
+    },
+    "recall": {
+      "title": "Fim de jogo ou próxima rodada",
+      "instruction": "Alguém com 10 ou mais Pontos de Vitória, ou o Baralho de Conflito vazio? O jogo termina: joguem as Intrigas de Fim de Jogo e vence quem tiver mais Pontos de Vitória. Senão:",
+      "bullets": [
+        "Devolvam o Mentat ao seu espaço no Landsraad.",
+        "Todos recolhem seus Agentes para os Líderes.",
+        "Passem o marcador de Primeiro Jogador em sentido horário."
+      ],
+      "components": [
+        "Mentat",
+        "Agentes",
+        "Marcador de Primeiro Jogador"
+      ]
+    }
+  }
+}

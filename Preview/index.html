@@ -513,7 +513,8 @@ html, body { overscroll-behavior-x: none; }
   .scroll.ghost { display: none; }
   .check.on.ticked .box path, .primary.ready, .phase-label b.roll, .tabbar.slide::before, .answer.fresh .chip, .game-list { animation: none; }
   .chat-row, .pill { transition: none; }
-  .game:not(.soon), .option { transition: none; }
+  .game:not(.soon), .option, .game-row { transition: none; }
+  .game-row:not(:disabled):active { transform: none; }
   .tabbar button { transition: none; }
   .intro-orb .mascot, .intro h1, .intro p { animation: fade .3s ease both !important; }
   .intro-line { display: none; }
@@ -764,7 +765,9 @@ function stepTitle(s) { const st = stepOf(s); return phaseOf(s).loop && !s.isBat
 function stepKey(s) { return `${s.pos.round}-${s.pos.phase}-${s.pos.step}-${s.pos.pass}-${s.finished}`; }
 function progressText(s) {
   const list = applicableSteps(s);
-  const inPhase = phaseOf(s).loop ? t("Turn {0}", turnNumber(s)) : t("{0} of {1}", list.findIndex((st) => st === stepOf(s)) + 1, list.length);
+  const n = t("{0} of {1}", list.findIndex((st) => st === stepOf(s)) + 1, list.length);
+  // A turn of several steps (games without fixed sides) also says which step of the turn: "Turn 3 · 2 of 3".
+  const inPhase = !phaseOf(s).loop ? n : takesTurns() && list.length > 1 ? `${t("Turn {0}", turnNumber(s))} · ${n}` : t("Turn {0}", turnNumber(s));
   if (s.isBattle) { const n = t("{0} of {1}", list.findIndex((st) => st === stepOf(s)) + 1, list.length); return phaseOf(s).loop ? `${t("Round {0}", s.pos.pass)} · ${n}` : n; }
   return phaseOf(s).part === "setup" ? inPhase : `${t("Round {0}", s.pos.round)} · ${inPhase}`;
 }
@@ -876,7 +879,9 @@ function half(seat, isFar, animate) {
        <div class="actions">${loop ? `<button class="textbtn" data-act="end-loop" data-seat="${seat}">${esc(loop.endLabel)}</button>` : ""}
          <button class="primary" data-act="done" data-seat="${seat}">${t("Done")}</button></div>`
     : waiting(s, seat);
-  return `<section class="half ${isFar ? "far" : "near"}" aria-label="${esc(t("{0} side", sideName(seat)))}">
+  // Without fixed sides both halves show the player on turn, so they're named by where they face.
+  const name = takesTurns() ? (isFar ? t("Across the table") : t("This side of the table")) : t("{0} side", sideName(seat));
+  return `<section class="half ${isFar ? "far" : "near"}" aria-label="${esc(name)}">
     <div class="seat ${seat}"><span class="dot"></span>${sideName(seat)}</div>${body}${overlayFor(seat, animate || !!state.pending || !!state.enlarged)}${online.ask.open && online.ask.seat === seat ? askSheet() : ""}</section>`;
 }
 
@@ -1144,9 +1149,9 @@ const TOUR = [
   { art: () => mascot("speaking"), title: "Welcome to Ordir",
     text: "I walk you through every turn, step by step, and answer rules questions with the page they come from." },
   { art: () => `<span class="tour-icon">${TAB_ICONS.games}</span>`, title: "Pick a game",
-    text: "Choose a game, then how you’re playing and which expansions are on the table." },
-  { art: () => `<span class="tour-phone" aria-hidden="true"><span class="far">${t("Your turn")}</span><span>${t("Waiting…")}</span></span>`, title: "One phone, two players",
-    text: "On the table, the screen splits: the top half faces the player across from you. You can also pass the phone, or each use your own." },
+    text: "Search for a game, or start from Ordi’s favorites. Then choose how you’re playing and which expansions are on the table." },
+  { art: () => `<span class="tour-phone" aria-hidden="true"><span class="far">${t("Your turn")}</span><span>${t("Waiting…")}</span></span>`, title: "One phone at the table",
+    text: "With two players the screen can split, the top half facing the player across from you. Or pass the phone to whoever’s turn it is, or each use your own." },
   { art: () => `<span class="tour-step" aria-hidden="true"><i></i><i></i><i></i><b>${t("Done")}</b></span>`, title: "Follow each step",
     text: "Each step says who acts and what to do, with pictures and the rulebook page. Tap Done to move on; the arrow goes back a step." },
   { art: () => `<span class="tour-checks" aria-hidden="true">${"<span></span>".repeat(3)}</span>`, title: "Before you pass the turn",

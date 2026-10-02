@@ -106,7 +106,11 @@ def fight_battle(page, a11y):
     raise Failed("battle never finished")
 
 
-def play(page, url, problems, mode="table", expansions=(), fights_battle=False, game="dune", script="duneWarForArrakis", marks=False):
+def play(page, url, problems, mode="table", expansions=(), fights_battle=False, game="dune", script="duneWarForArrakis", marks=False,
+         loop_taps=2):
+    """Plays into round 2. Inside a looping phase it taps Done `loop_taps` times before ending the loop (games without
+    fixed sides have several steps per turn, so they need more to go round the table)."""
+    game_button = f"[data-act=game-{game}]:visible"
     a11y = Accessibility(page, problems)
     page.goto(url)
     page.wait_for_selector(".intro")
@@ -117,9 +121,9 @@ def play(page, url, problems, mode="table", expansions=(), fights_battle=False, 
     else:
         a11y.scan("opening", settle=1250)  # once its text has faded in; then let it play out
     page.wait_for_selector(".intro", state="detached", timeout=8000)
-    page.wait_for_selector(f"[data-act=game-{game}]:not([disabled])")
+    page.wait_for_selector(f"{game_button}:not([disabled])")
     check(focused(page, ".pane h1"), "focus did not move to Home's heading")
-    check(page.query_selector(f".game img[src='img/{script}/cover.jpg']"), f"{game}'s card has no cover art")
+    check(page.query_selector(f":is(.game, .game-row) img[src='img/{script}/cover.jpg']"), f"{game} has no cover art on Home")
     a11y.scan("home")
     if expansions:
         # The orb opens Ask full screen; the glass bar switches tabs and keeps focus on the tab.
@@ -129,13 +133,13 @@ def play(page, url, problems, mode="table", expansions=(), fights_battle=False, 
         check(focused(page, "[data-act=tab-join]") and page.query_selector("[data-act=tab-join][aria-current=page]"), "the Join tab did not open")
         a11y.scan("join tab", settle=1500)
         page.click("[data-act=tab-games]")
-    page.click(f"[data-act=game-{game}]")
+    page.click(game_button)
     page.wait_for_selector("[data-act=start]")
     a11y.scan("setup picker")
     if mode == "pass":
         page.click("[data-act=home]")
-        check(page.query_selector(f"[data-act=game-{game}]"), "Games did not go back to Home")
-        page.click(f"[data-act=game-{game}]")
+        check(page.query_selector(game_button), "Games did not go back to Home")
+        page.click(game_button)
     if mode == "pass":
         page.click("[data-mode=pass]")
     for expansion in expansions:
@@ -151,7 +155,7 @@ def play(page, url, problems, mode="table", expansions=(), fights_battle=False, 
         page.keyboard.press("Escape")
         check(not page.query_selector(".sheet") and focused(page, "[data-act=ask-here]"), "Escape did not close the ask sheet")
 
-    steps = turns_in_loop = handoffs = 0
+    steps = turns_in_loop = handoffs = checklists = 0
     fought = marked = False
     while "Round 2" not in label(page):
         steps += 1
@@ -173,21 +177,23 @@ def play(page, url, problems, mode="table", expansions=(), fights_battle=False, 
             fought = True
             fight_battle(page, a11y)
             continue
-        if end and turns_in_loop >= 2:
+        if end and turns_in_loop >= loop_taps:
             end.click()
             turns_in_loop = 0
         else:
             if end:
                 turns_in_loop += 1
             page.click("[data-act=done] >> nth=0")
-        # Action turns stop at the "Before you pass the turn" checklist.
-        if end:
+        # Turns stop at the "Before you pass the turn" checklist (on the turn's last step).
+        if end and page.query_selector("[data-act=pass]"):
+            checklists += 1
             check(focused(page, '[role="dialog"] h2'), f"focus did not move to the checklist on {before}")
             a11y.scan("turn-change checklist")
-            check(tap_if(page, "[data-act=pass]"), f"no turn-change checklist on {before}")
+            check(tap_if(page, "[data-act=pass]"), f"the checklist on {before} did not pass the turn")
         check(label(page) != before or page.query_selector("[data-act=handoff-ready]"), f"Done did not advance past {before}")
         check(focused(page, ".title, .handoff h2"), f"focus did not move to the step after {before}")
 
+    check(checklists > 0, "no turn ever showed the turn-change checklist")
     page.click("[data-act=menu]")
     check(focused(page, ".menu h2"), "focus did not move to the Game menu")
     a11y.scan("game menu")
@@ -201,7 +207,7 @@ def play(page, url, problems, mode="table", expansions=(), fights_battle=False, 
     if fights_battle:
         check(fought, "never offered to start a battle")
     if marks:
-        check(marked, "never offered to mark the Smugglers alliance")
+        check(marked, "never offered to mark a game state from a step")
     if mode == "pass":
         check(handoffs > 5, "pass-the-phone play never asked to pass the phone")
     return steps
@@ -241,7 +247,7 @@ def tour_gestures_languages(page, url, problems):
     check(not page.query_selector(".overlay.tour"), "Skip did not close the tutorial")
     page.reload()
     page.keyboard.press("Enter")
-    page.wait_for_selector("[data-act=game-dune]:not([disabled])")
+    page.wait_for_selector("[data-act=game-dune]:visible:not([disabled])")
     page.wait_for_timeout(1800)
     check(not page.query_selector(".overlay.tour"), "the tutorial came back after it was skipped")
     page.click("[data-act=tab-account]")
@@ -252,15 +258,15 @@ def tour_gestures_languages(page, url, problems):
 
     # Swipe-back and the browser's Back leave a game's setup; a running guide ignores swipe-back.
     page.click("[data-act=tab-games]")
-    page.click("[data-act=game-dune]")
+    page.click("[data-act=game-dune]:visible")
     page.wait_for_selector("[data-act=start]")
     swipe(page, 60, 500, 330, 520)
-    check(page.query_selector("[data-act=game-dune]"), "swiping right did not go back to Home")
-    page.click("[data-act=game-dune]")
+    check(page.query_selector("[data-act=game-dune]:visible"), "swiping right did not go back to Home")
+    page.click("[data-act=game-dune]:visible")
     page.wait_for_selector("[data-act=start]")
     page.go_back()
-    page.wait_for_selector("[data-act=game-dune]")
-    page.click("[data-act=game-dune]")
+    page.wait_for_selector("[data-act=game-dune]:visible")
+    page.click("[data-act=game-dune]:visible")
     page.click("[data-mode=pass]")
     page.click("[data-act=start]")
     page.wait_for_selector(".title")
@@ -274,8 +280,23 @@ def tour_gestures_languages(page, url, problems):
     page.click("[data-act=close]")
     page.click("[data-act=home]")
 
+    # Home's search: typing lists only the matches; clearing brings back the favourites; the sort sticks.
+    page.fill("#home-search", "bra")
+    check(page.is_hidden("#home-browse"), "typing in the search did not hide the favourites")
+    titles = [el.text_content() for el in page.query_selector_all("#home-results .game-row:visible strong")]
+    check(titles == ["Brass: Birmingham"], f"searching for 'bra' listed {titles}")
+    a11y.scan("home search")
+    page.fill("#home-search", "")
+    check(page.is_visible("#home-browse") and page.is_hidden("#home-results"), "clearing the search did not bring back Home")
+    page.click("[data-act=sort-name]")
+    titles = [el.text_content() for el in page.query_selector_all("#home-browse .game-row strong")]
+    check(titles == sorted(titles), f"A–Z did not sort the games: {titles}")
+    page.click("[data-act=sort-recent]")
+    first = page.text_content("#home-browse .game-row strong")
+    check(first == "Dune: Imperium", f"Most recently added starts with {first}")
+
     # Languages: Account switches them, and the choice sticks.
-    for lang, account, games in (("pt-BR", "Conta", "Escolha um jogo"), ("es-419", "Cuenta", "Elige un juego")):
+    for lang, account, games in (("pt-BR", "Conta", "Os favoritos do Ordi"), ("es-419", "Cuenta", "Los favoritos de Ordi")):
         page.click("[data-act=tab-account]")
         page.click(f"[data-lang={lang}]")
         page.wait_for_function(f"document.documentElement.lang === '{lang}'")
@@ -285,8 +306,8 @@ def tour_gestures_languages(page, url, problems):
         check(games in page.text_content("#phone"), f"{lang}: Home is not translated")
     page.reload()
     page.keyboard.press("Enter")
-    page.wait_for_selector("[data-act=game-dune]:not([disabled])")
-    check("Elige un juego" in page.text_content("#phone"), "the language choice did not survive a reload")
+    page.wait_for_selector("[data-act=game-dune]:visible:not([disabled])")
+    check("Los favoritos de Ordi" in page.text_content("#phone"), "the language choice did not survive a reload")
     page.click("[data-act=tab-account]")
     page.click("[data-lang=en]")
 
@@ -307,6 +328,11 @@ def main():
         ("War of the Ring: table, both expansions, with a battle", dict(game="warOfTheRing2E", script="warOfTheRing2E",
                                                                      expansions=("lordsOfMiddleEarth", "warriorsOfMiddleEarth"), fights_battle=True)),
         ("War of the Ring: pass the phone, base game", dict(mode="pass", game="warOfTheRing2E", script="warOfTheRing2E")),
+        ("Knarr: pass the phone round the table", dict(mode="pass", game="knarr", script="knarr", loop_taps=15)),
+        ("Brass: table, marking the end of the Canal Era", dict(game="brassBirmingham", script="brassBirmingham", marks=True, loop_taps=6)),
+        ("Dune: Imperium: table, every expansion", dict(game="duneImperium", script="duneImperium", loop_taps=4,
+                                                        expansions=("riseOfIx", "immortality", "bloodlines"))),
+        ("Dune: Imperium: pass the phone, base game", dict(mode="pass", game="duneImperium", script="duneImperium", loop_taps=6)),
     ]
     failed = False
     with sync_playwright() as p:

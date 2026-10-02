@@ -396,7 +396,10 @@ private struct TurnGuideRunner: View {
             // Combat rounds repeat: "Round 2 · 3 of 6".
             return session.phase.loop != nil ? "\(tr("Round {0}", session.position.pass)) · \(steps)" : steps
         }
-        let inPhase = session.phase.loop != nil ? tr("Turn {0}", session.turnNumber) : steps
+        // A turn of several steps (games without fixed sides) also says which step of the turn: "Turn 3 · 2 of 3".
+        let turn = tr("Turn {0}", session.turnNumber)
+        let inPhase = session.phase.loop == nil ? steps
+            : session.script.takesTurns && session.applicableSteps.count > 1 ? "\(turn) · \(steps)" : turn
         return session.isInSetup ? inPhase : "\(tr("Round {0}", session.round)) · \(inPhase)"
     }
 

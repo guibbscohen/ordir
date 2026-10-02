@@ -68,7 +68,7 @@ final class TurnGuideSession {
     /// Expansion additions that apply to the current step right now.
     var additions: [TurnScript.Addition] {
         (step.additions ?? []).filter { addition in
-            (addition.expansion.map(expansions.contains) ?? true) && applies(addition.when)
+            (addition.expansion.map { expansions.contains($0) } ?? true) && applies(addition.when)
         }
     }
     /// Turn-change reminders for the current step, without those of switched-off expansions.
@@ -78,9 +78,9 @@ final class TurnGuideSession {
             return expansions.contains(expansion)
         }
     }
-    /// States the players can mark or correct: those of switched-on expansions.
+    /// States the players can mark or correct: the base game’s and those of switched-on expansions.
     var availableStates: [TurnScript.GameState] {
-        (script.states ?? []).filter { state in state.expansion.map(expansions.contains) ?? true }
+        (script.states ?? []).filter { state in state.expansion.map { expansions.contains($0) } ?? true }
     }
     var canGoBack: Bool { !history.isEmpty || isFinished }
 
