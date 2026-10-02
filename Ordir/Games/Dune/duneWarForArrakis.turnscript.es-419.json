@@ -1,0 +1,1088 @@
+{
+  "language": "es-419",
+  "title": "Dune: War for Arrakis",
+  "sides": {
+    "atreides": "Atreides",
+    "harkonnen": "Harkonnen"
+  },
+  "victory": "Los Harkonnen ganan con 10 puntos de Supremacía; los Atreides, cuando todos los marcadores de Presciencia llegan a su Objetivo Secreto.",
+  "sources": {
+    "rulebook": {
+      "title": "Reglamento (versión en desarrollo)",
+      "shortTitle": "Reglamento"
+    },
+    "faq": {
+      "title": "FAQ 3.0 (junio de 2024)",
+      "shortTitle": "FAQ 3.0"
+    },
+    "desertWar": {
+      "title": "Reglamento de la expansión Desert War",
+      "shortTitle": "Desert War"
+    },
+    "smugglers": {
+      "title": "Reglamento de la expansión Smugglers",
+      "shortTitle": "Smugglers"
+    },
+    "spacingGuild": {
+      "title": "Reglamento de la expansión The Spacing Guild",
+      "shortTitle": "Spacing Guild"
+    }
+  },
+  "expansions": {
+    "desertWar": {
+      "title": "Desert War",
+      "summary": "Ornitópteros de Escolta, Soldados Suspensores, Campamentos Fremen, Lanzacohetes y Jinetes de arena."
+    },
+    "smugglers": {
+      "title": "Smugglers",
+      "summary": "Una facción neutral de contrabandistas de especia que los Atreides pueden ganarse."
+    },
+    "spacingGuild": {
+      "title": "The Spacing Guild",
+      "summary": "Cruceros, Fragatas Espaciales, Tropas de las Casas Mayores y Acciones del Imperio."
+    }
+  },
+  "images": {
+    "cover": "Arte de la caja",
+    "game-board": "Tablero, preparado",
+    "atreides-dashboard": "Tablero de jugador Atreides (Sietch Tabr)",
+    "harkonnen-dashboard": "Tablero de jugador Harkonnen (Giedi Prime)",
+    "spice-must-flow": "Tablero La Especia Debe Fluir",
+    "prescience-markers": "Marcadores de Presciencia",
+    "imperium-markers": "Marcadores del Imperio",
+    "supremacy-marker": "Marcador de Supremacía",
+    "spice-reserve-token": "Ficha de Reserva de Especia",
+    "atreides-garrison-tokens": "Fichas de Despliegue de Guarnición Atreides",
+    "atreides-deployment-tokens": "Fichas de Despliegue Atreides",
+    "harkonnen-garrison-tokens": "Fichas de Despliegue de Guarnición Harkonnen",
+    "deployment-legend": "Símbolos de las fichas de Despliegue Harkonnen",
+    "wormsign-tokens": "Fichas de Señal de gusano",
+    "wormsign-effects": "Efectos de la Señal de gusano: Arena, Gusano de arena, Gusano excavador",
+    "testing-stations": "Estaciones de Prueba Ecológica",
+    "settlement-tokens": "Asentamientos: Arrakeen, Aldeas Pyon, Carthag, Sietches",
+    "action-dice": "Dados de Acción: Atreides (negros y verdes), Harkonnen (negros y rojos)",
+    "combat-dice": "Dados de Combate: Atreides (verdes), Harkonnen (rojos)",
+    "harkonnen-leaders": "Líderes Harkonnen",
+    "atreides-leaders": "Líderes Atreides",
+    "naib-leader": "Líder Naib",
+    "harkonnen-units": "Unidades Harkonnen: Regular, Élite, Sardaukar",
+    "atreides-units": "Unidades Atreides: Regular, Élite, Fedaykin",
+    "vehicles": "Ornitóptero, Cosechadora, Ala de acarreo",
+    "sandworms": "Gusano de arena y Hacedor salvaje",
+    "atreides-planning-decks": "Mazos Casa Atreides y Aliados Fremen",
+    "harkonnen-planning-decks": "Mazos Casa Harkonnen y Aliados Corrino",
+    "atreides-leader-cards": "Cartas de Líder Atreides",
+    "harkonnen-leader-cards": "Cartas de Líder Harkonnen",
+    "prescience-cards": "Cartas de Presciencia",
+    "objective-cards": "Cartas de Objetivo Secreto",
+    "imperium-bans-cards": "Cartas de Prohibiciones del Imperio",
+    "dw-escort-ornithopter": "Ornitóptero de Escolta",
+    "dw-suspensor-troopers": "Soldado Suspensor",
+    "dw-sandriders": "Jinete de arena Fremen",
+    "dw-rocket-launchers": "Lanzacohetes Fremen",
+    "dw-fremen-camps": "Fichas y miniatura de Campamento Fremen",
+    "dw-desert-war-tokens": "Fichas de Desert War Harkonnen",
+    "dw-reference-cards": "Cartas de referencia de Desert War",
+    "dw-sandriders-card": "Carta de Líder Jinetes de arena Fremen",
+    "sm-staban-tuek": "Staban Tuek",
+    "sm-smuggler-regulars": "Regular Contrabandista",
+    "sm-drone-ornithopter-cards": "Cartas de Planificación Ornitópteros Dron",
+    "sm-smugglers-board": "Tablero de los Contrabandistas",
+    "sm-vehicles": "Ornitóptero, Cosechadora y Ala de acarreo de los Contrabandistas",
+    "sm-smugglers-base": "Base de los Contrabandistas",
+    "sm-action-die": "Dado de Acción de los Contrabandistas",
+    "sg-guild-navigator": "Navegante de la Cofradía",
+    "sg-houses-major-troop": "Tropa de las Casas Mayores",
+    "sg-space-board": "Tablero del Espacio",
+    "sg-heighliner-boards": "Tableros de Crucero",
+    "sg-color-bases": "Peanas de color",
+    "sg-heighliners": "Cruceros",
+    "sg-space-frigates": "Fragatas Espaciales",
+    "sg-planning-cards": "Cartas de Planificación de la Cofradía Espacial",
+    "sg-reference-cards": "Cartas de referencia CHOAM, Landsraad y Cofradía Espacial"
+  },
+  "states": {
+    "smugglersAllied": {
+      "title": "Contrabandistas aliados de los Atreides",
+      "markLabel": "Los Contrabandistas se unieron a nosotros",
+      "trigger": "Cualquier marcador de Presciencia llega a (o pasa) Staban Tuek en el registro de Presciencia.",
+      "event": {
+        "title": "Los Contrabandistas se unen a los Atreides",
+        "bullets": [
+          "Quita del juego todas las Cosechadoras de los Contrabandistas y el Ala de acarreo de los Contrabandistas.",
+          "Pon la Base de los Contrabandistas en cualquier Área de Desierto vacía de uno de los cuatro Sectores más bajos (debajo del Polo Norte).",
+          "Mueve a Staban Tuek, Gurney Halleck y todos los Regulares Contrabandistas del tablero de los Contrabandistas al Área de la Base de los Contrabandistas.",
+          "Pon la carta de Líder de Staban Tuek en tu espacio de Acción Poder del Desierto.",
+          "Agrega el dado de Acción de los Contrabandistas a tus dados de Acción a partir de la próxima Resolución de Acciones."
+        ]
+      }
+    }
+  },
+  "battle": "Batalla",
+  "phases": {
+    "setup": {
+      "title": "Preparación"
+    },
+    "round-start": {
+      "title": "Inicio de la ronda"
+    },
+    "vehicle-placement": {
+      "title": "Colocación de vehículos"
+    },
+    "action-roll": {
+      "title": "Resolución de acciones"
+    },
+    "action-turns": {
+      "title": "Turnos de acción",
+      "loop": {
+        "endLabel": "Dados Harkonnen agotados",
+        "note": "La resolución de acciones termina cuando los Harkonnen usan todos sus dados de Acción. Los dados Atreides que sobren se pierden."
+      }
+    },
+    "desert-hazards": {
+      "title": "Peligros del desierto"
+    },
+    "spice-harvesting": {
+      "title": "Cosecha de especia"
+    },
+    "round-end": {
+      "title": "Fin de la ronda"
+    },
+    "battle-start": {
+      "title": "Antes de la batalla"
+    },
+    "battle-rounds": {
+      "title": "Ronda de combate",
+      "loop": {
+        "endLabel": "Fin de la batalla",
+        "note": "La batalla termina cuando el atacante se detiene, el defensor se retira o una Legión es destruida."
+      }
+    },
+    "battle-end": {
+      "title": "Después de la batalla"
+    }
+  },
+  "steps": {
+    "setup-board": {
+      "title": "Arma el tablero",
+      "instruction": "Junten las dos mitades del tablero en el centro de la mesa.",
+      "components": [
+        "Tablero (2 partes)"
+      ]
+    },
+    "setup-sietches": {
+      "title": "Pon los Sietches",
+      "instruction": "Baraja las 8 fichas de Sietch boca abajo.",
+      "bullets": [
+        "Pon 1 en cada símbolo de Sietch del tablero.",
+        "Solo tú, Atreides, puedes mirar su lado oculto."
+      ],
+      "components": [
+        "8 fichas de Sietch"
+      ]
+    },
+    "setup-atreides-garrisons": {
+      "title": "Guarnece los Sietches",
+      "instruction": "Baraja las fichas de Despliegue de Guarnición Atreides boca abajo.",
+      "bullets": [
+        "En cada Área con un Sietch, pon 1 ficha y 1 miniatura de Líder Naib."
+      ],
+      "components": [
+        "8 fichas de Despliegue de Guarnición Atreides",
+        "8 miniaturas de Líder Naib"
+      ]
+    },
+    "setup-atreides-deployment": {
+      "title": "Prepara tus fichas de Despliegue",
+      "instruction": "Baraja las fichas de Despliegue Atreides estándar y déjalas boca abajo a tu lado.",
+      "components": [
+        "8 fichas de Despliegue Atreides"
+      ]
+    },
+    "setup-settlements": {
+      "title": "Pon los Asentamientos",
+      "instruction": "Pon los 6 Asentamientos Harkonnen en sus Áreas marcadas.",
+      "bullets": [
+        "4 Aldeas Pyon, Carthag y Arrakeen.",
+        "Sus niveles son públicos."
+      ],
+      "components": [
+        "4 fichas de Aldea Pyon",
+        "Ficha de Carthag",
+        "Ficha de Arrakeen"
+      ]
+    },
+    "setup-harkonnen-garrisons": {
+      "title": "Guarnece los Asentamientos",
+      "instruction": "Guarnece cada Asentamiento Harkonnen.",
+      "bullets": [
+        "Baraja por separado los dos conjuntos de fichas de Despliegue de Guarnición Harkonnen, boca abajo.",
+        "Pon 1 ficha de cada conjunto en cada Área con un Asentamiento Harkonnen.",
+        "Voltéalas boca arriba y cambia cada ficha por las miniaturas que muestra (leyenda en la página 15)."
+      ],
+      "components": [
+        "12 fichas de Despliegue de Guarnición Harkonnen",
+        "Miniaturas Harkonnen de Regular, Élite y Sardaukar",
+        "Miniaturas de Líder Bashar"
+      ]
+    },
+    "setup-stations": {
+      "title": "Pon las Estaciones de Prueba",
+      "instruction": "Baraja las 6 Estaciones de Prueba Ecológica boca abajo.",
+      "bullets": [
+        "Pon 1 en cada Área marcada.",
+        "Nadie las mira.",
+        "Una Estación solo se revela cuando una Legión Atreides entra en su Área."
+      ],
+      "components": [
+        "6 fichas de Estación de Prueba Ecológica"
+      ]
+    },
+    "setup-tracks": {
+      "title": "Pon en cero los registros",
+      "instruction": "Pongan todos los marcadores de puntuación en la casilla 0.",
+      "bullets": [
+        "3 marcadores de Presciencia en el registro de Presciencia.",
+        "El marcador de Supremacía en el registro de Supremacía."
+      ],
+      "components": [
+        "3 marcadores de Presciencia",
+        "Marcador de Supremacía"
+      ]
+    },
+    "setup-prescience-deck": {
+      "title": "Arma el mazo de Presciencia",
+      "instruction": "Baraja las 16 cartas de Presciencia en un mazo boca abajo junto al tablero.",
+      "components": [
+        "16 cartas de Presciencia"
+      ]
+    },
+    "setup-wormsign-pool": {
+      "title": "Arma la reserva de Señales de gusano",
+      "instruction": "Baraja las 16 fichas de Señal de gusano boca abajo para formar la reserva de Señales de gusano.",
+      "components": [
+        "16 fichas de Señal de gusano"
+      ]
+    },
+    "setup-dashboards": {
+      "title": "Prepara los tableros de jugador",
+      "instruction": "Cada jugador toma su tablero de jugador.",
+      "bullets": [
+        "Atreides: Sietch Tabr. Harkonnen: Giedi Prime.",
+        "Pon cada carta de Líder con nombre marcada ‘en juego al inicio de la partida’ en el espacio de Acción con el símbolo correspondiente.",
+        "Dejen cerca las cartas de Líder genérico (Naib y Bashar) y las demás cartas de Líder con nombre."
+      ],
+      "components": [
+        "Tablero Sietch Tabr",
+        "Tablero Giedi Prime",
+        "Cartas de Líder"
+      ]
+    },
+    "setup-spice-board": {
+      "title": "Prepara La Especia Debe Fluir",
+      "instruction": "Pon el tablero La Especia Debe Fluir junto a tu tablero Giedi Prime.",
+      "bullets": [
+        "Alinea los 3 marcadores del Imperio en el escalón marcado ‘empieza aquí’."
+      ],
+      "components": [
+        "Tablero La Especia Debe Fluir",
+        "3 marcadores del Imperio"
+      ]
+    },
+    "sm-setup-drone-cards": {
+      "title": "Cambia por los Ornitópteros Dron",
+      "instruction": "Modifica el mazo Casa Atreides.",
+      "bullets": [
+        "Saca las 3 cartas de Planificación Contrabandistas y quítalas del juego.",
+        "Pon las 3 cartas Ornitópteros Dron de esta expansión."
+      ],
+      "components": [
+        "3 cartas de Planificación Ornitópteros Dron",
+        "Mazo Casa Atreides"
+      ]
+    },
+    "sg-setup-cards": {
+      "title": "Agrega las cartas de Planificación de la Cofradía",
+      "instruction": "Agreguen las cartas de Planificación de esta expansión a sus mazos correspondientes, 3 por mazo, antes de barajarlos.",
+      "components": [
+        "12 cartas de Planificación de la Cofradía Espacial"
+      ]
+    },
+    "setup-planning-decks": {
+      "title": "Baraja los mazos de Planificación",
+      "instruction": "Separen las cartas de Planificación en cuatro mazos según su reverso y barajen cada uno.",
+      "bullets": [
+        "Harkonnen: Casa Harkonnen y Aliados Corrino.",
+        "Atreides: Casa Atreides y Aliados Fremen."
+      ],
+      "components": [
+        "Mazo Casa Harkonnen",
+        "Mazo Aliados Corrino",
+        "Mazo Casa Atreides",
+        "Mazo Aliados Fremen"
+      ]
+    },
+    "setup-secret-objective": {
+      "title": "Roba un Objetivo Secreto",
+      "instruction": "Baraja las 6 cartas de Objetivo Secreto y roba 1.",
+      "bullets": [
+        "Devuelve las otras 5 a la caja.",
+        "Mantén tu carta oculta para los Harkonnen toda la partida."
+      ],
+      "components": [
+        "6 cartas de Objetivo Secreto"
+      ]
+    },
+    "setup-pieces": {
+      "title": "Reúne tus piezas",
+      "instruction": "Dejen al alcance las miniaturas, los dados de Acción, los dados de Combate, las demás fichas y las cartas de referencia de su facción.",
+      "components": [
+        "Miniaturas",
+        "Dados de Acción",
+        "Dados de Combate",
+        "Cartas de referencia"
+      ]
+    },
+    "dw-setup-harkonnen": {
+      "title": "Prepara las fuerzas de Desert War",
+      "instruction": "Deja tus piezas de Desert War al alcance.",
+      "bullets": [
+        "2 Ornitópteros de Escolta y 6 Soldados Suspensores.",
+        "La carta de referencia Soldados Suspensores / Ornitópteros de Escolta.",
+        "Pon la carta de referencia Desert War Harkonnen a la derecha de tu tablero de jugador."
+      ],
+      "components": [
+        "2 Ornitópteros de Escolta",
+        "6 Soldados Suspensores",
+        "4 fichas de Desert War Harkonnen",
+        "2 cartas de referencia"
+      ]
+    },
+    "dw-setup-atreides": {
+      "title": "Prepara las fuerzas de Desert War",
+      "instruction": "Deja tus piezas de Desert War al alcance.",
+      "bullets": [
+        "6 Lanzacohetes y 2 Jinetes de arena.",
+        "3 miniaturas de Campamento Fremen y sus fichas.",
+        "La carta de referencia Lanzacohetes / Jinetes de arena.",
+        "Pon la carta de Líder Jinetes de arena boca arriba en tu espacio de Acción Poder del Desierto.",
+        "Pon la carta Desert War Atreides a la derecha de tu tablero de jugador."
+      ],
+      "components": [
+        "6 Lanzacohetes",
+        "2 Jinetes de arena",
+        "3 Campamentos Fremen y fichas",
+        "Carta de Líder Jinetes de arena",
+        "2 cartas de referencia"
+      ]
+    },
+    "sm-setup-board": {
+      "title": "Prepara a los Contrabandistas",
+      "instruction": "Preparen a los Contrabandistas. Empiezan neutrales.",
+      "bullets": [
+        "Pongan el tablero de los Contrabandistas junto al tablero principal.",
+        "Pongan 1 Regular Contrabandista y a Gurney Halleck en él.",
+        "Pongan la miniatura de Staban Tuek en el escalón 7 del registro de Presciencia."
+      ],
+      "components": [
+        "Tablero de los Contrabandistas",
+        "Regular Contrabandista",
+        "Miniatura de Gurney Halleck",
+        "Miniatura de Staban Tuek"
+      ]
+    },
+    "sm-setup-harkonnen": {
+      "title": "Toma los vehículos de los Contrabandistas",
+      "instruction": "Agrega las 3 Cosechadoras de los Contrabandistas y el Ala de acarreo de los Contrabandistas a tus vehículos disponibles.",
+      "components": [
+        "3 Cosechadoras de los Contrabandistas",
+        "Ala de acarreo de los Contrabandistas"
+      ]
+    },
+    "sm-setup-atreides": {
+      "title": "Ten listas las piezas de los Contrabandistas",
+      "instruction": "Ten a mano las cartas de Gurney Halleck y Staban Tuek y los 3 Ornitópteros de los Contrabandistas.",
+      "components": [
+        "Carta de Gurney Halleck",
+        "Carta de Staban Tuek",
+        "3 Ornitópteros de los Contrabandistas"
+      ]
+    },
+    "sg-setup-boards": {
+      "title": "Prepara los tableros del Espacio",
+      "instruction": "Preparen el viaje espacial.",
+      "bullets": [
+        "Unan el tablero del Espacio y los dos tableros de Crucero a un lado del tablero principal.",
+        "Pongan cada Crucero en la casilla inicial de su tablero de Crucero."
+      ],
+      "components": [
+        "Tablero del Espacio",
+        "2 tableros de Crucero",
+        "2 Cruceros"
+      ]
+    },
+    "sg-setup-troops": {
+      "title": "Embarca las primeras Tropas",
+      "instruction": "Embarquen las primeras Tropas.",
+      "bullets": [
+        "Cada jugador pone una peana de color de su facción a 2 Tropas de las Casas Mayores.",
+        "Pónganlas en el espacio Landsraad de su tablero de Crucero.",
+        "Dejen a mano las Fragatas Espaciales, las demás Tropas y peanas de color, y la carta y la miniatura del Navegante de la Cofradía."
+      ],
+      "components": [
+        "4 Tropas de las Casas Mayores",
+        "Peanas de color",
+        "Fragatas Espaciales",
+        "Navegante de la Cofradía"
+      ]
+    },
+    "round-check-objective": {
+      "title": "Revisa el Objetivo Secreto",
+      "instruction": "Antes que nada en esta ronda, revisa tu Objetivo Secreto.",
+      "bullets": [
+        "Compara tus 3 marcadores de Presciencia con la carta.",
+        "Si todos los marcadores llegaron a su meta, los Atreides ganan.",
+        "Destruir Arrakeen activa esta revisión de inmediato."
+      ],
+      "components": [
+        "Carta de Objetivo Secreto",
+        "Registro de Presciencia"
+      ]
+    },
+    "round-draw-planning": {
+      "title": "Roba cartas de Planificación",
+      "instruction": "Cada jugador roba 1 carta de Planificación de cada uno de sus dos mazos, 2 cartas en total.",
+      "components": [
+        "Mazos de Planificación"
+      ]
+    },
+    "round-reveal-prescience": {
+      "title": "Revela cartas de Presciencia",
+      "instruction": "Roba 3 cartas de Presciencia y déjalas boca arriba junto al mazo.",
+      "bullets": [
+        "Los dos jugadores pueden verlas.",
+        "Los Atreides pueden reclamar hasta 2 en esta ronda, en cuanto se cumplan los requisitos de una carta."
+      ],
+      "components": [
+        "Mazo de Presciencia"
+      ]
+    },
+    "sm-round-regular": {
+      "title": "Haz crecer a los Contrabandistas",
+      "instruction": "Agrega 1 Regular Contrabandista al tablero de los Contrabandistas.",
+      "bullets": [
+        "Solo mientras los Contrabandistas sean neutrales."
+      ],
+      "components": [
+        "Regular Contrabandista",
+        "Tablero de los Contrabandistas"
+      ]
+    },
+    "vehicles-set-aside-dice": {
+      "title": "Aparta dados de Acción",
+      "instruction": "Aparta dados de Acción para esta ronda.",
+      "bullets": [
+        "Busca la fila activa en el tablero La Especia Debe Fluir: la fila de tu marcador del Imperio más bajo.",
+        "Aparta tantos dados de Acción como muestra su primera columna.",
+        "Se quedan en tu tablero de jugador, sin usarse esta ronda."
+      ],
+      "components": [
+        "Tablero La Especia Debe Fluir",
+        "8 dados de Acción Harkonnen"
+      ]
+    },
+    "sm-vehicles-allied": {
+      "title": "Pon Ornitópteros de los Contrabandistas",
+      "instruction": "Pon cada Ornitóptero de los Contrabandistas disponible en una Zona Aérea, 1 por Zona, antes de que los Harkonnen pongan Alas de acarreo y Ornitópteros.",
+      "bullets": [
+        "Ocupan su Zona Aérea: ningún otro Ornitóptero ni Ala de acarreo puede ir ahí.",
+        "Batalla de Ornitópteros: los Harkonnen pueden renunciar a 1 de sus Ornitópteros esta ronda para quitar 1 Ornitóptero de los Contrabandistas."
+      ],
+      "components": [
+        "Ornitópteros de los Contrabandistas"
+      ]
+    },
+    "dw-escort-choice": {
+      "title": "Considera un Ornitóptero de Escolta",
+      "instruction": "Puedes poner 1 Ornitóptero de Escolta en lugar de uno estándar.",
+      "bullets": [
+        "Solo 1, cuando pones Ornitópteros.",
+        "No puede hacer Exploración ni Transporte de Tropas.",
+        "En cambio, escolta Tropas."
+      ],
+      "components": [
+        "Ornitóptero de Escolta"
+      ]
+    },
+    "vehicles-place": {
+      "title": "Pon los vehículos",
+      "instruction": "Toma los vehículos que muestra la fila activa y ponlos.",
+      "bullets": [
+        "Cosechadoras: Áreas de Desierto libres, 1 por Área.",
+        "Ornitópteros y Alas de acarreo: Zonas Aéreas, 1 por Zona.",
+        "Un Área libre no tiene Asentamientos enemigos, Unidades enemigas ni Gusanos de arena."
+      ],
+      "components": [
+        "Cosechadoras",
+        "Ornitópteros",
+        "Alas de acarreo"
+      ]
+    },
+    "sm-vehicles-neutral": {
+      "title": "Pon los vehículos de los Contrabandistas",
+      "instruction": "Pon también cada Cosechadora de los Contrabandistas disponible y el Ala de acarreo de los Contrabandistas.",
+      "bullets": [
+        "Es obligatorio mientras los Contrabandistas sean neutrales.",
+        "Reglas normales de vehículos, pero cada Cosechadora de los Contrabandistas recoge solo 1 de especia, incluso en el Desierto Profundo."
+      ],
+      "components": [
+        "Cosechadoras de los Contrabandistas",
+        "Ala de acarreo de los Contrabandistas"
+      ]
+    },
+    "dw-desert-war-tokens": {
+      "title": "Pon las fichas de Desert War",
+      "instruction": "Pon una ficha de Desert War en cada espacio vacío de la primera columna del tablero La Especia Debe Fluir.",
+      "bullets": [
+        "Los espacios con dados de Acción no están vacíos.",
+        "Las fichas que no caben se quedan fuera esta ronda."
+      ],
+      "components": [
+        "Fichas de Desert War Harkonnen",
+        "Tablero La Especia Debe Fluir"
+      ]
+    },
+    "dw-fremen-camps": {
+      "title": "Pon los Campamentos Fremen",
+      "instruction": "Pon cada Campamento Fremen disponible.",
+      "bullets": [
+        "Ficha boca abajo en un Área de Desierto vacía, cada una en un Sector distinto.",
+        "Una miniatura de Campamento Fremen sobre cada ficha.",
+        "Las Áreas con un Campamento son libres para los dos jugadores.",
+        "Una Legión Harkonnen que entra en una lo quita."
+      ],
+      "components": [
+        "Fichas de Campamento Fremen",
+        "Miniaturas de Campamento Fremen"
+      ]
+    },
+    "actions-roll": {
+      "title": "Tira los dados de Acción",
+      "instruction": "Tiren los dados de Acción y pongan cada uno en el espacio del tablero de jugador que corresponde a su resultado.",
+      "bullets": [
+        "Atreides: 4 dados.",
+        "Harkonnen: todos los dados no apartados.",
+        "4 o más de tus dados con el mismo resultado: quédate con 1 y vuelve a tirar los demás iguales (una vez por ronda).",
+        "Los dos jugadores deben cambiar los dados que excedan los huecos de un espacio de Acción: elijan nuevos resultados de a uno, alternando, empezando por los Harkonnen."
+      ],
+      "components": [
+        "Dados de Acción",
+        "Tableros de jugador"
+      ],
+      "additions": [
+        {
+          "text": "Tira también el dado de Acción de los Contrabandistas y ponlo en el tablero de los Contrabandistas."
+        }
+      ]
+    },
+    "turn-atreides": {
+      "title": "Turno de acción",
+      "instruction": "Haz una Acción. Elige una:",
+      "bullets": [
+        "Gasta 1 dado de Acción en una Acción que su resultado permita.",
+        "Gasta cualquier dado para jugar una carta de Planificación.",
+        "Haz una Acción Poder del Desierto sin dado, si tienes menos dados sin usar que los Harkonnen.",
+        "Gratis, en cualquier momento de tu turno: revela fichas de Despliegue (Entrenamiento de Guerrilla).",
+        "No queda nada por hacer: toca Listo."
+      ],
+      "components": [
+        "Tablero Sietch Tabr",
+        "4 dados de Acción Atreides",
+        "Cartas de Planificación"
+      ],
+      "additions": [
+        {
+          "text": "Cada Acción Poder del Desierto también te da una Acción de Desert War, antes o después. Elige una:",
+          "bullets": [
+            "Despliega 3 Lanzacohetes en Áreas con un Campamento Fremen.",
+            "Haz un ataque especial de Lanzacohetes.",
+            "Cuando el Poder del Desierto pone 2 Señales de gusano, puedes poner 1 Jinete de arena en lugar de 1 de ellas, en un Área de Desierto vacía."
+          ]
+        },
+        {
+          "text": "Captura Cosechadoras de los Contrabandistas.",
+          "bullets": [
+            "Una Legión que termina su movimiento en un Área con una Cosechadora de los Contrabandistas la captura: quítala del juego.",
+            "Baja a Staban Tuek 1 escalón por cada captura.",
+            "Cuando cualquier marcador de Presciencia llega a Staban Tuek, los Contrabandistas se alían contigo (reglamento de Smugglers, página 5)."
+          ]
+        },
+        {
+          "text": "Puedes usar el dado de Acción de los Contrabandistas en lugar de un dado Atreides.",
+          "bullets": [
+            "Liderazgo: mueve una Legión con Líder, o ataca con una Legión que tenga una Unidad Contrabandista.",
+            "Estrategia: mueve una Legión, o mueve 2 Legiones que tengan cada una una Unidad Contrabandista.",
+            "Despliegue: pon 2 Unidades Contrabandistas en el Área de la Base de los Contrabandistas.",
+            "Mentat: juega 1 carta de Planificación, o roba 2 cartas Casa Atreides y quédate con una.",
+            "Casa: úsalo como cualquier otro resultado de los Contrabandistas.",
+            "No puede jugar cartas de Planificación, salvo con el Mentat.",
+            "Ornitóptero de los Contrabandistas: quita uno de una Zona Aérea conectada para mover o atacar con una Legión a hasta 2 Áreas de distancia."
+          ]
+        },
+        {
+          "text": "Cuando una de tus Legiones destruye una Cosechadora Harkonnen, haz 1 Acción del Imperio de inmediato. Elige una:",
+          "bullets": [
+            "Cofradía Espacial: avanza tu Crucero 1 escalón.",
+            "CHOAM: pon 1 Fragata Espacial en tu tablero de Crucero.",
+            "Landsraad: pon 2 Tropas de las Casas Mayores en él.",
+            "Que un Gusano de arena destruya la Cosechadora no cuenta."
+          ]
+        },
+        {
+          "text": "Un Crucero que llega a Arrakis aterriza de inmediato.",
+          "bullets": [
+            "Tropas: Áreas vacías no adyacentes a Legiones ni Asentamientos enemigos.",
+            "Fragatas: Zonas Aéreas libres distintas.",
+            "Luego el Crucero vuelve a su inicio."
+          ]
+        }
+      ],
+      "reminders": [
+        "Mueve el dado de Acción que gastaste a un hueco de Dados de Acción Usados.",
+        "¿Jugaste una carta de Planificación? Ponla en el descarte junto a su mazo.",
+        "¿Usaste la Acción especial de un Líder con nombre? Voltea su carta: queda gastada hasta la próxima ronda.",
+        "Ningún Área puede tener más de 6 Unidades: quita el exceso ahora. Un Líder sin Unidades es eliminado.",
+        "Mueve cada miniatura de tu Tanque de Regeneración un espacio a la derecha. Un Líder que sale del último espacio vuelve al juego.",
+        "¿Destruiste un Asentamiento Harkonnen? Avanza cada marcador de Presciencia según su nivel.",
+        "¿Quitaste una Cosechadora? Apártala. Cada 2 apartadas en esta fase avanzan el marcador de Jihad 1 escalón.",
+        "¿Se cumplen los requisitos de una carta de Presciencia revelada? Reclámala (como máximo 2 por ronda).",
+        "Los Soldados del Desierto que comparten un Área con una Legión enemiga se quitan.",
+        "Staban Tuek, al volver del Tanque de Regeneración, se une a la Legión Atreides que elijas."
+      ]
+    },
+    "turn-harkonnen": {
+      "title": "Turno de acción",
+      "instruction": "Haz una Acción. Elige una:",
+      "bullets": [
+        "Gasta 1 dado de Acción en una Acción que su resultado permita.",
+        "Gasta cualquier dado para jugar una carta de Planificación.",
+        "Gratis, en cualquier momento de esta ronda: quita un Ornitóptero para revelar un Sietch en un Sector conectado (Exploración)."
+      ],
+      "components": [
+        "Tablero Giedi Prime",
+        "Dados de Acción Harkonnen",
+        "Cartas de Planificación"
+      ],
+      "additions": [
+        {
+          "text": "Cada vez que gastas un dado de Acción, también puedes descartar 1 ficha de Desert War para una Acción de Desert War, antes o después. Elige una:",
+          "bullets": [
+            "Despliega 3 Soldados Suspensores en Áreas de Desierto vacías de un Sector conectado a una Zona Aérea con uno de tus Vehículos.",
+            "Mueve 1 Soldado Suspensor.",
+            "Quita un Soldado Suspensor para revelar cualquier Sietch y todas las fichas de Despliegue en 1 Área adyacente.",
+            "Escoltar Tropas: un Ornitóptero de Escolta en una Zona Aérea conectada lleva a una Legión que se mueve o ataca, como el Transporte de Tropas, y luego se une a ella como Líder Genérico."
+          ]
+        },
+        {
+          "text": "Un Crucero que llega a Arrakis aterriza de inmediato.",
+          "bullets": [
+            "Tropas: Áreas vacías no adyacentes a Legiones ni Asentamientos enemigos.",
+            "Fragatas: Zonas Aéreas libres distintas.",
+            "Luego el Crucero vuelve a su inicio."
+          ]
+        }
+      ],
+      "reminders": [
+        "Mueve el dado de Acción que gastaste a un hueco de Dados de Acción Usados.",
+        "¿Jugaste una carta de Planificación? Ponla en el descarte junto a su mazo.",
+        "¿Usaste la Acción especial de un Líder con nombre? Voltea su carta: queda gastada hasta la próxima ronda.",
+        "Ningún Área puede tener más de 6 Unidades: quita el exceso ahora. Un Líder sin Unidades es eliminado.",
+        "Mueve cada miniatura de tu Tanque de Regeneración un espacio a la derecha. Un Líder que sale del último espacio vuelve al juego.",
+        "¿Destruiste un Sietch? Avanza el marcador de Supremacía según su nivel. 10 puntos de Supremacía ganan.",
+        "Los Soldados del Desierto que comparten un Área con una Legión enemiga se quitan."
+      ]
+    },
+    "sg-remove-frigates": {
+      "title": "Quita las Fragatas Espaciales",
+      "instruction": "Quiten todas las Fragatas Espaciales que sigan en el tablero y devuélvanlas a la reserva de su dueño.",
+      "components": [
+        "Fragatas Espaciales"
+      ]
+    },
+    "hazards-place-wormsigns": {
+      "title": "Pon Señales de gusano",
+      "instruction": "Sin mirar, roba fichas de Señal de gusano y pon 1 boca abajo en cada Área de Desierto que tenga:",
+      "bullets": [
+        "una Legión o Cosechadora Harkonnen, y",
+        "todavía ninguna Señal de gusano ni Gusano de arena."
+      ],
+      "components": [
+        "Reserva de Señales de gusano"
+      ],
+      "additions": [
+        {
+          "text": "Pon también 1 Señal de gusano en cada Área de Desierto con una Cosechadora de los Contrabandistas."
+        },
+        {
+          "text": "No va ninguna Señal de gusano a un Área con Soldados Suspensores, salvo que la compartan con una Legión o Cosechadora Harkonnen."
+        },
+        {
+          "text": "Las Unidades Contrabandistas ahora son tuyas.",
+          "bullets": [
+            "No va ninguna Señal de gusano a un Área con Unidades Contrabandistas; quita las que ya estén ahí.",
+            "Las Tormentas de Coriolis no afectan a las Unidades Contrabandistas."
+          ]
+        }
+      ]
+    },
+    "hazards-reveal-wormsigns": {
+      "title": "Revela las Señales de gusano",
+      "instruction": "Volteen todas las fichas de Señal de gusano del tablero y resuélvanlas en cualquier orden.",
+      "bullets": [
+        "Arena: no pasa nada.",
+        "Gusano de arena: un Gusano de arena ataca o se coloca.",
+        "Gusano excavador: lo mismo, pero solo en el Desierto Profundo.",
+        "Una ficha en un Área con una Legión Atreides o un Gusano de arena no hace nada."
+      ],
+      "components": [
+        "Fichas de Señal de gusano"
+      ]
+    },
+    "hazards-sandworms": {
+      "title": "Resuelve los Gusanos de arena",
+      "instruction": "Por cada Gusano de arena que aparece, revisen su Área:",
+      "bullets": [
+        "Solo una Cosechadora: quítala. O los Harkonnen quitan un Ala de acarreo de una Zona Aérea conectada; entonces la Cosechadora se queda y también se coloca un Gusano de arena.",
+        "Una Legión Harkonnen: tira dados de Combate para el ataque del Gusano de arena (5 en el Desierto Profundo, 4 en el Desierto, 3 en Erg Menor o Meseta). Si la Legión es destruida, quita también cualquier Cosechadora ahí.",
+        "Vacía: coloca un Gusano de arena.",
+        "Luego barajen todas las fichas de Señal de gusano de nuevo en la reserva."
+      ],
+      "components": [
+        "Miniaturas de Gusano de arena",
+        "Dados de Combate Atreides",
+        "Reserva de Señales de gusano"
+      ],
+      "additions": [
+        {
+          "text": "El Ala de acarreo de los Contrabandistas solo puede salvar Cosechadoras de los Contrabandistas, y las Alas de acarreo Harkonnen no pueden salvar Cosechadoras de los Contrabandistas."
+        }
+      ]
+    },
+    "hazards-coriolis": {
+      "title": "Tira por las Tormentas de Coriolis",
+      "instruction": "Tiren por cada Legión Harkonnen en un Área de Meseta, Erg Menor o Desierto sin Asentamiento Harkonnen.",
+      "bullets": [
+        "Desierto Profundo: 3 dados de Combate. Desierto: 2. Erg Menor o Meseta: 1.",
+        "Cada resultado Impacto o Especial es 1 impacto.",
+        "Por cada impacto, los Harkonnen quitan un Regular, cambian un Élite por un Regular o quitan un Líder."
+      ],
+      "components": [
+        "Dados de Combate Atreides"
+      ],
+      "additions": [
+        {
+          "text": "Los Soldados del Desierto no pueden recibir impactos de ninguna fuente, incluidas las Tormentas de Coriolis y los Gusanos de arena."
+        }
+      ]
+    },
+    "spice-collect": {
+      "title": "Recoge especia",
+      "instruction": "Quita todas las Cosechadoras que sigan en el tablero y recoge especia.",
+      "bullets": [
+        "Desierto: 1 de especia cada una.",
+        "Desierto Profundo: 2 de especia cada una.",
+        "¿Guardaste especia la ronda anterior? Puedes descartar la ficha de Reserva de Especia para sumar 1."
+      ],
+      "components": [
+        "Cosechadoras",
+        "Ficha de Reserva de Especia"
+      ],
+      "additions": [
+        {
+          "text": "Cada Cosechadora de los Contrabandistas que siga en el tablero suma 1 de especia, incluso en el Desierto Profundo."
+        }
+      ]
+    },
+    "spice-spend": {
+      "title": "Paga al Imperio",
+      "instruction": "Gasta especia en cada marcador del Imperio. Elige por marcador:",
+      "bullets": [
+        "Paga 2: se queda donde está.",
+        "Paga 3: sube un escalón (un escalón como máximo).",
+        "No pagues nada: baja 1 escalón.",
+        "Puedes guardar 1 de especia poniendo la ficha de Reserva de Especia, hayas pagado o no todos los marcadores.",
+        "Luego activa la Prohibición de cada marcador que acaba de bajar, como describe cada carta de Prohibiciones del Imperio."
+      ],
+      "components": [
+        "Tablero La Especia Debe Fluir",
+        "3 marcadores del Imperio",
+        "Ficha de Reserva de Especia",
+        "Cartas de Prohibiciones del Imperio"
+      ],
+      "additions": [
+        {
+          "text": "Tu especia también compra Acciones del Imperio del poder de ese marcador.",
+          "bullets": [
+            "Paga 2 para mantener un marcador: 1 Acción del Imperio.",
+            "Paga 3 para subirlo: 2 Acciones del Imperio.",
+            "Cofradía Espacial: avanza tu Crucero 1 escalón.",
+            "CHOAM: pon 1 Fragata Espacial en tu tablero de Crucero.",
+            "Landsraad: pon en él 2 Tropas de las Casas Mayores, con tus peanas de color."
+          ]
+        }
+      ]
+    },
+    "end-air-vehicles": {
+      "title": "Quita los vehículos aéreos",
+      "instruction": "Quita todos los Ornitópteros y Alas de acarreo que sigan en el tablero. Puedes usar la Exploración de un Ornitóptero al quitarlo.",
+      "components": [
+        "Ornitópteros",
+        "Alas de acarreo"
+      ],
+      "additions": [
+        {
+          "text": "Quita también todos los Vehículos de los Contrabandistas que sigan en el tablero."
+        },
+        {
+          "text": "Quita también al Navegante de la Cofradía, si está en el tablero."
+        }
+      ]
+    },
+    "dw-end-cleanup": {
+      "title": "Despeja el desierto",
+      "instruction": "Quiten lo que queda de Desert War.",
+      "bullets": [
+        "Todos los Ornitópteros de Escolta y los Campamentos Fremen.",
+        "Todos los Soldados del Desierto, salvo los Jinetes de arena que comparten un Área con un Gusano de arena."
+      ],
+      "components": [
+        "Ornitópteros de Escolta",
+        "Campamentos Fremen",
+        "Soldados del Desierto"
+      ]
+    },
+    "end-swap-leaders-harkonnen": {
+      "title": "Cambia Líderes con nombre",
+      "instruction": "Puedes reemplazar cualquier Líder con nombre del tablero por un Bashar genérico.",
+      "bullets": [
+        "¿No quedan Bashar? El Líder con nombre se quita igual, sin reemplazo."
+      ],
+      "components": [
+        "Miniaturas de Líder con nombre",
+        "Miniaturas de Líder Bashar"
+      ]
+    },
+    "end-swap-leaders-atreides": {
+      "title": "Cambia Líderes con nombre",
+      "instruction": "Puedes reemplazar cualquier Líder con nombre del tablero por un Naib genérico.",
+      "bullets": [
+        "¿No quedan Naib? El Líder con nombre se quita igual, sin reemplazo."
+      ],
+      "components": [
+        "Miniaturas de Líder con nombre",
+        "Miniaturas de Líder Naib"
+      ]
+    },
+    "end-refresh-leaders": {
+      "title": "Renueva las cartas de Líder",
+      "instruction": "Pongan cada carta de Líder con nombre gastada de nuevo en su espacio de Acción del tablero de jugador.",
+      "components": [
+        "Cartas de Líder",
+        "Tableros de jugador"
+      ]
+    },
+    "end-discard": {
+      "title": "Descarta hasta 6",
+      "instruction": "Si tienes más de 6 cartas de Planificación, descarta hasta quedarte con 6. Tú eliges cuáles descartar.",
+      "components": [
+        "Cartas de Planificación"
+      ]
+    },
+    "end-prescience-cards": {
+      "title": "Ordena las cartas de Presciencia",
+      "instruction": "Ordena las cartas de Presciencia reveladas que nadie reclamó.",
+      "bullets": [
+        "Quita del juego las que elijas.",
+        "Baraja el resto de nuevo en el mazo de Presciencia."
+      ],
+      "components": [
+        "Cartas de Presciencia"
+      ]
+    },
+    "sg-heighliners-move": {
+      "title": "Avanza los Cruceros",
+      "instruction": "Muevan cada Crucero 1 escalón hacia Arrakis.",
+      "bullets": [
+        "Llegó uno: resuelvan su Aterrizaje ahora (primero los Harkonnen si llegan los dos).",
+        "Luego devuélvanlo a su casilla inicial."
+      ],
+      "components": [
+        "Cruceros",
+        "Tablero del Espacio"
+      ]
+    },
+    "battle-attack": {
+      "title": "Elige el ataque",
+      "instruction": "Ataca una Legión enemiga en un Área adyacente.",
+      "bullets": [
+        "Las Áreas separadas por un borde infranqueable no son adyacentes.",
+        "Ataca con toda o parte de tu Legión; se queda en su propia Área durante la batalla.",
+        "Atacando con una Acción de Liderazgo: al menos 1 Líder tiene que participar.",
+        "Los Atreides también pueden atacar un Área que alcancen Cabalgando el gusano; los Harkonnen, con Transporte de Tropas.",
+        "Ninguna Legión puede atacar un Área con un Gusano de arena."
+      ],
+      "components": [
+        "Tu Legión",
+        "La Legión enemiga"
+      ]
+    },
+    "battle-reveal": {
+      "title": "Revela las piezas ocultas",
+      "instruction": "Antes de la primera ronda de combate:",
+      "bullets": [
+        "Defensor en un Área con un Sietch sin revelar: voltéalo para mostrar su nivel.",
+        "Volteen todas las fichas de Despliegue de la batalla y cámbienlas por sus Unidades."
+      ],
+      "components": [
+        "Ficha de Sietch",
+        "Fichas de Despliegue"
+      ]
+    },
+    "battle-cards": {
+      "title": "Suma dados con cartas de Planificación",
+      "instruction": "Primero el atacante, luego el defensor: puedes descartar cartas de Planificación para ganar dados de Combate extra.",
+      "bullets": [
+        "+1 dado de Combate por cada carta descartada.",
+        "Como máximo 6 dados de Combate en total.",
+        "Ataque sorpresa: en la primera ronda solo el atacante puede descartar cartas."
+      ],
+      "components": [
+        "Cartas de Planificación"
+      ]
+    },
+    "battle-roll": {
+      "title": "Tira los dados de Combate",
+      "instruction": "Cada jugador tira 1 dado de Combate por Unidad de su Legión.",
+      "bullets": [
+        "Los Líderes no suman dados.",
+        "Defensor en un Área con un Asentamiento: suma dados iguales a su nivel, en todas las rondas.",
+        "Como máximo 6 dados."
+      ],
+      "components": [
+        "Dados de Combate"
+      ],
+      "additions": [
+        {
+          "text": "Los Soldados del Desierto del Área no participan en la batalla."
+        },
+        {
+          "text": "Defendiendo en la Base de los Contrabandistas: cuenta como un Asentamiento de nivel 3."
+        }
+      ]
+    },
+    "battle-hits": {
+      "title": "Cuenta los impactos",
+      "instruction": "Lee cada tirada:",
+      "bullets": [
+        "Impacto: 1 impacto a la Legión enemiga.",
+        "Escudo: cancela 1 Impacto del oponente.",
+        "Especial: solo cuenta a través de Líderes. Cada Líder Genérico convierte 1 Especial en 1 Impacto; cada Líder con nombre usa 1 Especial como indica su carta.",
+        "Más Líderes que Especiales: elijan qué Líderes los usan, empezando por el atacante.",
+        "Cada Sardaukar o Fedaykin cancela 1 Escudo rival, incluidos los Escudos que vienen de Especiales."
+      ],
+      "components": [
+        "Dados de Combate",
+        "Cartas de Líder"
+      ],
+      "additions": [
+        {
+          "text": "Las Tropas de las Casas Mayores también cuentan como Líderes Genéricos: cada una convierte 1 Especial en 1 Impacto."
+        },
+        {
+          "text": "Un Ornitóptero de Escolta en la Legión cuenta como Líder Genérico."
+        }
+      ]
+    },
+    "battle-casualties": {
+      "title": "Quita las bajas",
+      "instruction": "Por cada impacto recibido, elige uno:",
+      "bullets": [
+        "Quita 1 Unidad Regular.",
+        "Cambia 1 Unidad Élite (Especial o no) por 1 Regular. Sin Regulares en tu reserva: quita el Élite.",
+        "Quita 1 Líder.",
+        "Sin Unidades en la Legión: quita también sus Líderes.",
+        "Las Unidades y los Líderes Genéricos quitados vuelven a tu reserva; los Líderes con nombre van al espacio de más a la izquierda de tu Tanque de Regeneración."
+      ],
+      "components": [
+        "Unidades",
+        "Líderes",
+        "Tanque de Regeneración"
+      ],
+      "additions": [
+        {
+          "text": "Un Ornitóptero de Escolta aguanta 2 impactos antes de ser quitado (1 impacto también lo quita)."
+        }
+      ]
+    },
+    "battle-cease": {
+      "title": "Detenerse o seguir",
+      "instruction": "Si las dos Legiones todavía tienen Unidades, elige:",
+      "bullets": [
+        "Detener el ataque: la batalla termina y tu Legión se queda donde empezó.",
+        "Seguir: el defensor puede retirarse, o empieza otra ronda de combate.",
+        "Un Escudo sobrante no cancela el impacto recibido para seguir la batalla (FAQ 3.0)."
+      ],
+      "components": [
+        "Tu Legión"
+      ]
+    },
+    "battle-retreat": {
+      "title": "Retirarse o resistir",
+      "instruction": "Si el atacante sigue, elige:",
+      "bullets": [
+        "Retirarse: el atacante mueve tu Legión a un Área adyacente libre para ti, y la batalla termina.",
+        "Sin esa Área: no puedes retirarte.",
+        "Resistir: empieza otra ronda de combate."
+      ],
+      "components": [
+        "Tu Legión"
+      ]
+    },
+    "battle-result": {
+      "title": "Quién ganó la batalla",
+      "instruction": "Revisen cómo terminó:",
+      "bullets": [
+        "El defensor se retiró o fue destruido y el atacante sigue en pie: gana el atacante.",
+        "El atacante se detuvo o fue destruido y el defensor sigue en pie: gana el defensor.",
+        "Las dos Legiones destruidas: nadie gana."
+      ],
+      "components": [
+        "Las dos Legiones"
+      ]
+    },
+    "battle-advance": {
+      "title": "Avanza si ganaste",
+      "instruction": "Puedes entrar en el Área atacada, ahora sin Unidades enemigas.",
+      "bullets": [
+        "Mueve cuantas miniaturas atacantes quieras, o ninguna: nunca estás obligado a avanzar (FAQ 3.0).",
+        "Mover al menos 1 Unidad al Área de un Asentamiento enemigo lo destruye; un Asentamiento sin defensa cae sin tirada.",
+        "Sietch destruido: los Harkonnen ganan puntos de Supremacía iguales a su nivel.",
+        "Asentamiento Harkonnen destruido: cada marcador de Presciencia avanza según su nivel. Arrakeen: revisen el Objetivo Secreto de inmediato.",
+        "Atreides avanzando donde había una Cosechadora: quiten la Cosechadora."
+      ],
+      "components": [
+        "Fichas de Asentamiento",
+        "Registros de Supremacía y de Presciencia",
+        "Cosechadoras"
+      ],
+      "additions": [
+        {
+          "text": "Destruir la Base de los Contrabandistas no da puntos de Supremacía, pero saca a los Contrabandistas del juego.",
+          "bullets": [
+            "Quita la Base, descarta el dado de los Contrabandistas y quita todas las Unidades y Vehículos Contrabandistas y a Staban Tuek."
+          ]
+        }
+      ]
+    }
+  }
+}

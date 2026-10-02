@@ -105,3 +105,12 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   percentages so it survives the screen settling at launch. Test with emulated safe-area insets.
 - 2026-10-02: War of the Ring (2nd Edition) ships with Lords of Middle-earth and Warriors of Middle-earth as
   expansions. Kings of Middle-earth waits until its PDF can be obtained (aresgames.eu blocks downloads).
+- 2026-10-02: Gestures (app and preview): a left-to-right swipe goes back (game setup to Home, closes the chat, ask
+  sheet, Game menu, picture or checklist); a downward swipe closes the chat, sheets and menus. A running turn guide
+  ignores swipe-back (no leaving a game by brushing the phone). Visible Back/Close buttons always stay.
+- 2026-10-02: New users get a short, skippable tutorial after the opening on first launch (Back and Skip on every
+  card); Account has "Replay tutorial". Keep it in step with the app when screens change.
+- 2026-10-02: Ordir speaks English, Brazilian Portuguese (pt-BR) and Latin American Spanish (es-419). It follows the
+  phone's language at first; Account lets players change it. Everything is translated: screens, tutorial, turn-guide
+  steps (per-game translation files, still citing the English rulebook pages) and rules answers. Citation quotes stay
+  in the source's language. Every new string or step ships in all three languages.

@@ -3,7 +3,9 @@
 
 For each step (and each loop) it verifies the shape of the data and that every citation's
 excerpt really appears on the cited page of the downloaded PDF. Every image must name a real source
-page and have its generated asset (tools/crop_source_images.py). Run from the repo root:
+page and have its generated asset (tools/crop_source_images.py). Each script also needs a complete
+translation per language (<game>.turnscript.<lang>.json: every text the players read, nothing more;
+`--template` prints the English to start one from). Run from the repo root:
 
     python3 tools/validate_turn_scripts.py
 
@@ -44,6 +46,69 @@ def check_citations(citations, where, sources, pages, errors):
             errors.append(f"{where}: excerpt too short to verify")
         elif normalise(excerpt) not in pages[source][page - 1]:
             errors.append(f"{where}: excerpt not found on {source} p. {page}: {excerpt[:60]!r}")
+
+
+LANGUAGES = ("pt-BR", "es-419")  # besides English
+
+
+def translatable(script):
+    """Every text players read in a script, keyed by id, in the shape of a translation file."""
+    out = {
+        "title": script["title"],
+        "sides": {x["id"]: x["name"] for x in script["sides"]},
+        "victory": script["victory"]["note"],
+        "sources": {x["id"]: {"title": x["title"], "shortTitle": x["shortTitle"]} for x in script["sources"]},
+        "expansions": {x["id"]: {"title": x["title"], "summary": x["summary"]} for x in script["expansions"]},
+        "images": {x["id"]: x["caption"] for x in script["images"]},
+    }
+    if script.get("states"):
+        out["states"] = {}
+        for x in script["states"]:
+            state = {k: x[k] for k in ("title", "markLabel", "trigger") if x.get(k)}
+            state["event"] = {"title": x["event"]["title"], "bullets": x["event"]["bullets"]}
+            out["states"][x["id"]] = state
+    battle = script.get("battle")
+    if battle:
+        out["battle"] = battle["title"]
+    out["phases"], out["steps"] = {}, {}
+    for phase in script["phases"] + (battle["phases"] if battle else []):
+        entry = {"title": phase["title"]}
+        if phase.get("loop"):
+            entry["loop"] = {"endLabel": phase["loop"]["endLabel"], "note": phase["loop"]["note"]}
+        out["phases"][phase["id"]] = entry
+        for step in phase["steps"]:
+            entry = {"title": step["title"], "instruction": step["instruction"]}
+            if step.get("bullets"):
+                entry["bullets"] = step["bullets"]
+            entry["components"] = step["components"]
+            if step.get("additions"):
+                entry["additions"] = [{"text": a["text"], **({"bullets": a["bullets"]} if a.get("bullets") else {})} for a in step["additions"]]
+            if step.get("reminders"):
+                entry["reminders"] = [r["text"] for r in step["reminders"]]
+            out["steps"][step["id"]] = entry
+    return out
+
+
+def compare(english, translated, at, errors):
+    """The translation has exactly the English's texts: same keys, same list lengths, nothing empty."""
+    if isinstance(english, dict):
+        if not isinstance(translated, dict):
+            errors.append(f"{at}: should be an object")
+            return
+        for key in english.keys() - translated.keys():
+            errors.append(f"{at}.{key}: missing")
+        for key in translated.keys() - english.keys():
+            errors.append(f"{at}.{key}: not in the English script")
+        for key in english.keys() & translated.keys():
+            compare(english[key], translated[key], f"{at}.{key}", errors)
+    elif isinstance(english, list):
+        if not isinstance(translated, list) or len(translated) != len(english):
+            errors.append(f"{at}: needs {len(english)} items")
+            return
+        for n, (e, t) in enumerate(zip(english, translated)):
+            compare(e, t, f"{at}[{n}]", errors)
+    elif not isinstance(translated, str) or not translated.strip():
+        errors.append(f"{at}: needs a translation")
 
 
 def validate(path):
@@ -184,10 +249,25 @@ def validate(path):
         for step in phase["steps"]:
             if step.get("opensBattle") and battle is None:
                 errors.append(f"{step['id']}: opensBattle but the script has no battle")
+
+    english = translatable(script)
+    for lang in LANGUAGES:
+        tr_path = path.with_name(path.name.replace(".json", f".{lang}.json"))
+        if not tr_path.exists():
+            errors.append(f"{lang}: translation missing ({tr_path.name}; start from --template)")
+            continue
+        translation = json.loads(tr_path.read_text())
+        if translation.pop("language", None) != lang:
+            errors.append(f"{tr_path.name}: needs \"language\": \"{lang}\"")
+        compare(english, translation, lang, errors)
     return errors
 
 
 def main():
+    if sys.argv[1:2] == ["--template"]:
+        # The English text of one script, to translate: python3 tools/validate_turn_scripts.py --template <script>
+        print(json.dumps(translatable(json.loads(pathlib.Path(sys.argv[2]).read_text())), indent=2, ensure_ascii=False))
+        return
     scripts = sorted((ROOT / "Ordir" / "Games").rglob("*.turnscript.json"))
     if not scripts:
         sys.exit("No turn scripts found.")
