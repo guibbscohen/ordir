@@ -267,6 +267,11 @@ def tour_gestures_languages(page, url, problems):
     page.wait_for_selector("#home-browse")
     after = page.evaluate("document.querySelector('.home > .scroll').scrollTop")
     check(before > 300 and abs(after - before) < 2, f"Home went back to {after}px instead of {before}px")
+    check(not page.query_selector(".pane.home.enter"), "coming back to Home replayed its arrival animation")
+    check(focused(page, "#home-browse .game-row[data-act=game-knarr]"), "focus did not return to the game that was opened")
+    page.wait_for_timeout(400)
+    later = page.evaluate("document.querySelector('.home > .scroll').scrollTop")
+    check(abs(later - before) < 2, f"Home drifted to {later}px after coming back")
     page.evaluate("document.querySelector('.home > .scroll').scrollTop = 0")
 
     # Swipe-back and the browser's Back leave a game's setup; a running guide ignores swipe-back.
