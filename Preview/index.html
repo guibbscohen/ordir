@@ -166,6 +166,8 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 .seat-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; background: var(--surface-2); border-radius: 14px; padding: 14px 16px; min-height: 48px; box-sizing: border-box; }
 .seat-row span { color: var(--muted); font-size: 15px; }
 .seat-row span.in { color: var(--on); }
+.rejoin { display: flex; flex-direction: column; align-items: flex-end; gap: 0; }
+.rejoin .option { border: 1px solid var(--sparkle); }
 .timer { font-size: 24px; color: var(--muted); font-variant-numeric: tabular-nums; }
 
 /* Game menu covers the whole phone */
@@ -1171,6 +1173,7 @@ function gamesPage() {
   return `<div class="brand${build}"><button class="orb-btn" data-act="orb-ask" aria-label="${t("Ask Ordir a rules question")}">${mascot("idle")}</button>
       <div><h1 tabindex="-1">Ordir</h1><button class="ask-link" data-act="orb-ask">${TAB_ICONS.ask}${t("Ask me a rules question")}</button></div></div>
     <button class="bubble${build}" data-act="next-phrase" aria-label="${esc(t("{0} (tap for another)", t(PHRASES[phraseIndex])))}">${esc(t(PHRASES[phraseIndex]))}</button>
+    ${rejoinCard()}
     <div class="field home-search"><label for="home-search" class="sr-only">${t("Search games")}</label>
       <div class="search-box">${LENS}<input id="home-search" type="search" autocomplete="off" spellcheck="false" enterkeyhint="search"
         placeholder="${t("Search games")}" value="${esc(state.homeQuery)}" aria-controls="home-results"></div></div>
@@ -1499,6 +1502,7 @@ function trackGame() {
   g.steps += 1;
   if (!g.setup && phaseOf(s).part === "round") { g.setup = true; track("setup_done", { game, minutes: minutes() }); }
   if (s.pos.round > g.round) { g.round = s.pos.round; track("round_reached", { game, round: g.round }); }
+  if (s.finished && !g.over && state.mode === "own") forgetTable();  // a finished game is nothing to come back to
   if (s.finished && !g.over) { g.over = true; track("game_over", { game, mode: state.mode, rounds: s.pos.round, minutes: minutes(), steps: g.steps, winner: s.winner }); }
 }
 // What a report carries besides the player's words: where they were, the game and step, the phone and the version.
@@ -1907,6 +1911,12 @@ async function sitAt(row, side) {
   state.session = makeSession(state.script, new Set(row.expansions), false);
   state.battle = null;
   online.lobby.open = false;
+  try { localStorage.setItem("ordir-table", JSON.stringify({ id: row.id, code: row.code, game: row.game || state.script.game, side, at: Date.now() })); } catch {}
+  listen(row);
+  applyRow(row);
+}
+/** Follows the table's moves: Realtime, with a poll as a safety net (and to see who has joined). */
+function listen(row) {
   if (online.channel) online.client.removeChannel(online.channel);
   online.channel = online.client.channel(`table-${row.id}`)
     .on("postgres_changes", { event: "UPDATE", schema: "public", table: "game_tables", filter: `id=eq.${row.id}` },
@@ -1924,8 +1934,35 @@ async function sitAt(row, side) {
       .eq("id", online.table.id).gt("version", online.version).maybeSingle();
     if (data && data.version > online.version) applyRow(data);
   }, 3000);
-  applyRow(row);
 }
+
+// ---- Coming back to a table ----
+// A phone that sleeps, or a Home Screen app the system closed, loses its connection to the table. Back in the
+// app, Ordir catches up (the latest step, a fresh Realtime connection); after a restart, Home offers the table
+// again for 12 hours.
+const TABLE_HOURS = 12;
+function savedTable() {
+  try {
+    const t = JSON.parse(localStorage.getItem("ordir-table") || "null");
+    return t && Date.now() - t.at < TABLE_HOURS * 3600e3 && gameOf(t.game) ? t : null;
+  } catch { return null; }
+}
+const forgetTable = () => { try { localStorage.removeItem("ordir-table"); } catch {} };
+function rejoinCard() {
+  const saved = savedTable();
+  if (!saved || online.table || !signedIn()) return "";
+  return `<div class="rejoin"><button class="option" data-act="table-rejoin"><div><strong>${t("Back to your table")}</strong>
+      <span>${esc(gameOf(saved.game).title)} · ${t("Table {0}", esc(saved.code))}</span></div>${CHEVRON}</button>
+    <button class="textbtn" data-act="table-forget">${t("Not now")}</button></div>`;
+}
+document.addEventListener("visibilitychange", async () => {
+  if (document.visibilityState !== "visible" || !online.table || !online.client) return;
+  const { data } = await online.client.from("game_tables").select("*").eq("id", online.table.id).maybeSingle();
+  if (!data || !online.table || data.id !== online.table.id) return;
+  if (!online.live) listen(data);
+  if (data.version > online.version) applyRow(data);
+  refreshSeated();
+});
 
 function leaveTable() {
   if (online.channel) online.client.removeChannel(online.channel);
@@ -1955,7 +1992,7 @@ async function onlineAction(act, el) {
   } else if (act === "change-email") {
     f.sent = false; f.code = ""; f.error = ""; render(); $("#signin-email")?.focus();
   } else if (act === "sign-out") {
-    leaveTable(); await client.auth.signOut();
+    leaveTable(); forgetTable(); await client.auth.signOut();
     Object.assign(a, { threads: {}, loadedFor: null, loading: null, open: false, seat: null }); render();
   } else if (act === "ask-send" || act === "ask-start") {
     const field = el.closest(".chat, .sheet, .pane")?.querySelector("textarea");
@@ -1989,6 +2026,15 @@ async function onlineAction(act, el) {
     a.busy = null; a.toBottom = true; render();
     const answer = [...document.querySelectorAll(".thread .answer")].pop();
     if (!a.error && answer) { answer.setAttribute("tabindex", "-1"); answer.focus(); } else $("#ask-question")?.focus();
+  } else if (act === "table-rejoin") {
+    const saved = savedTable();
+    if (!saved) return render();
+    const { data } = await client.from("game_tables").select("*").eq("id", saved.id).maybeSingle();
+    if (!data || !scripts[data.game]) { forgetTable(); l.error = ""; return render(); }  // the table is gone
+    state.script = scripts[data.game];
+    track("table_rejoin", { game: data.game });
+    state.usedKey = "[data-none]";
+    await sitAt(data, saved.side);
   } else if (act === "table-find") {
     l.code = ($("#table-code")?.value || l.code).trim().toUpperCase();
     if (l.code.length !== 6) { l.error = t("Enter the 6-character code from the other phone."); return render(); }
@@ -2390,7 +2436,7 @@ function startIntro() {
 document.addEventListener("keydown", (event) => {
   if (state.screen === "intro" && ["Enter", " ", "Escape"].includes(event.key)) { event.preventDefault(); showHome(); }
 });
-const ONLINE_ACTIONS = ["send-code", "verify-code", "change-email", "sign-out", "ask-send", "ask-start", "table-create", "table-join", "table-find"];
+const ONLINE_ACTIONS = ["send-code", "verify-code", "change-email", "sign-out", "ask-send", "ask-start", "table-create", "table-join", "table-find", "table-rejoin"];
 function connect() {
   backend().then(render, () => { online.ready = true; online.signIn.error = t("Can’t reach Ordir right now. Check your connection and try again."); render(); });
 }
@@ -2470,6 +2516,7 @@ function handleClick(el) {
     case "report-open": openReport(); break;
     case "pro-open": openPro(); break;
     case "table-share": shareTable(); break;
+    case "table-forget": forgetTable(); render(); break;
     case "table-go": online.waitingRoom = false; state.lastKey = null; render(); break;
     case "pro-close": state.pro = null; render(); break;
     case "report-close": state.report = null; render(); break;

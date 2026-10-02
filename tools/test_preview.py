@@ -345,7 +345,8 @@ online.client = {
     : { data: null, error: { message: name } }),
   channel: () => ({ on() { return this; }, subscribe() { return this; } }),
   removeChannel() {},
-  from: () => ({ select() { return this; }, eq() { return this; }, gt() { return this; }, maybeSingle: async () => ({ data: null }),
+  from: () => ({ select() { return this; }, eq() { return this; }, gt() { this.newer = true; return this; },
+                 maybeSingle: async function () { return { data: this.newer ? null : { ...row, game: "knarr" } }; },
                  single: async () => ({ data: row }) }),
 };
 clientPromise = Promise.resolve(online.client);
@@ -381,6 +382,15 @@ def own_phone_seats(page, url, problems):
     page.wait_for_selector(".strip")
     check("You’re Player 3" in page.text_content(".strip"), "the table strip does not name the seat")
     check(page.query_selector("[data-act=done]"), "an own phone at a game without sides has no Done")
+    # The phone restarts: Home offers the table again, and rejoining puts this player back on their seat.
+    saved = page.evaluate("JSON.parse(localStorage.getItem('ordir-table'))")
+    check(saved and saved["code"] == "ABC234" and saved["side"] == "seat3", f"the table was not remembered: {saved}")
+    page.evaluate("leaveTable(); state.session = null; state.screen = 'home'; state.tab = 'games'; render()")  # as after a restart
+    page.wait_for_selector("[data-act=table-rejoin]")
+    a11y.scan("rejoin card")
+    page.click("[data-act=table-rejoin]")
+    page.wait_for_selector(".strip")
+    check("You’re Player 3" in page.text_content(".strip"), "rejoining did not seat the player again")
     seats5 = page.evaluate("seatsOf(scripts.terraformingMars).map((x) => x.name)")
     check(seats5 == ["Player 1", "Player 2", "Player 3", "Player 4", "Player 5"], f"Terraforming Mars seats {seats5}")
     a11y.scan("own-phone step")

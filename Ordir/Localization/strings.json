@@ -315,7 +315,9 @@
     "Whoever plays the {0} follows this step on their phone and taps Done there. Yours moves on by itself.": "Quem joga com {0} segue este passo no próprio celular e toca em Feito lá. O seu avança sozinho.",
     "You": "Você",
     "You can start now: anyone who joins later lands on the step you’re on.": "Pode começar agora: quem entrar depois chega no passo em que vocês estão.",
-    "Your table is ready": "Sua mesa está pronta"
+    "Your table is ready": "Sua mesa está pronta",
+    "Back to your table": "Voltar para a sua mesa",
+    "Not now": "Agora não"
   },
   "es-419": {
     "Both players": "Ambos jugadores",
@@ -633,6 +635,8 @@
     "Whoever plays the {0} follows this step on their phone and taps Done there. Yours moves on by itself.": "Quien juega con {0} sigue este paso en su celular y toca Listo allí. El tuyo avanza solo.",
     "You": "Tú",
     "You can start now: anyone who joins later lands on the step you’re on.": "Puedes empezar ya: quien se una después llega al paso en que están.",
-    "Your table is ready": "Tu mesa está lista"
+    "Your table is ready": "Tu mesa está lista",
+    "Back to your table": "Volver a tu mesa",
+    "Not now": "Ahora no"
   }
 }

@@ -165,3 +165,6 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   or copy, who has joined per side or seat, Start the guide); invites are links (?table=CODE) that open Join a table with
   the code filled in; on your own phone the waiting screen says the other player acts on their phone and taps Done there,
   or that nobody has joined that side yet, with the invite. Sign-in stays on the phone (remembered session and email).
+- 2026-10-02: Coming back to a table: the phone remembers its table for 12 hours (forgotten on sign-out or game over).
+  Back in the app it catches up (latest step, fresh Realtime); after a restart, Home shows "Back to your table" (with
+  "Not now") to sit down again on the same side.
