@@ -45,5 +45,12 @@ The database, the `rules-answer` Edge Function and the table functions are alrea
 - `supabase/functions/rules-answer/`: answers a question with Claude Opus 5.5, citing source pages.
   Signed-in players only, 30 questions a day. With `followUp: true` it reads the player's last 3 questions
   on that game from the past 6 hours (from `rules_questions`, never from the client) as earlier turns.
+  Deployed with JWT verification off: it checks the player's token itself, and `{ keepWarm: true }` needs none.
+- Rules cache: each game's base rules stay in Claude's 1-hour prompt cache, shared by every player,
+  language and expansion set (the answer language goes after the question, not in the system prompt).
+  The `rules-keep-warm` cron job (every 10 minutes) calls `rules-answer` with `{ keepWarm: true }`, which
+  re-reads (max_tokens 0) the rules of any game unread for 45 minutes; `claim_rules_cache_warm` lets each
+  game through at most once per 45 minutes. All seven games' base rules cost about $1.25 a day to keep warm.
+  To pause it: `select cron.unschedule('rules-keep-warm');`.
 - `tools/rules_corpus.py` and `.github/workflows/rules-corpus.yml`: extract the official PDFs page by
   page and load them.

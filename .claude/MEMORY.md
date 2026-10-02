@@ -139,3 +139,6 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   The tester dashboard is a private claude.ai artifact that queries them through the Supabase connector.
 - 2026-10-02: Terraforming Mars ships with Prelude, Venus Next, Colonies and Turmoil as expansions and the Hellas & Elysium
   maps as options; 2–5 players (no solo or draft variant for now), played by passing the phone like the other no-sides games.
+- 2026-10-02: Rules answers keep each game's base rules in Claude's 1-hour cache, shared by every player, language and
+  expansion set (nothing player- or language-specific before the base rules), kept warm 24/7 by the rules-keep-warm
+  cron job. Keep this in mind for any change to the rules-answer request.
