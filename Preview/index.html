@@ -218,6 +218,26 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 .field label { font-size: 15px; font-weight: 600; }
 .field input, .field textarea { font: inherit; font-size: 16px; color: var(--fg); background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; min-height: 48px; width: 100%; }
 .field textarea { min-height: 96px; resize: vertical; }
+/* Report a problem: the optional screenshot, shown small once attached. */
+.shot { display: flex; align-items: center; gap: 12px; }
+.shot img { width: 64px; height: 64px; object-fit: cover; border-radius: 10px; border: 1px solid var(--line); }
+#report-shot:focus-visible + label { outline: 2px solid var(--sparkle); outline-offset: 2px; }
+.report label.option { cursor: pointer; }
+/* Game over: a 1–5 rating, then an optional comment. */
+.rate { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; max-width: 360px; margin-top: 8px; }
+.rate h2 { margin: 0; font-size: 17px; }
+.stars { display: flex; gap: 6px; }
+.stars button { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; color: var(--muted); }
+.stars button svg { width: 28px; height: 28px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linejoin: round; }
+.stars button.on { color: var(--sparkle); }
+.stars button.on svg { fill: currentColor; }
+.rate .field { width: 100%; }
+.rate .field textarea { min-height: 72px; }
+/* Under each rules answer: was it helpful? */
+.feedback { display: flex; gap: 4px; margin-top: 6px; }
+.feedback button { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; color: var(--muted); }
+.feedback button svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.feedback button[aria-pressed="true"] { color: var(--sparkle); background: var(--surface-2); }
 .field input:focus-visible, .field textarea:focus-visible { outline: 2px solid var(--sparkle); outline-offset: 1px; }
 .error { color: var(--danger); font-size: 15px; margin: 0; }
 .code { font-size: 32px; font-weight: 700; letter-spacing: .12em; font-variant-numeric: tabular-nums; }
@@ -1169,10 +1189,14 @@ function accountPage() {
       ${LANGS.map(([id, name]) => `<button class="option" role="radio" aria-checked="${state.lang === id}" data-lang="${id}" lang="${id}">
         <div><strong>${name}</strong></div><span class="radio" aria-hidden="true"></span></button>`).join("")}</div>
     <div class="group"><h2>${t("Help")}</h2>
-      <button class="option" data-act="tutorial"><div><strong>${t("Replay the tutorial")}</strong><span>${t("A quick tour of how Ordir works.")}</span></div>${CHEVRON}</button></div>
+      <button class="option" data-act="tutorial"><div><strong>${t("Replay the tutorial")}</strong><span>${t("A quick tour of how Ordir works.")}</span></div>${CHEVRON}</button>
+      <button class="option" data-act="report-open"><div><strong>${t("Report a problem")}</strong><span>${t("Something broken or confusing? Tell us, with a screenshot if you like.")}</span></div>${CHEVRON}</button>
+      <label class="toggle" for="share-usage"><div><strong>${t("Share usage data")}</strong>
+        <span>${t("Anonymous: screens, games played and errors, to improve Ordir. Linked to your account when you’re signed in.")}</span></div>
+        <input type="checkbox" id="share-usage" ${shareUsage() ? "checked" : ""}><span class="switch" aria-hidden="true"></span></label></div>
     <p class="hint">${t("Logo: “Magic Ball” by Ziyad Aljunaidi, Noun Project (CC BY 3.0). Type: Google Sans Flex (SIL OFL 1.1).")}
       ${t("Rules © CMON / Gale Force Nine, Fantasy Flight Games and Ares Games; Ordir cites them by page and isn’t affiliated with them.")}</p>
-    <p class="hint" style="display:flex;align-items:center;gap:8px">${t("Version {0}", esc(BUILD))}
+    <p class="hint" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">${t("Version {0}", esc(BUILD))} · ${t("Tester {0}", tracking.device.slice(0, 8))}
       <button class="textbtn" style="font-size:13px" data-act="layout-info" aria-pressed="${layoutInfo.on}">${t("Layout info")}</button></p>`;
 }
 
@@ -1258,8 +1282,20 @@ function finished() {
   return `<div class="pane done-pane">${mascot("idle")}<h1 tabindex="-1">${t("Game over")}</h1>
     ${s.winner ? `<h2 style="margin:0;font-size:20px">${t("The {0} win", `<span class="side-${s.winner}">${esc(sideName(s.winner))}</span>`)}</h2>` : ""}
     <p>${s.pos.round === 1 ? t("Played in 1 round.") : t("Played in {0} rounds.", s.pos.round)}</p>
+    ${ratingBox(s)}
     <button class="primary" data-act="restart">${t("Start over")}</button>
     <button class="textbtn" data-act="close">${t("Back to expansions")}</button></div>`;
+}
+
+// Game over: how was the guide? 1–5 stars and an optional comment, sent with the game.
+function ratingBox(s) {
+  const r = (s.rating ||= { stars: 0, text: "", sent: false });
+  if (r.sent) return `<p class="hint" role="status">${t("Thanks for rating the guide!")}</p>`;
+  return `<div class="rate" role="group" aria-labelledby="rate-title"><h2 id="rate-title">${t("How was the guide?")}</h2>
+    <div class="stars">${[1, 2, 3, 4, 5].map((n) => `<button class="${n <= r.stars ? "on" : ""}" data-rate="${n}" aria-pressed="${n === r.stars}" aria-label="${n === 1 ? t("1 star") : t("{0} stars", n)}">${STAR}</button>`).join("")}</div>
+    ${r.stars ? `<div class="field"><label class="sr-only" for="rate-text">${t("Comment (optional)")}</label>
+      <textarea id="rate-text" maxlength="1000" placeholder="${t("Anything to tell us? (optional)")}">${esc(r.text)}</textarea></div>
+      <button class="primary" data-act="rate-send">${t("Send rating")}</button>` : ""}</div>`;
 }
 
 function gameMenu(s) {
@@ -1277,6 +1313,7 @@ function gameMenu(s) {
           : state.script.sides.map((x) => `<button class="option" data-winner="${x.id}"><div><strong class="side-${x.id}">${t("The {0} won", esc(x.name))}</strong></div></button>`).join("")}
         <p class="hint">${esc(state.script.victory.note)} (${esc(citeText(state.script.victory.citations))})</p>
       </div>
+      <button class="option" data-act="report-open"><div><strong>${t("Report a problem")}</strong><span>${t("Ordir adds this game and step to your report.")}</span></div></button>
       <button class="textbtn" style="align-self:flex-start" data-act="close">${t("Leave the guide")}</button></div></div>`;
 }
 
@@ -1284,6 +1321,157 @@ function gameMenu(s) {
 // Talks to the Ordir backend (Supabase). supabase-js loads only when a player first opens one of
 // these features, so the offline guide works without a network.
 const BACKEND = { url: "https://dhaeqyvdjkhbedqsnqzj.supabase.co", key: "sb_publishable_8tU1Ih0mwFEaHMz0o_i3gg_nLm2NjjM" };
+
+// ---- Tester feedback ----
+// On the hosted preview (github.io), Ordir records anonymous usage events (screens, games, rules questions),
+// script errors, ratings and "Report a problem" reports in the backend, for the tester dashboard. Phones can only
+// add rows (the events and bug_reports tables), never read them. A random id per phone ties a tester's events
+// together; a signed-in player's account is linked through their sign-in token. Account → "Share usage data"
+// turns the events off (reports and ratings are only ever sent when the player sends them).
+const uuid = () => crypto.randomUUID?.() || "10000000-1000-4000-8000-100000000000".replace(/[018]/g, (c) => (c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))).toString(16));
+const tracking = {
+  on: location.hostname.endsWith("github.io") || window.ORDIR_TRACK === true,
+  device: (() => { try { let id = localStorage.getItem("ordir-device"); if (!id) localStorage.setItem("ordir-device", (id = uuid())); return id; } catch { return uuid(); } })(),
+  session: uuid(),
+  queue: [], trail: [], errors: [], timer: null, view: null, game: null, visibleAt: Date.now(),
+};
+const shareUsage = () => { try { return localStorage.getItem("ordir-share-usage") !== "0"; } catch { return true; } };
+// The signed-in player's token, straight from supabase-js's saved session (which may not be loaded yet).
+function accessToken() {
+  if (online.session) return online.session.access_token;
+  try {
+    const saved = JSON.parse(localStorage.getItem("sb-dhaeqyvdjkhbedqsnqzj-auth-token") || "null");
+    return saved && saved.expires_at * 1000 > Date.now() + 60000 ? saved.access_token : null;
+  } catch { return null; }
+}
+function viewName() {
+  if (state.screen !== "game") return state.screen === "home" ? `home-${state.tab}` : state.screen;
+  return !state.session ? (online.lobby.open ? "lobby" : "picker") : state.session.finished ? "game-over" : "guide";
+}
+function postRows(table, rows, keepalive = false) {
+  const token = accessToken();
+  return fetch(`${BACKEND.url}/rest/v1/${table}`, { method: "POST", keepalive, body: JSON.stringify(rows),
+    headers: { apikey: BACKEND.key, "Content-Type": "application/json", Prefer: "return=minimal", ...(token ? { Authorization: `Bearer ${token}` } : {}) } })
+    .then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); });
+}
+function track(name, props = {}) {
+  tracking.trail.push({ name, game: props.game, at: Date.now() });
+  tracking.trail.splice(0, tracking.trail.length - 30);
+  if (!tracking.on || !shareUsage()) return;
+  tracking.queue.push({ name, props, client_at: new Date().toISOString(), screen: viewName() });
+  clearTimeout(tracking.timer);
+  tracking.timer = setTimeout(flushEvents, tracking.queue.length >= 20 ? 0 : 4000);
+}
+function flushEvents(keepalive = false) {
+  clearTimeout(tracking.timer);
+  if (!tracking.queue.length) return;
+  const base = { device_id: tracking.device, session_id: tracking.session, build: BUILD, lang: state.lang,
+    standalone: !!(navigator.standalone || matchMedia("(display-mode: standalone)").matches) };
+  postRows("events", tracking.queue.splice(0).map((e) => ({ ...base, ...e })), keepalive).catch(() => {});  // usage is best effort
+}
+// Each distinct error once a session: a script error, a promise nobody caught, or a picture or file that failed to load.
+function trackError(kind, message, extra = {}) {
+  message = String(message || "unknown").slice(0, 300);
+  if (tracking.errors.some((e) => e.message === message)) return;
+  tracking.errors.push({ kind, message, at: Date.now() });
+  track("error", { kind, message, ...extra });
+  flushEvents();
+}
+addEventListener("error", (event) => {
+  const el = event.target;
+  if (el && el !== window && el.tagName) return trackError("load", `${el.tagName.toLowerCase()} ${(el.currentSrc || el.src || el.href || "").replace(location.origin, "")}`);
+  trackError("script", event.message, { file: (event.filename || "").split("/").pop(), line: event.lineno, col: event.colno, stack: event.error?.stack?.slice(0, 1200) });
+}, true);
+addEventListener("unhandledrejection", (event) => trackError("promise", event.reason?.message || event.reason, { stack: event.reason?.stack?.slice(0, 1200) }));
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "hidden") { track("app_hidden", { seconds: Math.round((Date.now() - tracking.visibleAt) / 1000) }); flushEvents(true); }
+  else { tracking.visibleAt = Date.now(); track("app_visible"); }
+});
+// The guide's milestones, for the dashboard's funnel: started, setup finished, each new round, game over.
+function trackGame() {
+  const s = state.session;
+  if (!s) return;
+  const game = state.script.game, minutes = () => Math.round((Date.now() - tracking.game.started) / 6000) / 10;
+  if (!tracking.game || tracking.game.session !== s) {
+    tracking.game = { session: s, round: 1, setup: false, over: false, steps: 0, started: Date.now() };
+    track("guide_start", { game, mode: state.mode, expansions: [...s.expansions] });
+  }
+  const g = tracking.game;
+  g.steps += 1;
+  if (!g.setup && phaseOf(s).part === "round") { g.setup = true; track("setup_done", { game, minutes: minutes() }); }
+  if (s.pos.round > g.round) { g.round = s.pos.round; track("round_reached", { game, round: g.round }); }
+  if (s.finished && !g.over) { g.over = true; track("game_over", { game, mode: state.mode, rounds: s.pos.round, minutes: minutes(), steps: g.steps, winner: s.winner }); }
+}
+// What a report carries besides the player's words: where they were, the game and step, the phone and the version.
+function reportContext() {
+  const s = state.session;
+  return {
+    view: viewName(), lang: state.lang, signedIn: !!signedIn(), mode: state.mode,
+    game: state.screen === "game" && state.script ? state.script.game : null,
+    expansions: s ? [...s.expansions] : null,
+    step: s ? { part: phaseOf(s).part, phase: phaseOf(s).title, step: stepOf(s).id || null, round: s.pos.round, pass: s.pos.pass, finished: s.finished } : null,
+    table: online.table ? { code: online.table.code, side: online.mySide } : null,
+    screen: screenSize(), insets: insets(), ua: navigator.userAgent,
+    standalone: !!(navigator.standalone || matchMedia("(display-mode: standalone)").matches),
+    errors: tracking.errors.slice(-5), opening: introLog.slice(-8),
+    recent: tracking.trail.slice(-20).map((e) => `${Math.round((Date.now() - e.at) / 1000)}s ago ${e.name}${e.game ? ` (${e.game})` : ""}`),
+  };
+}
+// A screenshot from the phone's photos, made small (a JPEG at most 1000 px across) so the report stays light.
+async function shrinkShot(file) {
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await new Promise((resolve, reject) => { const i = new Image(); i.onload = () => resolve(i); i.onerror = reject; i.src = url; });
+    const scale = Math.min(1, 1000 / Math.max(img.naturalWidth, img.naturalHeight));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(img.naturalWidth * scale); canvas.height = Math.round(img.naturalHeight * scale);
+    canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+    for (const quality of [0.7, 0.5, 0.35]) { const data = canvas.toDataURL("image/jpeg", quality); if (data.length < 1400000) return data; }
+    return null;
+  } finally { URL.revokeObjectURL(url); }
+}
+const STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></svg>';
+const THUMB_UP = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 11v9H4v-9zM7 11l4-7c1.5 0 2.5 1 2.2 2.6L12.6 10H19a2 2 0 0 1 2 2.3l-1.2 6A2 2 0 0 1 17.8 20H7"/></svg>';
+const THUMB_DOWN = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 13V4h3v9zM17 13l-4 7c-1.5 0-2.5-1-2.2-2.6l.6-3.4H5a2 2 0 0 1-2-2.3l1.2-6A2 2 0 0 1 6.2 4H17"/></svg>';
+// The "Report a problem" form, over whatever the player was doing.
+function reportPanel() {
+  const r = state.report;
+  if (r.sent) return `<div class="overlay${r.enter ? " enter" : ""} menu report" role="dialog" aria-modal="true" aria-labelledby="report-title">
+    <div class="head"><h2 id="report-title" style="flex:1" tabindex="-1">${t("Report a problem")}</h2><button class="textbtn" data-act="report-close">${t("Close")}</button></div>
+    <div class="chat-empty">${mascot("speaking")}<p>${t("Thanks! Your report reached the Ordir team.")}</p></div>
+    <button class="primary" data-act="report-close">${t("Done")}</button></div>`;
+  return `<div class="overlay${r.enter ? " enter" : ""} menu report" role="dialog" aria-modal="true" aria-labelledby="report-title">
+    <div class="head"><h2 id="report-title" style="flex:1" tabindex="-1">${t("Report a problem")}</h2><button class="textbtn" data-act="report-close">${t("Close")}</button></div>
+    <div class="scroll" style="padding:0;display:flex;flex-direction:column;gap:16px">
+      <p class="hint" style="font-size:15px">${t("Tell us what went wrong. Ordir adds the screen you were on, the game and step, your phone and the version.")}</p>
+      <div class="field"><label for="report-text">${t("What happened?")}</label>
+        <textarea id="report-text" maxlength="4000" rows="5">${esc(r.text)}</textarea></div>
+      ${r.shot ? `<div class="shot"><img src="${r.shot}" alt="${t("The attached screenshot")}"><button class="textbtn" data-act="report-unshot">${t("Remove")}</button></div>`
+        : `<input type="file" id="report-shot" class="sr-only" accept="image/*">
+          <label class="option" for="report-shot"><div><strong>${t("Add a screenshot")}</strong><span>${t("Optional. From your photos.")}</span></div>${CHEVRON}</label>`}
+      ${r.error ? `<p class="error" role="alert">${esc(r.error)}</p>` : ""}
+      <button class="primary" style="flex:none" data-act="report-send" ${r.busy ? "disabled" : ""}>${r.busy ? t("Sending…") : t("Send report")}</button></div></div>`;
+}
+function openReport() {
+  state.menu = false;
+  state.returnTo = state.usedKey;  // closing the form goes back to the button that opened it, where it's still there
+  state.report = { text: "", shot: null, busy: false, error: "", sent: false, enter: true, context: reportContext() };
+  render();
+}
+async function sendReport() {
+  const r = state.report;
+  r.text = ($("#report-text")?.value ?? r.text).trim();
+  if (r.text.length < 3) { r.error = t("Describe what happened first."); render(); $("#report-text")?.focus(); return; }
+  r.busy = true; r.error = ""; r.enter = false; render();
+  try {
+    await postRows("bug_reports", [{ device_id: tracking.device, session_id: tracking.session, build: BUILD, description: r.text, screenshot: r.shot, context: r.context }]);
+    r.sent = true;
+    track("bug_report", { view: r.context.view, game: r.context.game, screenshot: !!r.shot });
+  } catch {
+    r.error = t("Couldn’t send the report. Check your connection and try again.");
+  }
+  r.busy = false; render();
+}
 const online = {
   client: null,
   session: null,
@@ -1365,7 +1553,10 @@ function chatThread() {
   const turns = thread.map((x, i) => {
     const fresh = !a.busy && i === thread.length - 1 && a.freshUntil > Date.now();
     return `<p class="msg"><span class="sr-only">${t("You asked:")} </span>${esc(x.question)}</p>
-      <article class="answer${fresh ? " fresh" : ""}"><div class="answer-by">${mascot(fresh ? "speaking" : "idle")}<span>Ordir</span></div>${answerHtml(x.answer, askGame())}</article>`;
+      <article class="answer${fresh ? " fresh" : ""}"><div class="answer-by">${mascot(fresh ? "speaking" : "idle")}<span>Ordir</span></div>${answerHtml(x.answer, askGame())}
+        <div class="feedback" role="group" aria-label="${t("Was this answer helpful?")}">
+          <button data-feedback="${i}:up" aria-pressed="${x.feedback === "up"}" aria-label="${t("Helpful")}">${THUMB_UP}</button>
+          <button data-feedback="${i}:down" aria-pressed="${x.feedback === "down"}" aria-label="${t("Not helpful")}">${THUMB_DOWN}</button></div></article>`;
   }).join("");
   const pending = a.busy ? `<p class="msg"><span class="sr-only">${t("You asked:")} </span>${esc(a.busy.question)}</p>
       <div class="answer checking" role="status"><div class="answer-by">${mascot("thinking")}<span>${t("Checking the rules…")}</span></div></div>` : "";
@@ -1572,6 +1763,7 @@ async function onlineAction(act, el) {
     // From Home's Ask page the game's chat takes over the screen; closing it lands on that chat in the list.
     if (act === "ask-start") { a.open = true; a.seat = null; state.returnTo = `[data-chat="${game}"]`; }
     a.busy = { question }; a.question = ""; a.error = ""; a.toBottom = true; render();
+    const asked = Date.now();
     try {
       const token = (await client.auth.getSession()).data.session?.access_token;
       const response = await fetch(`${BACKEND.url}/functions/v1/rules-answer`, {
@@ -1582,12 +1774,14 @@ async function onlineAction(act, el) {
       const body = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(body.error || t("Couldn’t get an answer. Try again."));
       thread.push({ question, answer: body.answer, expansions, at: new Date().toISOString() });
+      track("question", { game, ok: true, ms: Date.now() - asked, followUp: thread.length > 1, from: inGame() ? "game" : "home", expansions });
       // The orb "speaks" the new answer for a moment, then rests.
       a.freshUntil = Date.now() + 1500;
       setTimeout(() => document.querySelectorAll(".answer.fresh .answer-by .mascot").forEach((m) => m.setAttribute("class", "mascot idle")), 3000);
     } catch (error) {
       a.error = errorText(error, t("Couldn’t get an answer. Try again."));
       a.question ||= question;
+      track("question", { game, ok: false, ms: Date.now() - asked, error: String(a.error).slice(0, 200), from: inGame() ? "game" : "home" });
     }
     a.busy = null; a.toBottom = true; render();
     const answer = [...document.querySelectorAll(".thread .answer")].pop();
@@ -1621,6 +1815,7 @@ async function onlineAction(act, el) {
       state.script = scripts[data.game];  // joining from Home: the table's game is now the one being played
     }
     l.found = null; l.joinSide = null; l.code = "";
+    track(act === "table-create" ? "table_create" : "table_join", { game: state.script.game });
     await sitAt(data, side);
   }
 }
@@ -1642,7 +1837,7 @@ function settleFocus(phone, stepChanged, kept) {
     const overlay = [...half.querySelectorAll(":scope > .overlay")].pop();
     if (overlay) for (const child of half.children) if (child !== overlay) child.inert = true;
   }
-  if (state.menu || state.tutorial || (online.ask.open && online.ask.seat === null)) for (const child of phone.children) if (!child.classList.contains("menu")) child.inert = true;
+  if (state.menu || state.tutorial || state.report || (online.ask.open && online.ask.seat === null)) for (const child of phone.children) if (!child.classList.contains("menu")) child.inert = true;
   const first = (...selectors) => selectors.map((sel) => sel && phone.querySelector(sel)).find(Boolean);
   const dialog = [...phone.querySelectorAll('[role="dialog"] [tabindex="-1"]')].find((h) => !h.closest("[inert]"));
   // On Home, focus never scrolls the page (it keeps the player's place); back from a game, it returns to the
@@ -1688,7 +1883,9 @@ function render() {
   const kept = active && phone.contains(active) ? (active.id ? `#${active.id}` : focusKey(active) || "[data-none]") : null;
   const menu = s && state.menu ? gameMenu(s) : "";
   askEnter = !phone.querySelector(".chat, .sheet");
-  const ask = online.ask.open && online.ask.seat === null ? chatPanel() : "";
+  const ask = (online.ask.open && online.ask.seat === null ? chatPanel() : "") + (state.report ? reportPanel() : "");
+  const view = viewName();
+  if (view !== tracking.view && state.screen !== "intro") { tracking.view = view; track("screen_view", { view, game: state.screen === "game" ? state.script?.game : undefined }); }
   if (signedIn() && online.client && online.ask.loadedFor !== online.session.user.id && (state.tab === "ask" || online.ask.open)) loadThreads();
   const threadTop = phone.querySelector(".thread")?.scrollTop;
   // The step that's leaving: copy each half's step so it can lift away over the new one.
@@ -1746,6 +1943,7 @@ function render() {
   state.navBack = false;
   state.tabFrom = null;
   if (state.tutorial) { state.tutorial.enter = false; state.tutorial.turn = 0; }
+  if (state.report) state.report.enter = false;
   const homeScroller = state.screen === "home" && phone.querySelector(".home > .scroll");
   const homeTop = homeScroll[state.tab] || 0;
   if (homeScroller) homeScroller.scrollTop = homeTop;
@@ -1758,6 +1956,7 @@ function render() {
 // ---- Behaviour ----
 let speakTimer = null;
 function onStepChanged() {
+  trackGame();
   state.pending = null;
   state.enlarged = null;
   const s = cur();
@@ -1787,7 +1986,7 @@ function run(action) {
 
 // At an own-phone table, any tap that changes the shared position is saved for the other phone.
 document.addEventListener("click", (event) => {
-  const el = event.target.closest("[data-act], [data-enlarge], [data-check], [data-mode], [data-mark], [data-winner], [data-evcheck], [data-side], [data-joinside], [data-askgame], [data-chat], [data-lang]");
+  const el = event.target.closest("[data-act], [data-enlarge], [data-check], [data-mode], [data-mark], [data-winner], [data-evcheck], [data-side], [data-joinside], [data-askgame], [data-chat], [data-lang], [data-feedback], [data-rate]");
   if (!el) return;
   const atTable = () => state.mode === "own" && online.table && state.session;
   const before = atTable() ? JSON.stringify(shared()) : null;
@@ -1887,6 +2086,7 @@ function showHome(landed) {
   if (landed && rim && orb && rim.width) {
     introLog.push(`landed: line vs orb ${Math.round(rim.x + rim.width / 2 - orb.x - orb.width / 2)},${Math.round(rim.y + rim.height / 2 - orb.y - orb.height / 2)}`);
   } else introLog.push(landed ? "landed" : "skipped");
+  track("opening", { landed: !!landed, ms: Math.round(performance.now()), log: introLog.join(" → ").slice(0, 600) });
   state.screen = "home";
   state.usedKey = "[data-none]";  // move focus to Home's heading
   if (landed) state.lastKey = `home-${state.tab}`;  // Home already rose in under the opening
@@ -1990,6 +2190,19 @@ function handleClick(el) {
     Object.assign(a, { game: el.dataset.chat, expansions: new Set(last ? last.expansions : []), picking: false, open: true, seat: null, error: "", toBottom: true });
     state.returnTo = state.usedKey; render(); return;
   }
+  if (el.dataset.feedback) {
+    const [i, vote] = el.dataset.feedback.split(":"), x = (online.ask.threads[askGame()] || [])[Number(i)];
+    if (!x) return;
+    x.feedback = x.feedback === vote ? null : vote;
+    if (x.feedback) track("answer_feedback", { game: askGame(), vote, question: x.question.slice(0, 300) });
+    const key = `[data-feedback="${el.dataset.feedback}"]`;
+    state.usedKey = null; render(); $(key)?.focus(); return;
+  }
+  if (el.dataset.rate) {
+    const r = state.session.rating;
+    r.text = $("#rate-text")?.value ?? r.text; r.stars = Number(el.dataset.rate);
+    state.usedKey = null; render(); $(`[data-rate="${r.stars}"]`)?.focus(); return;
+  }
   if (ONLINE_ACTIONS.includes(el.dataset.act)) {
     onlineAction(el.dataset.act, el).catch((error) => { online.signIn.busy = online.ask.busy = online.lobby.busy = false; online.ask.error = online.lobby.error = errorText(error, t("Something went wrong. Try again.")); render(); });
     return;
@@ -2023,6 +2236,7 @@ function handleClick(el) {
       state.nearSeat = state.script.sides[0].id;
       online.lobby.side = seatsOf()[0].id;
     }
+    track("game_open", { game: opened.script });
     state.screen = "game"; render(); return;
   }
   switch (el.dataset.act) {
@@ -2030,6 +2244,16 @@ function handleClick(el) {
       if (state.mode === "own") { online.lobby.open = true; render(); connect(); break; }
       state.session = makeSession(state.script, new Set(state.chosen), state.mode === "pass"); onStepChanged(); break;
     case "skip-intro": showHome(); break;
+    case "report-open": openReport(); break;
+    case "report-close": state.report = null; render(); break;
+    case "report-unshot": state.report.shot = null; state.report.enter = false; render(); $("#report-shot")?.focus(); break;
+    case "report-send": sendReport(); break;
+    case "rate-send": {
+      const r = state.session.rating;
+      r.text = ($("#rate-text")?.value ?? r.text).trim(); r.sent = true;
+      track("rating", { game: state.script.game, stars: r.stars, comment: r.text.slice(0, 1000), mode: state.mode, rounds: state.session.pos.round });
+      flushEvents(); render(); break;
+    }
     case "home": leaveTable(); Object.assign(online.lobby, { open: false, error: "", found: null, joinSide: null }); state.session = null; state.battle = null; state.screen = "home"; state.tab = "games"; render(); break;
     case "tab-games": case "tab-ask": case "tab-join": case "tab-account": case "orb-ask":
       state.tabFrom = TABS.findIndex(([id]) => id === state.tab);
@@ -2041,7 +2265,9 @@ function handleClick(el) {
     case "table-reset": Object.assign(online.lobby, { found: null, joinSide: null, error: "" }); render(); $("#table-code")?.focus(); break;
     case "battle": state.battle = makeBattle(state.session); state.lastKey = null; onStepChanged(); break;
     case "leave-battle": state.battle = null; state.lastKey = null; onStepChanged(); break;
-    case "close": leaveTable(); online.lobby.open = false; state.battle = null; state.session = null; state.pending = null; state.enlarged = null; state.menu = false; render(); break;
+    case "close":
+      if (state.session && !state.session.finished && !state.session.isBattle) track("guide_left", { game: state.script.game, round: state.session.pos.round, part: phaseOf(state.session).part, steps: tracking.game?.steps || 0 });
+      leaveTable(); online.lobby.open = false; state.battle = null; state.session = null; state.pending = null; state.enlarged = null; state.menu = false; render(); break;
     case "restart": state.session = makeSession(state.script, state.session.expansions, state.session.passesPhone); onStepChanged(); break;
     case "handoff-ready": s.handoffTo = null; s.startedAt = Date.now(); onStepChanged(); break;
     case "back": state.navBack = true; goBack(s); onStepChanged(); break;
@@ -2098,6 +2324,8 @@ document.addEventListener("focusout", (event) => {
 // Typed text survives re-renders.
 document.addEventListener("input", (event) => {
   if (event.target.id === "home-search") { filterHome(event.target.value); return; }
+  if (event.target.id === "report-text" && state.report) { state.report.text = event.target.value; return; }
+  if (event.target.id === "rate-text" && state.session?.rating) { state.session.rating.text = event.target.value; return; }
   if (event.target.id === "ask-game") {
     if (!online.ask.picking) { online.ask.picking = true; $("#ask-games").hidden = false; event.target.setAttribute("aria-expanded", "true"); }
     online.ask.query = event.target.value; filterGames(event.target.value); return;
@@ -2108,7 +2336,7 @@ document.addEventListener("input", (event) => {
 });
 // ---- Going back ----
 // What closes first: the tutorial, the rules chat, the picture, the Game menu, or the turn-change checklist.
-const closeAct = () => (state.tutorial ? (state.tutorial.i === TOUR.length - 1 ? "tour-next" : "tour-skip") : online.ask.open ? "ask-close" : state.enlarged ? "close-enlarged"
+const closeAct = () => (state.tutorial ? (state.tutorial.i === TOUR.length - 1 ? "tour-next" : "tour-skip") : state.report ? "report-close" : online.ask.open ? "ask-close" : state.enlarged ? "close-enlarged"
   : state.menu ? "menu-close" : state.pending ? "not-yet" : null);
 // What going back does: close that, or leave a game's setup (or the table lobby, or the end of the game).
 // A running guide has no "back" here: brushing the phone on the table never leaves a game.
@@ -2181,6 +2409,20 @@ document.addEventListener("touchend", () => {
 });
 document.addEventListener("touchcancel", () => { if (swipe?.panel) swipe.panel.style.transform = ""; swipe = null; });
 document.addEventListener("change", (event) => {
+  if (event.target.id === "share-usage") {
+    try { localStorage.setItem("ordir-share-usage", event.target.checked ? "1" : "0"); } catch {}
+    if (!event.target.checked) tracking.queue.length = 0;
+    return;
+  }
+  if (event.target.id === "report-shot" && event.target.files[0] && state.report) {
+    shrinkShot(event.target.files[0]).then((data) => {
+      if (!state.report) return;
+      state.report.shot = data; state.report.enter = false;
+      state.report.error = data ? "" : t("That picture is too large. Try a screenshot instead.");
+      render(); $('[data-act="report-unshot"]')?.focus();
+    }).catch(() => { if (state.report) { state.report.error = t("Couldn’t read that picture. Try another."); render(); } });
+    return;
+  }
   const stateId = event.target.dataset && event.target.dataset.state;
   if (stateId) { state.usedKey = `[data-state="${stateId}"]`; setGameState(cur(), stateId, event.target.checked); render(); return; }
   const askExp = event.target.dataset && event.target.dataset.askexp;
@@ -2196,10 +2438,12 @@ setInterval(() => {
 }, 1000);
 
 render();
+track("session_start", { launch_ms: Math.round(performance.now()), screen: screenSize(), insets: insets(), dpr: devicePixelRatio,
+  ios: (navigator.userAgent.match(/OS (\d+)_(\d+)/) || []).slice(1).join(".") || null, returning: (() => { try { return !!localStorage.getItem("ordir-tour-done"); } catch { return null; } })() });
 if (layoutInfo.on) showLayoutInfo(true);
 if (reducedMotion()) introTimer = setTimeout(showHome, 900); else requestAnimationFrame(startIntro);
 document.documentElement.lang = state.lang;
 loadScripts()
   .then(render)
-  .catch((error) => { $("#phone").innerHTML = `<div class="pane done-pane"><h1>${t("Couldn’t load the game guides")}</h1><p>${t("{0}. Reload the page to try again.", esc(error.message))}</p></div>`; });
+  .catch((error) => { trackError("load", `guides: ${error.message}`); $("#phone").innerHTML = `<div class="pane done-pane"><h1>${t("Couldn’t load the game guides")}</h1><p>${t("{0}. Reload the page to try again.", esc(error.message))}</p></div>`; });
 </script>
