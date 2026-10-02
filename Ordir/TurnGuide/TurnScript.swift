@@ -13,6 +13,10 @@ struct TurnScript: Decodable {
     let game: OrdirGame
     let title: String
     let version: Int
+    /// The two sides (factions) the game is played between; steps name one of them, or both.
+    let sides: [SideInfo]
+    /// How each side wins, shown when the players end the game.
+    let victory: Victory
     let sources: [Source]
     /// Optional modules players can switch on before starting; steps and additions name one by id.
     let expansions: [Expansion]
@@ -151,10 +155,54 @@ struct TurnScript: Decodable {
         let excerpt: String
     }
 
-    enum Side: String, Decodable {
-        case atreides, harkonnen, both
-        /// Only in the battle script; resolved to a faction when a battle starts.
-        case attacker, defender
+    /// Who a step is for: one of the script's `sides` (by id), or both players. Battle steps name the
+    /// attacker and defender, resolved to a side when a battle starts.
+    struct Side: RawRepresentable, Hashable, Decodable {
+        let rawValue: String
+        init(rawValue: String) { self.rawValue = rawValue }
+        init(from decoder: Decoder) throws { rawValue = try decoder.singleValueContainer().decode(String.self) }
+
+        static let both = Side(rawValue: "both")
+        static let attacker = Side(rawValue: "attacker")
+        static let defender = Side(rawValue: "defender")
+    }
+
+    struct SideInfo: Decodable, Identifiable {
+        let id: Side
+        let name: String
+        /// "#rrggbb", the side's colour in the guide.
+        let color: String
+    }
+
+    struct Victory: Decodable {
+        let note: String
+        let citations: [Citation]
+    }
+
+    func name(of side: Side) -> String {
+        side == .both ? "Both players" : sides.first { $0.id == side }?.name ?? side.rawValue.capitalized
+    }
+
+    /// The other side; for "both" (or an unknown side), the first side.
+    func opponent(of side: Side) -> Side {
+        sides.first { $0.id != side }?.id ?? side
+    }
+
+    func isPlayer(_ side: Side) -> Bool {
+        sides.contains { $0.id == side }
+    }
+
+    /// "Rulebook p. 7, p. 27; FAQ p. 2": citations as a short line of text.
+    func citeText(_ citations: [Citation]) -> String {
+        var order: [String] = []
+        var pages: [String: [Int]] = [:]
+        for citation in citations {
+            let title = sources.first { $0.id == citation.source }?.shortTitle ?? citation.source
+            if pages[title] == nil { order.append(title) }
+            if !(pages[title] ?? []).contains(citation.page) { pages[title, default: []].append(citation.page) }
+        }
+        return order.map { title in "\(title) " + (pages[title] ?? []).map { "p. \($0)" }.joined(separator: ", ") }
+            .joined(separator: "; ")
     }
 
     func source(for citation: Citation) -> Source? {

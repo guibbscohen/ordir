@@ -3,6 +3,33 @@
   "title": "Dune: War for Arrakis",
   "version": 6,
   "scope": "Setup, then rounds until someone wins; 2 players (Atreides vs Harkonnen) on one phone; optional Desert War, Smugglers and Spacing Guild expansions",
+  "sides": [
+    {
+      "id": "atreides",
+      "name": "Atreides",
+      "color": "#4cc38a"
+    },
+    {
+      "id": "harkonnen",
+      "name": "Harkonnen",
+      "color": "#ff6b5e"
+    }
+  ],
+  "victory": {
+    "note": "The Harkonnen win at 10 Supremacy points; the Atreides when every Prescience marker reaches their Secret Objective.",
+    "citations": [
+      {
+        "source": "rulebook",
+        "page": 7,
+        "excerpt": "To win the game, the Harkonnen player must accumulate 10 Supremacy Points (SP) or more."
+      },
+      {
+        "source": "rulebook",
+        "page": 27,
+        "excerpt": "To win the game, the Atreides player must do so before the Harkonnen player gains 10 Supremacy points."
+      }
+    ]
+  },
   "sources": [
     {
       "id": "rulebook",

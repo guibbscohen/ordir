@@ -120,7 +120,7 @@ def play(page, url, problems, mode="table", expansions=(), fights_battle=False):
     page.wait_for_selector("[data-act=game-dune]:not([disabled])")
     check(focused(page, ".pane h1"), "focus did not move to Home's heading")
     check(len(page.query_selector_all(".game.soon")) == 2, "Home does not list the two coming-soon games")
-    check(page.query_selector(".game img[src='img/cover.jpg']"), "Dune's card has no cover art")
+    check(page.query_selector(".game img[src='img/duneWarForArrakis/cover.jpg']"), "Dune's card has no cover art")
     a11y.scan("home")
     if expansions:
         # The orb opens Ask full screen; the glass bar switches tabs and keeps focus on the tab.

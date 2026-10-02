@@ -177,9 +177,9 @@ final class TurnGuideSession {
     /// A battle walkthrough for the current turn: the acting side attacks. It shares this game's
     /// expansions, states and way of passing the phone, and finishes when the battle is over.
     func makeBattle() -> TurnGuideSession? {
-        guard let battle = script.battle, step.side == .atreides || step.side == .harkonnen else { return nil }
+        guard let battle = script.battle, script.isPlayer(step.side) else { return nil }
         let attacker = step.side
-        let defender: TurnScript.Side = attacker == .atreides ? .harkonnen : .atreides
+        let defender = script.opponent(of: attacker)
         func resolve(_ side: TurnScript.Side) -> TurnScript.Side {
             switch side {
             case .attacker: attacker

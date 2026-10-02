@@ -29,8 +29,8 @@
   --fg: #f5f5f7;
   --muted: #9a9aa0;
   --sparkle: #9ec7ff;
-  --atreides: #4cc38a;
-  --harkonnen: #ff6b5e;
+  --on: #4cc38a;        /* switches turned on */
+  --danger: #ff6b5e;    /* errors */
   --font: "Google Sans Flex", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
   color-scheme: dark;
 }
@@ -70,8 +70,7 @@ main { display: flex; flex-direction: column; flex: 1; min-height: 0; width: 100
 .half.far { transform: rotate(180deg); }
 .seat { display: flex; align-items: center; gap: 8px; padding: 16px 24px 8px; font-size: 13px; font-weight: 600; }
 .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; flex: none; }
-.seat.atreides, .side-atreides { color: var(--atreides); }
-.seat.harkonnen, .side-harkonnen { color: var(--harkonnen); }
+/* Each side's colour (.seat.<side>, .side-<side>) comes from its game's turn script (styleSides). */
 .seat.both { color: var(--muted); }
 .scroll { flex: 1; min-height: 0; overflow-y: auto; padding: 0 24px 20px; scrollbar-width: none; }
 .scroll::-webkit-scrollbar { display: none; }
@@ -195,7 +194,7 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 .toggle input { position: absolute; opacity: 0; pointer-events: none; }
 .switch { width: 51px; height: 31px; border-radius: 16px; background: #39393d; position: relative; flex: none; transition: background .2s; }
 .switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 27px; height: 27px; border-radius: 50%; background: #fff; transition: transform .2s; }
-.toggle input:checked + .switch { background: var(--atreides); }
+.toggle input:checked + .switch { background: var(--on); }
 .toggle input:checked + .switch::after { transform: translateX(20px); }
 .hint { color: var(--muted); font-size: 13px; margin: 0; }
 /* Online: sign-in, rules questions, own-phone tables */
@@ -204,7 +203,7 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 .field input, .field textarea { font: inherit; font-size: 16px; color: var(--fg); background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; min-height: 48px; width: 100%; }
 .field textarea { min-height: 96px; resize: vertical; }
 .field input:focus-visible, .field textarea:focus-visible { outline: 2px solid var(--sparkle); outline-offset: 1px; }
-.error { color: var(--harkonnen); font-size: 15px; margin: 0; }
+.error { color: var(--danger); font-size: 15px; margin: 0; }
 .code { font-size: 32px; font-weight: 700; letter-spacing: .12em; font-variant-numeric: tabular-nums; }
 .answer { background: var(--surface); border-radius: 14px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; line-height: 1.45; }
 .answer .q { color: var(--muted); font-size: 15px; margin: 0; }
@@ -517,7 +516,19 @@ const ICONS = {
   swap: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 20V4M3 8l4-4 4 4M17 4v16M13 16l4 4 4-4"/></svg>',
 };
 
-const SIDE_NAME = { atreides: "Atreides", harkonnen: "Harkonnen", both: "Both players" };
+// Every game's turn script, by game id (scripts/<game>.json, loaded at start); state.script is the one being played.
+const scripts = {};
+// A game's two sides (factions) come from its turn script: names, colours and who wins.
+function sideName(id, script = state.script) {
+  if (id === "both") return "Both players";
+  return ((script && script.sides.find((x) => x.id === id)) || { name: id }).name;
+}
+const otherSide = (id, script = state.script) => script.sides.map((x) => x.id).find((x) => x !== id);
+function styleSides(script) {
+  const style = document.createElement("style");
+  style.textContent = script.sides.map((x) => `.seat.${x.id}, .side-${x.id} { color: ${x.color}; }`).join("\n");
+  document.head.append(style);
+}
 
 const state = {
   screen: "intro",    // "intro" → "home" → "game" (picker, lobby and guide)
@@ -527,7 +538,7 @@ const state = {
   mode: "table",      // "table" (split screen) or "pass" (pass the phone)
   session: null,      // null → setup picker
   battle: null,       // a battle walkthrough opened from an Action turn
-  nearSeat: "atreides",
+  nearSeat: null,     // the side sitting at the near half (the first side when a game opens)
   pending: null,      // { seat, action: "done" | "endLoop", checked: Set }
   enlarged: null,     // { seat, id }
   menu: false,        // Game menu open
@@ -591,8 +602,8 @@ function goBack(s) {
 // A battle for the current Action turn: the acting side attacks; attacker/defender resolve to factions.
 function makeBattle(s) {
   const b = state.script.battle, side = stepOf(s).side;
-  if (!b || (side !== "atreides" && side !== "harkonnen")) return null;
-  const other = side === "atreides" ? "harkonnen" : "atreides";
+  if (!b || !state.script.sides.some((x) => x.id === side)) return null;
+  const other = otherSide(side);
   const resolve = (x) => (x === "attacker" ? side : x === "defender" ? other : x);
   const phases = b.phases.map((p) => ({ ...p, part: "setup", steps: p.steps.map((st) => ({ ...st, side: resolve(st.side) })) }));
   const battle = makeSession({ ...state.script, phases }, s.expansions, s.passesPhone);
@@ -608,12 +619,14 @@ function setGameState(s, id, on) {
 }
 
 // ---- Helpers ----
-const sourceOf = (id) => state.script.sources.find((x) => x.id === id);
-const imageOf = (id) => state.script.images.find((x) => x.id === id);
+const sourceOf = (id, script = state.script) => script && script.sources.find((x) => x.id === id);
+const imageOf = (id, script = state.script) => script && script.images.find((x) => x.id === id);
 const expansionTitle = (id) => (state.script.expansions.find((e) => e.id === id) || { title: id }).title;
-const imgUrl = (id) => `img/${id}.jpg`;
-const imgLabel = (img) => `${sourceOf(img.source).shortTitle}, page ${img.page}`;
-const farSeat = () => (state.nearSeat === "atreides" ? "harkonnen" : "atreides");
+const imgUrl = (id, game = state.script.game) => `img/${game}/${id}.jpg`;
+const imgLabel = (img, script = state.script) => `${sourceOf(img.source, script).shortTitle}, page ${img.page}`;
+// A game's cover picture (from its script), for Home's cards and lists.
+const coverOf = (g) => g && g.cover && imageOf(g.cover, scripts[g.script]);
+const farSeat = () => otherSide(state.nearSeat);
 const fmt = (ms) => { const t = Math.max(0, Math.floor(ms / 1000)); return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, "0")}`; };
 // Inside a loop, number each side's turns ("Action turn 2"); battles show the round in the bar instead.
 function stepTitle(s) { const st = stepOf(s); return phaseOf(s).loop && !s.isBattle ? `${st.title} ${s.pos.pass}` : st.title; }
@@ -625,6 +638,16 @@ function progressText(s) {
   return phaseOf(s).part === "setup" ? inPhase : `Round ${s.pos.round} · ${inPhase}`;
 }
 
+// "Rulebook p. 7, p. 27; FAQ p. 2": a short plain-text form of a list of citations.
+function citeText(list, script = state.script) {
+  const bySource = new Map();
+  for (const c of list) {
+    const title = sourceOf(c.source, script).shortTitle;
+    if (!bySource.has(title)) bySource.set(title, []);
+    if (!bySource.get(title).includes(c.page)) bySource.get(title).push(c.page);
+  }
+  return [...bySource].map(([title, pages]) => `${title} ${pages.map((n) => `p. ${n}`).join(", ")}`).join("; ");
+}
 function citations(list) {
   const seen = new Set();
   return `<div class="cites">${list.map((c) => {
@@ -673,7 +696,7 @@ function stepCard(s, seat, animate) {
 
 function waiting(s, seat) {
   const st = stepOf(s);
-  const who = st.side === "both" ? "Both players are" : `The ${SIDE_NAME[st.side]} is`;
+  const who = st.side === "both" ? "Both players are" : `The ${sideName(st.side)} is`;
   return `<div class="waiting"><button class="orb-btn" data-act="ask-here" data-seat="${seat}" aria-label="Ask Ordir a rules question">${mascot("thinking")}</button>
     <p>${who} on <b>${esc(stepTitle(s))}</b></p>
     <div class="timer" data-timer>${fmt(Date.now() - s.startedAt)}</div></div>`;
@@ -723,8 +746,8 @@ function half(seat, isFar, animate) {
        <div class="actions">${loop ? `<button class="textbtn" data-act="end-loop" data-seat="${seat}">${esc(loop.endLabel)}</button>` : ""}
          <button class="primary" data-act="done" data-seat="${seat}">Done</button></div>`
     : waiting(s, seat);
-  return `<section class="half ${isFar ? "far" : "near"}" aria-label="${SIDE_NAME[seat]} side">
-    <div class="seat ${seat}"><span class="dot"></span>${SIDE_NAME[seat]}</div>${body}${overlayFor(seat, animate || !!state.pending || !!state.enlarged)}${online.ask.open && online.ask.seat === seat ? askSheet() : ""}</section>`;
+  return `<section class="half ${isFar ? "far" : "near"}" aria-label="${sideName(seat)} side">
+    <div class="seat ${seat}"><span class="dot"></span>${sideName(seat)}</div>${body}${overlayFor(seat, animate || !!state.pending || !!state.enlarged)}${online.ask.open && online.ask.seat === seat ? askSheet() : ""}</section>`;
 }
 
 // The phase's name rolls in when the phase has just changed.
@@ -753,15 +776,15 @@ function handoff(s, animate) {
   const side = s.handoffTo;
   return `<section class="half" aria-label="Pass the phone">
     <div class="handoff${animate ? " card enter" : ""}">${mascot("thinking")}
-      <h2 tabindex="-1">Pass the phone to the <span class="side-${side}">${SIDE_NAME[side]}</span></h2>
+      <h2 tabindex="-1">Pass the phone to the <span class="side-${side}">${sideName(side)}</span></h2>
       <p>Next: ${esc(stepTitle(s))}</p></div>
-    <div class="handoff-actions"><button class="primary" data-act="handoff-ready">I’m the ${SIDE_NAME[side]}</button></div></section>`;
+    <div class="handoff-actions"><button class="primary" data-act="handoff-ready">I’m the ${sideName(side)}</button></div></section>`;
 }
 
 // Coming-soon games show on Home so players see what's next.
 const GAMES = [
   { id: "dune", script: "duneWarForArrakis", title: "Dune: War for Arrakis", detail: "2 players · turn guide and rules questions", cover: "cover",
-    sides: [["atreides", "Atreides"], ["harkonnen", "Harkonnen"]], askExample: "Can a Legion move and leave a Leader behind?" },
+    askExample: "Can a Legion move and leave a Leader behind?" },
   { id: "starWarsRebellion", title: "Star Wars: Rebellion", soon: true },
   { id: "warOfTheRing2E", title: "War of the Ring (2nd Edition)", soon: true },
 ];
@@ -840,16 +863,16 @@ let phraseIndex = (() => {
 
 function gamesPage() {
   const main = GAMES.filter((g) => !g.soon), soon = GAMES.filter((g) => g.soon);
-  const cover = (g) => state.script && imageOf(g.cover);
+  const cover = (g) => coverOf(g);
   const build = state.buildHome ? " build" : "";
   return `<div class="brand${build}"><button class="orb-btn" data-act="orb-ask" aria-label="Ask Ordir a rules question">${mascot("idle")}</button>
       <div><h1 tabindex="-1">Ordir</h1><button class="ask-link" data-act="orb-ask">${TAB_ICONS.ask}Ask me a rules question</button></div></div>
     <button class="bubble${build}" data-act="next-phrase" aria-label="${esc(PHRASES[phraseIndex])} (tap for another)">${esc(PHRASES[phraseIndex])}</button>
     <div class="group"><h2>Choose a game</h2>
-      ${main.map((g) => `<button class="game" data-act="game-${g.id}" ${state.script ? "" : "disabled"}>
-        <span class="art">${cover(g) ? `<img src="${imgUrl(g.cover)}" alt="">` : ""}</span>
+      ${main.map((g) => `<button class="game" data-act="game-${g.id}" ${scripts[g.script] ? "" : "disabled"}>
+        <span class="art">${cover(g) ? `<img src="${imgUrl(g.cover, g.script)}" alt="">` : ""}</span>
         <span class="meta"><div><strong>${esc(g.title)}</strong><span>${esc(g.detail)}</span>
-          ${cover(g) ? `<span class="src">Cover art: ${esc(imgLabel(cover(g)))}</span>` : ""}</div>${CHEVRON}</span></button>`).join("")}
+          ${cover(g) ? `<span class="src">Cover art: ${esc(imgLabel(cover(g), scripts[g.script]))}</span>` : ""}</div>${CHEVRON}</span></button>`).join("")}
       <div class="soon-grid">${soon.map((g) => `<div class="game soon"><span class="art">${mascot("")}<span class="badge">Coming soon</span></span>
         <span class="meta"><div><strong>${esc(g.title)}</strong></div></span></div>`).join("")}</div>
     </div>`;
@@ -859,7 +882,7 @@ function gamesPage() {
 // you play with) first. Asking opens that game's chat full screen; earlier chats are listed underneath.
 function askPage() {
   const a = online.ask, game = gameOf(a.game);
-  const script = state.script && state.script.game === a.game ? state.script : null;
+  const script = scripts[a.game] || null;
   const expansions = script && script.expansions.length ? `<fieldset class="pills"><legend>Expansions you play with</legend>
       ${script.expansions.map((e) => `<label class="pill"><input type="checkbox" data-askexp="${e.id}" ${a.expansions.has(e.id) ? "checked" : ""}>${esc(e.title)}</label>`).join("")}</fieldset>` : "";
   const body = !signedIn() ? signInPane("Sign in with your email to ask questions. Answers come only from the official rulebook, FAQ and the expansions you play with.")
@@ -874,7 +897,7 @@ function askPage() {
 }
 
 // A game's cover (or the house art until it has one), small.
-const thumb = (g) => `<span class="thumb" aria-hidden="true">${g && g.cover && state.script && imageOf(g.cover) ? `<img src="${imgUrl(g.cover)}" alt="">` : mascot("")}</span>`;
+const thumb = (g) => `<span class="thumb" aria-hidden="true">${coverOf(g) ? `<img src="${imgUrl(g.cover, g.script)}" alt="">` : mascot("")}</span>`;
 const norm = (text) => text.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 const LENS = '<svg class="lens" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>';
 const CLOSE_X = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9"/></svg>';
@@ -978,7 +1001,7 @@ function battleOver() {
 function finished() {
   const s = cur();
   return `<div class="pane done-pane">${mascot("idle")}<h1 tabindex="-1">Game over</h1>
-    ${s.winner ? `<h2 style="margin:0;font-size:20px">The <span class="side-${s.winner}">${SIDE_NAME[s.winner]}</span> win</h2>` : ""}
+    ${s.winner ? `<h2 style="margin:0;font-size:20px">The <span class="side-${s.winner}">${sideName(s.winner)}</span> win</h2>` : ""}
     <p>Played in ${s.pos.round} round${s.pos.round === 1 ? "" : "s"}.</p>
     <button class="primary" data-act="restart">Start over</button>
     <button class="textbtn" data-act="close">Back to expansions</button></div>`;
@@ -991,13 +1014,12 @@ function gameMenu(s) {
   return `<div class="overlay enter menu" role="dialog" aria-modal="true" aria-label="Game">
     <div class="head"><h2 style="flex:1" tabindex="-1">Game</h2><button class="textbtn" data-act="menu-close">Close</button></div>
     <div class="scroll" style="padding:0;display:flex;flex-direction:column;gap:16px">
-      <p class="hint" style="font-size:15px">${phaseOf(s).part === "setup" ? "Setup" : `Round ${s.pos.round}`}${online.table ? ` · Table <b>${esc(online.table.code)}</b> · You're the ${SIDE_NAME[online.mySide]}` : ""}</p>
+      <p class="hint" style="font-size:15px">${phaseOf(s).part === "setup" ? "Setup" : `Round ${s.pos.round}`}${online.table ? ` · Table <b>${esc(online.table.code)}</b> · You're the ${sideName(online.mySide)}` : ""}</p>
       <button class="option" data-act="ask-open"><div><strong>Ask a rules question</strong><span>Answers cite the rulebook and FAQ pages.</span></div></button>
       ${toggles ? `<div class="section"><h3>Happened this game</h3>${toggles}</div>` : ""}
       <div class="section"><h3>End the game</h3>
-        <button class="option" data-winner="atreides"><div><strong class="side-atreides">The Atreides won</strong></div></button>
-        <button class="option" data-winner="harkonnen"><div><strong class="side-harkonnen">The Harkonnen won</strong></div></button>
-        <p class="hint">The Harkonnen win at 10 Supremacy points; the Atreides when every Prescience marker reaches their Secret Objective (rulebook, pages 7 and 27).</p>
+        ${state.script.sides.map((x) => `<button class="option" data-winner="${x.id}"><div><strong class="side-${x.id}">The ${esc(x.name)} won</strong></div></button>`).join("")}
+        <p class="hint">${esc(state.script.victory.note)} (${esc(citeText(state.script.victory.citations))})</p>
       </div>
       <button class="textbtn" style="align-self:flex-start" data-act="close">Leave the guide</button></div></div>`;
 }
@@ -1016,7 +1038,7 @@ const online = {
     game: PLAYABLE[0].script, expansions: new Set(),  // from Home: the game (and expansions) a question is about
     picking: false, query: "",  // Home's game search list
     threads: {}, loadedFor: null, loading: null, toBottom: false },  // per game: [{ question, answer, expansions, at }], oldest first
-  lobby: { open: false, code: "", side: "atreides", busy: false, error: "",
+  lobby: { open: false, code: "", side: null, busy: false, error: "",
     found: null,     // the table a code points to, before joining: { code, game, expansions, taken }
     joinSide: null },
   table: null,      // the game_tables row this phone sits at
@@ -1059,12 +1081,12 @@ function signInPane(reason) {
 }
 
 /** Answer text with its citations as page chips; "- " lines become a list. */
-function answerHtml(answer) {
+function answerHtml(answer, game) {
   let chipIndex = 0;
   const html = answer.map((block) => {
     const seen = new Set();
     const chips = block.citations.filter((c) => !seen.has(`${c.source}-${c.page}`) && seen.add(`${c.source}-${c.page}`)).map((c) => {
-      const src = sourceOf(c.source);
+      const src = sourceOf(c.source, scripts[game]);
       return src ? `<a class="chip" style="--i: ${chipIndex++}" href="${esc(src.url)}#page=${c.page}" target="_blank" rel="noopener" title="${esc(c.quote)}">${esc(src.shortTitle)} p. ${c.page}</a>` : "";
     }).join("");
     return esc(block.text) + chips;
@@ -1087,7 +1109,7 @@ function chatThread() {
   const turns = thread.map((x, i) => {
     const fresh = !a.busy && i === thread.length - 1 && a.freshUntil > Date.now();
     return `<p class="msg"><span class="sr-only">You asked: </span>${esc(x.question)}</p>
-      <article class="answer${fresh ? " fresh" : ""}"><div class="answer-by">${mascot(fresh ? "speaking" : "idle")}<span>Ordir</span></div>${answerHtml(x.answer)}</article>`;
+      <article class="answer${fresh ? " fresh" : ""}"><div class="answer-by">${mascot(fresh ? "speaking" : "idle")}<span>Ordir</span></div>${answerHtml(x.answer, askGame())}</article>`;
   }).join("");
   const pending = a.busy ? `<p class="msg"><span class="sr-only">You asked: </span>${esc(a.busy.question)}</p>
       <div class="answer checking" role="status"><div class="answer-by">${mascot("thinking")}<span>Checking the rules…</span></div></div>` : "";
@@ -1105,7 +1127,7 @@ function composer() {
 // Full screen: from Home's Ask page (after asking, or an earlier chat) and from the Game menu.
 function chatPanel() {
   const game = gameOf(askGame());
-  const titles = askExpansions().map((id) => state.script?.expansions.find((e) => e.id === id)?.title).filter(Boolean);
+  const titles = askExpansions().map((id) => scripts[askGame()]?.expansions.find((e) => e.id === id)?.title).filter(Boolean);
   return `<div class="overlay${askEnter ? " enter" : ""} menu chat" role="dialog" aria-modal="true" aria-labelledby="chat-title">
     <div class="chat-head">${thumb(game)}<div><h2 id="chat-title" tabindex="-1">${esc(game?.title || "Rules question")}</h2>
       <p>Rules chat · ${esc(titles.length ? `With ${titles.join(", ")}` : "Base game")}</p></div>
@@ -1152,17 +1174,18 @@ function joinBody(label) {
       ${l.error ? `<p class="error" role="alert">${esc(l.error)}</p>` : ""}`;
   }
   const game = gameOf(f.game);
-  const cover = game && game.cover && state.script && state.script.game === f.game && imageOf(game.cover);
-  const expansions = f.expansions.map((id) => (state.script && state.script.game === f.game ? expansionTitle(id) : id));
-  const sides = game && game.sides ? game.sides.map(([id, name]) => {
+  const script = scripts[f.game];
+  const cover = coverOf(game);
+  const expansions = f.expansions.map((id) => ((script && script.expansions.find((e) => e.id === id)) || { title: id }).title);
+  const sides = script ? script.sides.map(({ id, name }) => {
     const taken = f.taken.includes(id);
     return `<button class="option" role="radio" aria-checked="${l.joinSide === id}" data-joinside="${id}" ${taken ? 'disabled aria-disabled="true"' : ""}>
       <div><strong class="side-${id}">${esc(name)}</strong>${taken ? "<span>Taken</span>" : ""}</div><span class="radio" aria-hidden="true"></span></button>`;
   }).join("") : "";
-  return `<div class="game" style="cursor:default">${cover ? `<span class="art"><img src="${imgUrl(game.cover)}" alt=""></span>` : ""}
+  return `<div class="game" style="cursor:default">${cover ? `<span class="art"><img src="${imgUrl(game.cover, game.script)}" alt=""></span>` : ""}
       <span class="meta"><div><strong id="join-found" tabindex="-1">${esc(game ? game.title : f.game)}</strong>
         <span>Table ${esc(f.code)}${expansions.length ? ` · with ${esc(expansions.join(", "))}` : ""}</span></div></span></div>
-    ${game && !game.soon ? `<div role="radiogroup" aria-label="Your side" class="group"><h2>Pick your side</h2>${sides}</div>
+    ${script ? `<div role="radiogroup" aria-label="Your side" class="group"><h2>Pick your side</h2>${sides}</div>
       <button class="primary" style="flex:none" data-act="table-join" ${l.busy || !l.joinSide ? "disabled" : ""}>${l.busy ? "Joining…" : "Join table"}</button>`
       : `<p style="margin:0">This table plays ${esc(game ? game.title : f.game)}, which isn't in Ordir yet.</p>`}
     ${l.error ? `<p class="error" role="alert">${esc(l.error)}</p>` : ""}
@@ -1174,8 +1197,7 @@ function lobbyBody(joinOnly) {
   if (!signedIn()) return signInPane(joinOnly ? "Sign in with your email to join the other player's table." : "Sign in with your email so the other player can join your table.");
   if (joinOnly) return joinBody("The code from the other phone");
   // Starting a table, from a game's setup: that game's sides.
-  const game = gameOf(state.script.game);
-  const sides = game.sides.map(([id, name]) => `<button class="option" role="radio" aria-checked="${l.side === id}" data-side="${id}">
+  const sides = state.script.sides.map(({ id, name }) => `<button class="option" role="radio" aria-checked="${l.side === id}" data-side="${id}">
       <div><strong class="side-${id}">${esc(name)}</strong></div><span class="radio" aria-hidden="true"></span></button>`).join("");
   return `<div role="radiogroup" aria-label="Your side" style="display:flex;flex-direction:column;gap:12px"><h2 style="margin:0;font-size:17px">Your side</h2>${sides}</div>
       <button class="primary" style="flex:none" data-act="table-create" ${l.busy ? "disabled" : ""}>Start a table</button>
@@ -1189,7 +1211,7 @@ function lobby() {
 }
 
 function tableStrip() {
-  return `<div class="strip"><span>Table <b>${esc(online.table.code)}</b></span><span>You're the <span class="side-${online.mySide}">${SIDE_NAME[online.mySide]}</span></span></div>`;
+  return `<div class="strip"><span>Table <b>${esc(online.table.code)}</b></span><span>You're the <span class="side-${online.mySide}">${sideName(online.mySide)}</span></span></div>`;
 }
 
 // The shared guide position, as stored in game_tables.state.
@@ -1322,9 +1344,10 @@ async function onlineAction(act, el) {
     const row = data[0], game = gameOf(row.game);
     l.found = { code: l.code, game: row.game, expansions: row.expansions || [], taken: row.taken_sides || [] };
     // One free side: pick it for them.
-    const free = game && game.sides ? game.sides.map(([id]) => id).filter((id) => !l.found.taken.includes(id)) : [];
+    const script = scripts[row.game];
+    const free = script ? script.sides.map((x) => x.id).filter((id) => !l.found.taken.includes(id)) : [];
     l.joinSide = free.length === 1 ? free[0] : null;
-    if (game && game.sides && !free.length) l.error = "Both sides are taken at this table.";
+    if (script && !free.length) l.error = "Both sides are taken at this table.";
     state.usedKey = null; render();
     $("#join-found")?.focus();  // the table's game, so screen readers start there
   } else if (act === "table-create" || act === "table-join") {
@@ -1335,7 +1358,10 @@ async function onlineAction(act, el) {
       : await client.rpc("join_table", { code: l.found.code, side });
     l.busy = false;
     if (error) { l.error = errorText(error, "Couldn't open the table. Try again."); return render(); }
-    if (act === "table-join" && data.game !== state.script.game) { l.error = "This game isn't in Ordir yet."; return render(); }
+    if (act === "table-join") {
+      if (!scripts[data.game]) { l.error = "This game isn't in Ordir yet."; return render(); }
+      state.script = scripts[data.game];  // joining from Home: the table's game is now the one being played
+    }
     l.found = null; l.joinSide = null; l.code = "";
     await sitAt(data, side);
   }
@@ -1679,13 +1705,24 @@ function handleClick(el) {
     }
     return;
   }
+  // A game card on Home: open that game's guide (its setup picker).
+  const opened = el.dataset.act && el.dataset.act.startsWith("game-") && GAMES.find((g) => `game-${g.id}` === el.dataset.act);
+  if (opened) {
+    if (!scripts[opened.script]) return;
+    if (!state.script || state.script.game !== opened.script) {
+      state.script = scripts[opened.script];
+      state.chosen = new Set();
+      state.nearSeat = state.script.sides[0].id;
+      online.lobby.side = state.script.sides[0].id;
+    }
+    state.screen = "game"; render(); return;
+  }
   switch (el.dataset.act) {
     case "start":
       if (state.mode === "own") { online.lobby.open = true; render(); connect(); break; }
       state.session = makeSession(state.script, new Set(state.chosen), state.mode === "pass"); onStepChanged(); break;
     case "skip-intro": showHome(); break;
     case "home": leaveTable(); Object.assign(online.lobby, { open: false, error: "", found: null, joinSide: null }); state.session = null; state.battle = null; state.screen = "home"; state.tab = "games"; render(); break;
-    case "game-dune": state.screen = "game"; render(); break;
     case "tab-games": case "tab-ask": case "tab-join": case "tab-account": case "orb-ask":
       state.tabFrom = TABS.findIndex(([id]) => id === state.tab);
       state.tab = el.dataset.act === "orb-ask" ? "ask" : el.dataset.act.slice(4); online.lobby.error = "";
@@ -1778,8 +1815,9 @@ setInterval(() => {
 render();
 if (layoutInfo.on) showLayoutInfo(true);
 if (reducedMotion()) introTimer = setTimeout(showHome, 900); else requestAnimationFrame(startIntro);
-fetch("turnscript.json")
+Promise.all(PLAYABLE.map((g) => fetch(`scripts/${g.script}.json`)
   .then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
-  .then((script) => { state.script = script; render(); })
-  .catch((error) => { $("#phone").innerHTML = `<div class="pane done-pane"><h1>Couldn’t load the Dune guide</h1><p>${esc(error.message)}. Reload the page to try again.</p></div>`; });
+  .then((script) => { scripts[g.script] = script; styleSides(script); })))
+  .then(render)
+  .catch((error) => { $("#phone").innerHTML = `<div class="pane done-pane"><h1>Couldn’t load the game guides</h1><p>${esc(error.message)}. Reload the page to try again.</p></div>`; });
 </script>
