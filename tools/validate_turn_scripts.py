@@ -7,7 +7,7 @@ page and have its generated asset (tools/crop_source_images.py). Run from the re
 
     python3 tools/validate_turn_scripts.py
 
-Needs pypdf (`pip install pypdf`) and the PDFs from tools/fetch_sources.py. Exits non-zero on the first file with problems.
+Needs pypdf, cryptography and fonttools (`pip install pypdf cryptography fonttools`) and the PDFs from tools/fetch_sources.py. Exits non-zero on the first file with problems.
 """
 import json
 import pathlib
