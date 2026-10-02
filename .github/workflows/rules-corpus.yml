@@ -27,6 +27,8 @@ jobs:
           restore-keys: sources-
 
       - name: Extract the official sources page by page
+        env:
+          SUPABASE_SOURCES_KEY: ${{ secrets.SUPABASE_SOURCES_KEY }}  # the private backup of the rulebooks
         run: |
           python3 -m venv .venv
           .venv/bin/pip install --quiet pypdf cryptography fonttools
