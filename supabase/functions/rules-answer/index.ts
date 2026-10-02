@@ -43,6 +43,16 @@ const GAMES: Record<string, { title: string; sources: Record<string, string>; ba
       riseOfTheEmpire: "Rise of the Empire expansion rulesheet",
     },
   },
+  warOfTheRing2E: {
+    title: "War of the Ring (Second Edition)",
+    base: ["rulebook", "faq"],
+    sources: {
+      rulebook: "War of the Ring Second Edition rulebook",
+      faq: "War of the Ring Second Edition FAQ 1.2 (September 2014)",
+      lordsOfMiddleEarth: "Lords of Middle-earth expansion rulebook",
+      warriorsOfMiddleEarth: "Warriors of Middle-earth expansion rulebook",
+    },
+  },
 };
 
 const SYSTEM = `You are Ordir's rules referee for board games. Answer the player's question using only the official documents provided: the game's rulebook, the publisher's FAQ, and the rulebooks of the expansions in play.

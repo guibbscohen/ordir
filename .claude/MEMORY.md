@@ -103,3 +103,5 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
 - 2026-10-01: The preview must work as a Home Screen app on iPhone: edge to edge with no page scroll, clear of the
   notch and home indicator, no zoom on taps or text fields (fields at 16px), and the opening laid out in
   percentages so it survives the screen settling at launch. Test with emulated safe-area insets.
+- 2026-10-02: War of the Ring (2nd Edition) ships with Lords of Middle-earth and Warriors of Middle-earth as
+  expansions. Kings of Middle-earth waits until its PDF can be obtained (aresgames.eu blocks downloads).
