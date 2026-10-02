@@ -76,16 +76,16 @@ private struct SetupPicker: View {
                     OrdirMascotView()
                         .frame(width: 48, height: 48)
                         .accessibilityHidden(true)
-                    Text("How are you playing?")
+                    Text(tr("How are you playing?"))
                         .font(.ordir(.title3).weight(.semibold))
                         .fixedSize(horizontal: false, vertical: true)
                         .accessibilityAddTraits(.isHeader)
                 }
                 VStack(spacing: 12) {
-                    modeRow(.table, title: "One phone on the table", detail: "Split screen: the top half faces the player across the table.")
-                    modeRow(.pass, title: "Pass the phone", detail: "Full screen: hand the phone to whoever acts next.")
+                    modeRow(.table, title: tr("One phone on the table"), detail: tr("Split screen: the top half faces the player across the table."))
+                    modeRow(.pass, title: tr("Pass the phone"), detail: tr("Full screen: hand the phone to whoever acts next."))
                 }
-                Text("Which expansions are you playing with?")
+                Text(tr("Which expansions are you playing with?"))
                     .font(.ordir(.title3).weight(.semibold))
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityAddTraits(.isHeader)
@@ -106,7 +106,7 @@ private struct SetupPicker: View {
                         .background(Color(white: 0.11), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
                     }
                 }
-                Text("Leave them all off to play the base game.")
+                Text(tr("Leave them all off to play the base game."))
                     .font(.ordir(.footnote))
                     .foregroundStyle(.secondary)
             }
@@ -116,7 +116,7 @@ private struct SetupPicker: View {
             Button {
                 start(mode, chosen)
             } label: {
-                Text("Start guide")
+                Text(tr("Start guide"))
                     .font(.ordir(.headline))
                     .frame(maxWidth: .infinity, minHeight: 54)
             }
@@ -301,7 +301,7 @@ private struct TurnGuideRunner: View {
             phaseLabel
                 .accessibilityIdentifier("guide-progress")
             Spacer(minLength: 8)
-            barButton("Previous step", systemImage: "arrow.uturn.backward") {
+            barButton(tr("Previous step"), systemImage: "arrow.uturn.backward") {
                 goingBack = true
                 withAnimation(stepAnimation) { session.goBack() }
             }
@@ -310,7 +310,7 @@ private struct TurnGuideRunner: View {
                 .font(.ordir(.footnote).monospacedDigit())
                 .foregroundStyle(.secondary)
                 .frame(minWidth: 44)
-                .accessibilityLabel(Text("Time on this step: ") + Text(session.stepStartedAt, style: .timer))
+                .accessibilityLabel(Text(tr("Time on this step: ")) + Text(session.stepStartedAt, style: .timer))
         }
         .padding(.horizontal, 8)
         .frame(minHeight: 52)
@@ -333,12 +333,12 @@ private struct TurnGuideRunner: View {
             }
             .layoutPriority(1)
             Spacer(minLength: 8)
-            barButton("Previous step", systemImage: "arrow.uturn.backward") {
+            barButton(tr("Previous step"), systemImage: "arrow.uturn.backward") {
                 goingBack = true
                 withAnimation(stepAnimation) { session.goBack() }
             }
             .disabled(!session.canGoBack)
-            barButton("Swap seats", systemImage: "arrow.up.arrow.down") {
+            barButton(tr("Swap seats"), systemImage: "arrow.up.arrow.down") {
                 withAnimation(stepAnimation) { nearSeat = farSeat }
             }
         }
@@ -352,9 +352,9 @@ private struct TurnGuideRunner: View {
     /// The game's menu; in a battle, a way back to the turn instead.
     @ViewBuilder private var menuOrLeaveButton: some View {
         if isBattle {
-            barButton("Leave battle", systemImage: "xmark") { dismiss() }
+            barButton(tr("Leave battle"), systemImage: "xmark") { dismiss() }
         } else {
-            barButton("Game menu", systemImage: "flag.checkered") { showsGameMenu = true }
+            barButton(tr("Game menu"), systemImage: "flag.checkered") { showsGameMenu = true }
         }
     }
 
@@ -385,13 +385,13 @@ private struct TurnGuideRunner: View {
     }
 
     private var progressText: String {
-        let steps = "\(session.stepNumber) of \(session.applicableSteps.count)"
+        let steps = tr("{0} of {1}", session.stepNumber, session.applicableSteps.count)
         if isBattle {
             // Combat rounds repeat: "Round 2 · 3 of 6".
-            return session.phase.loop != nil ? "Round \(session.position.pass) · \(steps)" : steps
+            return session.phase.loop != nil ? "\(tr("Round {0}", session.position.pass)) · \(steps)" : steps
         }
-        let inPhase = session.phase.loop != nil ? "Turn \(session.turnNumber)" : steps
-        return session.isInSetup ? inPhase : "Round \(session.round) · \(inPhase)"
+        let inPhase = session.phase.loop != nil ? tr("Turn {0}", session.turnNumber) : steps
+        return session.isInSetup ? inPhase : "\(tr("Round {0}", session.round)) · \(inPhase)"
     }
 
     // MARK: Finished
@@ -409,17 +409,17 @@ private struct TurnGuideRunner: View {
             OrdirMascotView()
                 .frame(height: 96)
                 .accessibilityHidden(true)
-            Text("Battle over")
+            Text(tr("Battle over"))
                 .font(.ordir(.title2).weight(.semibold))
                 .accessibilityAddTraits(.isHeader)
-            Text("Back to the turn: finish your Action, then tap Done.")
+            Text(tr("Back to the turn: finish your Action, then tap Done."))
                 .font(.ordir(.body))
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
             Button {
                 dismiss()
             } label: {
-                Text("Back to the turn")
+                Text(tr("Back to the turn"))
                     .font(.ordir(.headline))
                     .frame(maxWidth: .infinity, minHeight: 54)
             }
@@ -435,27 +435,27 @@ private struct TurnGuideRunner: View {
             OrdirMascotView()
                 .frame(height: 96)
                 .accessibilityHidden(true)
-            Text("Game over")
+            Text(tr("Game over"))
                 .font(.ordir(.title2).weight(.semibold))
                 .accessibilityAddTraits(.isHeader)
             if let winner = session.winner {
-                Text("The \(Text(session.script.name(of: winner)).foregroundColor(session.script.color(of: winner))) win")
+                Text(tr: "The {0} win", Text(session.script.name(of: winner)).foregroundColor(session.script.color(of: winner)))
                     .font(.ordir(.title3).weight(.semibold))
             }
-            Text(session.round == 1 ? "Played in 1 round." : "Played in \(session.round) rounds.")
+            Text(session.round == 1 ? tr("Played in 1 round.") : tr("Played in {0} rounds.", session.round))
                 .font(.ordir(.body))
                 .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
             Button {
                 withAnimation(stepAnimation) { session.restart() }
             } label: {
-                Text("Start over")
+                Text(tr("Start over"))
                     .font(.ordir(.headline))
                     .frame(maxWidth: .infinity, minHeight: 54)
             }
             .buttonStyle(PrimaryButtonStyle())
             .padding(.top, 12)
-            Button("Back to games") { dismiss() }
+            Button(tr("Back to games")) { dismiss() }
                 .buttonStyle(TextButtonStyle())
         }
         .padding(32)
@@ -517,10 +517,10 @@ private struct GameMenu: View {
         NavigationStack {
             List {
                 Section {
-                    Text(session.isInSetup ? "Setup" : "Round \(session.round)")
+                    Text(session.isInSetup ? tr("Setup") : tr("Round {0}", session.round))
                 }
                 if !session.availableStates.isEmpty {
-                    Section("Happened this game") {
+                    Section(tr("Happened this game")) {
                         ForEach(session.availableStates) { state in
                             Toggle(isOn: Binding(
                                 get: { session.activeStates.contains(state.id) },
@@ -538,23 +538,23 @@ private struct GameMenu: View {
                 }
                 Section {
                     ForEach(session.script.sides) { side in
-                        Button("The \(side.name) won") { endGame(side.id) }
+                        Button(tr("The {0} won", side.name)) { endGame(side.id) }
                             .foregroundStyle(session.script.color(of: side.id))
                     }
                 } header: {
-                    Text("End the game")
+                    Text(tr("End the game"))
                 } footer: {
                     Text("\(session.script.victory.note) (\(session.script.citeText(session.script.victory.citations)))")
                 }
                 Section {
-                    Button("Leave the guide", action: leave)
+                    Button(tr("Leave the guide"), action: leave)
                 }
             }
-            .navigationTitle("Game")
+            .navigationTitle(tr("Game"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Close") { dismiss() }
+                    Button(tr("Close")) { dismiss() }
                 }
             }
         }
@@ -578,12 +578,12 @@ private struct HandoffView: View {
                 .frame(height: 80)
                 .accessibilityHidden(true)
             VStack(spacing: 6) {
-                Text("Pass the phone to the \(Text(script.name(of: side)).foregroundColor(script.color(of: side)))")
+                Text(tr: "Pass the phone to the {0}", Text(script.name(of: side)).foregroundColor(script.color(of: side)))
                     .font(.ordir(.title2).weight(.semibold))
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityAddTraits(.isHeader)
-                Text("Next: \(stepTitle)")
+                Text(tr("Next: {0}", stepTitle))
                     .font(.ordir(.body))
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
@@ -591,7 +591,7 @@ private struct HandoffView: View {
             }
             Spacer(minLength: 0)
             Button(action: ready) {
-                Text("I’m the \(script.name(of: side))")
+                Text(tr("I’m the {0}", script.name(of: side)))
                     .font(.ordir(.headline))
                     .frame(maxWidth: .infinity, minHeight: 54)
             }
@@ -705,7 +705,7 @@ private struct SeatPanel: View {
         .padding(.top, 12)
         .padding(.bottom, 8)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(script.name(of: seat)) side")
+        .accessibilityLabel(tr("{0} side", script.name(of: seat)))
         .accessibilityAddTraits(.isHeader)
     }
 
@@ -717,7 +717,7 @@ private struct SeatPanel: View {
             }
         } primary: {
             Button { passTurn(then: done) } label: {
-                Text("Done")
+                Text(tr("Done"))
                     .font(.ordir(.headline))
                     .frame(maxWidth: .infinity, minHeight: 50)
             }
@@ -770,13 +770,13 @@ private struct StepCard: View {
                 BulletList(items: step.bullets ?? [])
                 if step.opensBattle == true, script.battle != nil {
                     Button(action: startBattle) {
-                        Label("Start a battle", systemImage: "shield.lefthalf.filled")
+                        Label(tr("Start a battle"), systemImage: "shield.lefthalf.filled")
                             .font(.ordir(.subheadline).weight(.semibold))
                             .fixedSize(horizontal: false, vertical: true)
                             .frame(minHeight: 44)
                             .contentShape(Rectangle())
                     }
-                    .accessibilityHint("Walks both players through the battle, then returns to this turn")
+                    .accessibilityHint(tr("Walks both players through the battle, then returns to this turn"))
                 }
             }
 
@@ -795,7 +795,7 @@ private struct StepCard: View {
                 }
             }
 
-            section("You’ll need") {
+            section(tr("You’ll need")) {
                 PictureStrip(script: script, pictures: script.pictures(step.images), enlarge: enlarge)
                 Text(step.components.joined(separator: ", "))
                     .font(.ordir(.subheadline))
@@ -803,12 +803,12 @@ private struct StepCard: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
 
-            section("Source") {
+            section(tr("Source")) {
                 CitationList(script: script, citations: step.citations)
             }
 
             if let loop = phase.loop {
-                section("When to stop") {
+                section(tr("When to stop")) {
                     Text(loop.note)
                         .font(.ordir(.subheadline))
                         .fixedSize(horizontal: false, vertical: true)
@@ -821,7 +821,7 @@ private struct StepCard: View {
 
     /// "Both players" and/or the expansion a step belongs to.
     private var context: String? {
-        let parts = [step.side == .both && showsBothPlayers ? "Both players" : nil, step.expansion.map(script.expansionTitle)]
+        let parts = [step.side == .both && showsBothPlayers ? tr("Both players") : nil, step.expansion.map(script.expansionTitle)]
             .compactMap { $0 }
         return parts.isEmpty ? nil : parts.joined(separator: " · ")
     }
@@ -888,7 +888,7 @@ private struct EventChecklist: View {
             }
             .scrollIndicators(.hidden)
             Button(action: done) {
-                Text("Done")
+                Text(tr("Done"))
                     .font(.ordir(.headline))
                     .frame(maxWidth: .infinity, minHeight: 50)
             }
@@ -915,14 +915,21 @@ private struct PassTurnChecklist: View {
     @AccessibilityFocusState private var headingFocused: Bool
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var glowing = false
+    /// How far the sheet has been pulled down by its top; far enough, and it closes ("Not yet").
+    @State private var pull: CGFloat = 0
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
+            Capsule()
+                .fill(Color(white: 0.3))
+                .frame(width: 36, height: 5)
+                .frame(maxWidth: .infinity)
+                .accessibilityHidden(true)
             HStack(spacing: 12) {
                 OrdirMascotView(isSpeaking: true)
                     .frame(width: 40, height: 40)
                     .accessibilityHidden(true)
-                Text("Before you pass the turn")
+                Text(tr("Before you pass the turn"))
                     .font(.ordir(.title3).weight(.semibold))
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityAddTraits(.isHeader)
@@ -940,11 +947,11 @@ private struct PassTurnChecklist: View {
             }
             .scrollIndicators(.hidden)
             ActionRow {
-                Button("Not yet", action: cancel)
+                Button(tr("Not yet"), action: cancel)
                     .buttonStyle(TextButtonStyle())
             } primary: {
                 Button(action: pass) {
-                    Text("Pass the turn")
+                    Text(tr("Pass the turn"))
                         .font(.ordir(.headline))
                         .frame(maxWidth: .infinity, minHeight: 50)
                 }
@@ -956,6 +963,19 @@ private struct PassTurnChecklist: View {
         .padding(.vertical, 12)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         .background(.background)
+        .offset(y: pull)
+        // Swipe down from the top (the handle and heading) to close it, like "Not yet". The list keeps
+        // its own scrolling; the buttons stay for anyone who doesn't swipe.
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 12)
+                .onChanged { drag in
+                    if drag.startLocation.y < 90 { pull = max(0, drag.translation.height) }
+                }
+                .onEnded { drag in
+                    if drag.startLocation.y < 90 && drag.translation.height > 100 { cancel() }
+                    withAnimation(reduceMotion ? nil : .spring(duration: 0.3)) { pull = 0 }
+                }
+        )
         .task {
             // Let the overlay settle before VoiceOver focus moves onto it.
             try? await Task.sleep(for: .milliseconds(300))
@@ -1031,7 +1051,7 @@ private struct PictureStrip: View {
                     }
                     .buttonStyle(.plain)
                     .accessibilityElement(children: .combine)
-                    .accessibilityHint("Shows the picture larger")
+                    .accessibilityHint(tr("Shows the picture larger"))
                 }
             }
         }
@@ -1060,7 +1080,7 @@ private struct CitationList: View {
             guard seen.insert(id).inserted else { return nil }
             return Row(
                 id: id,
-                label: "\(source.shortTitle), page \(citation.page)",
+                label: tr("{0}, page {1}", source.shortTitle, citation.page),
                 entry: citation.entry,
                 url: URL(string: "\(source.url.absoluteString)#page=\(citation.page)")
             )
@@ -1089,7 +1109,7 @@ private struct CitationList: View {
                     .frame(minHeight: 44)
                     .contentShape(Rectangle())
                 }
-                .accessibilityHint("Opens the PDF at this page")
+                .accessibilityHint(tr("Opens the PDF at this page"))
             }
         }
     }
@@ -1131,7 +1151,7 @@ private struct WaitingView: View {
 
     private var line: Text {
         let step = Text(stepTitle).fontWeight(.semibold)
-        return Text("The \(sideName) is on \(step)")
+        return Text(tr: "The {0} is on {1}", Text(sideName), step)
     }
 }
 
@@ -1164,7 +1184,7 @@ private struct EnlargedImageView: View {
             Button {
                 dismiss()
             } label: {
-                Text("Close")
+                Text(tr("Close"))
                     .font(.ordir(.headline))
                     .frame(maxWidth: .infinity, minHeight: 50)
             }
@@ -1181,7 +1201,7 @@ private struct EnlargedImageView: View {
 // MARK: - Styling
 
 /// A secondary text button whose whole 44-point row is tappable, wrapping instead of truncating.
-private struct TextButtonStyle: ButtonStyle {
+struct TextButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.ordir(.subheadline).weight(.semibold))
@@ -1211,7 +1231,7 @@ private struct ActionRow<Secondary: View, Primary: View>: View {
     }
 }
 
-private struct PrimaryButtonStyle: ButtonStyle {
+struct PrimaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .multilineTextAlignment(.center)

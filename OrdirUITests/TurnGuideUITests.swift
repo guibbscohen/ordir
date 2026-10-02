@@ -29,7 +29,7 @@ final class TurnGuideUITests: XCTestCase {
 
     private func tapThrough(expansionIDs: [String], screenshots: Bool, passThePhone: Bool = false, fightsABattle: Bool = false) {
         let app = XCUIApplication()
-        app.launchArguments = ["-OrdirOpenGame", "duneWarForArrakis"]
+        app.launchArguments = ["-OrdirOpenGame", "duneWarForArrakis", "-OrdirLanguage", "en"]
         app.launch()
 
         XCTAssertTrue(app.buttons["Start guide"].waitForExistence(timeout: 20), "setup picker not shown")

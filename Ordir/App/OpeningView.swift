@@ -49,9 +49,9 @@ struct OpeningView: View {
         .contentShape(Rectangle())
         .onTapGesture(perform: onFinish)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Ordir. Learn any turn, step by step.")
+        .accessibilityLabel(tr("Ordir. Learn any turn, step by step."))
         .accessibilityAddTraits(.isButton)
-        .accessibilityHint("Skips the opening.")
+        .accessibilityHint(tr("Skips the opening."))
         .accessibilityAction { onFinish() }
         .task {
             try? await Task.sleep(for: .seconds(reduceMotion ? 0.9 : Self.length))
@@ -96,7 +96,7 @@ struct OpeningView: View {
                     .font(.ordir(.title).weight(.semibold))
                     .opacity(reduceMotion ? 1 : Self.smooth((t - 0.4) / 0.6))
                     .offset(y: reduceMotion ? 0 : 16 * (1 - Self.smooth((t - 0.4) / 0.6)))
-                Text("Learn any turn, step by step.")
+                Text(tr("Learn any turn, step by step."))
                     .font(.ordir(.subheadline))
                     .foregroundStyle(.secondary)
                     .opacity(reduceMotion ? 1 : Self.smooth((t - 0.55) / 0.6))

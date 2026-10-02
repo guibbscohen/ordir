@@ -16,6 +16,7 @@ final class AccessibilityAuditTests: XCTestCase {
 
     func testHome() throws {
         let app = XCUIApplication()
+        app.launchArguments = ["-OrdirTourDone", "YES", "-OrdirLanguage", "en"]
         app.launch()
         // The opening plays first, then Home.
         XCTAssertTrue(app.staticTexts["Choose a game"].waitForExistence(timeout: 20))
@@ -78,7 +79,7 @@ final class AccessibilityAuditTests: XCTestCase {
 
     private func launch(step: String? = nil, passThePhone: Bool = false, largestText: Bool = false) -> XCUIApplication {
         let app = XCUIApplication()
-        app.launchArguments = ["-OrdirOpenGame", "duneWarForArrakis"]
+        app.launchArguments = ["-OrdirOpenGame", "duneWarForArrakis", "-OrdirLanguage", "en"]
         if let step { app.launchArguments += ["-OrdirStartStep", step] }
         if passThePhone { app.launchArguments += ["-OrdirPlayMode", "pass"] }
         if largestText {

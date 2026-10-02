@@ -16,6 +16,8 @@ struct OrdirApp: App {
     @State private var orbBuildStart: Date?
     /// Home's header orb while Home waits one screen down: where the opening's line ends.
     @State private var homeOrb: CGRect?
+    /// The player's language (Settings), or the phone's until they pick one.
+    @AppStorage(OrdirLanguage.storageKey) private var language = OrdirLanguage.current.rawValue
 
     init() {
         OrdirFont.register()
@@ -31,8 +33,11 @@ struct OrdirApp: App {
                 let moves = showsOpening && !UIAccessibility.isReduceMotionEnabled
                 TimelineView(.animation(paused: !moves)) { timeline in
                     let camera = OpeningView.camera(at: timeline.date.timeIntervalSince(openingStart))
-                    HomeView(orbBuildStart: orbBuildStart) { frame in if homeOrb == nil { homeOrb = frame } }
+                    HomeView(orbBuildStart: orbBuildStart, onOrbFrame: { frame in if homeOrb == nil { homeOrb = frame } },
+                             openingDone: !showsOpening)
                         .offset(y: moves ? screen.size.height * (1 - camera) : 0)
+                        // A new language rebuilds Home, so every screen and guide reloads in it.
+                        .id(language)
                 }
             }
             .accessibilityHidden(showsOpening)

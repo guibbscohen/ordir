@@ -47,7 +47,7 @@ struct OrdirThinkingIndicator: View {
         }
         // VoiceOver hears one steady label instead of every verb change.
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Ordir is thinking")
+        .accessibilityLabel(tr("Ordir is thinking"))
     }
 
     /// New verb rises in as the old one rises out; a plain cross-fade with Reduce Motion on.

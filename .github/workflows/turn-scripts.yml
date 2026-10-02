@@ -26,6 +26,9 @@ jobs:
           .venv/bin/python tools/fetch_sources.py
           .venv/bin/python tools/validate_turn_scripts.py
 
+      - name: Check every screen text has its translations
+        run: python3 tools/check_strings.py
+
   preview:
     runs-on: ubuntu-latest
     timeout-minutes: 10

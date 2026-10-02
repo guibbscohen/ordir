@@ -539,8 +539,9 @@ const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&
 
 // ---- Languages ----
 // English, Brazilian Portuguese and Latin American Spanish. Ordir follows the phone's language until the player
-// picks one on the Account tab. Screen text is looked up by its English wording in STRINGS (strings.js); a
-// missing translation falls back to English. Each game's turn guide is translated in scripts/<game>.<lang>.json.
+// picks one on the Account tab. Screen text is looked up by its English wording in STRINGS (strings.js, built
+// from Ordir/Localization/strings.json, which the app shares); a missing translation falls back to English.
+// Each game's turn guide is translated in scripts/<game>.<lang>.json.
 const LANGS = [["en", "English"], ["pt-BR", "Português (Brasil)"], ["es-419", "Español (Latinoamérica)"]];
 function startLang() {
   try { const saved = localStorage.getItem("ordir-lang"); if (LANGS.some(([id]) => id === saved)) return saved; } catch {}

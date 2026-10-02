@@ -1,7 +1,4 @@
-// Ordir's screen text in Brazilian Portuguese and Latin American Spanish, keyed by the English wording used in
-// index.html (t("…")). {0}, {1}… are filled in by t(). A missing entry shows the English text. The turn guides are
-// translated separately (Ordir/Games/<game>/<game>.turnscript.<lang>.json).
-const STRINGS = {
+{
   "pt-BR": {
     "Both players": "Ambos os jogadores",
     "{0}, page {1}": "{0}, página {1}",
@@ -197,6 +194,27 @@ const STRINGS = {
     "Snacks off the board, please. The board thanks you.": "Petiscos fora do tabuleiro, por favor. O tabuleiro agradece.",
     "Let’s learn a turn before anyone loses a friend.": "Vamos aprender um turno antes que alguém perca um amigo.",
     "Every game night needs a referee. Hi.": "Toda noite de jogos precisa de um juiz. Oi.",
+    "Time on this step: ": "Tempo neste passo: ",
+    "Walks both players through the battle, then returns to this turn": "Guia os dois jogadores pela batalha e depois volta a esta vez",
+    "Shows the picture larger": "Mostra a imagem maior",
+    "Opens the PDF at this page": "Abre o PDF nesta página",
+    "Shows another line.": "Mostra outra frase.",
+    "Skips the opening.": "Pula a abertura.",
+    "Ordir. Learn any turn, step by step.": "Ordir. Aprenda qualquer turno, passo a passo.",
+    "Back to games": "Voltar aos jogos",
+    "Turn guide, step by step": "Guia de turnos, passo a passo",
+    "{0}, coming soon": "{0}, em breve",
+    "Turn guides for {0} are on the way.": "Os guias de turno de {0} estão a caminho.",
+    "Waiting": "Aguardando",
+    "Speaking": "Falando",
+    "Thinking": "Pensando",
+    "Settings": "Ajustes",
+    "Language and tutorial": "Idioma e tutorial",
+    "Ordir is thinking": "O Ordir está pensando",
+    "I walk you through every turn, step by step, with the rulebook page behind each one.": "Eu guio vocês em cada turno, passo a passo, com a página do livro de regras por trás de cada um.",
+    "On the table, the screen splits: the top half faces the player across from you. Or pass the phone between you.": "Na mesa, a tela se divide: a metade de cima fica virada para quem está à sua frente. Ou passem o celular entre vocês.",
+    "Make it yours": "Do seu jeito",
+    "Tap the gear on Home to change the language or replay this tour.": "Toque na engrenagem no início para trocar o idioma ou ver este tour de novo."
   },
   "es-419": {
     "Both players": "Ambos jugadores",
@@ -393,5 +411,26 @@ const STRINGS = {
     "Snacks off the board, please. The board thanks you.": "Las botanas fuera del tablero, por favor. El tablero lo agradece.",
     "Let’s learn a turn before anyone loses a friend.": "Aprendamos un turno antes de que alguien pierda un amigo.",
     "Every game night needs a referee. Hi.": "Toda noche de juegos necesita un árbitro. Hola.",
-  },
-};
+    "Time on this step: ": "Tiempo en este paso: ",
+    "Walks both players through the battle, then returns to this turn": "Guía a los dos jugadores por la batalla y luego vuelve a este turno",
+    "Shows the picture larger": "Muestra la imagen más grande",
+    "Opens the PDF at this page": "Abre el PDF en esta página",
+    "Shows another line.": "Muestra otra frase.",
+    "Skips the opening.": "Omite la apertura.",
+    "Ordir. Learn any turn, step by step.": "Ordir. Aprende cualquier turno, paso a paso.",
+    "Back to games": "Volver a los juegos",
+    "Turn guide, step by step": "Guía de turnos, paso a paso",
+    "{0}, coming soon": "{0}, próximamente",
+    "Turn guides for {0} are on the way.": "Las guías de turnos de {0} están en camino.",
+    "Waiting": "Esperando",
+    "Speaking": "Hablando",
+    "Thinking": "Pensando",
+    "Settings": "Ajustes",
+    "Language and tutorial": "Idioma y tutorial",
+    "Ordir is thinking": "Ordir está pensando",
+    "I walk you through every turn, step by step, with the rulebook page behind each one.": "Te guío en cada turno, paso a paso, con la página del reglamento detrás de cada uno.",
+    "On the table, the screen splits: the top half faces the player across from you. Or pass the phone between you.": "En la mesa, la pantalla se divide: la mitad de arriba mira al jugador de enfrente. O pásense el celular.",
+    "Make it yours": "A tu manera",
+    "Tap the gear on Home to change the language or replay this tour.": "Toca el engranaje en el inicio para cambiar el idioma o ver este recorrido otra vez."
+  }
+}
