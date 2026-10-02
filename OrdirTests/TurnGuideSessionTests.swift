@@ -65,7 +65,9 @@ final class TurnGuideSessionTests: XCTestCase {
         for expansions in expansionSets {
             _ = walk(TurnGuideSession(script: script, expansions: expansions)) { session in
                 for addition in session.additions {
-                    XCTAssertTrue(expansions.contains(addition.expansion), "\(session.step.id): \(addition.expansion)")
+                    if let expansion = addition.expansion {
+                        XCTAssertTrue(expansions.contains(expansion), "\(session.step.id): \(expansion)")
+                    }
                 }
                 for reminder in session.reminders {
                     if let expansion = reminder.expansion {

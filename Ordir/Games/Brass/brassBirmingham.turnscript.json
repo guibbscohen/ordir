@@ -1,0 +1,867 @@
+{
+  "game": "brassBirmingham",
+  "title": "Brass: Birmingham",
+  "version": 1,
+  "scope": "Setup, then rounds of turns through the Canal Era and the Rail Era, each ending with scoring; 2–4 players on one phone",
+  "sides": [
+    {
+      "id": "player",
+      "name": "Player on turn",
+      "color": "#e0a458"
+    }
+  ],
+  "victory": {
+    "note": "After the Rail Era is scored, the player with the most VPs wins. Ties go to the highest income, then the most money; if still tied, those players draw.",
+    "citations": [
+      {
+        "source": "rulebook",
+        "page": 4,
+        "excerpt": "The player with the most VPs is declared the winner."
+      },
+      {
+        "source": "rulebook",
+        "page": 4,
+        "excerpt": "Ties are broken, first by the highest income, and then by the most money remaining."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "rulebook",
+      "title": "Rulebook (v2018.11; two printed pages per PDF page)",
+      "shortTitle": "Rulebook",
+      "url": "https://cdn.shopify.com/s/files/1/0246/2190/8043/files/Brass-Birmingham-Rulebook.pdf?v=1758826281",
+      "file": "Sources/brassBirmingham/Brass-Birmingham-Rulebook.pdf",
+      "sha256": "bb627a11c769957fbb5f26a210e3957ae27a2bad054ba9cb3b4fadc6c2ba73e5"
+    }
+  ],
+  "expansions": [],
+  "states": [
+    {
+      "id": "railEra",
+      "title": "Rail Era",
+      "markLabel": "The Canal Era is over",
+      "trigger": "The Canal Era ends after the round in which every player uses the last card in their hand.",
+      "citations": [
+        {
+          "source": "rulebook",
+          "page": 4,
+          "excerpt": "Each era ends following the round in which all players use the final cards in their Hands."
+        }
+      ],
+      "event": {
+        "title": "End of the Canal Era",
+        "side": "both",
+        "bullets": [
+          "Links: each of your Link tiles scores 1 VP for each link icon in the locations next to it. Remove Link tiles as they score.",
+          "Industries: then score the VPs in the bottom left corner of your flipped Industry tiles (black top half). Unflipped tiles don’t score.",
+          "Remove every level 1 Industry tile from the board (not from Player Mats). Level 2 and up stay.",
+          "Put 1 beer barrel on each empty beer space beside a (non-blank) Merchant tile.",
+          "Shuffle everyone’s Discard Piles into a new Draw Deck (turn the face-down bottom card over first).",
+          "Each player draws 8 cards. The Rail Era begins."
+        ],
+        "images": [
+          "era-scoring",
+          "end-canal"
+        ],
+        "citations": [
+          {
+            "source": "rulebook",
+            "page": 4,
+            "excerpt": "For each of your Link tiles"
+          },
+          {
+            "source": "rulebook",
+            "page": 4,
+            "excerpt": "Remove Link tiles from the board as they are scored."
+          },
+          {
+            "source": "rulebook",
+            "page": 4,
+            "excerpt": "Unflipped Industry tiles"
+          },
+          {
+            "source": "rulebook",
+            "page": 4,
+            "excerpt": "Remove all level 1 Industry tiles from the board"
+          },
+          {
+            "source": "rulebook",
+            "page": 4,
+            "excerpt": "on each empty beer barrel space beside a (non-blank) Merchant tile"
+          },
+          {
+            "source": "rulebook",
+            "page": 4,
+            "excerpt": "Shuffle all players’ Discard Piles together and place the cards face down on the appropriate Card Draw Area"
+          },
+          {
+            "source": "rulebook",
+            "page": 4,
+            "excerpt": "Each player draws 8 cards from the newly shuffled Draw Deck."
+          }
+        ]
+      }
+    }
+  ],
+  "images": [
+    {
+      "id": "cover",
+      "caption": "Rulebook cover",
+      "source": "rulebook",
+      "page": 1,
+      "crop": [
+        0.08,
+        0.03,
+        0.92,
+        0.265
+      ]
+    },
+    {
+      "id": "components",
+      "caption": "Components",
+      "source": "rulebook",
+      "page": 1,
+      "crop": [
+        0.27,
+        0.32,
+        0.97,
+        0.93
+      ]
+    },
+    {
+      "id": "board-setup",
+      "caption": "Board setup",
+      "source": "rulebook",
+      "page": 3,
+      "crop": [
+        0.28,
+        0.05,
+        0.71,
+        0.94
+      ]
+    },
+    {
+      "id": "supply",
+      "caption": "Coal, iron, beer and money",
+      "source": "rulebook",
+      "page": 3,
+      "crop": [
+        0.13,
+        0.36,
+        0.27,
+        0.65
+      ]
+    },
+    {
+      "id": "player-area",
+      "caption": "Player area setup",
+      "source": "rulebook",
+      "page": 3,
+      "crop": [
+        0.72,
+        0.33,
+        0.995,
+        0.95
+      ]
+    },
+    {
+      "id": "actions",
+      "caption": "The actions",
+      "source": "rulebook",
+      "page": 4,
+      "crop": [
+        0.13,
+        0.15,
+        0.255,
+        0.76
+      ]
+    },
+    {
+      "id": "turn-order",
+      "caption": "Turn order: money spent on the Character tiles",
+      "source": "rulebook",
+      "page": 4,
+      "crop": [
+        0.34,
+        0.17,
+        0.49,
+        0.47
+      ]
+    },
+    {
+      "id": "income",
+      "caption": "Income on the Progress Track",
+      "source": "rulebook",
+      "page": 4,
+      "crop": [
+        0.26,
+        0.56,
+        0.365,
+        0.94
+      ]
+    },
+    {
+      "id": "era-scoring",
+      "caption": "Scoring links and flipped industries",
+      "source": "rulebook",
+      "page": 4,
+      "crop": [
+        0.52,
+        0.13,
+        0.75,
+        0.97
+      ]
+    },
+    {
+      "id": "end-canal",
+      "caption": "End of the Canal Era",
+      "source": "rulebook",
+      "page": 4,
+      "crop": [
+        0.875,
+        0.15,
+        0.995,
+        0.71
+      ]
+    },
+    {
+      "id": "build-cards",
+      "caption": "Location, Wild Location, Industry and Wild Industry cards",
+      "source": "rulebook",
+      "page": 5,
+      "crop": [
+        0.595,
+        0.36,
+        0.637,
+        0.76
+      ]
+    },
+    {
+      "id": "market",
+      "caption": "Selling coal and iron to the Markets",
+      "source": "rulebook",
+      "page": 5,
+      "crop": [
+        0.76,
+        0.6,
+        0.85,
+        0.88
+      ]
+    },
+    {
+      "id": "connections",
+      "caption": "Network and connected locations",
+      "source": "rulebook",
+      "page": 5,
+      "crop": [
+        0.13,
+        0.15,
+        0.5,
+        0.48
+      ]
+    },
+    {
+      "id": "sell",
+      "caption": "Selling to a Merchant",
+      "source": "rulebook",
+      "page": 6,
+      "crop": [
+        0.33,
+        0.55,
+        0.495,
+        0.97
+      ]
+    },
+    {
+      "id": "merchant-bonuses",
+      "caption": "Merchant beer bonuses",
+      "source": "rulebook",
+      "page": 6,
+      "crop": [
+        0.37,
+        0.14,
+        0.49,
+        0.55
+      ]
+    },
+    {
+      "id": "network",
+      "caption": "Rail Links",
+      "source": "rulebook",
+      "page": 6,
+      "crop": [
+        0.86,
+        0.45,
+        0.995,
+        0.97
+      ]
+    }
+  ],
+  "phases": [
+    {
+      "id": "setup",
+      "part": "setup",
+      "title": "Setup",
+      "steps": [
+        {
+          "id": "setup-board",
+          "side": "both",
+          "title": "Board and cards",
+          "instruction": "Place the board on its day or night side, then prepare the cards:",
+          "bullets": [
+            "Fewer than 4 players: return to the box every card and Merchant tile showing a player count higher than yours (bottom right of cards, top of Merchant tiles).",
+            "Place the Wild Location and Wild Industry cards face up on 2 of the Card Draw Areas.",
+            "Shuffle the rest into the Draw Deck, face down on the last Card Draw Area."
+          ],
+          "components": [
+            "Board",
+            "Location and Industry cards",
+            "Wild cards",
+            "Merchant tiles"
+          ],
+          "images": [
+            "board-setup",
+            "components"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 3,
+              "excerpt": "Place the board on either the day or night side."
+            },
+            {
+              "source": "rulebook",
+              "page": 3,
+              "excerpt": "For a player count of less than 4, remove all cards and Merchant tiles that show a player count greater than your number of players, and return them to the box."
+            },
+            {
+              "source": "rulebook",
+              "page": 3,
+              "excerpt": "Shuffle the remaining cards and place them face down on the remaining Card Draw Area"
+            }
+          ]
+        },
+        {
+          "id": "setup-markets",
+          "side": "both",
+          "title": "Merchants and markets",
+          "instruction": "Set up the Merchants, Markets and supply:",
+          "bullets": [
+            "Shuffle the Merchant tiles and place 1 face up on each Merchant space marked with your player count (2 players: none in Warrington and Nottingham; 3 players: none in Nottingham).",
+            "1 beer barrel on each beer space beside a (non-blank) Merchant tile.",
+            "Coal Market: a black cube on every space but one of the £1 spaces. Iron Market: an orange cube on every space but both £1 spaces.",
+            "The other cubes and barrels beside the board are the General Supply (limitless); the money is the Bank."
+          ],
+          "components": [
+            "Merchant tiles",
+            "Beer barrels",
+            "Coal cubes",
+            "Iron cubes",
+            "Money"
+          ],
+          "images": [
+            "board-setup",
+            "supply"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 3,
+              "excerpt": "Shuffle the remaining Merchant tiles, and place 1 (face up) on each of the Merchant spaces marked with the number of players in your game"
+            },
+            {
+              "source": "rulebook",
+              "page": 3,
+              "excerpt": "Place 1 beer barrel on each beer barrel space beside a (non-blank) Merchant tile"
+            },
+            {
+              "source": "rulebook",
+              "page": 3,
+              "excerpt": "Place 1 black cube on each space of the Coal Market"
+            },
+            {
+              "source": "rulebook",
+              "page": 3,
+              "excerpt": "Place 1 orange cube on each space of the Iron Market"
+            },
+            {
+              "source": "rulebook",
+              "page": 3,
+              "excerpt": "Note: The General Supply is limitless."
+            }
+          ]
+        },
+        {
+          "id": "setup-players",
+          "side": "both",
+          "title": "Your player area",
+          "instruction": "Each player sets up:",
+          "bullets": [
+            "A Player Mat, £17 from the Bank and a Character tile.",
+            "Your colour’s Link tiles beside you, and its Industry tiles stacked on their slots on your Player Mat (black top half face down).",
+            "VP Marker on 0 and Income Marker on 10 of the Progress Track."
+          ],
+          "components": [
+            "Player Mat",
+            "Character tile",
+            "Link tiles",
+            "Industry tiles",
+            "VP and Income Markers"
+          ],
+          "images": [
+            "player-area"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 3,
+              "excerpt": "Place the matching coloured Link tiles in your player area"
+            },
+            {
+              "source": "rulebook",
+              "page": 3,
+              "excerpt": "Choose a coloured Character tile."
+            },
+            {
+              "source": "rulebook",
+              "page": 3,
+              "excerpt": "The side of the tiles with the black top half should be face down."
+            },
+            {
+              "source": "rulebook",
+              "page": 3,
+              "excerpt": "Place your Victory Point (VP) Marker on the “0” space of the Progress Track"
+            },
+            {
+              "source": "rulebook",
+              "page": 3,
+              "excerpt": "Place your Income Marker on the “10” space of the Progress Track"
+            }
+          ]
+        },
+        {
+          "id": "setup-hands",
+          "side": "both",
+          "title": "Hands and turn order",
+          "instruction": "Deal the cards and set the first turn order:",
+          "bullets": [
+            "Each player draws 8 cards (keep your Hand hidden), plus 1 more face down beside them: their Discard Pile.",
+            "Shuffle the Character tiles and place them in a random order on the Turn Order Track."
+          ],
+          "components": [
+            "Draw Deck",
+            "Character tiles"
+          ],
+          "images": [
+            "player-area",
+            "turn-order"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 3,
+              "excerpt": "Draw 8 cards from the Draw Deck; this is your Hand."
+            },
+            {
+              "source": "rulebook",
+              "page": 3,
+              "excerpt": "Draw 1 additional card from the Draw Deck and place it face down in your player area; this is your Discard Pile."
+            },
+            {
+              "source": "rulebook",
+              "page": 3,
+              "excerpt": "shuffle all players’ Character tiles together and place them in a random order on the Turn Order Track"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "turns",
+      "part": "round",
+      "title": "Turns",
+      "loop": {
+        "endLabel": "Everyone has had a turn",
+        "note": "Take turns in the order of the Character tiles on the Turn Order Track.",
+        "citations": [
+          {
+            "source": "rulebook",
+            "page": 4,
+            "excerpt": "During each round, players take turns in the order of their Character tiles on the Turn Order Track."
+          }
+        ]
+      },
+      "steps": [
+        {
+          "id": "turn-actions",
+          "side": "player",
+          "title": "Your 2 actions",
+          "instruction": "Take 2 actions (only 1 each in the Canal Era’s first round). Discard a card for each. Choose from:",
+          "bullets": [
+            "Build: needs a Location card (that location) or an Industry card (that industry, in your network). Pay the cost from your Player Mat and use any coal and iron.",
+            "Network: place a Link tile next to your network.",
+            "Develop: remove 1 or 2 of the lowest Industry tiles from your Player Mat, using 1 iron each.",
+            "Sell: flip a Cotton Mill, Manufacturer or Pottery connected to a Merchant buying it, using the beer shown.",
+            "Loan: take £30 and move your Income Marker back 3 income levels.",
+            "Scout: discard 2 more cards and take 1 Wild Location and 1 Wild Industry (not if you hold a Wild card).",
+            "You may take the same action twice, or pass (still discarding a card)."
+          ],
+          "components": [
+            "Cards",
+            "Industry tiles",
+            "Link tiles",
+            "Money"
+          ],
+          "images": [
+            "actions",
+            "build-cards",
+            "sell",
+            "merchant-bonuses",
+            "market"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "On your turn, perform a total of 2 actions."
+            },
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "During the first round of the Canal Era, each player performs only 1 action."
+            },
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "For each action you perform, you must discard a card from your Hand and place it face up on top of your Discard Pile."
+            },
+            {
+              "source": "rulebook",
+              "page": 5,
+              "excerpt": "May be used to build any Industry tile at the location named on the card, even if the location is not a part of your network."
+            },
+            {
+              "source": "rulebook",
+              "page": 5,
+              "excerpt": "May be used to build the Industry tile matching an icon shown in the top corner of the card, in a location that is a part of your network."
+            },
+            {
+              "source": "rulebook",
+              "page": 6,
+              "excerpt": "The placed Link tile must be adjacent to a location that is a part of your network"
+            },
+            {
+              "source": "rulebook",
+              "page": 6,
+              "excerpt": "Remove 1 or 2 Industry tiles from your Player Mat, and return them to the box."
+            },
+            {
+              "source": "rulebook",
+              "page": 6,
+              "excerpt": "Consume 1 iron for each tile removed"
+            },
+            {
+              "source": "rulebook",
+              "page": 6,
+              "excerpt": "Choose 1 of your unflipped Cotton Mill, Manufacturer"
+            },
+            {
+              "source": "rulebook",
+              "page": 6,
+              "excerpt": "Take £30 from the bank, and move your Income Marker 3 income levels (not spaces) backwards down the Progress Track"
+            },
+            {
+              "source": "rulebook",
+              "page": 6,
+              "excerpt": "You may not perform this action if you already have a Wild card in your Hand."
+            },
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "You may choose to pass instead of performing an action, but must still discard a card for each action you pass."
+            }
+          ],
+          "additions": [
+            {
+              "title": "Canal Era",
+              "when": {
+                "state": "railEra",
+                "is": false
+              },
+              "text": "Building and links in the Canal Era:",
+              "bullets": [
+                "At most 1 of your Industry tiles per location.",
+                "Canal Links only: 1 per Network action, for £3."
+              ],
+              "images": [
+                "connections"
+              ],
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 6,
+                  "excerpt": "You may have a maximum of 1 Industry tile per location, but may have an Industry tile in the same location as other players."
+                },
+                {
+                  "source": "rulebook",
+                  "page": 6,
+                  "excerpt": "You may build a maximum of 1 canal Link for £3."
+                }
+              ]
+            },
+            {
+              "title": "Rail Era",
+              "when": {
+                "state": "railEra",
+                "is": true
+              },
+              "text": "Building and links in the Rail Era:",
+              "bullets": [
+                "You may build several Industry tiles in a location.",
+                "Rail Links only, each using 1 coal: 1 for £5, or 2 for £15 plus 1 beer from a Brewery."
+              ],
+              "images": [
+                "network"
+              ],
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 6,
+                  "excerpt": "You may build multiple Industry tiles in each location."
+                },
+                {
+                  "source": "rulebook",
+                  "page": 6,
+                  "excerpt": "You may build 1 rail Link for £5."
+                },
+                {
+                  "source": "rulebook",
+                  "page": 6,
+                  "excerpt": "In a single Network action, you may build 2 rail Links for £15, if you also consume 1 beer."
+                },
+                {
+                  "source": "rulebook",
+                  "page": 6,
+                  "excerpt": "You must consume 1 coal for each rail Link built"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "turn-end",
+          "side": "player",
+          "title": "End of your turn",
+          "instruction": "Refill your Hand back up to 8 cards from the Draw Deck.",
+          "bullets": [
+            "Once the Draw Deck is empty, your Hand shrinks each round until you have no cards left."
+          ],
+          "components": [
+            "Draw Deck",
+            "Character tile",
+            "Money"
+          ],
+          "images": [
+            "turn-order"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "After all of your actions have been completed, refill your Hand back up to 8 cards with cards from the Draw Deck."
+            },
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "Once the Draw Deck has been exhausted, your Hand will decrease each round until you have no cards left."
+            }
+          ],
+          "reminders": [
+            {
+              "text": "All the money you spent this turn is on your Character tile on the Turn Order Track.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 4,
+                  "excerpt": "Place all money spent during your turn on top of your Character tile on the Turn Order Track."
+                }
+              ]
+            },
+            {
+              "text": "Wild cards you used went back to their Card Draw Areas, not your Discard Pile.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 4,
+                  "excerpt": "Wild cards are placed back onto their Card Draw Areas."
+                }
+              ]
+            },
+            {
+              "text": "Any Coal Mine or Iron Works emptied this turn is flipped, and its owner’s income goes up.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 5,
+                  "excerpt": "Coal Mines, Iron Works, and Breweries: Flip when the last resource is removed from the tile."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "round-end",
+      "part": "round",
+      "title": "End of the round",
+      "steps": [
+        {
+          "id": "round-order",
+          "side": "both",
+          "title": "Turn order",
+          "instruction": "Rearrange the Character tiles on the Turn Order Track:",
+          "bullets": [
+            "Whoever spent the least money this round goes first next round, and so on; whoever spent the most goes last.",
+            "Equal amounts keep their relative order.",
+            "Then return all the money on the Character tiles to the Bank."
+          ],
+          "components": [
+            "Character tiles",
+            "Money"
+          ],
+          "images": [
+            "turn-order"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "The player who spent the least money this round will go first next round"
+            },
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "If multiple players have spent an equal amount, their relative turn order remains the same"
+            },
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "Afterwards, take all money from the Character tiles, and place it back into the Bank"
+            }
+          ]
+        },
+        {
+          "id": "round-income",
+          "side": "both",
+          "title": "Income",
+          "instruction": "Each player takes money from the Bank equal to their income level (the coin beside their Income Marker).",
+          "bullets": [
+            "Negative income: pay it to the Bank.",
+            "Can’t pay? Remove your own Industry tiles from the board for half their cost each (rounded down), stopping once you have enough; if you still can’t, lose 1 VP per £1 short.",
+            "No income after the game’s final round."
+          ],
+          "components": [
+            "Income Markers",
+            "Money"
+          ],
+          "images": [
+            "income"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "Take money from the Bank equal to your income level."
+            },
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "you must pay that amount of money to the Bank."
+            },
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "you must acquire money by removing one or more of your Industry tiles (not Link tiles) from the board; each being worth half of its cost, rounded down."
+            },
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "If you have no way to pay a shortfall, lose 1 VP (if possible) for each £1 you are short."
+            },
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "Income is not collected at the end of the final round of the game."
+            }
+          ],
+          "additions": [
+            {
+              "title": "End of the Canal Era?",
+              "when": {
+                "state": "railEra",
+                "is": false
+              },
+              "sets": "railEra",
+              "text": "Did every player just use the last card in their Hand? Then the Canal Era ends now (8/9/10 rounds with 4/3/2 players).",
+              "images": [
+                "era-scoring"
+              ],
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 4,
+                  "excerpt": "Each era ends following the round in which all players use the final cards in their Hands."
+                },
+                {
+                  "source": "rulebook",
+                  "page": 4,
+                  "excerpt": "There are exactly 8/9/10 rounds per era in a 4/3/2-players game."
+                }
+              ]
+            },
+            {
+              "title": "End of the game?",
+              "when": {
+                "state": "railEra",
+                "is": true
+              },
+              "text": "Did every player just use the last card in their Hand? Then the Rail Era and the game end (no income this time). Score the era:",
+              "bullets": [
+                "Links: each of your Link tiles scores 1 VP for each link icon in the locations next to it. Remove Link tiles as they score.",
+                "Industries: then score the VPs in the bottom left corner of your flipped Industry tiles (black top half). Unflipped tiles don’t score.",
+                "Most VPs wins. End the game from the Game menu."
+              ],
+              "images": [
+                "era-scoring"
+              ],
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 4,
+                  "excerpt": "Each era ends following the round in which all players use the final cards in their Hands."
+                },
+                {
+                  "source": "rulebook",
+                  "page": 4,
+                  "excerpt": "For each of your Link tiles"
+                },
+                {
+                  "source": "rulebook",
+                  "page": 4,
+                  "excerpt": "Unflipped Industry tiles"
+                },
+                {
+                  "source": "rulebook",
+                  "page": 4,
+                  "excerpt": "The player with the most VPs is declared the winner."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

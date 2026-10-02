@@ -1,0 +1,1543 @@
+{
+  "game": "duneImperium",
+  "title": "Dune: Imperium",
+  "version": 1,
+  "scope": "Setup, then rounds of five phases until someone reaches 10 VP or the Conflict Deck runs out; 3–4 players on one phone; optional Rise of Ix, Immortality and Bloodlines expansions",
+  "sides": [
+    {
+      "id": "player",
+      "name": "Player on turn",
+      "color": "#e3b867"
+    }
+  ],
+  "victory": {
+    "note": "At the end of a round, if anyone has 10 or more Victory Points (or the Conflict Deck is empty), the game ends: play any Endgame Intrigue cards, then the most Victory Points wins. Ties go to the most spice, then Solari, water and garrisoned troops.",
+    "citations": [
+      {
+        "source": "rulebook",
+        "page": 6,
+        "excerpt": "At the end of a round, if any player has reached 10 or more Victory Points (or if the Conflict Deck is empty), the game ends, and whoever has the most Victory Points wins."
+      },
+      {
+        "source": "rulebook",
+        "page": 13,
+        "excerpt": "First, you may play and resolve any Endgame Intrigue cards you have."
+      },
+      {
+        "source": "rulebook",
+        "page": 13,
+        "excerpt": "tiebreakers are, in order: amount of spice, Solari, water, and garrisoned troops."
+      },
+      {
+        "source": "faq",
+        "page": 2,
+        "excerpt": "the final tiebreaker is the player who most recently took a Reveal turn.",
+        "entry": "Endgame"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "rulebook",
+      "title": "Rulebook",
+      "shortTitle": "Rulebook",
+      "url": "https://d19y2ttatozxjp.cloudfront.net/pdfs/DUNE_IMPERIUM_Rules_2020_10_26.pdf",
+      "file": "Sources/duneImperium/DUNE_IMPERIUM_Rules_2020_10_26.pdf",
+      "sha256": "a689f19e7bda36ec03240ba19cbc481dd4d681f55837529cd8170ec9d19be6db"
+    },
+    {
+      "id": "faq",
+      "title": "Errata and FAQ (January 13, 2025)",
+      "shortTitle": "FAQ",
+      "url": "https://d19y2ttatozxjp.cloudfront.net/pdfs/DUNE_IMPERIUM_FAQ_25-1-13.pdf",
+      "file": "Sources/duneImperium/DUNE_IMPERIUM_FAQ_25-1-13.pdf",
+      "sha256": "7b54c283357244e5107d1d0f4e87817d39297e914c2014239acbb2c460c0c6b9"
+    },
+    {
+      "id": "riseOfIx",
+      "title": "Rise of Ix rulebook",
+      "shortTitle": "Rise of Ix",
+      "url": "https://d19y2ttatozxjp.cloudfront.net/pdfs/DUNE_IMPERIUM_RISE_OF_IX_Rulebook_22-2-11.pdf",
+      "file": "Sources/duneImperium/expansions/DUNE_IMPERIUM_RISE_OF_IX_Rulebook_22-2-11.pdf",
+      "sha256": "ca010552db0b043cb8630352f95eafb06bfe50ba4dc5a7bd318eb5b24a03658f"
+    },
+    {
+      "id": "immortality",
+      "title": "Immortality rulebook",
+      "shortTitle": "Immortality",
+      "url": "https://d19y2ttatozxjp.cloudfront.net/pdfs/DUNE_IMPERIUM_IMMORTALITY_Rulebook.pdf",
+      "file": "Sources/duneImperium/expansions/DUNE_IMPERIUM_IMMORTALITY_Rulebook.pdf",
+      "sha256": "2a7ba3b8129bc108a82c3b2677d7ce27ffc64be88532b691f55836bf48666a79"
+    },
+    {
+      "id": "bloodlines",
+      "title": "Bloodlines rulebook",
+      "shortTitle": "Bloodlines",
+      "url": "https://d19y2ttatozxjp.cloudfront.net/pdfs/DUNE_IMPERIUM_BLOODLINES_Rulebook.pdf",
+      "file": "Sources/duneImperium/expansions/DUNE_IMPERIUM_BLOODLINES_Rulebook.pdf",
+      "sha256": "5f0b4646ab59f467a1027b95e2b6f67809c77c224d98ddab26dd661d7e2b042a"
+    }
+  ],
+  "expansions": [
+    {
+      "id": "riseOfIx",
+      "title": "Rise of Ix",
+      "summary": "Tech tiles on the Ix board, dreadnoughts, and Freighters on the CHOAM Shipping track."
+    },
+    {
+      "id": "immortality",
+      "title": "Immortality",
+      "summary": "The Bene Tleilax board: research and Tleilaxu tracks, specimens, Tleilaxu cards, Graft and Family Atomics."
+    },
+    {
+      "id": "bloodlines",
+      "title": "Bloodlines",
+      "summary": "Sardaukar Commanders and their Skills, new leaders, cards and Intrigues."
+    }
+  ],
+  "images": [
+    {
+      "id": "cover",
+      "caption": "Rulebook cover",
+      "source": "rulebook",
+      "page": 1,
+      "crop": [
+        0.0,
+        0.02,
+        1.0,
+        0.8
+      ]
+    },
+    {
+      "id": "board",
+      "caption": "Game board",
+      "source": "rulebook",
+      "page": 3,
+      "crop": [
+        0.01,
+        0.06,
+        0.25,
+        0.3
+      ]
+    },
+    {
+      "id": "conflict-cards",
+      "caption": "Conflict cards",
+      "source": "rulebook",
+      "page": 3,
+      "crop": [
+        0.25,
+        0.23,
+        0.48,
+        0.39
+      ]
+    },
+    {
+      "id": "bank",
+      "caption": "Water, Solari and spice",
+      "source": "rulebook",
+      "page": 3,
+      "crop": [
+        0.49,
+        0.05,
+        0.97,
+        0.2
+      ]
+    },
+    {
+      "id": "reserve-cards",
+      "caption": "Reserve cards",
+      "source": "rulebook",
+      "page": 3,
+      "crop": [
+        0.01,
+        0.36,
+        0.27,
+        0.54
+      ]
+    },
+    {
+      "id": "decks-leaders",
+      "caption": "Intrigue cards, Imperium Deck and Leaders",
+      "source": "rulebook",
+      "page": 3,
+      "crop": [
+        0.29,
+        0.25,
+        0.68,
+        0.57
+      ]
+    },
+    {
+      "id": "mentat-alliances",
+      "caption": "Mentat, Alliance tokens and First Player marker",
+      "source": "rulebook",
+      "page": 3,
+      "crop": [
+        0.68,
+        0.27,
+        0.99,
+        0.55
+      ]
+    },
+    {
+      "id": "player-components",
+      "caption": "Player components",
+      "source": "rulebook",
+      "page": 3,
+      "crop": [
+        0.03,
+        0.6,
+        0.67,
+        0.95
+      ]
+    },
+    {
+      "id": "imperium-row",
+      "caption": "Imperium Row",
+      "source": "rulebook",
+      "page": 4,
+      "crop": [
+        0.45,
+        0.28,
+        0.99,
+        0.41
+      ]
+    },
+    {
+      "id": "setup-board",
+      "caption": "Board setup",
+      "source": "rulebook",
+      "page": 4,
+      "crop": [
+        0.62,
+        0.4,
+        0.99,
+        0.99
+      ]
+    },
+    {
+      "id": "player-supply",
+      "caption": "A player’s supply",
+      "source": "rulebook",
+      "page": 5,
+      "crop": [
+        0.42,
+        0.58,
+        0.86,
+        0.76
+      ]
+    },
+    {
+      "id": "score-track",
+      "caption": "Score track, garrisons and bank",
+      "source": "rulebook",
+      "page": 5,
+      "crop": [
+        0.0,
+        0.41,
+        0.42,
+        0.99
+      ]
+    },
+    {
+      "id": "round-structure",
+      "caption": "The five phases of a round",
+      "source": "rulebook",
+      "page": 8,
+      "crop": [
+        0.02,
+        0.08,
+        0.98,
+        0.21
+      ]
+    },
+    {
+      "id": "conflict-reveal",
+      "caption": "Revealing the Conflict card",
+      "source": "rulebook",
+      "page": 8,
+      "crop": [
+        0.73,
+        0.3,
+        0.95,
+        0.48
+      ]
+    },
+    {
+      "id": "card-anatomy",
+      "caption": "Card anatomy: Agent box and Reveal box",
+      "source": "rulebook",
+      "page": 8,
+      "crop": [
+        0.46,
+        0.55,
+        0.95,
+        0.93
+      ]
+    },
+    {
+      "id": "agent-icons",
+      "caption": "The seven Agent icons",
+      "source": "rulebook",
+      "page": 9,
+      "crop": [
+        0.57,
+        0.11,
+        0.95,
+        0.44
+      ]
+    },
+    {
+      "id": "conflict-area",
+      "caption": "The Conflict area between the garrisons",
+      "source": "rulebook",
+      "page": 10,
+      "crop": [
+        0.33,
+        0.4,
+        0.5,
+        0.51
+      ]
+    },
+    {
+      "id": "harvest",
+      "caption": "Harvesting spice at Hagga Basin",
+      "source": "rulebook",
+      "page": 10,
+      "crop": [
+        0.8,
+        0.2,
+        0.95,
+        0.3
+      ]
+    },
+    {
+      "id": "reveal",
+      "caption": "Revealed cards",
+      "source": "rulebook",
+      "page": 11,
+      "crop": [
+        0.8,
+        0.58,
+        0.98,
+        0.8
+      ]
+    },
+    {
+      "id": "combat-intrigue",
+      "caption": "A Combat Intrigue card",
+      "source": "rulebook",
+      "page": 12,
+      "crop": [
+        0.315,
+        0.13,
+        0.43,
+        0.335
+      ]
+    },
+    {
+      "id": "conflict-rewards",
+      "caption": "Conflict rewards: 1st, 2nd and 3rd",
+      "source": "rulebook",
+      "page": 12,
+      "crop": [
+        0.83,
+        0.17,
+        0.94,
+        0.33
+      ]
+    },
+    {
+      "id": "makers",
+      "caption": "Bonus spice on a Maker space",
+      "source": "rulebook",
+      "page": 13,
+      "crop": [
+        0.78,
+        0.13,
+        0.95,
+        0.22
+      ]
+    },
+    {
+      "id": "endgame",
+      "caption": "Endgame",
+      "source": "rulebook",
+      "page": 13,
+      "crop": [
+        0.69,
+        0.29,
+        0.95,
+        0.52
+      ]
+    },
+    {
+      "id": "ix-components",
+      "caption": "Rise of Ix components",
+      "source": "riseOfIx",
+      "page": 2,
+      "crop": [
+        0.01,
+        0.37,
+        0.97,
+        0.68
+      ]
+    },
+    {
+      "id": "ix-board",
+      "caption": "Ix board",
+      "source": "riseOfIx",
+      "page": 2,
+      "crop": [
+        0.06,
+        0.5,
+        0.22,
+        0.64
+      ]
+    },
+    {
+      "id": "choam-overlay",
+      "caption": "CHOAM board overlay",
+      "source": "riseOfIx",
+      "page": 2,
+      "crop": [
+        0.01,
+        0.37,
+        0.27,
+        0.48
+      ]
+    },
+    {
+      "id": "tech-tiles",
+      "caption": "Tech tiles",
+      "source": "riseOfIx",
+      "page": 2,
+      "crop": [
+        0.79,
+        0.37,
+        0.97,
+        0.47
+      ]
+    },
+    {
+      "id": "shipping-track",
+      "caption": "The Shipping track",
+      "source": "riseOfIx",
+      "page": 5,
+      "crop": [
+        0.39,
+        0.23,
+        0.62,
+        0.47
+      ]
+    },
+    {
+      "id": "dreadnought-control",
+      "caption": "A dreadnought controlling a location",
+      "source": "riseOfIx",
+      "page": 6,
+      "crop": [
+        0.73,
+        0.75,
+        0.99,
+        0.97
+      ]
+    },
+    {
+      "id": "tleilax-board",
+      "caption": "Bene Tleilax board",
+      "source": "immortality",
+      "page": 3,
+      "crop": [
+        0.02,
+        0.16,
+        0.32,
+        0.46
+      ]
+    },
+    {
+      "id": "immortality-components",
+      "caption": "Immortality components",
+      "source": "immortality",
+      "page": 3,
+      "crop": [
+        0.02,
+        0.11,
+        0.98,
+        0.56
+      ]
+    },
+    {
+      "id": "immortality-player",
+      "caption": "Family Atomics, Experimentation and the two discs",
+      "source": "immortality",
+      "page": 3,
+      "crop": [
+        0.08,
+        0.65,
+        0.62,
+        0.92
+      ]
+    },
+    {
+      "id": "tleilaxu-track",
+      "caption": "The Tleilaxu track",
+      "source": "immortality",
+      "page": 7,
+      "crop": [
+        0.13,
+        0.28,
+        0.88,
+        0.49
+      ]
+    },
+    {
+      "id": "commanders",
+      "caption": "Sardaukar Commanders and Skills",
+      "source": "bloodlines",
+      "page": 2,
+      "crop": [
+        0.5,
+        0.25,
+        0.97,
+        0.39
+      ]
+    },
+    {
+      "id": "bloodlines-leaders",
+      "caption": "Bloodlines leaders",
+      "source": "bloodlines",
+      "page": 2,
+      "crop": [
+        0.01,
+        0.22,
+        0.27,
+        0.4
+      ]
+    }
+  ],
+  "phases": [
+    {
+      "id": "setup",
+      "part": "setup",
+      "title": "Setup",
+      "steps": [
+        {
+          "id": "setup-board",
+          "side": "both",
+          "title": "Board",
+          "instruction": "Place the game board, then:",
+          "bullets": [
+            "Lay the Mentat on its side in the Mentat space.",
+            "Place the four Alliance tokens on their marked areas of the Influence tracks (Emperor, Spacing Guild, Bene Gesserit, Fremen)."
+          ],
+          "components": [
+            "Game board",
+            "Mentat",
+            "Alliance tokens"
+          ],
+          "images": [
+            "setup-board",
+            "mentat-alliances"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "Place the Mentat on its side in the Mentat space."
+            },
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "Place the four Alliance tokens on the marked areas of the Faction’s Influence tracks"
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "riseOfIx",
+              "text": "Place the CHOAM board overlay on the upper right corner of the board (over the Landsraad and CHOAM sections). Put the Ix board beside it:",
+              "bullets": [
+                "Shuffle the 18 Tech tiles face down into three stacks of 6 on its three spaces, and turn the top tile of each face up."
+              ],
+              "images": [
+                "choam-overlay",
+                "ix-board",
+                "tech-tiles"
+              ],
+              "citations": [
+                {
+                  "source": "riseOfIx",
+                  "page": 3,
+                  "excerpt": "Place the CHOAM board overlay on top of the upper right corner of your original game board"
+                },
+                {
+                  "source": "riseOfIx",
+                  "page": 3,
+                  "excerpt": "divide them into three stacks of 6 tiles."
+                }
+              ]
+            },
+            {
+              "expansion": "immortality",
+              "text": "Place the Bene Tleilax board above the Imperium Row:",
+              "bullets": [
+                "2 spice from the bank on the fourth space of the Tleilaxu track.",
+                "The Research Station overlay on the Research Station space of the board."
+              ],
+              "images": [
+                "tleilax-board",
+                "immortality-components"
+              ],
+              "citations": [
+                {
+                  "source": "immortality",
+                  "page": 4,
+                  "excerpt": "Place 2 spice from the bank on the fourth space of the Tleilaxu track."
+                },
+                {
+                  "source": "immortality",
+                  "page": 5,
+                  "excerpt": "Place the Research Station overlay on top of the Research Station space of your original game board."
+                }
+              ]
+            },
+            {
+              "expansion": "bloodlines",
+              "text": "Place one Sardaukar Commander (all wood or all plastic) on each of Conspire, Wealth, Foldspace, High Council and Rally Troops:",
+              "bullets": [
+                "4 players: a sixth on Hall of Oratory. Put the last one in the bank.",
+                "With all of Rise of Ix, the CHOAM overlay covers two of those spaces: put one Commander on Dreadnought and, with 4 players, the other on Tech Negotiation.",
+                "Shuffle the Sardaukar Commander Skills without the two “Fierce” ones and deal four face up."
+              ],
+              "images": [
+                "commanders"
+              ],
+              "citations": [
+                {
+                  "source": "bloodlines",
+                  "page": 3,
+                  "excerpt": "place the five Sardaukar Commanders on Conspire, Wealth, Foldspace, High Council, and Rally Troops. With four players, place the sixth on Hall of Oratory."
+                },
+                {
+                  "source": "bloodlines",
+                  "page": 3,
+                  "excerpt": "In step 2, exclude the two “Fierce” Sardaukar Commander Skills."
+                },
+                {
+                  "source": "bloodlines",
+                  "page": 7,
+                  "excerpt": "Instead, place one Sardaukar Commander on Dreadnought. If you are playing a four-player game, place the other on Tech Negotiation"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "setup-conflict",
+          "side": "both",
+          "title": "Conflict Deck",
+          "instruction": "Build the 10-card Conflict Deck in the marked area of the board, from the bottom up:",
+          "bullets": [
+            "All four Conflict III cards, shuffled.",
+            "Five of the ten Conflict II cards, shuffled.",
+            "One of the four Conflict I cards on top. Return the rest to the box unseen."
+          ],
+          "components": [
+            "Conflict cards"
+          ],
+          "images": [
+            "conflict-cards",
+            "setup-board"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "Shuffle the four Conflict III cards and place all of them face down in the marked area of the game board."
+            },
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "Shuffle the 10 Conflict II cards, then deal five face down on top of the Conflict III cards."
+            },
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "Shuffle the four Conflict I cards, then deal one face down on top of the Conflict II cards."
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "riseOfIx",
+              "text": "Add the 4 new Conflict cards before building the deck. One Conflict III card is now left over: return it to the box.",
+              "images": [
+                "ix-components"
+              ],
+              "citations": [
+                {
+                  "source": "riseOfIx",
+                  "page": 3,
+                  "excerpt": "Add the new Conﬂ  ict cards to those you already have."
+                },
+                {
+                  "source": "riseOfIx",
+                  "page": 3,
+                  "excerpt": "Now you will have one remaining, and will return it to the box with the other unused Conﬂ  ict cards."
+                }
+              ]
+            },
+            {
+              "expansion": "bloodlines",
+              "text": "With the original Dune: Imperium, don’t add the Bloodlines Conflict cards.",
+              "images": [
+                "commanders"
+              ],
+              "citations": [
+                {
+                  "source": "bloodlines",
+                  "page": 3,
+                  "excerpt": "Skip step 3; do not add the new Conﬂ  ict cards."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "setup-cards",
+          "side": "both",
+          "title": "Decks and Imperium Row",
+          "instruction": "Along the edge of the board:",
+          "bullets": [
+            "Intrigue Deck: shuffled, face down.",
+            "Imperium Deck: shuffled, face down; deal five cards face up as the Imperium Row.",
+            "Reserve cards beside it in three stacks: Arrakis Liaison, The Spice Must Flow and Foldspace."
+          ],
+          "components": [
+            "Intrigue cards",
+            "Imperium Deck",
+            "Reserve cards"
+          ],
+          "images": [
+            "imperium-row",
+            "reserve-cards",
+            "decks-leaders"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "Shuffle the Intrigue Deck and place it face down."
+            },
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "From it, deal five cards face up to form an Imperium Row."
+            },
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "place the Reserve cards in three stacks: one for Arrakis Liaison, one for The Spice Must Flow, and one for Foldspace."
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "riseOfIx",
+              "text": "Shuffle the 17 new Intrigue cards and 35 new Imperium cards into their decks before dealing the Imperium Row.",
+              "images": [
+                "ix-components"
+              ],
+              "citations": [
+                {
+                  "source": "riseOfIx",
+                  "page": 3,
+                  "excerpt": "Shuﬄ   e the 35 Imperium cards into the Imperium Deck (before forming the Imperium Row)."
+                }
+              ]
+            },
+            {
+              "expansion": "immortality",
+              "text": "Shuffle in the 30 new Imperium cards (before the Imperium Row) and the 15 new Intrigue cards. Then make the Tleilaxu Row:",
+              "bullets": [
+                "Reclaimed Forces to the left of the Bene Tleilax board.",
+                "Shuffle the Tleilaxu Deck face down above the Imperium Deck and deal two cards face up next to Reclaimed Forces."
+              ],
+              "images": [
+                "immortality-components"
+              ],
+              "citations": [
+                {
+                  "source": "immortality",
+                  "page": 4,
+                  "excerpt": "Place the Reclaimed Forces card to the left of the Bene Tleilax board."
+                },
+                {
+                  "source": "immortality",
+                  "page": 4,
+                  "excerpt": "deal two cards face up next to Reclaimed Forces."
+                },
+                {
+                  "source": "immortality",
+                  "page": 5,
+                  "excerpt": "Shuﬄ   e the 15 Intrigue cards into the Intrigue Deck."
+                }
+              ]
+            },
+            {
+              "expansion": "bloodlines",
+              "text": "Shuffle in the new Imperium and Intrigue cards, leaving out those for Uprising only:",
+              "bullets": [
+                "The CHOAM Module cards.",
+                "Intrigue: False Orders, Grasp Arrakis, Insider Information, Ripples in the Sand, Sleeper Unit.",
+                "Imperium: Arrakis Observer, Eliminate Allies, Holy War, Intelligence Training (2), Pointing the Way, Shrouded Counsel.",
+                "The Tech Module (Bloodlines pages 6–7) is optional."
+              ],
+              "images": [
+                "commanders"
+              ],
+              "citations": [
+                {
+                  "source": "bloodlines",
+                  "page": 3,
+                  "excerpt": "In step 4, exclude all the CHOAM Module components, as well as:"
+                },
+                {
+                  "source": "bloodlines",
+                  "page": 3,
+                  "excerpt": "Holy War, Intelligence Training (2), Pointing the Way, Shrouded Counsel"
+                },
+                {
+                  "source": "bloodlines",
+                  "page": 6,
+                  "excerpt": "BLOODLINES comes with a mini-expansion called the Tech Module"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "setup-leaders",
+          "side": "both",
+          "title": "Leaders",
+          "instruction": "Each player takes a Leader (chosen or at random) and places it in front of them.",
+          "bullets": [
+            "First game: pick Leaders with one icon after their names: Paul Atreides, Glossu “The Beast” Rabban, Earl Memnon Thorvald or Count Ilban Richese."
+          ],
+          "components": [
+            "Leaders"
+          ],
+          "images": [
+            "decks-leaders"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "Each player takes a Leader and places it in front of them. (You may choose or select at random.)"
+            },
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "For your first game, it is recommended that each player chooses a Leader with just one icon"
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "riseOfIx",
+              "text": "The 6 new Leaders join the others; any mix is fine.",
+              "images": [
+                "ix-components"
+              ],
+              "citations": [
+                {
+                  "source": "riseOfIx",
+                  "page": 3,
+                  "excerpt": "Add the 6 new Leaders to those you already have."
+                }
+              ]
+            },
+            {
+              "expansion": "bloodlines",
+              "text": "The new Leaders join the others, except Count Hasimir Fenring, Gaius Helen Mohiam and Liet Kynes (Uprising only).",
+              "images": [
+                "bloodlines-leaders"
+              ],
+              "citations": [
+                {
+                  "source": "bloodlines",
+                  "page": 3,
+                  "excerpt": "3 Leader cards: Count Hasimir Fenring,"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "setup-players",
+          "side": "both",
+          "title": "Your colour",
+          "instruction": "Each player chooses a colour and takes its components:",
+          "bullets": [
+            "Two Agents on your Leader; your third Agent (Swordmaster) next to the board.",
+            "Score disc on 1 with 4 players, on 0 with 3. Combat marker on 0 of the Combat track.",
+            "One cube on the bottom space of each of the four Influence tracks.",
+            "Three of your 12 troop cubes in the garrison closest to you; everything else in your supply, in view.",
+            "1 water in your supply. Solari, spice and water make the bank."
+          ],
+          "components": [
+            "Agents",
+            "Discs",
+            "Combat marker",
+            "Cubes",
+            "Water"
+          ],
+          "images": [
+            "player-components",
+            "score-track",
+            "player-supply"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 5,
+              "excerpt": "Place two of your Agents on your Leader. Place your third Agent (your Swordmaster) next to the game board."
+            },
+            {
+              "source": "rulebook",
+              "page": 5,
+              "excerpt": "Place one of your two discs on the Score track. In a 4-player game, place it on the 1 space. Otherwise, place it on the 0 space."
+            },
+            {
+              "source": "rulebook",
+              "page": 5,
+              "excerpt": "Place four cubes, one each, on the bottom spaces of the Influence tracks of the four Factions."
+            },
+            {
+              "source": "rulebook",
+              "page": 5,
+              "excerpt": "The other 12 cubes represent your troops."
+            },
+            {
+              "source": "rulebook",
+              "page": 5,
+              "excerpt": "Each player takes 1 water and places it in their supply."
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "riseOfIx",
+              "text": "Also take your two dreadnoughts (into your supply) and a disc as your Freighter, on the bottom space of the Shipping track.",
+              "images": [
+                "shipping-track"
+              ],
+              "citations": [
+                {
+                  "source": "riseOfIx",
+                  "page": 3,
+                  "excerpt": "Place the two dreadnoughts in your supply"
+                },
+                {
+                  "source": "riseOfIx",
+                  "page": 3,
+                  "excerpt": "Place the disc as a Freighter on the bottom space of the Shipping track."
+                }
+              ]
+            },
+            {
+              "expansion": "immortality",
+              "text": "Also place your two new discs on the leftmost spaces of the Tleilaxu track and the research track, and a Family Atomics token in your supply.",
+              "images": [
+                "immortality-player",
+                "tleilaxu-track"
+              ],
+              "citations": [
+                {
+                  "source": "immortality",
+                  "page": 4,
+                  "excerpt": "places one as a Tleilaxu token"
+                },
+                {
+                  "source": "immortality",
+                  "page": 5,
+                  "excerpt": "Each player takes a Family Atomics token and places it in their supply."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "setup-decks",
+          "side": "both",
+          "title": "Starting decks and first player",
+          "instruction": "Each player shuffles their 10-card starting deck and places it face down to the left of their Leader.",
+          "bullets": [
+            "Choose a first player at random: they take the First Player marker."
+          ],
+          "components": [
+            "Starting decks",
+            "First Player marker"
+          ],
+          "images": [
+            "player-supply",
+            "mentat-alliances"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 5,
+              "excerpt": "starting deck, shuffles it, and places it face down in their supply to the left of their Leader."
+            },
+            {
+              "source": "rulebook",
+              "page": 5,
+              "excerpt": "Determine a first player randomly. They take the First Player marker."
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "immortality",
+              "text": "Before shuffling, swap the two Dune, the Desert Planet cards in your starting deck for two Experimentation cards.",
+              "images": [
+                "immortality-player"
+              ],
+              "citations": [
+                {
+                  "source": "immortality",
+                  "page": 5,
+                  "excerpt": "Each player removes the two copies of Dune, the Desert Planet from their starting deck"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "round-start",
+      "part": "round",
+      "title": "Round start",
+      "steps": [
+        {
+          "id": "round-start",
+          "side": "both",
+          "title": "Conflict and hands",
+          "instruction": "Reveal the top Conflict card and place it face up beside the Conflict Deck. Then each player draws five cards from their own deck.",
+          "bullets": [
+            "A Conflict for a space you control: you may deploy one troop from your supply to it.",
+            "Your deck is empty when you need to draw? Shuffle your discard pile into a new deck."
+          ],
+          "components": [
+            "Conflict Deck",
+            "Your deck"
+          ],
+          "images": [
+            "conflict-reveal",
+            "round-structure"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 8,
+              "excerpt": "Each round begins by revealing a new Conflict card from the top of the Conflict Deck."
+            },
+            {
+              "source": "rulebook",
+              "page": 8,
+              "excerpt": "Next, each player draws five cards from their own deck, forming their hand for the round."
+            },
+            {
+              "source": "rulebook",
+              "page": 10,
+              "excerpt": "When a Conflict card is revealed for a space that you already control, you receive a defensive bonus: you may deploy one troop from your supply to the Conflict."
+            },
+            {
+              "source": "rulebook",
+              "page": 6,
+              "excerpt": "any time you’re unable to draw a card because your deck is empty, you reshuffle your discard pile to form a new deck"
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "riseOfIx",
+              "text": "Turn face up any Tech tiles you flipped last round to use their once-per-round ability.",
+              "images": [
+                "tech-tiles"
+              ],
+              "citations": [
+                {
+                  "source": "riseOfIx",
+                  "page": 4,
+                  "excerpt": "At the start of the next round (during Phase 1: Round Start), return it to its face-up side to show you can use it again."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "turns",
+      "part": "round",
+      "title": "Player turns",
+      "loop": {
+        "endLabel": "Everyone has revealed",
+        "note": "Clockwise from the First Player, one turn each. Once you’ve taken your Reveal turn, you’re skipped until everyone has revealed.",
+        "citations": [
+          {
+            "source": "rulebook",
+            "page": 8,
+            "excerpt": "Starting with the player who has the First Player marker and continuing clockwise, players take one turn at a time."
+          },
+          {
+            "source": "rulebook",
+            "page": 8,
+            "excerpt": "Once you’ve taken a Reveal turn, your turns are skipped for the rest of the phase, while other players finish taking their turns."
+          }
+        ]
+      },
+      "steps": [
+        {
+          "id": "turn",
+          "side": "player",
+          "title": "Agent turn or Reveal turn",
+          "instruction": "Take an Agent turn while you have Agents, or a Reveal turn:",
+          "bullets": [
+            "Agent turn: play 1 card and send an Agent from your Leader to an unoccupied board space showing one of the card’s Agent icons, paying the space’s cost.",
+            "Gain the space’s effects and the card’s Agent box, in any order. A Faction space also gives you 1 Influence there.",
+            "On a Combat space, you may deploy the troops you recruited this turn plus up to 2 from your garrison.",
+            "Reveal turn: reveal the rest of your hand and gain the Reveal boxes. Spend Persuasion on cards from the Imperium Row or the Reserve; they go to your discard pile.",
+            "Set your strength: 2 per troop in the Conflict plus 1 per sword (0 without a troop there). Then put all your played cards in your discard pile.",
+            "Plot Intrigue cards may be played any time during your own turns."
+          ],
+          "components": [
+            "Cards",
+            "Agents",
+            "Troops",
+            "Combat marker"
+          ],
+          "images": [
+            "card-anatomy",
+            "agent-icons",
+            "conflict-area",
+            "reveal",
+            "harvest"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 9,
+              "excerpt": "In an Agent turn, you play one card from your hand face up in front of you, using it to send an Agent from your Leader to an unoccupied space on the game board."
+            },
+            {
+              "source": "rulebook",
+              "page": 9,
+              "excerpt": "You must pay any costs or meet any requirements of the board space you choose."
+            },
+            {
+              "source": "rulebook",
+              "page": 9,
+              "excerpt": "If the board space belongs to one of the Factions, you also move your cube one space up on its Influence track."
+            },
+            {
+              "source": "rulebook",
+              "page": 10,
+              "excerpt": "You may deploy any or all troops recruited during your current turn (from both the board space and the card you played), plus up to two more troops from your garrison."
+            },
+            {
+              "source": "rulebook",
+              "page": 11,
+              "excerpt": "Reveal all cards remaining in your hand, placing them face up in play in front of you."
+            },
+            {
+              "source": "rulebook",
+              "page": 11,
+              "excerpt": "You may acquire any of the five cards in the Imperium Row, or Arrakis Liaison or The Spice Must Flow from the Reserve."
+            },
+            {
+              "source": "rulebook",
+              "page": 11,
+              "excerpt": "Each troop you have in the Conflict is worth 2 strength."
+            },
+            {
+              "source": "rulebook",
+              "page": 11,
+              "excerpt": "You must have at least one troop in the Conflict to have any strength."
+            },
+            {
+              "source": "rulebook",
+              "page": 11,
+              "excerpt": "Remove all the cards from in front of you (from your Agent and Reveal turns) and put them in your discard pile."
+            },
+            {
+              "source": "rulebook",
+              "page": 8,
+              "excerpt": "You may play any Plot Intrigue cards you have during this phase, at any point during one of your own Agent or Reveal turns."
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "riseOfIx",
+              "text": "Rise of Ix icons:",
+              "bullets": [
+                "Dreadnought: commission one into your garrison (max 2). In the Conflict it’s worth 3 strength, even with no troops.",
+                "Freighter: advance one space on the Shipping track, or recall it to the bottom and collect the rewards of its space and each one below.",
+                "Acquire Tech: buy a face-up Tech tile for its spice cost (minus discounts and Negotiators), then turn the next tile up."
+              ],
+              "images": [
+                "shipping-track",
+                "tech-tiles"
+              ],
+              "citations": [
+                {
+                  "source": "riseOfIx",
+                  "page": 6,
+                  "excerpt": "Each dreadnought in a Conﬂ  ict is worth 3 strength."
+                },
+                {
+                  "source": "riseOfIx",
+                  "page": 5,
+                  "excerpt": "Advance your Freighter one space up on the Shipping track."
+                },
+                {
+                  "source": "riseOfIx",
+                  "page": 5,
+                  "excerpt": "you collect all the shipping rewards associated with your Freighter’s current space and each space below it."
+                },
+                {
+                  "source": "riseOfIx",
+                  "page": 4,
+                  "excerpt": "To acquire a Tech tile, choose a face-up tile on top of any of the three stacks, pay the cost in spice shown"
+                }
+              ]
+            },
+            {
+              "expansion": "immortality",
+              "text": "Immortality:",
+              "bullets": [
+                "Graft: a Graft card is played together with exactly one other card; use either card’s Agent icon and gain both cards’ effects.",
+                "Specimens go to the Axolotl tanks; spend them on Tleilaxu Row cards on your Reveal turn.",
+                "Research and Tleilaxu icons advance your tokens on the Bene Tleilax board; gain each bonus as you reach it.",
+                "Family Atomics (once per game, on your turn): replace the whole Imperium Row."
+              ],
+              "images": [
+                "tleilax-board",
+                "tleilaxu-track"
+              ],
+              "citations": [
+                {
+                  "source": "immortality",
+                  "page": 10,
+                  "excerpt": "You must play two cards (and only two) on that turn."
+                },
+                {
+                  "source": "immortality",
+                  "page": 8,
+                  "excerpt": "However, Tleilaxu cards come from the Tleilaxu Row and cost specimens to acquire rather than persuasion."
+                },
+                {
+                  "source": "immortality",
+                  "page": 7,
+                  "excerpt": "Whenever your Tleilaxu token reaches a space with a bonus, gain it immediately."
+                },
+                {
+                  "source": "immortality",
+                  "page": 12,
+                  "excerpt": "Once per game, you may spend yours during your turn"
+                }
+              ]
+            },
+            {
+              "expansion": "bloodlines",
+              "text": "Sardaukar Commanders:",
+              "bullets": [
+                "On a space with a Commander, you may pay 2 Solari to acquire and recruit it, and take one of the face-up Commander Skills.",
+                "Once per turn, you may pay 2 Solari to recruit a Commander from your supply (no new Skill).",
+                "A Commander is a troop worth 2 strength. While one is in the Conflict, all your Skills work, once each per round."
+              ],
+              "images": [
+                "commanders"
+              ],
+              "citations": [
+                {
+                  "source": "bloodlines",
+                  "page": 4,
+                  "excerpt": "you may spend 2 Solari to acquire and then immediately recruit that Sardaukar Commander."
+                },
+                {
+                  "source": "bloodlines",
+                  "page": 4,
+                  "excerpt": "Whenever you acquire a Sardaukar Commander, you gain a Sardaukar Commander Skill."
+                },
+                {
+                  "source": "bloodlines",
+                  "page": 4,
+                  "excerpt": "It is a “troop” that’s worth 2 strength in the Conﬂ  ict."
+                },
+                {
+                  "source": "bloodlines",
+                  "page": 4,
+                  "excerpt": "Each one works only once each round, even if you have more than one Sardaukar Commander in the Conﬂ  ict."
+                }
+              ]
+            }
+          ],
+          "reminders": [
+            {
+              "text": "Imperium Row back to five cards from the Imperium Deck.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 11,
+                  "excerpt": "The Imperium Row must always have five cards; whenever it does not, replace missing cards from the top of the Imperium Deck."
+                }
+              ]
+            },
+            {
+              "text": "Your new cards went to your discard pile, not your hand.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 11,
+                  "excerpt": "When you acquire a card, place it in your discard pile"
+                }
+              ]
+            },
+            {
+              "expansion": "immortality",
+              "text": "Tleilaxu Row back to two cards plus Reclaimed Forces.",
+              "citations": [
+                {
+                  "source": "immortality",
+                  "page": 9,
+                  "excerpt": "The Tleilaxu Row must always have two cards plus Reclaimed Forces."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "combat",
+      "part": "round",
+      "title": "Combat",
+      "steps": [
+        {
+          "id": "combat-intrigue",
+          "side": "both",
+          "title": "Combat Intrigue cards",
+          "instruction": "Clockwise from the First Player, each player with a troop in the Conflict plays Combat Intrigue cards or passes.",
+          "bullets": [
+            "Passing doesn’t stop you playing later; resolve the Combat once everyone involved passes in a row.",
+            "Adjust Combat markers whenever strength changes. Keep “when you win a Conflict” cards for after you’ve won."
+          ],
+          "components": [
+            "Intrigue cards",
+            "Combat markers"
+          ],
+          "images": [
+            "combat-intrigue"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 12,
+              "excerpt": "each player with at least one troop in the Conflict may play any number of Combat Intrigue cards, or may pass."
+            },
+            {
+              "source": "rulebook",
+              "page": 12,
+              "excerpt": "Once all players involved in Combat pass consecutively, you then resolve the Combat."
+            },
+            {
+              "source": "rulebook",
+              "page": 12,
+              "excerpt": "wait until you’ve won, then play them (before moving on to the next phase)."
+            }
+          ]
+        },
+        {
+          "id": "combat-resolve",
+          "side": "both",
+          "title": "Rewards",
+          "instruction": "Give the Conflict card’s rewards by strength:",
+          "bullets": [
+            "Highest strength wins the top reward; second highest the second; third highest the third (4 players only). 0 strength gets nothing.",
+            "Tied for first: no one wins; each tied player gets the second reward. Tied for second: each gets the third.",
+            "A Conflict for a space: the winner places a Control marker on the flag below it.",
+            "Then everyone returns their troops from the Conflict to their supply and resets their Combat marker to 0."
+          ],
+          "components": [
+            "Conflict card",
+            "Control markers",
+            "Combat markers"
+          ],
+          "images": [
+            "conflict-rewards",
+            "conflict-area"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 12,
+              "excerpt": "The player with the highest strength wins the Conflict and gains the top reward on the Conflict card."
+            },
+            {
+              "source": "rulebook",
+              "page": 12,
+              "excerpt": "A player with 0 strength does not receive any reward."
+            },
+            {
+              "source": "rulebook",
+              "page": 12,
+              "excerpt": "When players tie for first place, no one wins the Conflict. The tied players each receive the second reward."
+            },
+            {
+              "source": "rulebook",
+              "page": 12,
+              "excerpt": "When players tie for second place, they each receive the third reward."
+            },
+            {
+              "source": "rulebook",
+              "page": 10,
+              "excerpt": "take a Control marker from your supply and place it on the flag below the appropriate board space."
+            },
+            {
+              "source": "rulebook",
+              "page": 12,
+              "excerpt": "each player takes their troops from the Conflict and puts them in their supply (not their garrison). Reset all Combat markers to 0 on the Combat track."
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "riseOfIx",
+              "text": "Dreadnoughts:",
+              "bullets": [
+                "Won with a dreadnought? Place it on the flag of Arrakeen, Carthag or Imperial Basin (one without a dreadnought); it controls that space until the end of the next Combat.",
+                "Dreadnoughts in the Conflict go back to your garrison, not your supply.",
+                "A dreadnought placed last round now returns to its garrison."
+              ],
+              "images": [
+                "dreadnought-control"
+              ],
+              "citations": [
+                {
+                  "source": "riseOfIx",
+                  "page": 6,
+                  "excerpt": "When you win a Conﬂ  ict in which you had at least one dreadnought, you must choose one of those spaces where there is not already a dreadnought."
+                },
+                {
+                  "source": "riseOfIx",
+                  "page": 6,
+                  "excerpt": "When Combat resolves, your dreadnoughts in the Conﬂ  ict don’t return to your supply."
+                },
+                {
+                  "source": "riseOfIx",
+                  "page": 6,
+                  "excerpt": "At that time, your dreadnought returns to your garrison"
+                }
+              ]
+            },
+            {
+              "expansion": "bloodlines",
+              "text": "Sardaukar Commanders in the Conflict return to your supply like other troops.",
+              "images": [
+                "commanders"
+              ],
+              "citations": [
+                {
+                  "source": "bloodlines",
+                  "page": 4,
+                  "excerpt": "When combat is resolved and rewards have been given, it returns to your supply."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "makers",
+      "part": "round",
+      "title": "Makers",
+      "steps": [
+        {
+          "id": "makers",
+          "side": "both",
+          "title": "Bonus spice",
+          "instruction": "Put 1 spice from the bank on each Maker space without an Agent: The Great Flat, Hagga Basin and Imperial Basin.",
+          "bullets": [
+            "It adds to any bonus spice already there."
+          ],
+          "components": [
+            "Spice"
+          ],
+          "images": [
+            "makers"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 13,
+              "excerpt": "If the space does not have an Agent, place 1 spice from the bank on that space"
+            },
+            {
+              "source": "rulebook",
+              "page": 13,
+              "excerpt": "This spice is added to any bonus spice that may already be there from previous rounds."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "recall",
+      "part": "round",
+      "title": "Recall",
+      "steps": [
+        {
+          "id": "recall",
+          "side": "both",
+          "title": "Game end or next round",
+          "instruction": "Anyone at 10 or more Victory Points, or the Conflict Deck empty? The game ends: play Endgame Intrigue cards, then the most Victory Points wins. Otherwise:",
+          "bullets": [
+            "Return the Mentat to its space in the Landsraad.",
+            "Everyone recalls their Agents to their Leaders.",
+            "Pass the First Player marker clockwise."
+          ],
+          "components": [
+            "Mentat",
+            "Agents",
+            "First Player marker"
+          ],
+          "images": [
+            "endgame",
+            "mentat-alliances"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 13,
+              "excerpt": "If any player is at 10 or more Victory Points on the Score track, or if the Conflict Deck is empty, the Endgame is triggered."
+            },
+            {
+              "source": "rulebook",
+              "page": 13,
+              "excerpt": "Return the Mentat to its designated space in the Landsraad"
+            },
+            {
+              "source": "rulebook",
+              "page": 13,
+              "excerpt": "Players recall their Agents, returning them to their Leaders."
+            },
+            {
+              "source": "rulebook",
+              "page": 13,
+              "excerpt": "Pass the First Player marker clockwise to the next player, then begin a new round with Phase 1."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

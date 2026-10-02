@@ -78,6 +78,33 @@ enum OrdirSpinnerVerbs {
                 "Counting corruption",
                 "Guiding the Fellowship",
             ]
+        case .knarr:
+            [
+                "Recruiting Vikings",
+                "Setting sail",
+                "Trading silver bracelets",
+                "Exploring new lands",
+                "Raising our reputation",
+                "Loading the knarr",
+            ]
+        case .brassBirmingham:
+            [
+                "Building a cotton mill",
+                "Digging the canals",
+                "Laying the rail",
+                "Selling to the merchants",
+                "Taking a loan",
+                "Flipping industry tiles",
+            ]
+        case .duneImperium:
+            [
+                "Sending an Agent",
+                "Revealing the hand",
+                "Gathering spice",
+                "Courting the Emperor",
+                "Deploying troops",
+                "Buying from the Imperium Row",
+            ]
         }
     }
 }

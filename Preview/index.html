@@ -340,6 +340,19 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 .pane .brand h1 { font-size: 26px; font-weight: 700; letter-spacing: -.01em; }
 .brand p { margin: 2px 0 0; color: var(--muted); }
 .group { display: flex; flex-direction: column; gap: 12px; }
+#home-browse { display: flex; flex-direction: column; gap: 32px; }
+#home-browse[hidden], #home-results[hidden], .game-row[hidden], .group .none[hidden] { display: none; }
+.game-row { display: flex; align-items: center; gap: 14px; width: 100%; min-height: 64px; padding: 8px 14px 8px 8px; border-radius: 16px; text-align: left;
+  background: var(--surface); border: 1px solid var(--line); transition: transform .25s cubic-bezier(.3, 1.4, .5, 1); }
+.game-row:not(:disabled):active { transform: scale(.98); transition-duration: .1s; }
+.game-row > span:nth-child(2) { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.game-row strong { font-size: 16px; }
+.game-row .sub { color: var(--muted); font-size: 13px; }
+.game-row .thumb { width: 48px; height: 48px; }
+.game-row:disabled { opacity: .5; }
+.segmented { display: flex; padding: 3px; border-radius: 12px; background: var(--surface); border: 1px solid var(--line); }
+.segmented button { flex: 1; min-height: 36px; border-radius: 9px; font-size: 14px; font-weight: 600; color: var(--muted); }
+.segmented button[aria-checked="true"] { background: var(--surface-2); color: var(--fg); }
 .group h2 { margin: 0; font-size: 13px; font-weight: 600; color: var(--muted); }
 .home .scroll { padding-bottom: calc(112px + env(safe-area-inset-bottom)); }  /* room to scroll past the floating bar */
 /* Home's ambient light (on the whole screen, notch included): the opening's glow settles behind the header and
@@ -500,7 +513,8 @@ html, body { overscroll-behavior-x: none; }
   .scroll.ghost { display: none; }
   .check.on.ticked .box path, .primary.ready, .phase-label b.roll, .tabbar.slide::before, .answer.fresh .chip, .game-list { animation: none; }
   .chat-row, .pill { transition: none; }
-  .game:not(.soon), .option { transition: none; }
+  .game:not(.soon), .option, .game-row { transition: none; }
+  .game-row:not(:disabled):active { transform: none; }
   .tabbar button { transition: none; }
   .intro-orb .mascot, .intro h1, .intro p { animation: fade .3s ease both !important; }
   .intro-line { display: none; }
@@ -582,7 +596,9 @@ function sideName(id, script = state.script) {
   if (id === "both") return t("Both players");
   return ((script && script.sides.find((x) => x.id === id)) || { name: id }).name;
 }
-const otherSide = (id, script = state.script) => script.sides.map((x) => x.id).find((x) => x !== id);
+// Games without fixed sides have one, the player on turn: play (and the phone) passes round the table.
+const takesTurns = (script = state.script) => script.sides.length === 1;
+const otherSide = (id, script = state.script) => script.sides.map((x) => x.id).find((x) => x !== id) ?? id;
 function styleSides(script) {
   const style = document.createElement("style");
   style.textContent = script.sides.map((x) => `.seat.${x.id}, .side-${x.id} { color: ${x.color}; }`).join("\n");
@@ -626,7 +642,7 @@ function localize(base, tr) {
       const z = tr.steps?.[st.id];
       if (!z) continue;
       put(st, z, ["title", "instruction", "bullets", "components"]);
-      (st.additions || []).forEach((a, i) => put(a, z.additions?.[i], ["text", "bullets"]));
+      (st.additions || []).forEach((a, i) => put(a, z.additions?.[i], ["title", "text", "bullets"]));
       (st.reminders || []).forEach((r, i) => { if (z.reminders?.[i]) r.text = z.reminders[i]; });
     }
   }
@@ -645,6 +661,8 @@ const state = {
   tutorial: null,     // the tutorial's open card ({ i }), on first launch or from Account
   screen: "intro",    // "intro" → "home" → "game" (picker, lobby and guide)
   tab: "games",       // Home's tab: games, ask, join or account
+  homeQuery: "",      // Home's game search
+  sort: (() => { try { return localStorage.getItem("ordir-sort") || "recent"; } catch { return "recent"; } })(),  // "name" or "recent"
   script: null,
   chosen: new Set(),
   mode: "table",      // "table" (split screen) or "pass" (pass the phone)
@@ -670,18 +688,20 @@ const cur = () => state.battle || state.session;
 const applies = (s, when) => !when || s.states.has(when.state) === when.is;
 const phaseOf = (s) => s.phases[s.pos.phase];
 const stepOf = (s) => phaseOf(s).steps[s.pos.step];
-const additionsOf = (s) => (stepOf(s).additions || []).filter((a) => s.expansions.has(a.expansion) && applies(s, a.when));
+const additionsOf = (s) => (stepOf(s).additions || []).filter((a) => (!a.expansion || s.expansions.has(a.expansion)) && applies(s, a.when));
 const remindersOf = (s) => (stepOf(s).reminders || []).filter((r) => !r.expansion || s.expansions.has(r.expansion));
-const statesOf = (s) => (state.script.states || []).filter((x) => s.expansions.has(x.expansion));
+const statesOf = (s) => (state.script.states || []).filter((x) => !x.expansion || s.expansions.has(x.expansion));
 const applicableSteps = (s) => phaseOf(s).steps.filter((st) => applies(s, st.when));
-const turnNumber = (s) => (s.pos.pass - 1) * phaseOf(s).steps.length + s.pos.step + 1;
+const turnNumber = (s) => takesTurns() ? s.pos.pass : (s.pos.pass - 1) * phaseOf(s).steps.length + s.pos.step + 1;
 const firstApplicable = (s, phase, after) => phase.steps.findIndex((st, i) => i > after && applies(s, st.when));
 function moveTo(s, next) {
   const previousSide = stepOf(s).side;
+  // Without fixed sides, going round the loop again (or into a new round) is another player's turn.
+  const nextPlayer = takesTurns() && (next.pass > s.pos.pass || next.round > s.pos.round);
   s.history.push({ ...s.pos }); s.pos = next; s.startedAt = Date.now();
   // Steps for both players need no handoff; a switch to the other single side does.
   const side = stepOf(s).side;
-  s.handoffTo = s.passesPhone && side !== "both" && side !== previousSide ? side : null;
+  s.handoffTo = s.passesPhone && side !== "both" && (side !== previousSide || nextPlayer) ? side : null;
 }
 // Next phase with a step that applies; after the round's last phase, the next round's first.
 function nextPhase(s) {
@@ -741,11 +761,13 @@ const coverOf = (g) => g && g.cover && imageOf(g.cover, scripts[g.script]);
 const farSeat = () => otherSide(state.nearSeat);
 const fmt = (ms) => { const t = Math.max(0, Math.floor(ms / 1000)); return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, "0")}`; };
 // Inside a loop, number each side's turns ("Action turn 2"); battles show the round in the bar instead.
-function stepTitle(s) { const st = stepOf(s); return phaseOf(s).loop && !s.isBattle ? `${st.title} ${s.pos.pass}` : st.title; }
+function stepTitle(s) { const st = stepOf(s); return phaseOf(s).loop && !s.isBattle && !takesTurns() ? `${st.title} ${s.pos.pass}` : st.title; }
 function stepKey(s) { return `${s.pos.round}-${s.pos.phase}-${s.pos.step}-${s.pos.pass}-${s.finished}`; }
 function progressText(s) {
   const list = applicableSteps(s);
-  const inPhase = phaseOf(s).loop ? t("Turn {0}", turnNumber(s)) : t("{0} of {1}", list.findIndex((st) => st === stepOf(s)) + 1, list.length);
+  const n = t("{0} of {1}", list.findIndex((st) => st === stepOf(s)) + 1, list.length);
+  // A turn of several steps (games without fixed sides) also says which step of the turn: "Turn 3 · 2 of 3".
+  const inPhase = !phaseOf(s).loop ? n : takesTurns() && list.length > 1 ? `${t("Turn {0}", turnNumber(s))} · ${n}` : t("Turn {0}", turnNumber(s));
   if (s.isBattle) { const n = t("{0} of {1}", list.findIndex((st) => st === stepOf(s)) + 1, list.length); return phaseOf(s).loop ? `${t("Round {0}", s.pos.pass)} · ${n}` : n; }
   return phaseOf(s).part === "setup" ? inPhase : `${t("Round {0}", s.pos.round)} · ${inPhase}`;
 }
@@ -798,7 +820,7 @@ function stepCard(s, seat, animate) {
       <div>${context ? `<div class="context">${esc(context)}</div>` : ""}<h2 class="title" tabindex="-1">${esc(stepTitle(s))}</h2></div></div>
     <div><p class="lead">${esc(st.instruction)}</p>${bullets(st.bullets)}
       ${st.opensBattle && state.script.battle && !s.isBattle ? `<button class="textbtn" data-act="battle">${t("Start a battle")}</button>` : ""}</div>
-    ${additionsOf(s).map((a) => section(expansionTitle(a.expansion),
+    ${additionsOf(s).map((a) => section(a.title || expansionTitle(a.expansion),
       `<p>${esc(a.text)}</p>${bullets(a.bullets)}${pictures(a.images, seat)}${citations(a.citations)}${markButton(a)}`)).join("")}
     ${section(t("You’ll need"), `${pictures(st.images, seat)}<div class="comps">${esc(st.components.join(", "))}</div>`)}
     ${section(t("Source"), citations(st.citations))}
@@ -857,7 +879,9 @@ function half(seat, isFar, animate) {
        <div class="actions">${loop ? `<button class="textbtn" data-act="end-loop" data-seat="${seat}">${esc(loop.endLabel)}</button>` : ""}
          <button class="primary" data-act="done" data-seat="${seat}">${t("Done")}</button></div>`
     : waiting(s, seat);
-  return `<section class="half ${isFar ? "far" : "near"}" aria-label="${esc(t("{0} side", sideName(seat)))}">
+  // Without fixed sides both halves show the player on turn, so they're named by where they face.
+  const name = takesTurns() ? (isFar ? t("Across the table") : t("This side of the table")) : t("{0} side", sideName(seat));
+  return `<section class="half ${isFar ? "far" : "near"}" aria-label="${esc(name)}">
     <div class="seat ${seat}"><span class="dot"></span>${sideName(seat)}</div>${body}${overlayFor(seat, animate || !!state.pending || !!state.enlarged)}${online.ask.open && online.ask.seat === seat ? askSheet() : ""}</section>`;
 }
 
@@ -871,7 +895,7 @@ function bar(s) {
     ${s.isBattle ? `<button class="iconbtn" data-act="leave-battle" aria-label="${t("Leave battle")}">${ICONS.close}</button>` : `<button class="iconbtn" data-act="menu" aria-label="${t("Game menu")}">${ICONS.flag}</button>`}
     <div class="labels"><div class="phase-label mirror" aria-hidden="true">${label}</div><div class="phase-label">${label}</div></div>
     <button class="iconbtn" data-act="back" aria-label="${t("Previous step")}" ${canBack ? "" : "disabled"}>${ICONS.back}</button>
-    <button class="iconbtn" data-act="swap" aria-label="${t("Swap seats")}">${ICONS.swap}</button></div>`;
+    ${takesTurns() ? "" : `<button class="iconbtn" data-act="swap" aria-label="${t("Swap seats")}">${ICONS.swap}</button>`}</div>`;
 }
 
 function passBar(s) {
@@ -887,19 +911,26 @@ function handoff(s, animate) {
   const side = s.handoffTo;
   return `<section class="half" aria-label="${t("Pass the phone")}">
     <div class="handoff${animate ? " card enter" : ""}">${mascot("thinking")}
-      <h2 tabindex="-1">${t("Pass the phone to the {0}", `<span class="side-${side}">${esc(sideName(side))}</span>`)}</h2>
+      <h2 tabindex="-1">${takesTurns() ? t("Pass the phone to the player whose turn it is") : t("Pass the phone to the {0}", `<span class="side-${side}">${esc(sideName(side))}</span>`)}</h2>
       <p>${t("Next: {0}", esc(stepTitle(s)))}</p></div>
-    <div class="handoff-actions"><button class="primary" data-act="handoff-ready">${t("I’m the {0}", esc(sideName(side)))}</button></div></section>`;
+    <div class="handoff-actions"><button class="primary" data-act="handoff-ready">${takesTurns() ? t("I have the phone") : t("I’m the {0}", esc(sideName(side)))}</button></div></section>`;
 }
 
 // Coming-soon games show on Home so players see what's next.
+// In the order they were added (Home's "Most recently added" reverses it); `fav`: Ordi's Current Favorites.
 const GAMES = [
-  { id: "dune", script: "duneWarForArrakis", title: "Dune: War for Arrakis", detail: "2 players · turn guide and rules questions", cover: "cover",
+  { id: "dune", script: "duneWarForArrakis", title: "Dune: War for Arrakis", detail: "2 players · turn guide and rules questions", cover: "cover", fav: true,
     askExample: "Can a Legion move and leave a Leader behind?" },
-  { id: "starWarsRebellion", script: "starWarsRebellion", title: "Star Wars: Rebellion", detail: "2 players · turn guide and rules questions", cover: "cover",
+  { id: "starWarsRebellion", script: "starWarsRebellion", title: "Star Wars: Rebellion", detail: "2 players · turn guide and rules questions", cover: "cover", fav: true,
     askExample: "Can the Rebels retreat to the Rebel Base space?" },
-  { id: "warOfTheRing2E", script: "warOfTheRing2E", title: "War of the Ring (2nd Edition)", detail: "2 players · turn guide and rules questions", cover: "cover",
+  { id: "warOfTheRing2E", script: "warOfTheRing2E", title: "War of the Ring (2nd Edition)", detail: "2 players · turn guide and rules questions", cover: "cover", fav: true,
     askExample: "Can the Fellowship move while it is Revealed?" },
+  { id: "knarr", script: "knarr", title: "Knarr", detail: "2–4 players · turn guide and rules questions", cover: "cover",
+    askExample: "Can I trade before I recruit?" },
+  { id: "brassBirmingham", script: "brassBirmingham", title: "Brass: Birmingham", detail: "2–4 players · turn guide and rules questions", cover: "cover",
+    askExample: "Can I build on a location that isn’t in my network?" },
+  { id: "duneImperium", script: "duneImperium", title: "Dune: Imperium", detail: "3–4 players · turn guide and rules questions", cover: "cover",
+    askExample: "Can I send an Agent to a space another player is on?" },
 ];
 // Games with a turn guide and rules (not "Coming soon"), and the one a table or question is about.
 const PLAYABLE = GAMES.filter((g) => !g.soon);
@@ -974,21 +1005,44 @@ let phraseIndex = (() => {
   return next;
 })();
 
+// Home: the search box, then (with it empty) Ordi's Current Favorites and every game sorted A–Z or by most
+// recently added; typing hides those and lists only the matches (filterHome, without redrawing the page).
 function gamesPage() {
-  const main = GAMES.filter((g) => !g.soon), soon = GAMES.filter((g) => g.soon);
   const cover = (g) => coverOf(g);
   const build = state.buildHome ? " build" : "";
+  const query = norm(state.homeQuery);
+  const card = (g) => `<button class="game" data-act="game-${g.id}" ${scripts[g.script] ? "" : "disabled"}>
+        <span class="art">${cover(g) ? `<img src="${imgUrl(g.cover, g.script)}" alt="">` : ""}</span>
+        <span class="meta"><div><strong>${esc(g.title)}</strong><span>${esc(t(g.detail))}</span>
+          ${cover(g) ? `<span class="src">${t("Cover art: {0}", esc(imgLabel(cover(g), scripts[g.script])))}</span>` : ""}</div>${CHEVRON}</span></button>`;
+  const row = (g, hidden) => `<button class="game-row" data-act="game-${g.id}" data-title="${esc(norm(g.title))}" ${scripts[g.script] ? "" : "disabled"} ${hidden ? "hidden" : ""}>${thumb(g)}
+        <span><strong>${esc(g.title)}</strong><span class="sub">${esc(t(g.detail))}</span></span>${CHEVRON}</button>`;
+  const sorted = state.sort === "name" ? [...GAMES].sort((a, b) => a.title.localeCompare(b.title)) : [...GAMES].reverse();
+  const sortButton = (id, label) => `<button role="radio" aria-checked="${state.sort === id}" data-act="sort-${id}">${t(label)}</button>`;
   return `<div class="brand${build}"><button class="orb-btn" data-act="orb-ask" aria-label="${t("Ask Ordir a rules question")}">${mascot("idle")}</button>
       <div><h1 tabindex="-1">Ordir</h1><button class="ask-link" data-act="orb-ask">${TAB_ICONS.ask}${t("Ask me a rules question")}</button></div></div>
     <button class="bubble${build}" data-act="next-phrase" aria-label="${esc(t("{0} (tap for another)", t(PHRASES[phraseIndex])))}">${esc(t(PHRASES[phraseIndex]))}</button>
-    <div class="group"><h2>${t("Choose a game")}</h2>
-      ${main.map((g) => `<button class="game" data-act="game-${g.id}" ${scripts[g.script] ? "" : "disabled"}>
-        <span class="art">${cover(g) ? `<img src="${imgUrl(g.cover, g.script)}" alt="">` : ""}</span>
-        <span class="meta"><div><strong>${esc(g.title)}</strong><span>${esc(t(g.detail))}</span>
-          ${cover(g) ? `<span class="src">${t("Cover art: {0}", esc(imgLabel(cover(g), scripts[g.script])))}</span>` : ""}</div>${CHEVRON}</span></button>`).join("")}
-      <div class="soon-grid">${soon.map((g) => `<div class="game soon"><span class="art">${mascot("")}<span class="badge">${t("Coming soon")}</span></span>
-        <span class="meta"><div><strong>${esc(g.title)}</strong></div></span></div>`).join("")}</div>
-    </div>`;
+    <div class="field home-search"><label for="home-search" class="sr-only">${t("Search games")}</label>
+      <div class="search-box">${LENS}<input id="home-search" type="search" autocomplete="off" spellcheck="false" enterkeyhint="search"
+        placeholder="${t("Search games")}" value="${esc(state.homeQuery)}" aria-controls="home-results"></div></div>
+    <div id="home-results" class="group" ${query ? "" : "hidden"}><h2>${t("Games")}</h2>
+      ${GAMES.map((g) => row(g, !norm(g.title).includes(query))).join("")}
+      <p class="hint none" ${GAMES.some((g) => norm(g.title).includes(query)) ? "hidden" : ""}>${t("No games match.")}</p></div>
+    <div id="home-browse" ${query ? "hidden" : ""}>
+      <div class="group"><h2>${t("Ordi’s Current Favorites")}</h2>${GAMES.filter((g) => g.fav).map(card).join("")}</div>
+      <div class="group"><h2>${t("All games")}</h2>
+        <div class="segmented" role="radiogroup" aria-label="${t("Sort games")}">${sortButton("name", "A–Z")}${sortButton("recent", "Most recently added")}</div>
+        ${sorted.map((g) => row(g, false)).join("")}</div></div>`;
+}
+// Typing in Home's search: show only the matching games, keeping focus in the box.
+function filterHome(value) {
+  state.homeQuery = value;
+  const query = norm(value), results = $("#home-results"), browse = $("#home-browse");
+  if (!results || !browse) return;
+  results.hidden = !query; browse.hidden = !!query;
+  let any = false;
+  for (const el of results.querySelectorAll(".game-row")) { el.hidden = !el.dataset.title.includes(query); any ||= !el.hidden; }
+  results.querySelector(".none").hidden = any;
 }
 
 // From Home, a question isn't about any game yet: find the game in the search bar (and pick the expansions
@@ -1095,9 +1149,9 @@ const TOUR = [
   { art: () => mascot("speaking"), title: "Welcome to Ordir",
     text: "I walk you through every turn, step by step, and answer rules questions with the page they come from." },
   { art: () => `<span class="tour-icon">${TAB_ICONS.games}</span>`, title: "Pick a game",
-    text: "Choose a game, then how you’re playing and which expansions are on the table." },
-  { art: () => `<span class="tour-phone" aria-hidden="true"><span class="far">${t("Your turn")}</span><span>${t("Waiting…")}</span></span>`, title: "One phone, two players",
-    text: "On the table, the screen splits: the top half faces the player across from you. You can also pass the phone, or each use your own." },
+    text: "Search for a game, or start from Ordi’s favorites. Then choose how you’re playing and which expansions are on the table." },
+  { art: () => `<span class="tour-phone" aria-hidden="true"><span class="far">${t("Your turn")}</span><span>${t("Waiting…")}</span></span>`, title: "One phone at the table",
+    text: "With two players the screen can split, the top half facing the player across from you. Or pass the phone to whoever’s turn it is, or each use your own." },
   { art: () => `<span class="tour-step" aria-hidden="true"><i></i><i></i><i></i><b>${t("Done")}</b></span>`, title: "Follow each step",
     text: "Each step says who acts and what to do, with pictures and the rulebook page. Tap Done to move on; the arrow goes back a step." },
   { art: () => `<span class="tour-checks" aria-hidden="true">${"<span></span>".repeat(3)}</span>`, title: "Before you pass the turn",
@@ -1142,19 +1196,20 @@ function picker() {
     <button class="textbtn" style="align-self:flex-start;margin:-16px 0 -12px" data-act="home">‹ ${t("Games")}</button>
     <div class="head">${mascot("idle")}<h1 tabindex="-1">${t("How are you playing?")}</h1></div>
     <div role="radiogroup" aria-label="${t("How are you playing?")}" style="display:flex;flex-direction:column;gap:12px">
-      ${[["table", "One phone on the table", "Split screen: the top half faces the player across the table."],
+      ${[["table", "One phone on the table", takesTurns() ? "Split screen for two players: the top half faces the player across the table." : "Split screen: the top half faces the player across the table."],
          ["pass", "Pass the phone", "Full screen: hand the phone to whoever acts next."],
-         ["own", "Each on our own phone", "Sign in, start a table and share its code; each phone shows its own side."]].map(([id, title, detail]) =>
+         // Own-phone tables have a seat per side, so games without fixed sides are one phone only for now.
+         ...(takesTurns() ? [] : [["own", "Each on our own phone", "Sign in, start a table and share its code; each phone shows its own side."]])].map(([id, title, detail]) =>
         `<button class="option" role="radio" aria-checked="${state.mode === id}" data-mode="${id}">
           <div><strong>${t(title)}</strong><span>${t(detail)}</span></div><span class="radio" aria-hidden="true"></span></button>`).join("")}
     </div>
-    <h1>${t("Which expansions are you playing with?")}</h1>
+    ${state.script.expansions.length ? `<h1>${t("Which expansions are you playing with?")}</h1>
     <div style="display:flex;flex-direction:column;gap:12px">
       ${state.script.expansions.map((e) => `<label class="toggle" for="exp-${e.id}">
         <div><strong>${esc(e.title)}</strong><span>${esc(e.summary)}</span></div>
         <input type="checkbox" id="exp-${e.id}" data-exp="${e.id}" ${state.chosen.has(e.id) ? "checked" : ""}><span class="switch" aria-hidden="true"></span></label>`).join("")}
     </div>
-    <p class="hint">${t("Leave them all off to play the base game.")}</p>
+    <p class="hint">${t("Leave them all off to play the base game.")}</p>` : ""}
     </div>
     <div class="actions"><button class="primary" data-act="start">${state.mode === "own" ? t("Continue") : t("Start guide")}</button></div></div>`;
 }
@@ -1185,7 +1240,8 @@ function gameMenu(s) {
       <button class="option" data-act="ask-open"><div><strong>${t("Ask a rules question")}</strong><span>${t("Answers cite the rulebook and FAQ pages.")}</span></div></button>
       ${toggles ? `<div class="section"><h3>${t("Happened this game")}</h3>${toggles}</div>` : ""}
       <div class="section"><h3>${t("End the game")}</h3>
-        ${state.script.sides.map((x) => `<button class="option" data-winner="${x.id}"><div><strong class="side-${x.id}">${t("The {0} won", esc(x.name))}</strong></div></button>`).join("")}
+        ${takesTurns() ? `<button class="option" data-winner=""><div><strong>${t("End the game now")}</strong></div></button>`
+          : state.script.sides.map((x) => `<button class="option" data-winner="${x.id}"><div><strong class="side-${x.id}">${t("The {0} won", esc(x.name))}</strong></div></button>`).join("")}
         <p class="hint">${esc(state.script.victory.note)} (${esc(citeText(state.script.victory.citations))})</p>
       </div>
       <button class="textbtn" style="align-self:flex-start" data-act="close">${t("Leave the guide")}</button></div></div>`;
@@ -1862,7 +1918,7 @@ function handleClick(el) {
     return;
   }
   if (el.dataset.mark) { setGameState(s, el.dataset.mark, true); render(); return; }
-  if (el.dataset.winner) { s.winner = el.dataset.winner; s.finished = true; s.handoffTo = null; s.pendingEvent = null; state.menu = false; onStepChanged(); return; }
+  if (el.dataset.winner !== undefined) { s.winner = el.dataset.winner || null; s.finished = true; s.handoffTo = null; s.pendingEvent = null; state.menu = false; onStepChanged(); return; }
   if (el.dataset.evcheck !== undefined) { const on = !el.classList.contains("on"); el.classList.toggle("on", on); el.setAttribute("aria-pressed", on); return; }
   if (el.dataset.enlarge) { state.enlarged = { seat: el.dataset.seat, id: el.dataset.enlarge }; render(); return; }
   if (el.dataset.check !== undefined) {
@@ -1887,6 +1943,7 @@ function handleClick(el) {
       state.chosen = new Set();
       state.nearSeat = state.script.sides[0].id;
       online.lobby.side = state.script.sides[0].id;
+      if (takesTurns() && state.mode === "own") state.mode = "table";
     }
     state.screen = "game"; render(); return;
   }
@@ -1919,6 +1976,10 @@ function handleClick(el) {
     case "menu": state.menu = true; render(); break;
     case "menu-close": state.menu = false; render(); break;
     case "event-done": s.pendingEvent = null; render(); break;
+    case "sort-name": case "sort-recent":
+      state.sort = el.dataset.act.slice(5);
+      try { localStorage.setItem("ordir-sort", state.sort); } catch {}
+      render(); break;
     case "next-phrase": {
       phraseIndex = (phraseIndex + 1) % PHRASES.length;
       el.textContent = t(PHRASES[phraseIndex]);
@@ -1958,6 +2019,7 @@ document.addEventListener("focusout", (event) => {
 });
 // Typed text survives re-renders.
 document.addEventListener("input", (event) => {
+  if (event.target.id === "home-search") { filterHome(event.target.value); return; }
   if (event.target.id === "ask-game") {
     if (!online.ask.picking) { online.ask.picking = true; $("#ask-games").hidden = false; event.target.setAttribute("aria-expanded", "true"); }
     online.ask.query = event.target.value; filterGames(event.target.value); return;

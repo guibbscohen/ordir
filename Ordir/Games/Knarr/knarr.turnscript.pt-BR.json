@@ -1,0 +1,131 @@
+{
+  "language": "pt-BR",
+  "title": "Knarr",
+  "sides": {
+    "player": "Jogador da vez"
+  },
+  "victory": "Quando alguém chegar a 40 pontos, terminem a rodada para que todos tenham jogado o mesmo número de turnos. Vence quem tiver mais pontos; no empate, vence quem tiver mais recrutas e braceletes de prata.",
+  "sources": {
+    "rulebook": {
+      "title": "Livro de regras",
+      "shortTitle": "Livro de regras"
+    }
+  },
+  "expansions": {},
+  "images": {
+    "cover": "Cartas de Viking",
+    "board": "Tabuleiro",
+    "destination-cards": "Cartas de Destino: Terras de Comércio e Terras de Influência",
+    "ship-sheets": "Ficha de Navio, lados normal e avançado",
+    "viking-cards": "Cartas de Viking, frente e verso",
+    "tokens": "Fichas de Bracelete de Prata, Recruta, Pontuação, Reputação e Destino",
+    "setup-layout": "Preparação, com os números dos passos",
+    "reputation": "Reputação: o marcador de Pontuação avança",
+    "recruit-example": "Recrutando um viking amarelo",
+    "explore-example": "Explorando um destino",
+    "trade-example": "Comércio com 1 bracelete: a 1ª coluna",
+    "assets": "Os recursos"
+  },
+  "phases": {
+    "setup": {
+      "title": "Preparação"
+    },
+    "turns": {
+      "title": "Turnos",
+      "loop": {
+        "endLabel": "Rodada terminada: alguém tem 40 pontos",
+        "note": "A vez passa para a esquerda. Quando alguém chegar a 40 pontos, terminem a rodada: ela acaba com o jogador à direita do primeiro jogador."
+      }
+    },
+    "end": {
+      "title": "Fim do jogo"
+    }
+  },
+  "steps": {
+    "setup-board": {
+      "title": "Tabuleiro e destinos",
+      "instruction": "Coloquem o tabuleiro no meio da mesa e depois os destinos:",
+      "bullets": [
+        "Terras de Comércio: embaralhem num monte virado para baixo ao lado do tabuleiro e revelem as 3 primeiras nos seus espaços.",
+        "Terras de Influência: do mesmo jeito."
+      ],
+      "components": ["Tabuleiro", "Cartas de Terras de Comércio", "Cartas de Terras de Influência"]
+    },
+    "setup-vikings": {
+      "title": "Monte de Vikings",
+      "instruction": "Preparem as cartas de Viking para o número de jogadores:",
+      "bullets": [
+        "4 jogadores: todas as cartas.",
+        "3 jogadores: retirem as cartas marcadas com 4 no canto inferior esquerdo.",
+        "2 jogadores: retirem as cartas marcadas com 3 e 4.",
+        "Embaralhem num monte virado para baixo ao lado do tabuleiro e revelem as 5 primeiras nos seus espaços."
+      ],
+      "components": ["Cartas de Viking"]
+    },
+    "setup-ships": {
+      "title": "Seu navio",
+      "instruction": "Cada jogador pega uma Ficha de Navio, 3 fichas de Bracelete de Prata e 3 fichas de Recruta.",
+      "bullets": [
+        "Combinem o lado do navio: normal (melhor para a primeira partida) ou avançado.",
+        "Peguem 2 cartas de Viking de cores diferentes do monte e coloquem viradas para cima na sua Zona de Tripulação, à sua frente.",
+        "Deslizem 1 ficha de Recruta e 1 ficha de Bracelete de Prata para os espaços de cada lado do barco."
+      ],
+      "components": ["Fichas de Navio", "Fichas de Bracelete de Prata", "Fichas de Recruta", "Cartas de Viking"]
+    },
+    "setup-markers": {
+      "title": "Marcadores e mãos",
+      "instruction": "Cada jogador prepara seus marcadores e sua mão:",
+      "bullets": [
+        "Peguem as 2 peças de madeira da cor do seu navio: a redonda no início da Trilha de Pontuação, a quadrada no início da Trilha de Reputação.",
+        "Comprem 3 cartas de Viking para a mão."
+      ],
+      "components": ["Fichas de Pontuação", "Fichas de Reputação", "Cartas de Viking"]
+    },
+    "setup-first": {
+      "title": "Primeiro jogador",
+      "instruction": "Um jogador pega as fichas de Destino dos navios em jogo e sorteia 1: o dono desse navio começa.",
+      "bullets": ["Depois os turnos seguem no sentido horário."],
+      "components": ["Fichas de Destino"]
+    },
+    "turn-reputation": {
+      "title": "Reputação",
+      "instruction": "Avance seu marcador de Pontuação tantas casas quanto o maior valor que seu marcador de Reputação já alcançou.",
+      "components": ["Ficha de Pontuação", "Ficha de Reputação"]
+    },
+    "turn-action": {
+      "title": "Recrutar ou Explorar",
+      "instruction": "Escolha uma ação:",
+      "bullets": [
+        "Recrutar: coloque um Viking da mão na sua Zona de Tripulação, na coluna da cor dele, e pegue os recursos do topo de todas as cartas dessa coluna, na ordem que quiser.",
+        "Depois pegue para a mão o Viking do espaço daquela cor no tabuleiro (ou gaste 1 recruta para pegar qualquer um dos 5) e revele um novo.",
+        "Explorar: escolha 1 dos 6 Destinos virados para cima e pague o custo (canto superior esquerdo) descartando Vikings dessas cores da sua Zona de Tripulação. Cada recruta gasto substitui 1 carta.",
+        "Coloque-o acima do seu navio, pegue os recursos do canto superior direito e revele um novo Destino do mesmo tipo."
+      ],
+      "components": ["Cartas de Viking", "Cartas de Destino", "Fichas de Recruta"]
+    },
+    "turn-trade": {
+      "title": "Comércio (opcional)",
+      "instruction": "Uma vez por turno, antes ou depois da sua ação, você pode gastar braceletes de prata para pegar os recursos de todas as suas cartas de Destino e do seu navio:",
+      "bullets": [
+        "1 bracelete: a 1ª coluna.",
+        "2 braceletes: a 1ª e a 2ª colunas.",
+        "3 braceletes: as 3 colunas."
+      ],
+      "components": ["Fichas de Bracelete de Prata", "Cartas de Destino", "Ficha de Navio"],
+      "reminders": [
+        "No máximo 3 recrutas e 3 braceletes de prata no seu navio: os excedentes se perdem.",
+        "Acabou o monte de Vikings? Embaralhem o descarte para formar um novo monte."
+      ]
+    },
+    "end-score": {
+      "title": "Quem venceu",
+      "instruction": "Todos jogaram o mesmo número de turnos. Comparem a Trilha de Pontuação:",
+      "bullets": [
+        "Vence quem tiver mais pontos.",
+        "Empate: vence quem tiver mais recrutas e braceletes de prata.",
+        "Depois encerrem o jogo pelo menu Jogo."
+      ],
+      "components": ["Fichas de Pontuação", "Fichas de Recruta", "Fichas de Bracelete de Prata"]
+    }
+  }
+}

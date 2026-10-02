@@ -54,6 +54,31 @@ const GAMES: Record<string, { title: string; sources: Record<string, string>; ba
       warriorsOfMiddleEarth: "Warriors of Middle-earth expansion rulebook",
     },
   },
+  knarr: {
+    title: "Knarr",
+    base: ["rulebook"],
+    sources: {
+      rulebook: "Knarr rulebook",
+    },
+  },
+  brassBirmingham: {
+    title: "Brass: Birmingham",
+    base: ["rulebook"],
+    sources: {
+      rulebook: "Brass: Birmingham rulebook (v2018.11; each PDF page holds two printed pages)",
+    },
+  },
+  duneImperium: {
+    title: "Dune: Imperium",
+    base: ["rulebook", "faq"],
+    sources: {
+      rulebook: "Dune: Imperium rulebook",
+      faq: "Dune: Imperium errata and FAQ (January 13, 2025)",
+      riseOfIx: "Rise of Ix expansion rulebook",
+      immortality: "Immortality expansion rulebook",
+      bloodlines: "Bloodlines expansion rulebook (played with the original Dune: Imperium)",
+    },
+  },
 };
 
 const SYSTEM = `You are Ordir's rules referee for board games. Answer the player's question using only the official documents provided: the game's rulebook, the publisher's FAQ, and the rulebooks of the expansions in play.

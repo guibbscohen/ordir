@@ -1,0 +1,565 @@
+{
+  "game": "knarr",
+  "title": "Knarr",
+  "version": 1,
+  "scope": "Setup, then turns clockwise until someone reaches 40 points and the round is finished; 2–4 players on one phone",
+  "sides": [
+    {
+      "id": "player",
+      "name": "Player on turn",
+      "color": "#62c7bd"
+    }
+  ],
+  "victory": {
+    "note": "When someone reaches 40 points, finish the round so everyone has played the same number of turns. Most points wins; a tie goes to the most recruits and silver bracelets.",
+    "citations": [
+      {
+        "source": "rulebook",
+        "page": 10,
+        "excerpt": "The end of the game is triggered when a player reaches 40 Victory Points or more on the Score Track."
+      },
+      {
+        "source": "rulebook",
+        "page": 10,
+        "excerpt": "The person with the most points on the Score Track wins! In case of a tie, the one with the most recruits and silver bracelets wins."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "rulebook",
+      "title": "Rulebook",
+      "shortTitle": "Rulebook",
+      "url": "https://www.dropbox.com/scl/fi/a57vjcbllhfruqk2ygvu6/rulebook-KNARR-ENG-PAN.pdf?rlkey=h9mc6seue037pz1y6hvqh3pk1&dl=1",
+      "file": "Sources/knarr/rulebook-KNARR-ENG-PAN.pdf",
+      "sha256": "e03d9a100a4d6b299181d2a091b4d7e555054a8bae76d5f0f92e1ba6d1ae1100"
+    }
+  ],
+  "expansions": [],
+  "images": [
+    {
+      "id": "cover",
+      "caption": "Viking cards",
+      "source": "rulebook",
+      "page": 3,
+      "crop": [
+        0.08,
+        0.09,
+        0.7,
+        0.333
+      ]
+    },
+    {
+      "id": "board",
+      "caption": "Board",
+      "source": "rulebook",
+      "page": 2,
+      "crop": [
+        0.12,
+        0.105,
+        0.885,
+        0.3
+      ]
+    },
+    {
+      "id": "destination-cards",
+      "caption": "Destination cards: Trading Lands and Lands of Influence",
+      "source": "rulebook",
+      "page": 2,
+      "crop": [
+        0.08,
+        0.355,
+        0.92,
+        0.67
+      ]
+    },
+    {
+      "id": "ship-sheets",
+      "caption": "Ship sheet, normal and advanced sides",
+      "source": "rulebook",
+      "page": 2,
+      "crop": [
+        0.05,
+        0.712,
+        0.97,
+        0.94
+      ]
+    },
+    {
+      "id": "viking-cards",
+      "caption": "Viking cards, front and back",
+      "source": "rulebook",
+      "page": 3,
+      "crop": [
+        0.08,
+        0.09,
+        0.93,
+        0.333
+      ]
+    },
+    {
+      "id": "tokens",
+      "caption": "Silver Bracelet, Recruit, Scoring, Reputation and Destiny tokens",
+      "source": "rulebook",
+      "page": 3,
+      "crop": [
+        0.08,
+        0.57,
+        0.92,
+        0.93
+      ]
+    },
+    {
+      "id": "setup-layout",
+      "caption": "Setup, with the step numbers",
+      "source": "rulebook",
+      "page": 5,
+      "crop": [
+        0.08,
+        0.235,
+        0.93,
+        0.9
+      ]
+    },
+    {
+      "id": "reputation",
+      "caption": "Reputation: the Scoring marker moves forward",
+      "source": "rulebook",
+      "page": 6,
+      "crop": [
+        0.26,
+        0.335,
+        0.74,
+        0.475
+      ]
+    },
+    {
+      "id": "recruit-example",
+      "caption": "Recruiting a yellow viking",
+      "source": "rulebook",
+      "page": 7,
+      "crop": [
+        0.08,
+        0.285,
+        0.93,
+        0.91
+      ]
+    },
+    {
+      "id": "explore-example",
+      "caption": "Exploring a destination",
+      "source": "rulebook",
+      "page": 8,
+      "crop": [
+        0.08,
+        0.42,
+        0.92,
+        0.69
+      ]
+    },
+    {
+      "id": "trade-example",
+      "caption": "Trading with 1 bracelet: the 1st column",
+      "source": "rulebook",
+      "page": 9,
+      "crop": [
+        0.14,
+        0.445,
+        0.9,
+        0.94
+      ]
+    },
+    {
+      "id": "assets",
+      "caption": "The assets",
+      "source": "rulebook",
+      "page": 10,
+      "crop": [
+        0.07,
+        0.27,
+        0.93,
+        0.585
+      ]
+    }
+  ],
+  "phases": [
+    {
+      "id": "setup",
+      "part": "setup",
+      "title": "Setup",
+      "steps": [
+        {
+          "id": "setup-board",
+          "side": "both",
+          "title": "Board and destinations",
+          "instruction": "Place the board in the middle of the table, then lay out the destinations:",
+          "bullets": [
+            "Trading Lands: shuffle them into a face-down deck beside the board and reveal the first 3 on their spaces.",
+            "Lands of Influence: the same way."
+          ],
+          "components": [
+            "Board",
+            "Trading Lands cards",
+            "Lands of Influence cards"
+          ],
+          "images": [
+            "board",
+            "destination-cards"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "Place the board in the center of the table."
+            },
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "Shuffle the Trading Lands cards, form a deck, and place it face down to the side of the board. Reveal the first 3 cards on the designated spaces."
+            },
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "Shuffle and place the Lands of Influence cards in the same way."
+            }
+          ]
+        },
+        {
+          "id": "setup-vikings",
+          "side": "both",
+          "title": "Viking deck",
+          "instruction": "Prepare the Viking cards for your number of players:",
+          "bullets": [
+            "4 players: all the cards.",
+            "3 players: remove the cards marked 4 at the bottom left.",
+            "2 players: remove the cards marked 3 and 4.",
+            "Shuffle them into a face-down deck beside the board and reveal the first 5 on their spaces."
+          ],
+          "components": [
+            "Viking cards"
+          ],
+          "images": [
+            "viking-cards",
+            "setup-layout"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "For 3 players, remove the cards marked 4 at the bottom left"
+            },
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "For 2 players, remove the cards marked 3 and 4 at the bottom left"
+            },
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "Shuffle them, form a deck, and place it face down to the side of the board, then reveal the first 5 cards on the designated spaces."
+            }
+          ]
+        },
+        {
+          "id": "setup-ships",
+          "side": "both",
+          "title": "Your ship",
+          "instruction": "Each player takes a Ship sheet, 3 Silver Bracelet tokens and 3 Recruit tokens.",
+          "bullets": [
+            "Agree on the ship side: normal (best for a first game) or advanced.",
+            "Take 2 Viking cards of different colours from the deck and place them face up in your Crew Zone, in front of you.",
+            "Slide 1 Recruit token and 1 Silver Bracelet token onto their spaces on each side of the boat."
+          ],
+          "components": [
+            "Ship sheets",
+            "Silver Bracelet tokens",
+            "Recruit tokens",
+            "Viking cards"
+          ],
+          "images": [
+            "ship-sheets",
+            "tokens"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "Each player takes a Ship sheet, 3 Silver Bracelet tokens, and 3 Recruit tokens."
+            },
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "The players decide together whether the game will be played with the normal side (recommended for your first game) or the advanced side"
+            },
+            {
+              "source": "rulebook",
+              "page": 4,
+              "excerpt": "Each player takes 2 Viking cards of different colors from the deck and places them face up in front of them, in their Crew Zone. Slide 1 Recruit token and 1 Silver Bracelet token onto the designated spaces on each side of the boat."
+            }
+          ]
+        },
+        {
+          "id": "setup-markers",
+          "side": "both",
+          "title": "Markers and hands",
+          "instruction": "Each player sets up their markers and hand:",
+          "bullets": [
+            "Take the 2 wooden tokens of your ship’s colour: the round one on the start of the Score Track, the square one on the start of the Reputation Track.",
+            "Draw 3 Viking cards into your hand."
+          ],
+          "components": [
+            "Scoring tokens",
+            "Reputation tokens",
+            "Viking cards"
+          ],
+          "images": [
+            "tokens",
+            "setup-layout"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 5,
+              "excerpt": "Take the 2 wooden tokens corresponding to the color of each player’s ship. Place the round one on the starting space of the Score Track and the square one on that of the Reputation Track."
+            },
+            {
+              "source": "rulebook",
+              "page": 5,
+              "excerpt": "Each player draws 3 Viking cards to make up their hand."
+            }
+          ]
+        },
+        {
+          "id": "setup-first",
+          "side": "both",
+          "title": "First player",
+          "instruction": "One player takes the Destiny tokens of the ships in play and draws 1 at random: that ship’s player goes first.",
+          "bullets": [
+            "Turns then go clockwise."
+          ],
+          "components": [
+            "Destiny tokens"
+          ],
+          "images": [
+            "tokens"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 5,
+              "excerpt": "One of the players takes the colored Destiny tokens of the ships in play into their hand and draws 1 at random to choose the first player."
+            },
+            {
+              "source": "rulebook",
+              "page": 6,
+              "excerpt": "The players take turns going clockwise."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "turns",
+      "part": "round",
+      "title": "Turns",
+      "loop": {
+        "endLabel": "Round over: someone has 40 points",
+        "note": "Play passes to the left. Once someone reaches 40 points, finish the round: it ends with the player to the right of the first player.",
+        "citations": [
+          {
+            "source": "rulebook",
+            "page": 9,
+            "excerpt": "At the end of the player’s turn, it is the turn of the player to their left."
+          },
+          {
+            "source": "rulebook",
+            "page": 10,
+            "excerpt": "The current round is finished, ending with the player to the right of the one who took the first turn of the game"
+          }
+        ]
+      },
+      "steps": [
+        {
+          "id": "turn-reputation",
+          "side": "player",
+          "title": "Reputation",
+          "instruction": "Move your Scoring marker forward as many spaces as the highest value your Reputation marker has reached.",
+          "components": [
+            "Scoring token",
+            "Reputation token"
+          ],
+          "images": [
+            "reputation"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 6,
+              "excerpt": "The player moves their Scoring marker forward a number of spaces equal to the highest value that their Reputation marker has reached."
+            }
+          ]
+        },
+        {
+          "id": "turn-action",
+          "side": "player",
+          "title": "Recruit or Explore",
+          "instruction": "Choose one action:",
+          "bullets": [
+            "Recruit: place a Viking from your hand in your Crew Zone, in the column of its colour, and take the assets on top of every card in that column, in any order.",
+            "Then take the Viking on the board’s space of that colour into your hand (or spend 1 recruit to take any of the 5), and reveal a new one.",
+            "Explore: choose 1 of the 6 face-up Destinations and pay its cost (top left) by discarding Vikings of those colours from your Crew Zone. Each recruit you spend replaces 1 card.",
+            "Place it above your ship, take the assets in its top right corner, and reveal a new Destination of the same type."
+          ],
+          "components": [
+            "Viking cards",
+            "Destination cards",
+            "Recruit tokens"
+          ],
+          "images": [
+            "recruit-example",
+            "explore-example"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 6,
+              "excerpt": "The player must choose between 2 actions: Recruit or Explore."
+            },
+            {
+              "source": "rulebook",
+              "page": 6,
+              "excerpt": "When a player Recruits a viking, they must place them in the column of the same color."
+            },
+            {
+              "source": "rulebook",
+              "page": 6,
+              "excerpt": "The player then takes the assets shown at the top of every card in the column where the new viking was just placed, including any on the new card. These assets are taken in any order the player wishes."
+            },
+            {
+              "source": "rulebook",
+              "page": 7,
+              "excerpt": "Next, the player adds to their hand the Viking card on the board that is in the space matching the color of the viking they just Recruited."
+            },
+            {
+              "source": "rulebook",
+              "page": 7,
+              "excerpt": "A player may spend 1 recruit (by removing a Recruit token from their ship) to take the Viking card of their choice from the 5 visible cards, instead of the matching one."
+            },
+            {
+              "source": "rulebook",
+              "page": 8,
+              "excerpt": "The player chooses a Destination card from the 6 face-up cards near the board and pays its exploration cost"
+            },
+            {
+              "source": "rulebook",
+              "page": 8,
+              "excerpt": "Each recruit spent (by removing a token from their ship) replaces any 1 card required for the exploration cost."
+            },
+            {
+              "source": "rulebook",
+              "page": 8,
+              "excerpt": "They immediately take the assets shown in the upper right corner of the Destination card."
+            }
+          ]
+        },
+        {
+          "id": "turn-trade",
+          "side": "player",
+          "title": "Trade (optional)",
+          "instruction": "Once per turn, before or after your action, you may spend silver bracelets to collect assets from all your Destination cards and your ship:",
+          "bullets": [
+            "1 bracelet: the 1st column.",
+            "2 bracelets: the 1st and 2nd columns.",
+            "3 bracelets: all 3 columns."
+          ],
+          "components": [
+            "Silver Bracelet tokens",
+            "Destination cards",
+            "Ship sheet"
+          ],
+          "images": [
+            "trade-example",
+            "assets"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 9,
+              "excerpt": "Once per turn, before or after their action, a player can spend their bracelets to buy assets from their Destination cards."
+            },
+            {
+              "source": "rulebook",
+              "page": 9,
+              "excerpt": "1 bracelet allows the player to collect the assets from the 1st column of all their Destination cards and ship."
+            },
+            {
+              "source": "rulebook",
+              "page": 9,
+              "excerpt": "3 bracelets allow the player to collect the assets from all 3 columns of all their Destination cards and ship."
+            }
+          ],
+          "reminders": [
+            {
+              "text": "No more than 3 recruits and 3 silver bracelets on your ship: extras are lost.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 8,
+                  "excerpt": "A player can never have more than 3 recruits and 3 silver bracelets on their ship. Any extras are lost."
+                }
+              ]
+            },
+            {
+              "text": "Viking deck empty? Shuffle the discard pile into a new deck.",
+              "citations": [
+                {
+                  "source": "rulebook",
+                  "page": 8,
+                  "excerpt": "If the viking deck is empty when a player needs to draw a card from it, the discard pile is shuffled and a new deck is formed."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "end",
+      "part": "round",
+      "title": "End of the game",
+      "steps": [
+        {
+          "id": "end-score",
+          "side": "both",
+          "title": "Who won",
+          "instruction": "Everyone has played the same number of turns. Compare the Score Track:",
+          "bullets": [
+            "Most points wins.",
+            "Tie: the one with the most recruits and silver bracelets wins.",
+            "Then end the game from the Game menu."
+          ],
+          "components": [
+            "Scoring tokens",
+            "Recruit tokens",
+            "Silver Bracelet tokens"
+          ],
+          "images": [
+            "board"
+          ],
+          "citations": [
+            {
+              "source": "rulebook",
+              "page": 10,
+              "excerpt": "ends after all players have played the same number of turns"
+            },
+            {
+              "source": "rulebook",
+              "page": 10,
+              "excerpt": "The person with the most points on the Score Track wins! In case of a tie, the one with the most recruits and silver bracelets wins."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

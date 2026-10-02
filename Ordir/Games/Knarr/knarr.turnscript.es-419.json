@@ -1,0 +1,131 @@
+{
+  "language": "es-419",
+  "title": "Knarr",
+  "sides": {
+    "player": "Jugador en turno"
+  },
+  "victory": "Cuando alguien llegue a 40 puntos, terminen la ronda para que todos hayan jugado el mismo número de turnos. Gana quien tenga más puntos; en caso de empate, gana quien tenga más reclutas y brazaletes de plata.",
+  "sources": {
+    "rulebook": {
+      "title": "Reglamento",
+      "shortTitle": "Reglamento"
+    }
+  },
+  "expansions": {},
+  "images": {
+    "cover": "Cartas de Vikingo",
+    "board": "Tablero",
+    "destination-cards": "Cartas de Destino: Tierras de Comercio y Tierras de Influencia",
+    "ship-sheets": "Hoja de Barco, lados normal y avanzado",
+    "viking-cards": "Cartas de Vikingo, frente y reverso",
+    "tokens": "Fichas de Brazalete de Plata, Recluta, Puntuación, Reputación y Destino",
+    "setup-layout": "Preparación, con los números de los pasos",
+    "reputation": "Reputación: el marcador de Puntuación avanza",
+    "recruit-example": "Reclutar un vikingo amarillo",
+    "explore-example": "Explorar un destino",
+    "trade-example": "Comerciar con 1 brazalete: la 1.ª columna",
+    "assets": "Los recursos"
+  },
+  "phases": {
+    "setup": {
+      "title": "Preparación"
+    },
+    "turns": {
+      "title": "Turnos",
+      "loop": {
+        "endLabel": "Ronda terminada: alguien tiene 40 puntos",
+        "note": "El turno pasa a la izquierda. Cuando alguien llegue a 40 puntos, terminen la ronda: acaba con el jugador a la derecha del primer jugador."
+      }
+    },
+    "end": {
+      "title": "Fin de la partida"
+    }
+  },
+  "steps": {
+    "setup-board": {
+      "title": "Tablero y destinos",
+      "instruction": "Coloquen el tablero en el centro de la mesa y luego los destinos:",
+      "bullets": [
+        "Tierras de Comercio: barájenlas en un mazo boca abajo junto al tablero y revelen las 3 primeras en sus espacios.",
+        "Tierras de Influencia: de la misma manera."
+      ],
+      "components": ["Tablero", "Cartas de Tierras de Comercio", "Cartas de Tierras de Influencia"]
+    },
+    "setup-vikings": {
+      "title": "Mazo de Vikingos",
+      "instruction": "Preparen las cartas de Vikingo según el número de jugadores:",
+      "bullets": [
+        "4 jugadores: todas las cartas.",
+        "3 jugadores: quiten las cartas marcadas con 4 en la esquina inferior izquierda.",
+        "2 jugadores: quiten las cartas marcadas con 3 y 4.",
+        "Barájenlas en un mazo boca abajo junto al tablero y revelen las 5 primeras en sus espacios."
+      ],
+      "components": ["Cartas de Vikingo"]
+    },
+    "setup-ships": {
+      "title": "Tu barco",
+      "instruction": "Cada jugador toma una Hoja de Barco, 3 fichas de Brazalete de Plata y 3 fichas de Recluta.",
+      "bullets": [
+        "Acuerden el lado del barco: normal (lo mejor para la primera partida) o avanzado.",
+        "Tomen 2 cartas de Vikingo de colores distintos del mazo y pónganlas boca arriba en su Zona de Tripulación, frente a ustedes.",
+        "Deslicen 1 ficha de Recluta y 1 ficha de Brazalete de Plata a los espacios de cada lado del barco."
+      ],
+      "components": ["Hojas de Barco", "Fichas de Brazalete de Plata", "Fichas de Recluta", "Cartas de Vikingo"]
+    },
+    "setup-markers": {
+      "title": "Marcadores y manos",
+      "instruction": "Cada jugador prepara sus marcadores y su mano:",
+      "bullets": [
+        "Tomen las 2 piezas de madera del color de su barco: la redonda al inicio del Marcador de Puntuación, la cuadrada al inicio del Marcador de Reputación.",
+        "Roben 3 cartas de Vikingo para la mano."
+      ],
+      "components": ["Fichas de Puntuación", "Fichas de Reputación", "Cartas de Vikingo"]
+    },
+    "setup-first": {
+      "title": "Primer jugador",
+      "instruction": "Un jugador toma las fichas de Destino de los barcos en juego y saca 1 al azar: el dueño de ese barco empieza.",
+      "bullets": ["Después los turnos siguen en el sentido de las agujas del reloj."],
+      "components": ["Fichas de Destino"]
+    },
+    "turn-reputation": {
+      "title": "Reputación",
+      "instruction": "Avanza tu marcador de Puntuación tantas casillas como el valor más alto que haya alcanzado tu marcador de Reputación.",
+      "components": ["Ficha de Puntuación", "Ficha de Reputación"]
+    },
+    "turn-action": {
+      "title": "Reclutar o Explorar",
+      "instruction": "Elige una acción:",
+      "bullets": [
+        "Reclutar: coloca un Vikingo de tu mano en tu Zona de Tripulación, en la columna de su color, y toma los recursos de la parte superior de todas las cartas de esa columna, en el orden que quieras.",
+        "Luego toma a tu mano el Vikingo del espacio de ese color en el tablero (o gasta 1 recluta para tomar cualquiera de los 5) y revela uno nuevo.",
+        "Explorar: elige 1 de los 6 Destinos boca arriba y paga su costo (arriba a la izquierda) descartando Vikingos de esos colores de tu Zona de Tripulación. Cada recluta que gastes reemplaza 1 carta.",
+        "Colócalo encima de tu barco, toma los recursos de su esquina superior derecha y revela un nuevo Destino del mismo tipo."
+      ],
+      "components": ["Cartas de Vikingo", "Cartas de Destino", "Fichas de Recluta"]
+    },
+    "turn-trade": {
+      "title": "Comerciar (opcional)",
+      "instruction": "Una vez por turno, antes o después de tu acción, puedes gastar brazaletes de plata para tomar los recursos de todas tus cartas de Destino y de tu barco:",
+      "bullets": [
+        "1 brazalete: la 1.ª columna.",
+        "2 brazaletes: la 1.ª y la 2.ª columnas.",
+        "3 brazaletes: las 3 columnas."
+      ],
+      "components": ["Fichas de Brazalete de Plata", "Cartas de Destino", "Hoja de Barco"],
+      "reminders": [
+        "No más de 3 reclutas y 3 brazaletes de plata en tu barco: los sobrantes se pierden.",
+        "¿Se acabó el mazo de Vikingos? Barajen el descarte para formar un mazo nuevo."
+      ]
+    },
+    "end-score": {
+      "title": "Quién ganó",
+      "instruction": "Todos jugaron el mismo número de turnos. Comparen el Marcador de Puntuación:",
+      "bullets": [
+        "Gana quien tenga más puntos.",
+        "Empate: gana quien tenga más reclutas y brazaletes de plata.",
+        "Luego terminen la partida desde el menú Juego."
+      ],
+      "components": ["Fichas de Puntuación", "Fichas de Recluta", "Fichas de Brazalete de Plata"]
+    }
+  }
+}

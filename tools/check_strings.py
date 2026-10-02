@@ -28,8 +28,9 @@ def preview_strings():
     html = (ROOT / "Preview" / "index.html").read_text()
     found = re.findall(r"\bt\(" + QUOTED, html)
     found += re.findall(r'\["(?:games|ask|join|account)", "([^"]+)"\]', html)  # tab labels
-    found += [s for s in re.findall(QUOTED, block(html, '${[["table", "One phone', "]].map"))
+    found += [s for s in re.findall(QUOTED, block(html, '${[["table", "One phone', ".map(([id, title, detail])"))
               if s not in ("table", "pass", "own")]  # play modes
+    found += re.findall(r'sortButton\("\w+", ' + QUOTED + r"\)", html)  # Home's sort options
     found += re.findall(r"(?:title|text): " + QUOTED, block(html, "const TOUR = ["))
     found += re.findall(r"(?:detail|askExample): " + QUOTED, block(html, "const GAMES = ["))
     found += re.findall(QUOTED, block(html, "const PHRASES = ["))

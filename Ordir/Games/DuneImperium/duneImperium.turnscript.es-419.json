@@ -1,0 +1,389 @@
+{
+  "language": "es-419",
+  "title": "Dune: Imperium",
+  "sides": {
+    "player": "Jugador en turno"
+  },
+  "victory": "Al final de una ronda, si alguien tiene 10 o más Puntos de Victoria (o el Mazo de Conflicto se acabó), la partida termina: jueguen las cartas de Intriga de Fin de Partida y gana quien tenga más Puntos de Victoria. Desempate: más especia, luego Solaris, agua y tropas en la guarnición.",
+  "sources": {
+    "rulebook": {
+      "title": "Reglamento",
+      "shortTitle": "Reglamento"
+    },
+    "faq": {
+      "title": "Erratas y FAQ (13 de enero de 2025)",
+      "shortTitle": "FAQ"
+    },
+    "riseOfIx": {
+      "title": "Reglamento de Rise of Ix",
+      "shortTitle": "Rise of Ix"
+    },
+    "immortality": {
+      "title": "Reglamento de Immortality",
+      "shortTitle": "Immortality"
+    },
+    "bloodlines": {
+      "title": "Reglamento de Bloodlines",
+      "shortTitle": "Bloodlines"
+    }
+  },
+  "expansions": {
+    "riseOfIx": {
+      "title": "Rise of Ix",
+      "summary": "Losetas de Tecnología en el tablero de Ix, acorazados y Cargueros en el track de Transporte de la CHOAM."
+    },
+    "immortality": {
+      "title": "Immortality",
+      "summary": "El tablero Bene Tleilax: tracks de investigación y Tleilaxu, especímenes, cartas Tleilaxu, Injerto y Atómicas Familiares."
+    },
+    "bloodlines": {
+      "title": "Bloodlines",
+      "summary": "Comandantes Sardaukar y sus Habilidades, nuevos líderes, cartas e Intrigas."
+    }
+  },
+  "images": {
+    "cover": "Portada del reglamento",
+    "board": "Tablero",
+    "conflict-cards": "Cartas de Conflicto",
+    "bank": "Agua, Solaris y especia",
+    "reserve-cards": "Cartas de la Reserva",
+    "decks-leaders": "Cartas de Intriga, Mazo del Imperio y Líderes",
+    "mentat-alliances": "Mentat, fichas de Alianza y marcador de Jugador Inicial",
+    "player-components": "Componentes del jugador",
+    "imperium-row": "Fila del Imperio",
+    "setup-board": "Preparación del tablero",
+    "player-supply": "La reserva de un jugador",
+    "score-track": "Track de puntuación, guarniciones y banco",
+    "round-structure": "Las cinco fases de una ronda",
+    "conflict-reveal": "Revelar la carta de Conflicto",
+    "card-anatomy": "Anatomía de la carta: recuadro de Agente y recuadro de Revelación",
+    "agent-icons": "Los siete iconos de Agente",
+    "conflict-area": "La zona del Conflicto entre las guarniciones",
+    "harvest": "Cosechar especia en la Cuenca de Hagga",
+    "reveal": "Cartas reveladas",
+    "combat-intrigue": "Una carta de Intriga de Combate",
+    "conflict-rewards": "Recompensas del Conflicto: 1.º, 2.º y 3.º",
+    "makers": "Especia extra en un espacio de Creador",
+    "endgame": "Fin de la partida",
+    "ix-components": "Componentes de Rise of Ix",
+    "ix-board": "Tablero de Ix",
+    "choam-overlay": "Superposición de la CHOAM",
+    "tech-tiles": "Losetas de Tecnología",
+    "shipping-track": "El track de Transporte",
+    "dreadnought-control": "Un acorazado controlando una ubicación",
+    "tleilax-board": "Tablero Bene Tleilax",
+    "immortality-components": "Componentes de Immortality",
+    "immortality-player": "Atómicas Familiares, Experimentación y los dos discos",
+    "tleilaxu-track": "El track Tleilaxu",
+    "commanders": "Comandantes Sardaukar y Habilidades",
+    "bloodlines-leaders": "Líderes de Bloodlines"
+  },
+  "phases": {
+    "setup": {
+      "title": "Preparación"
+    },
+    "round-start": {
+      "title": "Inicio de ronda"
+    },
+    "turns": {
+      "title": "Turnos de los jugadores",
+      "loop": {
+        "endLabel": "Todos revelaron",
+        "note": "En el sentido de las agujas del reloj desde el Jugador Inicial, un turno cada uno. Tras tu turno de Revelación, te saltan hasta que todos hayan revelado."
+      }
+    },
+    "combat": {
+      "title": "Combate"
+    },
+    "makers": {
+      "title": "Creadores"
+    },
+    "recall": {
+      "title": "Retirada"
+    }
+  },
+  "steps": {
+    "setup-board": {
+      "title": "Tablero",
+      "instruction": "Coloquen el tablero y luego:",
+      "bullets": [
+        "Acuesten el Mentat en el espacio del Mentat.",
+        "Coloquen las cuatro fichas de Alianza en las zonas marcadas de los tracks de Influencia (Emperador, Cofradía Espacial, Bene Gesserit, Fremen)."
+      ],
+      "components": [
+        "Tablero",
+        "Mentat",
+        "Fichas de Alianza"
+      ],
+      "additions": [
+        {
+          "text": "Coloquen la superposición de la CHOAM en la esquina superior derecha del tablero (sobre el Landsraad y la CHOAM). Pongan el tablero de Ix al lado:",
+          "bullets": [
+            "Barajen las 18 losetas de Tecnología boca abajo en tres pilas de 6 en sus tres espacios y volteen boca arriba la loseta superior de cada una."
+          ]
+        },
+        {
+          "text": "Coloquen el tablero Bene Tleilax encima de la Fila del Imperio:",
+          "bullets": [
+            "2 especias del banco en el cuarto espacio del track Tleilaxu.",
+            "La superposición de la Estación de Investigación sobre el espacio Estación de Investigación del tablero."
+          ]
+        },
+        {
+          "text": "Coloquen un Comandante Sardaukar (todos de madera o todos de plástico) en cada uno de estos: Conspirar, Riqueza, Plegado Espacial, Alto Consejo y Reunir Tropas:",
+          "bullets": [
+            "4 jugadores: un sexto en el Salón de Oratoria. El último va al banco.",
+            "Con Rise of Ix completo, la superposición de la CHOAM cubre dos de esos espacios: pongan un Comandante en Acorazado y, con 4 jugadores, el otro en Negociación de Tecnología.",
+            "Barajen las Habilidades de Comandante Sardaukar sin las dos “Fierce” y revelen cuatro."
+          ]
+        }
+      ]
+    },
+    "setup-conflict": {
+      "title": "Mazo de Conflicto",
+      "instruction": "Armen el Mazo de Conflicto de 10 cartas en la zona marcada del tablero, de abajo hacia arriba:",
+      "bullets": [
+        "Las cuatro cartas de Conflicto III, barajadas.",
+        "Cinco de las diez cartas de Conflicto II, barajadas.",
+        "Una de las cuatro cartas de Conflicto I encima. Devuelvan el resto a la caja sin mirarlas."
+      ],
+      "components": [
+        "Cartas de Conflicto"
+      ],
+      "additions": [
+        {
+          "text": "Añadan las 4 nuevas cartas de Conflicto antes de armar el mazo. Ahora sobra una carta de Conflicto III: devuélvanla a la caja."
+        },
+        {
+          "text": "Con el Dune: Imperium original, no añadan las cartas de Conflicto de Bloodlines."
+        }
+      ]
+    },
+    "setup-cards": {
+      "title": "Mazos y Fila del Imperio",
+      "instruction": "Junto al tablero:",
+      "bullets": [
+        "Mazo de Intriga: barajado, boca abajo.",
+        "Mazo del Imperio: barajado, boca abajo; revelen cinco cartas como la Fila del Imperio.",
+        "Cartas de la Reserva al lado, en tres pilas: Enlace en Arrakis, La Especia Debe Fluir y Plegado Espacial."
+      ],
+      "components": [
+        "Cartas de Intriga",
+        "Mazo del Imperio",
+        "Cartas de la Reserva"
+      ],
+      "additions": [
+        {
+          "text": "Barajen las 17 nuevas cartas de Intriga y las 35 nuevas cartas del Imperio en sus mazos antes de revelar la Fila del Imperio."
+        },
+        {
+          "text": "Barajen las 30 nuevas cartas del Imperio (antes de la Fila) y las 15 nuevas cartas de Intriga. Luego armen la Fila Tleilaxu:",
+          "bullets": [
+            "Fuerzas Recuperadas a la izquierda del tablero Bene Tleilax.",
+            "Barajen el Mazo Tleilaxu boca abajo encima del Mazo del Imperio y revelen dos cartas junto a Fuerzas Recuperadas."
+          ]
+        },
+        {
+          "text": "Barajen las nuevas cartas del Imperio y de Intriga, dejando fuera las que son solo de Uprising:",
+          "bullets": [
+            "Las cartas del Módulo CHOAM.",
+            "Intriga: False Orders, Grasp Arrakis, Insider Information, Ripples in the Sand, Sleeper Unit.",
+            "Imperio: Arrakis Observer, Eliminate Allies, Holy War, Intelligence Training (2), Pointing the Way, Shrouded Counsel.",
+            "El Módulo de Tecnología (páginas 6–7 de Bloodlines) es opcional."
+          ]
+        }
+      ]
+    },
+    "setup-leaders": {
+      "title": "Líderes",
+      "instruction": "Cada jugador toma un Líder (elegido o al azar) y lo pone frente a sí.",
+      "bullets": [
+        "Primera partida: elijan Líderes con un icono tras el nombre: Paul Atreides, Glossu “La Bestia” Rabban, Conde Memnon Thorvald o Conde Ilban Richese."
+      ],
+      "components": [
+        "Líderes"
+      ],
+      "additions": [
+        {
+          "text": "Los 6 nuevos Líderes se suman a los demás; vale cualquier combinación."
+        },
+        {
+          "text": "Los nuevos Líderes se suman a los demás, excepto el Conde Hasimir Fenring, Gaius Helen Mohiam y Liet Kynes (solo de Uprising)."
+        }
+      ]
+    },
+    "setup-players": {
+      "title": "Tu color",
+      "instruction": "Cada jugador elige un color y toma sus componentes:",
+      "bullets": [
+        "Dos Agentes sobre tu Líder; tu tercer Agente (Maestro de Armas) junto al tablero.",
+        "Disco de puntuación en el 1 con 4 jugadores, en el 0 con 3. Marcador de Combate en el 0 del track de Combate.",
+        "Un cubo en el espacio inferior de cada uno de los cuatro tracks de Influencia.",
+        "Tres de tus 12 cubos de tropa en la guarnición más cercana a ti; todo lo demás en tu reserva, a la vista.",
+        "1 agua en tu reserva. Solaris, especia y agua forman el banco."
+      ],
+      "components": [
+        "Agentes",
+        "Discos",
+        "Marcador de Combate",
+        "Cubos",
+        "Agua"
+      ],
+      "additions": [
+        {
+          "text": "Toma también tus dos acorazados (a tu reserva) y un disco como tu Carguero, en el espacio inferior del track de Transporte."
+        },
+        {
+          "text": "Coloca también tus dos discos nuevos en los espacios más a la izquierda del track Tleilaxu y del track de investigación, y una ficha de Atómicas Familiares en tu reserva."
+        }
+      ]
+    },
+    "setup-decks": {
+      "title": "Mazos iniciales y jugador inicial",
+      "instruction": "Cada jugador baraja su mazo inicial de 10 cartas y lo pone boca abajo a la izquierda de su Líder.",
+      "bullets": [
+        "Elijan al azar el jugador inicial: toma el marcador de Jugador Inicial."
+      ],
+      "components": [
+        "Mazos iniciales",
+        "Marcador de Jugador Inicial"
+      ],
+      "additions": [
+        {
+          "text": "Antes de barajar, cambien las dos cartas Dune, el Planeta Desierto de su mazo inicial por dos cartas Experimentación."
+        }
+      ]
+    },
+    "round-start": {
+      "title": "Conflicto y manos",
+      "instruction": "Revelen la carta superior del Mazo de Conflicto y pónganla boca arriba junto a él. Luego cada jugador roba cinco cartas de su propio mazo.",
+      "bullets": [
+        "Un Conflicto por un espacio que controlas: puedes desplegar una tropa de tu reserva en él.",
+        "¿Se acabó tu mazo cuando necesitas robar? Baraja tu pila de descarte para formar un mazo nuevo."
+      ],
+      "components": [
+        "Mazo de Conflicto",
+        "Tu mazo"
+      ],
+      "additions": [
+        {
+          "text": "Volteen boca arriba las losetas de Tecnología que usaron la ronda anterior para usar su habilidad de una vez por ronda."
+        }
+      ]
+    },
+    "turn": {
+      "title": "Turno de Agente o de Revelación",
+      "instruction": "Haz un turno de Agente mientras tengas Agentes, o un turno de Revelación:",
+      "bullets": [
+        "Turno de Agente: juega 1 carta y envía un Agente desde tu Líder a un espacio libre del tablero que muestre uno de los iconos de Agente de la carta, pagando el costo del espacio.",
+        "Gana los efectos del espacio y del recuadro de Agente de la carta, en cualquier orden. Un espacio de Facción también te da 1 de Influencia en ella.",
+        "En un espacio de Combate, puedes desplegar al Conflicto las tropas reclutadas este turno y hasta 2 de tu guarnición.",
+        "Turno de Revelación: revela el resto de tu mano y gana los recuadros de Revelación. Gasta Persuasión en cartas de la Fila del Imperio o de la Reserva; van a tu pila de descarte.",
+        "Fija tu fuerza: 2 por tropa en el Conflicto más 1 por espada (0 sin tropa allí). Luego pon todas tus cartas jugadas en tu pila de descarte.",
+        "Las cartas de Intriga de Complot se pueden jugar en cualquier momento de tus turnos."
+      ],
+      "components": [
+        "Cartas",
+        "Agentes",
+        "Tropas",
+        "Marcador de Combate"
+      ],
+      "additions": [
+        {
+          "text": "Iconos de Rise of Ix:",
+          "bullets": [
+            "Acorazado: comisiona uno a tu guarnición (máximo 2). En el Conflicto vale 3 de fuerza, incluso sin tropas.",
+            "Carguero: avanza un espacio en el track de Transporte, o retíralo a la base y cobra las recompensas de su espacio y de todos los de abajo.",
+            "Adquirir Tecnología: compra una loseta de Tecnología boca arriba por su costo en especia (menos descuentos y Negociadores) y voltea la siguiente."
+          ]
+        },
+        {
+          "text": "Immortality:",
+          "bullets": [
+            "Injerto: una carta de Injerto se juega junto con exactamente otra carta; usa el icono de Agente de cualquiera de las dos y gana los efectos de ambas.",
+            "Los especímenes van a los tanques Axolotl; gástalos en cartas de la Fila Tleilaxu en tu turno de Revelación.",
+            "Los iconos de investigación y Tleilaxu avanzan tus fichas en el tablero Bene Tleilax; gana cada bonificación al alcanzarla.",
+            "Atómicas Familiares (una vez por partida, en tu turno): reemplaza toda la Fila del Imperio."
+          ]
+        },
+        {
+          "text": "Comandantes Sardaukar:",
+          "bullets": [
+            "En un espacio con un Comandante, puedes pagar 2 Solaris para adquirirlo y reclutarlo, y tomar una de las Habilidades de Comandante reveladas.",
+            "Una vez por turno, puedes pagar 2 Solaris para reclutar un Comandante de tu reserva (sin nueva Habilidad).",
+            "Un Comandante es una tropa que vale 2 de fuerza. Mientras haya uno en el Conflicto, todas tus Habilidades funcionan, una vez cada una por ronda."
+          ]
+        }
+      ],
+      "reminders": [
+        "Fila del Imperio de nuevo con cinco cartas, del Mazo del Imperio.",
+        "Tus cartas nuevas fueron a tu pila de descarte, no a tu mano.",
+        "Fila Tleilaxu de nuevo con dos cartas más Fuerzas Recuperadas."
+      ]
+    },
+    "combat-intrigue": {
+      "title": "Cartas de Intriga de Combate",
+      "instruction": "En el sentido de las agujas del reloj desde el Jugador Inicial, cada jugador con tropa en el Conflicto juega cartas de Intriga de Combate o pasa.",
+      "bullets": [
+        "Pasar no impide jugar después; resuelvan el Combate cuando todos los involucrados pasen seguidos.",
+        "Ajusten los marcadores de Combate cada vez que cambie la fuerza. Guarden las cartas “cuando ganes un Conflicto” para después de ganar."
+      ],
+      "components": [
+        "Cartas de Intriga",
+        "Marcadores de Combate"
+      ]
+    },
+    "combat-resolve": {
+      "title": "Recompensas",
+      "instruction": "Repartan las recompensas de la carta de Conflicto según la fuerza:",
+      "bullets": [
+        "La mayor fuerza gana la recompensa superior; la segunda mayor, la segunda; la tercera mayor, la tercera (solo con 4 jugadores). Fuerza 0 no gana nada.",
+        "Empate en primer lugar: nadie gana; cada empatado recibe la segunda recompensa. Empate en segundo: cada uno recibe la tercera.",
+        "Conflicto por un espacio: el ganador pone un marcador de Control en la bandera bajo ese espacio.",
+        "Luego todos devuelven sus tropas del Conflicto a su reserva y ponen su marcador de Combate en 0."
+      ],
+      "components": [
+        "Carta de Conflicto",
+        "Marcadores de Control",
+        "Marcadores de Combate"
+      ],
+      "additions": [
+        {
+          "text": "Acorazados:",
+          "bullets": [
+            "¿Ganaste con un acorazado? Ponlo en la bandera de Arrakeen, Carthag o la Cuenca Imperial (una sin acorazado); controla ese espacio hasta el final del próximo Combate.",
+            "Los acorazados del Conflicto vuelven a tu guarnición, no a tu reserva.",
+            "Un acorazado colocado la ronda anterior vuelve ahora a su guarnición."
+          ]
+        },
+        {
+          "text": "Los Comandantes Sardaukar del Conflicto vuelven a tu reserva como las demás tropas."
+        }
+      ]
+    },
+    "makers": {
+      "title": "Especia extra",
+      "instruction": "Pongan 1 especia del banco en cada espacio de Creador sin Agente: La Gran Llanura, la Cuenca de Hagga y la Cuenca Imperial.",
+      "bullets": [
+        "Se suma a la especia extra que ya haya allí."
+      ],
+      "components": [
+        "Especia"
+      ]
+    },
+    "recall": {
+      "title": "Fin de la partida o siguiente ronda",
+      "instruction": "¿Alguien con 10 o más Puntos de Victoria, o el Mazo de Conflicto vacío? La partida termina: jueguen las Intrigas de Fin de Partida y gana quien tenga más Puntos de Victoria. Si no:",
+      "bullets": [
+        "Devuelvan el Mentat a su espacio en el Landsraad.",
+        "Todos retiran sus Agentes a sus Líderes.",
+        "Pasen el marcador de Jugador Inicial en el sentido de las agujas del reloj."
+      ],
+      "components": [
+        "Mentat",
+        "Agentes",
+        "Marcador de Jugador Inicial"
+      ]
+    }
+  }
+}

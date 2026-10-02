@@ -19,7 +19,8 @@ final class AccessibilityAuditTests: XCTestCase {
         app.launchArguments = ["-OrdirTourDone", "YES", "-OrdirLanguage", "en"]
         app.launch()
         // The opening plays first, then Home.
-        XCTAssertTrue(app.staticTexts["Choose a game"].waitForExistence(timeout: 20))
+        XCTAssertTrue(app.staticTexts["Ordi’s Current Favorites"].waitForExistence(timeout: 20))
+        XCTAssertTrue(app.textFields["home-search"].exists)
         let comingSoon = app.descendants(matching: .any).matching(NSPredicate(format: "label CONTAINS[c] %@", "coming soon"))
         XCTAssertEqual(comingSoon.count, 0, "Every game on Home has a turn guide now")
         try audit(app)
