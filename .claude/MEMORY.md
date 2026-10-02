@@ -146,3 +146,6 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
 - 2026-10-02: Rules-answer guardrails: Claude Haiku 4.5 screens each question (rules / off_topic / manipulation); screened
   out ones get a short translated refusal, count against the daily cap and are flagged; 5 flags in a day pause that
   player until tomorrow. Answers are capped at 4,000 tokens with one retry at 16,000, never shown cut off.
+- 2026-10-02: The paid tier is "Ordir Pro". Its face is "The cooler Ordi": the same orb mascot wearing sunglasses, used on
+  the Free vs Pro comparison, the plans screen, the welcome screen and the Account Pro card (proposals in the private
+  "Ordir Pro proposals" claude.ai canvas). Free Ordi stays without shades.
