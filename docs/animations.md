@@ -40,9 +40,9 @@ Status key:
 
 | Moment | Animation | Reduce Motion | Engine | Status |
 | --- | --- | --- | --- | --- |
-| App launch | On black, the orb (88 pt, with its face) comes out of a blur, sparkles popping; "Ordir" and the tagline rise; a deep blue and violet glow sits below. A glowing line draws itself from the orb down the screen. Inspired by Ripplix's "Happier" splash. | Orb and name, short fade, Home after 0.9 s | SwiftUI / CSS | Built |
+| App launch | The logo rests for 1.5 s first. On black, the orb (88 pt, with its face) comes out of a blur, sparkles popping; "Ordir" and the tagline rise; a deep blue and violet glow sits below. A glowing line draws itself from the orb down the screen. Inspired by Ripplix's "Happier" splash. | Orb and name, short fade, Home after 0.9 s | SwiftUI / CSS | Built |
 | Opening → Home | One continuous camera move: the view glides down through the glow to Home, waiting one screen below; the line ends at Home's orb, which lights up. No cut or fade. | Crossfade | SwiftUI (Home slides with the same clock) / CSS (Web Animations) | Built |
-| Arriving on Home | One gesture: the line drops into Home's orb from above (clear of "Ordir"), runs round its rim, the orb fills in under it, the sparkles pop and the face appears, then the line fades. "Ask me a rules question" is conjured under "Ordir" (blur to sharp) and the phrase of the day pops up in a speech bubble. | Shown as is | SwiftUI (`OrdirMascotView(buildStart:)`) / CSS | Built (the app's Ask link comes with sign-in) |
+| Arriving on Home | One gesture: the line drops into Home's orb from above (clear of "Ordir"), runs round its rim, the orb fills in under it, the sparkles pop and the face appears, then the line fades. "Ask me a rules question" is conjured under "Ordir" (blur to sharp) and a board-game quip (a new one each launch; tap the bubble for another) pops up in a speech bubble. Everything after the line arrives finishes within ~0.85 s. | Shown as is | SwiftUI (`OrdirMascotView(buildStart:)`) / CSS | Built (the app's Ask link comes with sign-in) |
 | Richer opening (optional) | "Orb awakening": sparkles swirl in from the edges and ignite the orb with a soft glow pulse | Marker: orb already lit | Lottie | New (needs art) |
 
 ### Home

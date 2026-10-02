@@ -359,15 +359,17 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
 .bubble::before { content: ""; position: absolute; top: -7px; left: var(--tail); width: 12px; height: 12px; background: var(--surface-2);
   border-left: 1px solid var(--line); border-top: 1px solid var(--line); transform: rotate(45deg); }
 .bubble { --tail: 9%; }
+button.bubble { font: inherit; font-size: 15px; color: var(--fg); cursor: pointer; }
+.bubble.pop { animation: bubble-in .3s cubic-bezier(.3, 1.4, .5, 1) both; transform-origin: var(--tail) 0; }
 /* First arrival on Home: the opening's line builds the orb (traces its outline, fills it, sparkles pop, the
    face appears), then "Ask me a rules question" is conjured and the orb says its phrase of the day. */
-.brand.build .orb { animation: fill-in .35s ease both; }
-.brand.build .sp { animation: sparkle-in .4s .2s cubic-bezier(.2, .8, .2, 1) both, twinkle 3.2s .6s ease-in-out infinite; }
-.brand.build .sp2 { animation-delay: .3s, 1.4s; }
-.brand.build .sp3 { animation-delay: .4s, 2.2s; }
-.brand.build .face { animation: fade .25s .45s ease both; }
-.brand.build .ask-link { animation: conjure .5s .65s cubic-bezier(.2, .8, .2, 1) both; }
-.bubble.build { animation: bubble-in .45s .9s cubic-bezier(.3, 1.4, .5, 1) both; transform-origin: var(--tail) 0; }
+.brand.build .orb { animation: fill-in .25s ease both; }
+.brand.build .sp { animation: sparkle-in .3s .12s cubic-bezier(.2, .8, .2, 1) both, twinkle 3.2s .45s ease-in-out infinite; }
+.brand.build .sp2 { animation-delay: .19s, 1.2s; }
+.brand.build .sp3 { animation-delay: .26s, 2s; }
+.brand.build .face { animation: fade .2s .28s ease both; }
+.brand.build .ask-link { animation: conjure .35s .38s cubic-bezier(.2, .8, .2, 1) both; }
+.bubble.build { animation: bubble-in .35s .5s cubic-bezier(.3, 1.4, .5, 1) both; transform-origin: var(--tail) 0; }
 @keyframes fade-out { to { opacity: 0; } }
 @keyframes fill-in { from { fill-opacity: 0; } to { fill-opacity: 1; } }
 @keyframes conjure { from { opacity: 0; filter: blur(6px); transform: translateY(4px); } to { opacity: 1; filter: none; transform: none; } }
@@ -464,7 +466,7 @@ ul.bullets li::before { content: "\2022"; color: var(--muted); }
   .tabbar button { transition: none; }
   .intro-orb .mascot, .intro h1, .intro p { animation: fade .3s ease both !important; }
   .intro-line { display: none; }
-  .brand.build *, .bubble.build { animation: none !important; }
+  .brand.build *, .bubble.build, .bubble.pop { animation: none !important; }
 
   .mascot .sp { animation: none !important; }
   .mascot .face * { animation: none !important; transition: none; }
@@ -791,21 +793,47 @@ function home(animate) {
     <nav class="tabbar${from !== to ? " slide" : ""}" aria-label="Ordir" style="--from: ${from}; --to: ${to}">${bar}</nav>`;
 }
 
-// What the orb says on Home, one a day.
+// What the orb says on Home: a new line each time Ordir opens (never the same twice in a row), and another on
+// tap. Board-game humour, kept short; the app has the same list (HomeView.phrases).
 const PHRASES = [
   "What shall we play today?",
-  "Ready for your next turn?",
-  "Set up the board, I’ll walk you through it.",
-  "Got a rules question? I’m all ears.",
-  "Who’s going first today?",
-  "A new game, a fresh start.",
-  "Let’s learn a turn together.",
   "Shuffle up. I’ll keep the rules straight.",
+  "The box says 60 minutes. The box lies.",
+  "One more game? It’s always one more game.",
+  "The dice are innocent. Probably.",
+  "Read the rules? I read them so you don’t have to.",
+  "Let’s settle that argument. With page numbers.",
+  "I don’t take sides. Unless you have snacks.",
+  "Rolled ones again? I see clouds in your future.",
+  "Analysis paralysis? Take your time. I’m a ball.",
+  "Whose turn is it? I know. Do you?",
+  "A house rule? Let’s check that before it becomes law.",
+  "Setup takes longer than the game. Tradition.",
+  "Still finding pieces under the couch?",
+  "I promise not to peek at your hand.",
+  "Kingmaker spotted. Just kidding. Maybe.",
+  "The FAQ wins. The FAQ always wins.",
+  "I foresee a long game and a lost card.",
+  "Can’t trade that. Probably. Let’s look it up.",
+  "No table flipping. I’m fragile.",
+  "Someone’s counting victory points twice. Not naming names.",
+  "Sleeved cards, sorted bits, inner peace.",
+  "Who’s the first player? Whoever last saw a sandworm.",
+  "I have no hands, so I can’t cheat. Can you say the same?",
+  "Ready for your next turn?",
+  "Got a rules question? I’m all ears. Well, all orb.",
+  "The rulebook is long. My patience is longer.",
+  "Snacks off the board, please. The board thanks you.",
+  "Let’s learn a turn before anyone loses a friend.",
+  "Every game night needs a referee. Hi.",
 ];
-function phraseOfDay() {
-  const day = Math.floor((Date.now() - new Date().getTimezoneOffset() * 60000) / 86400000);
-  return PHRASES[day % PHRASES.length];
-}
+let phraseIndex = (() => {
+  let last = -1;
+  try { last = Number(localStorage.getItem("ordir-phrase") ?? -1); } catch {}
+  const next = (last + 1 + Math.floor(Math.random() * (PHRASES.length - 1))) % PHRASES.length;
+  try { localStorage.setItem("ordir-phrase", next); } catch {}
+  return next;
+})();
 
 function gamesPage() {
   const main = GAMES.filter((g) => !g.soon), soon = GAMES.filter((g) => g.soon);
@@ -813,7 +841,7 @@ function gamesPage() {
   const build = state.buildHome ? " build" : "";
   return `<div class="brand${build}"><button class="orb-btn" data-act="orb-ask" aria-label="Ask Ordir a rules question">${mascot("idle")}</button>
       <div><h1 tabindex="-1">Ordir</h1><button class="ask-link" data-act="orb-ask">${TAB_ICONS.ask}Ask me a rules question</button></div></div>
-    <p class="bubble${build}">${esc(phraseOfDay())}</p>
+    <button class="bubble${build}" data-act="next-phrase" aria-label="${esc(PHRASES[phraseIndex])} (tap for another)">${esc(PHRASES[phraseIndex])}</button>
     <div class="group"><h2>Choose a game</h2>
       ${main.map((g) => `<button class="game" data-act="game-${g.id}" ${state.script ? "" : "disabled"}>
         <span class="art">${cover(g) ? `<img src="${imgUrl(g.cover)}" alt="">` : ""}</span>
@@ -1581,25 +1609,26 @@ function startIntro() {
     layIntroLine();
   });
   resized.observe($("#phone"));
-  const camera = { duration: 1600, delay: 1300, easing: "cubic-bezier(.65, 0, .35, 1)", fill: "both" };
+  // HOLD: the logo rests this long before the line starts and the camera moves.
+  const HOLD = 1500, camera = { duration: 1600, delay: HOLD + 1300, easing: "cubic-bezier(.65, 0, .35, 1)", fill: "both" };
   // Hidden until it starts drawing: a not-yet-drawn line would still show its round cap as a dot.
   const draw = [{ strokeDashoffset: 1, opacity: 0 }, { strokeDashoffset: 0.995, opacity: 1, offset: 0.01 }, { strokeDashoffset: 0, opacity: 1 }];
-  $(".intro-line .approach").animate(draw, { duration: 2300, delay: 600, easing: "cubic-bezier(.4, 0, .25, 1)", fill: "both" });
-  $(".intro-line .rim").animate(draw, { duration: 550, delay: 2900, easing: "cubic-bezier(.3, 0, .2, 1)", fill: "both" });
-  $(".intro-line").animate([{ opacity: 1 }, { opacity: 0 }], { duration: 450, delay: 3500, fill: "forwards" });
+  $(".intro-line .approach").animate(draw, { duration: 2300, delay: HOLD + 600, easing: "cubic-bezier(.4, 0, .25, 1)", fill: "both" });
+  $(".intro-line .rim").animate(draw, { duration: 400, delay: HOLD + 2900, easing: "cubic-bezier(.3, 0, .2, 1)", fill: "both" });
+  $(".intro-line").animate([{ opacity: 1 }, { opacity: 0 }], { duration: 350, delay: HOLD + 3350, fill: "forwards" });
   // The track and backdrop are two screens tall, so -50% is one screen; Home's layer is one screen tall.
   $(".intro-track").animate([{ transform: "translateY(0)" }, { transform: "translateY(-50%)" }], camera);
   $(".intro-backdrop").animate([{ transform: "translateY(0)" }, { transform: "translateY(-50%)" }], camera);
   $(".intro-home").animate([{ transform: "translateY(100%)" }, { transform: "translateY(0)" }], camera);
-  $(".intro .skip").animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, delay: 1300, fill: "forwards" });
+  $(".intro .skip").animate([{ opacity: 1 }, { opacity: 0 }], { duration: 250, delay: HOLD + 1300, fill: "forwards" });
   // As the rim closes, the orb fills in under the line, then the Ask link and the phrase appear.
   setTimeout(() => {
     if (state.screen !== "intro") return;
     state.buildHome = true;
     $(".intro-home .brand")?.classList.add("build");
     $(".intro-home .bubble")?.classList.add("build");
-  }, 3300);
-  introTimer = setTimeout(() => showHome(true), 4700);
+  }, HOLD + 3150);
+  introTimer = setTimeout(() => showHome(true), HOLD + 4000);
 }
 document.addEventListener("keydown", (event) => {
   if (state.screen === "intro" && ["Enter", " ", "Escape"].includes(event.key)) { event.preventDefault(); showHome(); }
@@ -1677,6 +1706,13 @@ function handleClick(el) {
     case "menu": state.menu = true; render(); break;
     case "menu-close": state.menu = false; render(); break;
     case "event-done": s.pendingEvent = null; render(); break;
+    case "next-phrase": {
+      phraseIndex = (phraseIndex + 1) % PHRASES.length;
+      el.textContent = PHRASES[phraseIndex];
+      el.setAttribute("aria-label", `${PHRASES[phraseIndex]} (tap for another)`);
+      el.classList.remove("build", "pop"); void el.offsetWidth; el.classList.add("pop");
+      break;
+    }
     case "layout-info": showLayoutInfo(!layoutInfo.on); render(); break;
   }
 }
