@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Build the browser preview of the Dune guide from the same data the app ships.
+"""Build the browser preview of the game guides from the same data the app ships.
 
-Copies Preview/index.html, its font (Preview/fonts), its icons and web-app manifest, the turn script
-and every picture it names (the crops in Ordir/Assets.xcassets, from tools/crop_source_images.py)
-into Preview/dist/, so the preview can't drift from the app's data. Run from the repo root:
+Copies Preview/index.html, its font (Preview/fonts), its icons and web-app manifest, every game's turn
+script (scripts/<game>.json) and every picture each names (img/<game>/<id>.jpg, the crops in
+Ordir/Assets.xcassets from tools/crop_source_images.py) into Preview/dist/, so the preview can't drift
+from the app's data. Run from the repo root:
 
     python3 tools/build_preview.py
 
@@ -18,7 +19,7 @@ import subprocess
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-SCRIPT = ROOT / "Ordir" / "Games" / "Dune" / "duneWarForArrakis.turnscript.json"
+SCRIPTS = sorted((ROOT / "Ordir" / "Games").rglob("*.turnscript.json"))
 DIST = ROOT / "Preview" / "dist"
 
 
@@ -31,30 +32,34 @@ def build_stamp():
 
 
 def main():
-    script = json.loads(SCRIPT.read_text())
-    game = script["game"]
-    assets = ROOT / "Ordir" / "Assets.xcassets" / game
     shutil.rmtree(DIST, ignore_errors=True)
-    (DIST / "img").mkdir(parents=True)
+    DIST.mkdir(parents=True)
     # Stamp the version (commit and date) that the Account tab shows, so a phone can tell which build it runs.
     (DIST / "index.html").write_text((ROOT / "Preview" / "index.html").read_text().replace("__BUILD__", build_stamp()))
     shutil.copytree(ROOT / "Preview" / "fonts", DIST / "fonts")
     shutil.copytree(ROOT / "Preview" / "email", DIST / "email")  # images for the sign-in email (docs/email)
     shutil.copytree(ROOT / "Preview" / "icons", DIST / "icons")  # Home Screen and tab icons (rendered from icons/icon.svg)
     shutil.copy(ROOT / "Preview" / "manifest.webmanifest", DIST / "manifest.webmanifest")
-    shutil.copy(SCRIPT, DIST / "turnscript.json")
-    missing = []
-    for image in script["images"]:
-        name = f"{game}-{image['id']}"
-        source = assets / f"{name}.imageset" / f"{name}.jpg"
-        if source.exists():
-            shutil.copy(source, DIST / "img" / f"{image['id']}.jpg")
-        else:
-            missing.append(str(source.relative_to(ROOT)))
+    # Every game's turn script (scripts/<game>.json) and its pictures (img/<game>/<id>.jpg).
+    (DIST / "scripts").mkdir()
+    missing, built = [], []
+    for path in SCRIPTS:
+        script = json.loads(path.read_text())
+        game = script["game"]
+        assets = ROOT / "Ordir" / "Assets.xcassets" / game
+        shutil.copy(path, DIST / "scripts" / f"{game}.json")
+        (DIST / "img" / game).mkdir(parents=True)
+        for image in script["images"]:
+            name = f"{game}-{image['id']}"
+            source = assets / f"{name}.imageset" / f"{name}.jpg"
+            if source.exists():
+                shutil.copy(source, DIST / "img" / game / f"{image['id']}.jpg")
+            else:
+                missing.append(str(source.relative_to(ROOT)))
+        built.append(f"{game} v{script['version']} ({len(script['images'])} pictures)")
     if missing:
         sys.exit("Missing pictures, run tools/crop_source_images.py:\n  " + "\n  ".join(missing))
-    print(f"Built {DIST.relative_to(ROOT)}: turn script v{script['version']}, {len(script['images'])} pictures")
-
+    print(f"Built {DIST.relative_to(ROOT)}: " + ", ".join(built))
 
 if __name__ == "__main__":
     main()

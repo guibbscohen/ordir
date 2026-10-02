@@ -179,11 +179,11 @@ private struct TurnGuideRunner: View {
     @State private var nearSeat: TurnScript.Side
     @State private var battle: TurnGuideSession?
 
-    init(session: TurnGuideSession, mode: PlayMode, isBattle: Bool = false, nearSeat: TurnScript.Side = .atreides) {
+    init(session: TurnGuideSession, mode: PlayMode, isBattle: Bool = false, nearSeat: TurnScript.Side? = nil) {
         self.session = session
         self.mode = mode
         self.isBattle = isBattle
-        _nearSeat = State(initialValue: nearSeat)
+        _nearSeat = State(initialValue: nearSeat ?? session.script.sides[0].id)
     }
     @State private var enlarged: EnlargedImage?
     @State private var showsGameMenu = false
@@ -229,7 +229,7 @@ private struct TurnGuideRunner: View {
 
     // MARK: Split screen
 
-    private var farSeat: TurnScript.Side { nearSeat == .atreides ? .harkonnen : .atreides }
+    private var farSeat: TurnScript.Side { session.script.opponent(of: nearSeat) }
 
     /// VoiceOver starts with the near half, then the bar, then the far half; when a step is for both
     /// players, the far half's identical copy is skipped (unless it holds an event checklist).
@@ -283,7 +283,7 @@ private struct TurnGuideRunner: View {
         VStack(spacing: 0) {
             passBar
             if let side = session.handoffTo {
-                HandoffView(side: side, stepTitle: stepTitle) {
+                HandoffView(script: session.script, side: side, stepTitle: stepTitle) {
                     withAnimation(stepAnimation) { session.confirmHandoff() }
                 }
                 .transition(stepTransition)
@@ -439,7 +439,7 @@ private struct TurnGuideRunner: View {
                 .font(.ordir(.title2).weight(.semibold))
                 .accessibilityAddTraits(.isHeader)
             if let winner = session.winner {
-                Text("The \(Text(winner.displayName).foregroundColor(winner.color)) win")
+                Text("The \(Text(session.script.name(of: winner)).foregroundColor(session.script.color(of: winner))) win")
                     .font(.ordir(.title3).weight(.semibold))
             }
             Text(session.round == 1 ? "Played in 1 round." : "Played in \(session.round) rounds.")
@@ -494,7 +494,7 @@ private struct TurnGuideRunner: View {
             return
         }
         let step = session.step
-        let announcement: String = "\(step.side.displayName): \(stepTitle). \(step.instruction)"
+        let announcement: String = "\(session.script.name(of: step.side)): \(stepTitle). \(step.instruction)"
         AccessibilityNotification.Announcement(announcement).post()
         isSpeaking = true
         let seconds = min(5, max(1.5, Double(step.instruction.count) / 18))
@@ -537,14 +537,14 @@ private struct GameMenu: View {
                     }
                 }
                 Section {
-                    Button("The Atreides won") { endGame(.atreides) }
-                        .foregroundStyle(TurnScript.Side.atreides.color)
-                    Button("The Harkonnen won") { endGame(.harkonnen) }
-                        .foregroundStyle(TurnScript.Side.harkonnen.color)
+                    ForEach(session.script.sides) { side in
+                        Button("The \(side.name) won") { endGame(side.id) }
+                            .foregroundStyle(session.script.color(of: side.id))
+                    }
                 } header: {
                     Text("End the game")
                 } footer: {
-                    Text("The Harkonnen win at 10 Supremacy points; the Atreides when every Prescience marker reaches their Secret Objective (rulebook, pages 7 and 27).")
+                    Text("\(session.script.victory.note) (\(session.script.citeText(session.script.victory.citations)))")
                 }
                 Section {
                     Button("Leave the guide", action: leave)
@@ -566,6 +566,7 @@ private struct GameMenu: View {
 
 /// Pass-the-phone play: shown when the next step belongs to the other player.
 private struct HandoffView: View {
+    let script: TurnScript
     let side: TurnScript.Side
     let stepTitle: String
     let ready: () -> Void
@@ -577,7 +578,7 @@ private struct HandoffView: View {
                 .frame(height: 80)
                 .accessibilityHidden(true)
             VStack(spacing: 6) {
-                Text("Pass the phone to the \(Text(side.displayName).foregroundColor(side.color))")
+                Text("Pass the phone to the \(Text(script.name(of: side)).foregroundColor(script.color(of: side)))")
                     .font(.ordir(.title2).weight(.semibold))
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
@@ -590,7 +591,7 @@ private struct HandoffView: View {
             }
             Spacer(minLength: 0)
             Button(action: ready) {
-                Text("I’m the \(side.displayName)")
+                Text("I’m the \(script.name(of: side))")
                     .font(.ordir(.headline))
                     .frame(maxWidth: .infinity, minHeight: 54)
             }
@@ -657,7 +658,7 @@ private struct SeatPanel: View {
                 .scrollIndicators(.hidden)
                 actions
             } else {
-                WaitingView(side: step.side, stepTitle: stepTitle, startedAt: startedAt)
+                WaitingView(sideName: script.name(of: step.side), stepTitle: stepTitle, startedAt: startedAt)
                     .id(stepKey)
                     .transition(stepTransition)
             }
@@ -693,18 +694,18 @@ private struct SeatPanel: View {
     private var seatLabel: some View {
         HStack(spacing: 8) {
             Circle()
-                .fill(seat.color)
+                .fill(script.color(of: seat))
                 .frame(width: 8, height: 8)
-            Text(seat.displayName)
+            Text(script.name(of: seat))
                 .font(.ordir(.subheadline).weight(.semibold))
-                .foregroundStyle(seat.color)
+                .foregroundStyle(script.color(of: seat))
             Spacer()
         }
         .padding(.horizontal, 20)
         .padding(.top, 12)
         .padding(.bottom, 8)
         .accessibilityElement(children: .combine)
-        .accessibilityLabel("\(seat.displayName) side")
+        .accessibilityLabel("\(script.name(of: seat)) side")
         .accessibilityAddTraits(.isHeader)
     }
 
@@ -1098,7 +1099,7 @@ private struct CitationList: View {
 
 /// What the waiting player sees: who is acting, on which step, and for how long.
 private struct WaitingView: View {
-    let side: TurnScript.Side
+    let sideName: String
     let stepTitle: String
     let startedAt: Date
 
@@ -1130,7 +1131,7 @@ private struct WaitingView: View {
 
     private var line: Text {
         let step = Text(stepTitle).fontWeight(.semibold)
-        return Text("The \(side.displayName) is on \(step)")
+        return Text("The \(sideName) is on \(step)")
     }
 }
 
@@ -1223,23 +1224,13 @@ private struct PrimaryButtonStyle: ButtonStyle {
     }
 }
 
-extension TurnScript.Side {
-    var displayName: String {
-        switch self {
-        case .atreides: "Atreides"
-        case .harkonnen: "Harkonnen"
-        case .both: "Both players"
-        case .attacker: "Attacker"
-        case .defender: "Defender"
+extension TurnScript {
+    /// A side's colour from the script ("#rrggbb"); grey for both players.
+    func color(of side: Side) -> Color {
+        guard let hex = sides.first(where: { $0.id == side })?.color.dropFirst(), let value = UInt32(hex, radix: 16) else {
+            return .secondary
         }
-    }
-
-    var color: Color {
-        switch self {
-        case .atreides: Color("SideAtreides")
-        case .harkonnen: Color("SideHarkonnen")
-        case .both, .attacker, .defender: .secondary
-        }
+        return Color(red: Double(value >> 16 & 0xFF) / 255, green: Double(value >> 8 & 0xFF) / 255, blue: Double(value & 0xFF) / 255)
     }
 }
 

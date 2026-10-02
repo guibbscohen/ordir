@@ -18,7 +18,6 @@ import unicodedata
 from pypdf import PdfReader
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-SIDES = {"atreides", "harkonnen", "both"}
 
 
 def normalise(text):
@@ -72,6 +71,18 @@ def validate(path):
         name = f"{script['game']}-{image.get('id')}"
         if not (ROOT / "Ordir" / "Assets.xcassets" / script["game"] / f"{name}.imageset" / f"{name}.jpg").exists():
             errors.append(f"{where}: asset missing, run tools/crop_source_images.py")
+
+    # The two sides (factions) the game is played between; steps name one of them, or "both".
+    declared = script.get("sides", [])
+    if len(declared) != 2 or not all(
+        side.get("id") and side.get("name") and re.fullmatch(r"#[0-9a-fA-F]{6}", side.get("color", "")) for side in declared
+    ):
+        errors.append("sides: need exactly 2 sides, each with id, name and a #rrggbb color")
+    SIDES = {side.get("id") for side in declared} | {"both"}
+    victory = script.get("victory", {})
+    if not victory.get("note", "").strip():
+        errors.append("victory: needs a note saying how each side wins")
+    check_citations(victory.get("citations", []), "victory", sources, pages, errors)
 
     expansions = {e["id"] for e in script.get("expansions", [])}
     for e in expansions - set(sources):

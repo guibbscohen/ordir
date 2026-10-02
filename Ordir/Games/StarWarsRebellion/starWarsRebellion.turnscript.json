@@ -1,0 +1,1830 @@
+{
+  "game": "starWarsRebellion",
+  "title": "Star Wars: Rebellion",
+  "version": 1,
+  "scope": "Setup, then rounds until someone wins; 2 players (Empire vs Rebels) on one phone; optional Rise of the Empire expansion",
+  "sides": [
+    {
+      "id": "rebel",
+      "name": "Rebels",
+      "color": "#ff7a5c"
+    },
+    {
+      "id": "imperial",
+      "name": "Empire",
+      "color": "#9db8ff"
+    }
+  ],
+  "victory": {
+    "note": "The Empire wins at once with units in the revealed Rebel base\u2019s system and no Rebel units there; the Rebels win at once when the reputation marker meets the time marker.",
+    "citations": [
+      {
+        "source": "rulesReference",
+        "page": 14,
+        "excerpt": "The Imperial player wins the game immediately if there are Imperial units in the Rebel base\u2019s system and there are no Rebel units in the system."
+      },
+      {
+        "source": "rulesReference",
+        "page": 14,
+        "excerpt": "The Rebel player wins the game immediately if the reputation marker is in the same space as the time marker."
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "learnToPlay",
+      "title": "Learn to Play",
+      "shortTitle": "Learn to Play",
+      "url": "https://cdn.svc.asmodee.net/production-fantasyflightgames/uploads/2026/09/sw03_learn_to_play_web.pdf",
+      "file": "Sources/starWarsRebellion/sw03_learn_to_play_web.pdf",
+      "sha256": "b26b98139d694e9f42cb36060ec82fdc3000ab753d29809be03b7bc44d8598fc"
+    },
+    {
+      "id": "rulesReference",
+      "title": "Rules Reference",
+      "shortTitle": "Rules Reference",
+      "url": "https://cdn.svc.asmodee.net/production-fantasyflightgames/uploads/2026/09/sw03_rules_reference_web.pdf",
+      "file": "Sources/starWarsRebellion/sw03_rules_reference_web.pdf",
+      "sha256": "0b5af3a28bc4bc29a16f84456ed3a6543bf4d6a141461971e6fb170c6afba35a"
+    },
+    {
+      "id": "faq",
+      "title": "FAQ and errata (v2.1, May 2019)",
+      "shortTitle": "FAQ",
+      "url": "https://cdn.svc.asmodee.net/production-fantasyflightgames/uploads/2026/09/sw03_faq_v2_1.pdf",
+      "file": "Sources/starWarsRebellion/sw03_faq_v2_1.pdf",
+      "sha256": "0f6cdcbe9bf50d8afe6d17bfb6d8936d99ea1f060b89bcd9500ce5fafcebd82e"
+    },
+    {
+      "id": "riseOfTheEmpire",
+      "title": "Rise of the Empire rulesheet",
+      "shortTitle": "Rise of the Empire",
+      "url": "https://cdn.svc.asmodee.net/production-fantasyflightgames/uploads/2026/09/sw04_rulebook_web.pdf",
+      "file": "Sources/starWarsRebellion/expansions/sw04_rulebook_web.pdf",
+      "sha256": "46fd9ec0134ff3fabc2a12b111789e990549c84d82ec3ad44cddcf9fe2a66eca"
+    }
+  ],
+  "expansions": [
+    {
+      "id": "riseOfTheEmpire",
+      "title": "Rise of the Empire",
+      "summary": "Rogue One leaders, new units and missions, and cinematic combat with advanced tactic cards."
+    }
+  ],
+  "images": [
+    {
+      "id": "cover",
+      "caption": "Box art",
+      "source": "learnToPlay",
+      "page": 1,
+      "crop": [
+        0.0,
+        0.0,
+        1.0,
+        0.75
+      ]
+    },
+    {
+      "id": "game-board",
+      "caption": "Game board (2 halves)",
+      "source": "learnToPlay",
+      "page": 3,
+      "crop": [
+        0.335,
+        0.15,
+        0.73,
+        0.315
+      ]
+    },
+    {
+      "id": "objective-cards",
+      "caption": "Objective cards",
+      "source": "learnToPlay",
+      "page": 3,
+      "crop": [
+        0.74,
+        0.16,
+        0.945,
+        0.33
+      ]
+    },
+    {
+      "id": "leaders",
+      "caption": "Leaders on stands",
+      "source": "learnToPlay",
+      "page": 3,
+      "crop": [
+        0.14,
+        0.37,
+        0.335,
+        0.497
+      ]
+    },
+    {
+      "id": "faction-sheets",
+      "caption": "Faction sheets",
+      "source": "learnToPlay",
+      "page": 3,
+      "crop": [
+        0.515,
+        0.355,
+        0.74,
+        0.495
+      ]
+    },
+    {
+      "id": "mission-cards",
+      "caption": "Mission cards",
+      "source": "learnToPlay",
+      "page": 3,
+      "crop": [
+        0.73,
+        0.335,
+        0.95,
+        0.508
+      ]
+    },
+    {
+      "id": "loyalty-markers",
+      "caption": "Loyalty and subjugation markers",
+      "source": "learnToPlay",
+      "page": 3,
+      "crop": [
+        0.165,
+        0.515,
+        0.38,
+        0.615
+      ]
+    },
+    {
+      "id": "damage-markers",
+      "caption": "Damage markers",
+      "source": "learnToPlay",
+      "page": 3,
+      "crop": [
+        0.395,
+        0.505,
+        0.555,
+        0.615
+      ]
+    },
+    {
+      "id": "time-reputation",
+      "caption": "Time and reputation markers",
+      "source": "learnToPlay",
+      "page": 3,
+      "crop": [
+        0.56,
+        0.53,
+        0.74,
+        0.605
+      ]
+    },
+    {
+      "id": "probe-cards",
+      "caption": "Probe cards",
+      "source": "learnToPlay",
+      "page": 3,
+      "crop": [
+        0.75,
+        0.51,
+        0.925,
+        0.63
+      ]
+    },
+    {
+      "id": "dice",
+      "caption": "Custom dice (5 black, 5 red)",
+      "source": "learnToPlay",
+      "page": 3,
+      "crop": [
+        0.54,
+        0.61,
+        0.69,
+        0.728
+      ]
+    },
+    {
+      "id": "tactic-cards",
+      "caption": "Space and ground tactic cards",
+      "source": "learnToPlay",
+      "page": 3,
+      "crop": [
+        0.75,
+        0.64,
+        0.95,
+        0.78
+      ]
+    },
+    {
+      "id": "miniatures",
+      "caption": "Plastic miniatures",
+      "source": "learnToPlay",
+      "page": 3,
+      "crop": [
+        0.2,
+        0.728,
+        0.64,
+        0.94
+      ]
+    },
+    {
+      "id": "action-cards",
+      "caption": "Action cards",
+      "source": "learnToPlay",
+      "page": 3,
+      "crop": [
+        0.75,
+        0.785,
+        0.95,
+        0.918
+      ]
+    },
+    {
+      "id": "setup-components",
+      "caption": "Imperial player's components",
+      "source": "learnToPlay",
+      "page": 4,
+      "crop": [
+        0.48,
+        0.185,
+        0.875,
+        0.345
+      ]
+    },
+    {
+      "id": "setup-leader-pool",
+      "caption": "Leader pool and recruit icon",
+      "source": "learnToPlay",
+      "page": 4,
+      "crop": [
+        0.5,
+        0.355,
+        0.875,
+        0.46
+      ]
+    },
+    {
+      "id": "setup-time-track",
+      "caption": "Time track with time and reputation markers",
+      "source": "learnToPlay",
+      "page": 4,
+      "crop": [
+        0.475,
+        0.475,
+        0.875,
+        0.57
+      ]
+    },
+    {
+      "id": "setup-objective-deck",
+      "caption": "Building the objective deck",
+      "source": "learnToPlay",
+      "page": 4,
+      "crop": [
+        0.52,
+        0.615,
+        0.875,
+        0.775
+      ]
+    },
+    {
+      "id": "setup-action-deck",
+      "caption": "Action deck next to the faction sheet",
+      "source": "learnToPlay",
+      "page": 4,
+      "crop": [
+        0.5,
+        0.785,
+        0.865,
+        0.89
+      ]
+    },
+    {
+      "id": "setup-tactics",
+      "caption": "Tactic decks, markers and dice",
+      "source": "learnToPlay",
+      "page": 5,
+      "crop": [
+        0.525,
+        0.075,
+        0.875,
+        0.18
+      ]
+    },
+    {
+      "id": "setup-missions",
+      "caption": "Starting missions, projects and the mission deck",
+      "source": "learnToPlay",
+      "page": 5,
+      "crop": [
+        0.53,
+        0.195,
+        0.925,
+        0.455
+      ]
+    },
+    {
+      "id": "setup-starting-units",
+      "caption": "Starting loyalty and units",
+      "source": "learnToPlay",
+      "page": 5,
+      "crop": [
+        0.55,
+        0.465,
+        0.83,
+        0.55
+      ]
+    },
+    {
+      "id": "setup-base",
+      "caption": "Hiding the Rebel base",
+      "source": "learnToPlay",
+      "page": 5,
+      "crop": [
+        0.6,
+        0.58,
+        0.985,
+        0.75
+      ]
+    },
+    {
+      "id": "setup-hand",
+      "caption": "Starting hand of missions",
+      "source": "learnToPlay",
+      "page": 5,
+      "crop": [
+        0.53,
+        0.775,
+        0.88,
+        0.865
+      ]
+    },
+    {
+      "id": "assign-leaders",
+      "caption": "Leaders assigned to missions",
+      "source": "learnToPlay",
+      "page": 6,
+      "crop": [
+        0.49,
+        0.57,
+        0.995,
+        0.87
+      ]
+    },
+    {
+      "id": "activate-system",
+      "caption": "Activating a system",
+      "source": "learnToPlay",
+      "page": 7,
+      "crop": [
+        0.155,
+        0.71,
+        0.535,
+        0.882
+      ]
+    },
+    {
+      "id": "mission-example",
+      "caption": "Revealing a mission",
+      "source": "learnToPlay",
+      "page": 9,
+      "crop": [
+        0.1,
+        0.225,
+        0.93,
+        0.575
+      ]
+    },
+    {
+      "id": "build-example",
+      "caption": "Building units",
+      "source": "learnToPlay",
+      "page": 10,
+      "crop": [
+        0.46,
+        0.105,
+        0.855,
+        0.475
+      ]
+    },
+    {
+      "id": "build-queue",
+      "caption": "Imperial build queue",
+      "source": "learnToPlay",
+      "page": 10,
+      "crop": [
+        0.365,
+        0.745,
+        0.455,
+        0.955
+      ]
+    },
+    {
+      "id": "rebel-base-space",
+      "caption": "Rebel units on the Rebel Base space",
+      "source": "learnToPlay",
+      "page": 12,
+      "crop": [
+        0.315,
+        0.285,
+        0.455,
+        0.448
+      ]
+    },
+    {
+      "id": "combat-example",
+      "caption": "A combat",
+      "source": "learnToPlay",
+      "page": 15,
+      "crop": [
+        0.215,
+        0.315,
+        0.905,
+        0.625
+      ]
+    },
+    {
+      "id": "rote-green-dice",
+      "caption": "Green dice",
+      "source": "riseOfTheEmpire",
+      "page": 1,
+      "crop": [
+        0.66,
+        0.41,
+        0.715,
+        0.49
+      ]
+    },
+    {
+      "id": "rote-jabba",
+      "caption": "Leader with minor skills",
+      "source": "riseOfTheEmpire",
+      "page": 1,
+      "crop": [
+        0.667,
+        0.595,
+        0.715,
+        0.745
+      ]
+    },
+    {
+      "id": "rote-tactic-card",
+      "caption": "Advanced tactic card",
+      "source": "riseOfTheEmpire",
+      "page": 2,
+      "crop": [
+        0.205,
+        0.585,
+        0.26,
+        0.668
+      ]
+    },
+    {
+      "id": "rote-mission-icons",
+      "caption": "Mission set icons",
+      "source": "riseOfTheEmpire",
+      "page": 2,
+      "crop": [
+        0.5,
+        0.305,
+        0.74,
+        0.425
+      ]
+    }
+  ],
+  "phases": [
+    {
+      "id": "setup",
+      "part": "setup",
+      "title": "Setup",
+      "steps": [
+        {
+          "id": "setup-factions",
+          "side": "both",
+          "title": "Choose sides",
+          "instruction": "Decide who plays the Empire and who plays the Rebels (flip a coin if you can't agree).",
+          "bullets": [
+            "Each player takes their faction\u2019s miniatures, leaders, loyalty markers, faction sheet, mission cards and action cards."
+          ],
+          "components": [
+            "Both factions' miniatures, leaders and loyalty markers",
+            "Faction sheets",
+            "Mission and action cards"
+          ],
+          "images": [
+            "setup-components",
+            "faction-sheets"
+          ],
+          "citations": [
+            {
+              "source": "rulesReference",
+              "page": 15,
+              "excerpt": "Players must choose who will control the Imperials and who will control the Rebels for this game. If they cannot decide, choose randomly"
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "riseOfTheEmpire",
+              "text": "Put your unit reference sheet below your faction sheet; you can build the units on it.",
+              "images": [
+                "faction-sheets"
+              ],
+              "citations": [
+                {
+                  "source": "riseOfTheEmpire",
+                  "page": 1,
+                  "excerpt": "After each player has gathered his faction components, he places his unit reference sheet below his faction sheet."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "setup-leaders",
+          "side": "both",
+          "title": "Starting leaders",
+          "instruction": "Put your 4 leaders without a recruit icon in the Leader Pool space of your faction sheet.",
+          "bullets": [
+            "Leaders with a recruit icon wait next to the board until they\u2019re recruited."
+          ],
+          "components": [
+            "Leaders on stands",
+            "Faction sheet"
+          ],
+          "images": [
+            "setup-leader-pool",
+            "leaders"
+          ],
+          "citations": [
+            {
+              "source": "rulesReference",
+              "page": 15,
+              "excerpt": "Each player takes his four leaders that do not have a recruit icon and places them in the \u201cLeader Pool\u201d space of his faction sheet."
+            }
+          ]
+        },
+        {
+          "id": "setup-board",
+          "side": "both",
+          "title": "Board and time track",
+          "instruction": "Put the two halves of the board together in the middle of the table.",
+          "bullets": [
+            "Time marker: space 1 of the time track.",
+            "Reputation marker: space 14."
+          ],
+          "components": [
+            "Game board (2 halves)",
+            "Time marker",
+            "Reputation marker"
+          ],
+          "images": [
+            "game-board",
+            "setup-time-track"
+          ],
+          "citations": [
+            {
+              "source": "rulesReference",
+              "page": 15,
+              "excerpt": "place the time marker on the first space of the time track and the reputation marker on space \u201c14\u201d of the time track."
+            }
+          ]
+        },
+        {
+          "id": "setup-objectives",
+          "side": "rebel",
+          "title": "Objective deck",
+          "instruction": "Sort the objective cards by the number on their backs (I, II, III) and shuffle each pile.",
+          "bullets": [
+            "Stack them on the Objectives space: III at the bottom, then II, then I on top.",
+            "Draw 1 objective card and keep it secret from the Empire."
+          ],
+          "components": [
+            "Objective cards"
+          ],
+          "images": [
+            "setup-objective-deck",
+            "objective-cards"
+          ],
+          "citations": [
+            {
+              "source": "rulesReference",
+              "page": 15,
+              "excerpt": "Then place pile III on the \u201cObjectives\u201d space of the game board, followed by pile II, and then pile I on top of it to create the objective deck. Then the Rebel player draws one objective card."
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "riseOfTheEmpire",
+              "text": "Build the objective deck this way instead:",
+              "bullets": [
+                "Stage III: 1 \u201cDeath Star Plans\u201d + 4 random stage III cards, shuffled.",
+                "Stage II: 1 \u201cDeath Star Plans\u201d + 4 random stage II cards, shuffled, on top.",
+                "Stage I: 5 random stage I cards on top. Unused objectives go back in the box unseen.",
+                "You still draw 1 objective card (FAQ)."
+              ],
+              "images": [
+                "setup-objective-deck"
+              ],
+              "citations": [
+                {
+                  "source": "riseOfTheEmpire",
+                  "page": 1,
+                  "excerpt": "Build a stage III deck with 1 \u201cDeath Star Plans\u201d card and 4 random stage III cards."
+                },
+                {
+                  "source": "riseOfTheEmpire",
+                  "page": 1,
+                  "excerpt": "Shuffle the stage I pile and deal 5 random cards onto the top of the stage II deck."
+                },
+                {
+                  "source": "faq",
+                  "page": 6,
+                  "excerpt": "The Rebel player still draws an objective card during this step as normal.",
+                  "entry": "Errata: Prepare Objective Deck"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "setup-action-decks",
+          "side": "both",
+          "title": "Action decks",
+          "instruction": "Shuffle your action cards that have a recruit icon into your action deck, facedown next to your faction sheet.",
+          "components": [
+            "Action cards",
+            "Faction sheet"
+          ],
+          "images": [
+            "setup-action-deck",
+            "action-cards"
+          ],
+          "citations": [
+            {
+              "source": "rulesReference",
+              "page": 15,
+              "excerpt": "Each player takes all of his action cards that have a recruit icon and shuffles them to create his action deck."
+            }
+          ]
+        },
+        {
+          "id": "setup-tactics",
+          "side": "both",
+          "title": "Tactic decks, markers and dice",
+          "instruction": "Shuffle the space and ground tactic decks separately and put them where both of you can reach.",
+          "bullets": [
+            "Put the remaining markers and dice nearby."
+          ],
+          "components": [
+            "Space tactic cards",
+            "Ground tactic cards",
+            "Markers",
+            "Dice"
+          ],
+          "images": [
+            "setup-tactics",
+            "tactic-cards"
+          ],
+          "citations": [
+            {
+              "source": "rulesReference",
+              "page": 15,
+              "excerpt": "Shuffle the space tactic and ground tactic decks individually and place them within easy reach of all players. Then take all remaining markers and dice and place them nearby."
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "riseOfTheEmpire",
+              "text": "Remove the original tactic cards. Each of you uses your own advanced tactic decks (Cinematic Combat).",
+              "images": [
+                "rote-tactic-card"
+              ],
+              "citations": [
+                {
+                  "source": "riseOfTheEmpire",
+                  "page": 1,
+                  "excerpt": "Remove all of the original tactic cards from the game. Instead, use the advanced tactic cards found in this expansion"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "setup-missions",
+          "side": "both",
+          "title": "Mission cards",
+          "instruction": "Sort your mission cards:",
+          "bullets": [
+            "Starting missions (arrow at the bottom): set your 4 aside.",
+            "Projects (white star in a blue circle): the Empire shuffles them onto the Projects space.",
+            "The rest: shuffle into your mission deck, facedown next to your faction sheet."
+          ],
+          "components": [
+            "Mission cards",
+            "Project cards"
+          ],
+          "images": [
+            "setup-missions",
+            "mission-cards"
+          ],
+          "citations": [
+            {
+              "source": "rulesReference",
+              "page": 15,
+              "excerpt": "Each player takes his four starting mission cards and sets them aside."
+            },
+            {
+              "source": "rulesReference",
+              "page": 15,
+              "excerpt": "The Imperial player takes the project cards, shuffles them together, and places the deck facedown on the \u201cProjects\u201d space of the game board."
+            },
+            {
+              "source": "rulesReference",
+              "page": 15,
+              "excerpt": "Each player takes his remaining mission cards and shuffles them to create his mission deck."
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "riseOfTheEmpire",
+              "text": "Shuffle the expansion\u2019s mission cards into your decks, and its project cards into the project deck.",
+              "bullets": [
+                "First game with the expansion: build your mission deck only from cards with a Darth Vader icon or a leader icon.",
+                "Later games: each of you secretly picks a card from your mission deck and you reveal together. Darth Vader icon: use the Rise of the Empire set. Leader icon or no icon: use the base set.",
+                "Starting missions and projects are always used."
+              ],
+              "images": [
+                "rote-mission-icons"
+              ],
+              "citations": [
+                {
+                  "source": "riseOfTheEmpire",
+                  "page": 1,
+                  "excerpt": "For your first game using the expansion, players should build their mission decks using only the mission cards that have a Darth Vader icon or a leader icon on the left side of the card."
+                },
+                {
+                  "source": "riseOfTheEmpire",
+                  "page": 2,
+                  "excerpt": "Each player that revealed a card that has a Darth Vader icon on it will use the Rise of the Empire set of mission cards this game."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "setup-loyalty",
+          "side": "both",
+          "title": "Starting loyalty",
+          "instruction": "Shuffle the probe deck and reveal cards until 3 Rebel systems and 5 Imperial systems have come up.",
+          "bullets": [
+            "A Rebel loyalty marker in each of the 3 Rebel systems.",
+            "A subjugation marker in each of the first 2 Imperial systems; an Imperial loyalty marker in the other 3.",
+            "The 5 Imperial probe cards go back in the box; shuffle the rest back into the probe deck."
+          ],
+          "components": [
+            "Probe cards",
+            "Rebel loyalty markers",
+            "Imperial loyalty and subjugation markers"
+          ],
+          "images": [
+            "probe-cards",
+            "loyalty-markers"
+          ],
+          "citations": [
+            {
+              "source": "rulesReference",
+              "page": 15,
+              "excerpt": "reveal cards from the top of the deck until three Rebel systems and five Imperial systems have been revealed."
+            },
+            {
+              "source": "rulesReference",
+              "page": 15,
+              "excerpt": "Place a subjugation marker in each of the first two Imperial systems drawn and an Imperial loyalty marker in each of the other three Imperial systems drawn."
+            }
+          ]
+        },
+        {
+          "id": "setup-imperial-units",
+          "side": "imperial",
+          "title": "Imperial starting units",
+          "instruction": "Place your starting units in systems with an Imperial loyalty or subjugation marker:",
+          "bullets": [
+            "3 Star Destroyers, 3 Assault Carriers, 12 TIE Fighters.",
+            "12 Stormtroopers, 5 AT-STs, 1 AT-AT, 1 Death Star.",
+            "At least 1 ground unit in each Imperial system."
+          ],
+          "components": [
+            "3 Star Destroyers",
+            "3 Assault Carriers",
+            "12 TIE Fighters",
+            "12 Stormtroopers",
+            "5 AT-STs",
+            "1 AT-AT",
+            "1 Death Star"
+          ],
+          "images": [
+            "setup-starting-units",
+            "miniatures"
+          ],
+          "citations": [
+            {
+              "source": "rulesReference",
+              "page": 15,
+              "excerpt": "The Imperial player receives 3 Star Destroyers, 3 Assault Carriers, 12 TIE Fighters, 12 Stormtroopers, 5 AT-STs, 1 AT-AT, and 1 Death Star"
+            },
+            {
+              "source": "rulesReference",
+              "page": 15,
+              "excerpt": "At least one ground unit must be placed in each Imperial system."
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "riseOfTheEmpire",
+              "text": "If you both agree to use the Rise of the Empire starting units, instead:",
+              "bullets": [
+                "1 Death Star on space 3 of your build queue.",
+                "Any remote system: 4 TIE Fighters, 1 Stormtrooper, 1 Death Star Under Construction. Remove its probe card from the game.",
+                "Then 8 TIE Fighters, 3 Assault Carriers, 3 Star Destroyers, 2 TIE Strikers, 12 Stormtroopers, 4 AT-STs, 2 Assault Tanks, 1 AT-AT in Imperial systems or the Death Star Under Construction\u2019s system."
+              ],
+              "images": [
+                "miniatures"
+              ],
+              "citations": [
+                {
+                  "source": "riseOfTheEmpire",
+                  "page": 1,
+                  "excerpt": "The Imperial player places 1 Death Star on space 3 of his build queue."
+                },
+                {
+                  "source": "riseOfTheEmpire",
+                  "page": 1,
+                  "excerpt": "Then remove the remote system\u2019s card from the probe deck and place the card in the game box."
+                },
+                {
+                  "source": "riseOfTheEmpire",
+                  "page": 1,
+                  "excerpt": "The Imperial player receives 8 TIE Fighters, 3 Assault Carriers, 3 Star Destroyers, 2 TIE Strikers, 12 Stormtroopers, 4 AT-STs, 2 Assault Tanks, and 1 AT-AT."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "setup-rebel-units",
+          "side": "rebel",
+          "title": "Rebel starting units",
+          "instruction": "Place your starting units on the Rebel Base space and/or in any one system without Imperial units:",
+          "bullets": [
+            "1 Corellian Corvette, 1 Rebel Transport, 2 X-wings, 2 Y-wings.",
+            "6 Rebel Troopers, 2 Airspeeders.",
+            "The FAQ allows any one system without Imperial units (the Rules Reference said a Rebel or neutral system)."
+          ],
+          "components": [
+            "1 Corellian Corvette",
+            "1 Rebel Transport",
+            "2 X-wings",
+            "2 Y-wings",
+            "6 Rebel Troopers",
+            "2 Airspeeders"
+          ],
+          "images": [
+            "rebel-base-space",
+            "miniatures"
+          ],
+          "citations": [
+            {
+              "source": "rulesReference",
+              "page": 15,
+              "excerpt": "The Rebel player receives 1 Corellian Corvette, 1 Rebel Transport, 2 X-wings, 2 Y-wings, 6 Rebel Troopers, and 2 Airspeeders."
+            },
+            {
+              "source": "faq",
+              "page": 1,
+              "excerpt": "The Rebel player can place starting units on the \u2018Rebel Base\u2019 space and/or any one system that does not contain Imperial units.",
+              "entry": "Errata: Neutral Systems (setup step 8)"
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "riseOfTheEmpire",
+              "text": "If you both agreed to use the Rise of the Empire starting units, take these instead:",
+              "bullets": [
+                "1 X-wing, 1 Y-wing, 1 U-wing, 1 Rebel Transport, 1 Corellian Corvette.",
+                "5 Rebel Troopers, 2 Airspeeders, 1 Rebel Vanguard."
+              ],
+              "images": [
+                "miniatures"
+              ],
+              "citations": [
+                {
+                  "source": "riseOfTheEmpire",
+                  "page": 1,
+                  "excerpt": "The Rebel player receives 1 X-wing, 1 Y-wing, 1 U-wing, 1 Rebel Transport, 1 Corellian Corvette, 5 Rebel Troopers, 2 Airspeeders, and 1 Rebel Vanguard."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "setup-starting-actions",
+          "side": "both",
+          "title": "Starting action cards",
+          "instruction": "Draw 2 random starting action cards (the ones without a recruit icon) and keep them facedown by your faction sheet.",
+          "bullets": [
+            "Return the other starting action cards to the box without looking."
+          ],
+          "components": [
+            "Starting action cards"
+          ],
+          "images": [
+            "action-cards"
+          ],
+          "citations": [
+            {
+              "source": "rulesReference",
+              "page": 15,
+              "excerpt": "Each player draws two random starting action cards (i.e., the action cards without a recruit icon on them)."
+            }
+          ]
+        },
+        {
+          "id": "setup-base",
+          "side": "rebel",
+          "title": "Hide the Rebel base",
+          "instruction": "Secretly choose a card from the probe deck and put it facedown under the Rebel base Location space.",
+          "bullets": [
+            "Then shuffle the probe deck onto the Probe Deck space."
+          ],
+          "components": [
+            "Probe deck",
+            "Game board"
+          ],
+          "images": [
+            "setup-base"
+          ],
+          "citations": [
+            {
+              "source": "rulesReference",
+              "page": 15,
+              "excerpt": "The Rebel player secretly chooses one card from the probe deck and places it facedown under the Rebel base \u201cLocation\u201d space of the game board."
+            }
+          ]
+        },
+        {
+          "id": "setup-hand",
+          "side": "both",
+          "title": "Starting hand",
+          "instruction": "Take your 4 starting missions and draw 2 cards from your mission deck. Keep your hand secret.",
+          "components": [
+            "Starting missions",
+            "Mission deck"
+          ],
+          "images": [
+            "setup-hand"
+          ],
+          "citations": [
+            {
+              "source": "rulesReference",
+              "page": 15,
+              "excerpt": "Each player takes his four starting missions and draws the top two cards from his mission deck to create his starting hand."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "assignment",
+      "part": "round",
+      "title": "Assignment Phase",
+      "steps": [
+        {
+          "id": "assign-rebel",
+          "side": "rebel",
+          "title": "Assign leaders",
+          "instruction": "Assign leaders to missions:",
+          "bullets": [
+            "Put a mission card facedown by your faction sheet and 1 or 2 leaders from your pool on it.",
+            "Repeat for as many missions as you like; missions stay hidden.",
+            "Leaders you don\u2019t assign stay in your pool for the Command Phase."
+          ],
+          "components": [
+            "Mission cards in hand",
+            "Leaders in your leader pool"
+          ],
+          "images": [
+            "assign-leaders"
+          ],
+          "citations": [
+            {
+              "source": "rulesReference",
+              "page": 3,
+              "excerpt": "the player takes a mission card from his hand and places it facedown near his faction sheet. Then he chooses one or two leaders from his leader pool and places them on top of that card."
+            },
+            {
+              "source": "rulesReference",
+              "page": 3,
+              "excerpt": "The Rebel player starts by assigning any of his leaders to missions."
+            }
+          ]
+        },
+        {
+          "id": "assign-imperial",
+          "side": "imperial",
+          "title": "Assign leaders",
+          "instruction": "Now assign your leaders to missions:",
+          "bullets": [
+            "Put a mission card facedown by your faction sheet and 1 or 2 leaders from your pool on it.",
+            "Leaders you don\u2019t assign stay in your pool for the Command Phase."
+          ],
+          "components": [
+            "Mission cards in hand",
+            "Leaders in your leader pool"
+          ],
+          "images": [
+            "assign-leaders"
+          ],
+          "citations": [
+            {
+              "source": "rulesReference",
+              "page": 3,
+              "excerpt": "When the Rebel player is finished, the Imperial player assigns any of his leaders to missions."
+            },
+            {
+              "source": "learnToPlay",
+              "page": 6,
+              "excerpt": "After the Imperial player finishes assigning his leaders, players proceed to the Command Phase."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "command",
+      "part": "round",
+      "title": "Command Phase",
+      "loop": {
+        "endLabel": "Both players passed",
+        "note": "The Command Phase ends once both players have passed.",
+        "citations": [
+          {
+            "source": "learnToPlay",
+            "page": 7,
+            "excerpt": "After all players have passed, players proceed to the Refresh Phase."
+          }
+        ]
+      },
+      "steps": [
+        {
+          "id": "command-rebel",
+          "side": "rebel",
+          "title": "Command turn",
+          "instruction": "Take one turn. Choose one:",
+          "bullets": [
+            "Revealing your base by choice? Only at the start of your turn (FAQ).",
+            "Activate a system: place a leader with tactic values from your pool in a system, move units in from adjacent systems, then resolve combat if both factions are there.",
+            "Reveal a mission: flip a mission your leaders are assigned to, choose its system and place those leaders there.",
+            "Pass: you take no more turns this phase."
+          ],
+          "components": [
+            "Leaders in your leader pool",
+            "Mission cards",
+            "Your units"
+          ],
+          "images": [
+            "activate-system",
+            "mission-example"
+          ],
+          "citations": [
+            {
+              "source": "rulesReference",
+              "page": 6,
+              "excerpt": "During the Command Phase, players take turns activating systems or revealing missions."
+            },
+            {
+              "source": "rulesReference",
+              "page": 2,
+              "excerpt": "The player takes a leader from his leader pool and places it in any system."
+            },
+            {
+              "source": "rulesReference",
+              "page": 8,
+              "excerpt": "If the leaders assigned to the mission do not have a combined number of matching skill icons equal to or exceeding the mission\u2019s skill requirement, the mission cannot be revealed."
+            },
+            {
+              "source": "rulesReference",
+              "page": 6,
+              "excerpt": "When a player passes, he cannot use his leaders to reveal missions or activate systems for the rest of this Command Phase."
+            },
+            {
+              "source": "faq",
+              "page": 1,
+              "excerpt": "he can only do so at the start of one of his turns of the Command Phase, either before using one of his leaders or passing.",
+              "entry": "Errata: optionally revealing the base"
+            }
+          ],
+          "opensBattle": true,
+          "reminders": [
+            {
+              "text": "Units can\u2019t move out of a system that holds one of your leaders.",
+              "citations": [
+                {
+                  "source": "rulesReference",
+                  "page": 2,
+                  "excerpt": "a player cannot move his units out of a system that contains one of his faction\u2019s leaders."
+                }
+              ]
+            },
+            {
+              "text": "Imperial ground units moved into a system: the Rebels say whether the base is there.",
+              "citations": [
+                {
+                  "source": "rulesReference",
+                  "page": 2,
+                  "excerpt": "If Imperial ground units moved into a system, the Rebel player must declare whether the base is in the system."
+                }
+              ]
+            },
+            {
+              "text": "An Imperial ground unit in a system without Imperial loyalty: place a subjugation marker.",
+              "citations": [
+                {
+                  "source": "rulesReference",
+                  "page": 2,
+                  "excerpt": "If there is an Imperial ground unit in the system and it does not have Imperial loyalty, place a subjugation marker there."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "command-imperial",
+          "side": "imperial",
+          "title": "Command turn",
+          "instruction": "Take one turn. Choose one:",
+          "bullets": [
+            "Activate a system: place a leader with tactic values from your pool in a system, move units in from adjacent systems, then resolve combat if both factions are there.",
+            "Reveal a mission: flip a mission your leaders are assigned to, choose its system and place those leaders there.",
+            "Pass: you take no more turns this phase."
+          ],
+          "components": [
+            "Leaders in your leader pool",
+            "Mission cards",
+            "Your units"
+          ],
+          "images": [
+            "activate-system",
+            "mission-example"
+          ],
+          "citations": [
+            {
+              "source": "rulesReference",
+              "page": 6,
+              "excerpt": "During the Command Phase, players take turns activating systems or revealing missions."
+            },
+            {
+              "source": "rulesReference",
+              "page": 2,
+              "excerpt": "The player takes a leader from his leader pool and places it in any system."
+            },
+            {
+              "source": "rulesReference",
+              "page": 8,
+              "excerpt": "If the leaders assigned to the mission do not have a combined number of matching skill icons equal to or exceeding the mission\u2019s skill requirement, the mission cannot be revealed."
+            },
+            {
+              "source": "rulesReference",
+              "page": 6,
+              "excerpt": "When a player passes, he cannot use his leaders to reveal missions or activate systems for the rest of this Command Phase."
+            }
+          ],
+          "opensBattle": true,
+          "reminders": [
+            {
+              "text": "Units can\u2019t move out of a system that holds one of your leaders.",
+              "citations": [
+                {
+                  "source": "rulesReference",
+                  "page": 2,
+                  "excerpt": "a player cannot move his units out of a system that contains one of his faction\u2019s leaders."
+                }
+              ]
+            },
+            {
+              "text": "Imperial ground units moved into a system: the Rebels say whether the base is there.",
+              "citations": [
+                {
+                  "source": "rulesReference",
+                  "page": 2,
+                  "excerpt": "If Imperial ground units moved into a system, the Rebel player must declare whether the base is in the system."
+                }
+              ]
+            },
+            {
+              "text": "An Imperial ground unit in a system without Imperial loyalty: place a subjugation marker.",
+              "citations": [
+                {
+                  "source": "rulesReference",
+                  "page": 2,
+                  "excerpt": "If there is an Imperial ground unit in the system and it does not have Imperial loyalty, place a subjugation marker there."
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "refresh",
+      "part": "round",
+      "title": "Refresh Phase",
+      "steps": [
+        {
+          "id": "refresh-leaders",
+          "side": "both",
+          "title": "Retrieve leaders",
+          "instruction": "Return all your leaders from the board to your leader pool.",
+          "bullets": [
+            "Leaders still on a mission card return too; the card goes back to your hand.",
+            "Rebels: play a \u201cStart of Refresh Phase\u201d objective first, if you meet it."
+          ],
+          "components": [
+            "Leaders"
+          ],
+          "images": [
+            "leaders"
+          ],
+          "citations": [
+            {
+              "source": "rulesReference",
+              "page": 12,
+              "excerpt": "Players return all their leaders from the game board to their leader pools."
+            },
+            {
+              "source": "rulesReference",
+              "page": 12,
+              "excerpt": "Immediately before resolving this step, the Rebel player can play one \u201cStart of Refresh Phase\u201d objective card."
+            }
+          ]
+        },
+        {
+          "id": "refresh-missions",
+          "side": "both",
+          "title": "Draw missions",
+          "instruction": "Draw 2 mission cards, then discard down to 10 if you have more.",
+          "bullets": [
+            "Projects count toward the limit; objective cards don\u2019t.",
+            "Starting missions can\u2019t be discarded."
+          ],
+          "components": [
+            "Mission deck"
+          ],
+          "images": [
+            "mission-cards"
+          ],
+          "citations": [
+            {
+              "source": "rulesReference",
+              "page": 12,
+              "excerpt": "Each player draws two mission cards, then discards cards if he is holding more than 10 mission cards."
+            }
+          ]
+        },
+        {
+          "id": "refresh-probes",
+          "side": "imperial",
+          "title": "Launch probe droids",
+          "instruction": "Draw 2 probe cards and keep them secret. Each shows a system where the Rebel base is not.",
+          "components": [
+            "Probe deck"
+          ],
+          "images": [
+            "probe-cards"
+          ],
+          "citations": [
+            {
+              "source": "rulesReference",
+              "page": 12,
+              "excerpt": "The Imperial player draws two probe cards."
+            }
+          ]
+        },
+        {
+          "id": "refresh-objective",
+          "side": "rebel",
+          "title": "Draw an objective",
+          "instruction": "Draw 1 objective card and keep it secret.",
+          "components": [
+            "Objective deck"
+          ],
+          "images": [
+            "objective-cards"
+          ],
+          "citations": [
+            {
+              "source": "rulesReference",
+              "page": 12,
+              "excerpt": "The Rebel player draws one objective card."
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "riseOfTheEmpire",
+              "text": "An \u201cImmediate\u201d objective is revealed and resolved as soon as you draw it.",
+              "images": [
+                "objective-cards"
+              ],
+              "citations": [
+                {
+                  "source": "riseOfTheEmpire",
+                  "page": 1,
+                  "excerpt": "When one of these cards is drawn into the Rebel player\u2019s hand, he immediately reveals and resolves the ability."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "refresh-time",
+          "side": "both",
+          "title": "Advance the time marker",
+          "instruction": "Move the time marker 1 space. If it reaches the reputation marker, the Rebels win at once.",
+          "bullets": [
+            "Recruit icon: draw 2 action cards, recruit 1 (its leader joins your pool), put the other at the bottom of your deck.",
+            "Build icon: for each resource icon in your loyal and subjugated systems, put that unit on your build queue at the number shown (subjugated systems: left-most icon only).",
+            "No building from a system that has an enemy unit."
+          ],
+          "components": [
+            "Time marker",
+            "Action deck",
+            "Build queue"
+          ],
+          "images": [
+            "setup-time-track",
+            "build-example"
+          ],
+          "citations": [
+            {
+              "source": "rulesReference",
+              "page": 12,
+              "excerpt": "Advance the time marker one space along the track. Then players recruit leaders and/or build units if the proper icon is in the time marker\u2019s new space."
+            },
+            {
+              "source": "rulesReference",
+              "page": 14,
+              "excerpt": "If the time marker is ever in the same space as the reputation marker, the Rebel player immediately wins the game."
+            },
+            {
+              "source": "rulesReference",
+              "page": 12,
+              "excerpt": "Each player draws two cards from his action deck, chooses one to recruit, and places the other one facedown on the bottom of his deck."
+            },
+            {
+              "source": "rulesReference",
+              "page": 12,
+              "excerpt": "Each player builds one unit matching each resource icon in his loyal and subjugated systems."
+            }
+          ],
+          "additions": [
+            {
+              "expansion": "riseOfTheEmpire",
+              "text": "More than 8 leaders in your pool? Keep 8 and eliminate the rest. When building, the Rebels choose first.",
+              "images": [
+                "leaders"
+              ],
+              "citations": [
+                {
+                  "source": "riseOfTheEmpire",
+                  "page": 1,
+                  "excerpt": "If a player ever has more than 8 leaders in his leader pool, he must choose 8 to keep and eliminate the excess"
+                },
+                {
+                  "source": "riseOfTheEmpire",
+                  "page": 1,
+                  "excerpt": "the Rebel player chooses which units to place on the build queue first, followed by the Imperial player."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "refresh-deploy-rebel",
+          "side": "rebel",
+          "title": "Deploy units",
+          "instruction": "Slide every unit on your build queue 1 space down. Units that slide off space 1 are deployed.",
+          "bullets": [
+            "Put them in your loyal systems or on the Rebel Base space (while hidden), at most 2 per system.",
+            "Not in systems with Imperial units or a sabotage marker; units you can\u2019t place go back to space 1."
+          ],
+          "components": [
+            "Build queue",
+            "Units"
+          ],
+          "images": [
+            "build-queue",
+            "rebel-base-space"
+          ],
+          "citations": [
+            {
+              "source": "rulesReference",
+              "page": 12,
+              "excerpt": "Starting with the Rebel player, each player slides all units one space down his build queue."
+            },
+            {
+              "source": "rulesReference",
+              "page": 7,
+              "excerpt": "Each player can deploy a maximum of two units to each system during each Refresh Phase."
+            },
+            {
+              "source": "rulesReference",
+              "page": 7,
+              "excerpt": "While the base is hidden, the Rebel player can deploy up to two units to the \u201cRebel Base\u201d space."
+            }
+          ]
+        },
+        {
+          "id": "refresh-deploy-imperial",
+          "side": "imperial",
+          "title": "Deploy units",
+          "instruction": "Slide every unit on your build queue 1 space down. Units that slide off space 1 are deployed.",
+          "bullets": [
+            "Put them in your loyal or subjugated systems, at most 2 per system.",
+            "Not in systems with Rebel units or a sabotage marker; units you can\u2019t place go back to space 1."
+          ],
+          "components": [
+            "Build queue",
+            "Units"
+          ],
+          "images": [
+            "build-queue"
+          ],
+          "citations": [
+            {
+              "source": "rulesReference",
+              "page": 7,
+              "excerpt": "The player places these units in any of his loyal or subjugated systems."
+            },
+            {
+              "source": "rulesReference",
+              "page": 7,
+              "excerpt": "A player cannot deploy units to a system that contains a sabotage marker or any of his opponent\u2019s ships or ground units."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "battle": {
+    "title": "Combat",
+    "phases": [
+      {
+        "id": "combat-start",
+        "part": "setup",
+        "title": "Before combat",
+        "steps": [
+          {
+            "id": "combat-leader",
+            "side": "both",
+            "title": "Add a leader",
+            "instruction": "No leader with tactic values in the system? You may add one from your leader pool.",
+            "bullets": [
+              "The player whose turn it is decides first.",
+              "Then, attacker first, play any \u201cStart of Combat\u201d action cards."
+            ],
+            "components": [
+              "Leaders in your leader pool"
+            ],
+            "images": [
+              "leaders"
+            ],
+            "citations": [
+              {
+                "source": "rulesReference",
+                "page": 4,
+                "excerpt": "If a player does not have a leader with tactic values in the system, he may take one leader from his leader pool and place it in the system."
+              },
+              {
+                "source": "rulesReference",
+                "page": 4,
+                "excerpt": "After adding leaders, starting with the current player, each player may use \u201cStart of Combat\u201d action cards."
+              }
+            ]
+          },
+          {
+            "id": "combat-tactics",
+            "side": "both",
+            "title": "Draw tactic cards",
+            "instruction": "Draw space and ground tactic cards equal to your leader\u2019s space and ground tactic values (your best leader in each theater).",
+            "bullets": [
+              "Space cards only if both factions have ships there; ground cards only if both have ground units.",
+              "The attacker draws first."
+            ],
+            "components": [
+              "Space tactic cards",
+              "Ground tactic cards",
+              "Leaders"
+            ],
+            "images": [
+              "tactic-cards",
+              "leaders"
+            ],
+            "citations": [
+              {
+                "source": "rulesReference",
+                "page": 4,
+                "excerpt": "Each player draws space tactic cards according to his leader\u2019s space tactic value and ground tactic cards according to on his leader\u2019s ground tactic value."
+              },
+              {
+                "source": "rulesReference",
+                "page": 4,
+                "excerpt": "Players only draw space tactic cards if both factions have ships in the system."
+              }
+            ],
+            "additions": [
+              {
+                "expansion": "riseOfTheEmpire",
+                "text": "Cinematic Combat: don\u2019t draw. Pick up your own advanced tactic decks; your leader\u2019s tactic value is now a reroll.",
+                "images": [
+                  "rote-tactic-card"
+                ],
+                "citations": [
+                  {
+                    "source": "riseOfTheEmpire",
+                    "page": 2,
+                    "excerpt": "each player picks up his tactic decks and may look through them."
+                  },
+                  {
+                    "source": "riseOfTheEmpire",
+                    "page": 2,
+                    "excerpt": "as a combat action, a player can choose to reroll a number of his dice up to his leader\u2019s tactic value in that theater."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "combat-rounds",
+        "part": "setup",
+        "title": "Combat round",
+        "loop": {
+          "endLabel": "Combat over",
+          "note": "Combat ends when the two factions no longer have units in the same theater after a combat round.",
+          "citations": [
+            {
+              "source": "rulesReference",
+              "page": 4,
+              "excerpt": "Combat ends if both factions do not have units in the same theater after resolving the last step of a combat round."
+            }
+          ]
+        },
+        "steps": [
+          {
+            "id": "combat-space-attacker",
+            "side": "attacker",
+            "title": "Space battle: your attack",
+            "instruction": "Attack with all your ships (only if both factions have ships here):",
+            "bullets": [
+              "Roll dice for your ships\u2019 attack values (max 5 black and 5 red).",
+              "Combat actions: spend a special result to draw a tactic card, or play space tactic cards.",
+              "Assign damage: red hits to red-health units, black hits to black-health units, direct hits to any.",
+              "Your opponent may block damage with tactic cards; units with damage equal to their health are destroyed at the end of the step."
+            ],
+            "components": [
+              "Dice",
+              "Space tactic cards",
+              "Damage markers"
+            ],
+            "images": [
+              "combat-example",
+              "dice"
+            ],
+            "citations": [
+              {
+                "source": "rulesReference",
+                "page": 4,
+                "excerpt": "The current player resolves one attack with all of his ships. Then his opponent resolves one attack with all of his ships."
+              },
+              {
+                "source": "rulesReference",
+                "page": 4,
+                "excerpt": "Each player can roll a maximum of five black dice and five red dice during each attack."
+              },
+              {
+                "source": "rulesReference",
+                "page": 5,
+                "excerpt": "Each unit that has damage assigned to it equal to or exceeding its health is placed on the player\u2019s faction sheet and is destroyed at the end of this combat step"
+              }
+            ],
+            "additions": [
+              {
+                "expansion": "riseOfTheEmpire",
+                "text": "Cinematic Combat, before each round of space battle:",
+                "bullets": [
+                  "You both pick 1 space tactic card facedown and reveal together; the attacker resolves the top or bottom ability first.",
+                  "Special results remove 1 damage from your own unit instead of drawing cards.",
+                  "Units are destroyed at the end of the round of battle, not after each attack."
+                ],
+                "images": [
+                  "rote-tactic-card"
+                ],
+                "citations": [
+                  {
+                    "source": "riseOfTheEmpire",
+                    "page": 2,
+                    "excerpt": "Each player simultaneously chooses 1 tactic card from his deck that matches the current theater and places it facedown."
+                  },
+                  {
+                    "source": "riseOfTheEmpire",
+                    "page": 2,
+                    "excerpt": "units are destroyed if they have damage equal to or exceeding their health at the end of that round of battle"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "combat-space-defender",
+            "side": "defender",
+            "title": "Space battle: your attack",
+            "instruction": "Now attack with all your ships the same way:",
+            "bullets": [
+              "Roll, take combat actions, assign damage; the attacker may block.",
+              "Destroyed ships still attacked this round."
+            ],
+            "components": [
+              "Dice",
+              "Space tactic cards",
+              "Damage markers"
+            ],
+            "images": [
+              "combat-example",
+              "dice"
+            ],
+            "citations": [
+              {
+                "source": "rulesReference",
+                "page": 4,
+                "excerpt": "The current player resolves one attack with all of his ships. Then his opponent resolves one attack with all of his ships."
+              }
+            ]
+          },
+          {
+            "id": "combat-ground-attacker",
+            "side": "attacker",
+            "title": "Ground battle: your attack",
+            "instruction": "Attack with all your ground units (only if both factions have ground units here):",
+            "bullets": [
+              "Roll dice for your ground units\u2019 attack values (max 5 black and 5 red).",
+              "Play ground tactic cards; assign damage; your opponent may block."
+            ],
+            "components": [
+              "Dice",
+              "Ground tactic cards",
+              "Damage markers"
+            ],
+            "images": [
+              "combat-example",
+              "dice"
+            ],
+            "citations": [
+              {
+                "source": "rulesReference",
+                "page": 4,
+                "excerpt": "The current player resolves one attack with all of his ground units. Then his opponent resolves one attack with all of his ground units."
+              }
+            ],
+            "additions": [
+              {
+                "expansion": "riseOfTheEmpire",
+                "text": "Cinematic Combat: you both pick and reveal 1 ground tactic card first, as in space.",
+                "images": [
+                  "rote-tactic-card"
+                ],
+                "citations": [
+                  {
+                    "source": "riseOfTheEmpire",
+                    "page": 2,
+                    "excerpt": "Before the first step of each round of space battle and each round of ground battle, resolve the following steps"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "combat-ground-defender",
+            "side": "defender",
+            "title": "Ground battle: your attack",
+            "instruction": "Now attack with all your ground units the same way:",
+            "bullets": [
+              "Roll, play tactic cards, assign damage; the attacker may block."
+            ],
+            "components": [
+              "Dice",
+              "Ground tactic cards",
+              "Damage markers"
+            ],
+            "images": [
+              "combat-example",
+              "dice"
+            ],
+            "citations": [
+              {
+                "source": "rulesReference",
+                "page": 4,
+                "excerpt": "The current player resolves one attack with all of his ground units. Then his opponent resolves one attack with all of his ground units."
+              }
+            ]
+          },
+          {
+            "id": "combat-retreat",
+            "side": "both",
+            "title": "Retreat?",
+            "instruction": "Starting with the attacker, each of you may retreat once this combat:",
+            "bullets": [
+              "Move a leader to an adjacent system with your units or loyalty (never one with enemy units), then move your units there.",
+              "All your ships must leave; ground units and TIE Fighters may stay.",
+              "The Rebels can\u2019t retreat to the Rebel Base space; the Empire can\u2019t retreat with a Death Star in the combat.",
+              "Rebel Transports left alone in space must retreat or are destroyed."
+            ],
+            "components": [
+              "Leaders",
+              "Units"
+            ],
+            "images": [
+              "combat-example"
+            ],
+            "citations": [
+              {
+                "source": "rulesReference",
+                "page": 4,
+                "excerpt": "Starting with the current player, each player has an option to retreat."
+              },
+              {
+                "source": "rulesReference",
+                "page": 5,
+                "excerpt": "T o retreat from combat, the player must take one of his leaders from the system and place it in an adjacent system."
+              },
+              {
+                "source": "rulesReference",
+                "page": 5,
+                "excerpt": "The Imperial player cannot retreat any units if he has a Death Star or Death Star Under Construction in the combat."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "combat-end",
+        "part": "setup",
+        "title": "After combat",
+        "steps": [
+          {
+            "id": "combat-cleanup",
+            "side": "both",
+            "title": "End of combat",
+            "instruction": "Discard the tactic cards in your hands and shuffle them back into their decks. Remove all damage markers.",
+            "components": [
+              "Tactic cards",
+              "Damage markers"
+            ],
+            "images": [
+              "tactic-cards",
+              "damage-markers"
+            ],
+            "citations": [
+              {
+                "source": "rulesReference",
+                "page": 4,
+                "excerpt": "At the end of combat, players discard all tactic cards from their hands. Then shuffle all tactic cards back into their decks."
+              },
+              {
+                "source": "rulesReference",
+                "page": 4,
+                "excerpt": "At the end of combat, remove all damage markers assigned to units and place them back in the supply."
+              }
+            ],
+            "additions": [
+              {
+                "expansion": "riseOfTheEmpire",
+                "text": "Cinematic Combat: used advanced tactic cards stay in your discard piles; they come back only when a deck runs out.",
+                "images": [
+                  "rote-tactic-card"
+                ],
+                "citations": [
+                  {
+                    "source": "riseOfTheEmpire",
+                    "page": 2,
+                    "excerpt": "T actic cards in a discard pile are not shuffled back into the deck at the end of the combat."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

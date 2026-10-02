@@ -106,7 +106,7 @@ def fight_battle(page, a11y):
     raise Failed("battle never finished")
 
 
-def play(page, url, problems, mode="table", expansions=(), fights_battle=False):
+def play(page, url, problems, mode="table", expansions=(), fights_battle=False, game="dune", script="duneWarForArrakis", marks=False):
     a11y = Accessibility(page, problems)
     page.goto(url)
     page.wait_for_selector(".intro")
@@ -117,10 +117,9 @@ def play(page, url, problems, mode="table", expansions=(), fights_battle=False):
     else:
         a11y.scan("opening", settle=1250)  # once its text has faded in; then let it play out
     page.wait_for_selector(".intro", state="detached", timeout=8000)
-    page.wait_for_selector("[data-act=game-dune]:not([disabled])")
+    page.wait_for_selector(f"[data-act=game-{game}]:not([disabled])")
     check(focused(page, ".pane h1"), "focus did not move to Home's heading")
-    check(len(page.query_selector_all(".game.soon")) == 2, "Home does not list the two coming-soon games")
-    check(page.query_selector(".game img[src='img/cover.jpg']"), "Dune's card has no cover art")
+    check(page.query_selector(f".game img[src='img/{script}/cover.jpg']"), f"{game}'s card has no cover art")
     a11y.scan("home")
     if expansions:
         # The orb opens Ask full screen; the glass bar switches tabs and keeps focus on the tab.
@@ -130,13 +129,13 @@ def play(page, url, problems, mode="table", expansions=(), fights_battle=False):
         check(focused(page, "[data-act=tab-join]") and page.query_selector("[data-act=tab-join][aria-current=page]"), "the Join tab did not open")
         a11y.scan("join tab", settle=1500)
         page.click("[data-act=tab-games]")
-    page.click("[data-act=game-dune]")
+    page.click(f"[data-act=game-{game}]")
     page.wait_for_selector("[data-act=start]")
     a11y.scan("setup picker")
     if mode == "pass":
         page.click("[data-act=home]")
-        check(page.query_selector("[data-act=game-dune]"), "Games did not go back to Home")
-        page.click("[data-act=game-dune]")
+        check(page.query_selector(f"[data-act=game-{game}]"), "Games did not go back to Home")
+        page.click(f"[data-act=game-{game}]")
     if mode == "pass":
         page.click("[data-mode=pass]")
     for expansion in expansions:
@@ -164,7 +163,7 @@ def play(page, url, problems, mode="table", expansions=(), fights_battle=False):
             continue
         if tap_if(page, "[data-act=event-done]"):
             continue
-        if expansions and not marked and tap_if(page, "[data-mark]"):
+        if marks and not marked and tap_if(page, "[data-mark]"):
             marked = True
             continue
         before = label(page)
@@ -196,12 +195,12 @@ def play(page, url, problems, mode="table", expansions=(), fights_battle=False):
     check(not page.query_selector(".menu"), "Escape did not close the Game menu")
     check(focused(page, "[data-act=menu]"), "focus did not return to the Game menu button")
     page.click("[data-act=menu]")
-    page.click("[data-winner=atreides]")
+    page.click("[data-winner] >> nth=0")
     check("Game over" in page.text_content("#phone"), "game did not end")
     a11y.scan("game over")
     if fights_battle:
         check(fought, "never offered to start a battle")
-    if expansions:
+    if marks:
         check(marked, "never offered to mark the Smugglers alliance")
     if mode == "pass":
         check(handoffs > 5, "pass-the-phone play never asked to pass the phone")
@@ -216,8 +215,11 @@ def main():
     url = f"http://127.0.0.1:{server.server_address[1]}/index.html"
     games = [
         ("table, base game, with a battle", dict(fights_battle=True)),
-        ("table, every expansion", dict(expansions=("desertWar", "smugglers", "spacingGuild"))),
+        ("table, every expansion", dict(expansions=("desertWar", "smugglers", "spacingGuild"), marks=True)),
         ("pass the phone, base game", dict(mode="pass")),
+        ("Rebellion: table, Rise of the Empire, with combat", dict(game="starWarsRebellion", script="starWarsRebellion",
+                                                                   expansions=("riseOfTheEmpire",), fights_battle=True)),
+        ("Rebellion: pass the phone, base game", dict(mode="pass", game="starWarsRebellion", script="starWarsRebellion")),
     ]
     failed = False
     with sync_playwright() as p:

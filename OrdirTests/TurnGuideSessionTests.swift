@@ -12,6 +12,8 @@ import XCTest
 
 final class TurnGuideSessionTests: XCTestCase {
     private var script: TurnScript!
+    private let atreides = TurnScript.Side(rawValue: "atreides")
+    private let harkonnen = TurnScript.Side(rawValue: "harkonnen")
 
     override func setUpWithError() throws {
         script = try XCTUnwrap(TurnScript.bundled(for: .duneWarForArrakis), "Dune turn script missing or invalid")
@@ -134,9 +136,9 @@ final class TurnGuideSessionTests: XCTestCase {
         let session = TurnGuideSession(script: script, expansions: [])
         _ = walk(session)
         let stepBefore = session.step.id
-        session.endGame(winner: .atreides)
+        session.endGame(winner: atreides)
         XCTAssertTrue(session.isFinished)
-        XCTAssertEqual(session.winner, .atreides)
+        XCTAssertEqual(session.winner, atreides)
         session.goBack()
         XCTAssertFalse(session.isFinished)
         XCTAssertNil(session.winner)
@@ -221,7 +223,7 @@ final class TurnGuideSessionTests: XCTestCase {
     func testGoingBackClearsAHandoff() {
         let session = TurnGuideSession(script: script, expansions: [], passesPhone: true, startAt: "turn-atreides")
         session.advance()
-        XCTAssertEqual(session.handoffTo, .harkonnen)
+        XCTAssertEqual(session.handoffTo, harkonnen)
         session.goBack()
         XCTAssertNil(session.handoffTo)
         XCTAssertEqual(session.step.id, "turn-atreides")
@@ -231,9 +233,9 @@ final class TurnGuideSessionTests: XCTestCase {
         let session = TurnGuideSession(script: script, expansions: [], startAt: "turn-harkonnen")
         let battle = try XCTUnwrap(session.makeBattle())
         XCTAssertEqual(battle.step.id, "battle-attack")
-        XCTAssertEqual(battle.step.side, .harkonnen, "the acting side attacks")
+        XCTAssertEqual(battle.step.side, harkonnen, "the acting side attacks")
         let steps = battle.phases.flatMap(\.steps)
-        XCTAssertEqual(steps.first { $0.id == "battle-retreat" }?.side, .atreides, "the other side defends")
+        XCTAssertEqual(steps.first { $0.id == "battle-retreat" }?.side, atreides, "the other side defends")
         XCTAssertFalse(steps.contains { $0.side == .attacker || $0.side == .defender })
     }
 
