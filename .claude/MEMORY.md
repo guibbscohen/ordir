@@ -160,3 +160,17 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   (app: Settings) card and the chat's "x of 5 free questions left this month" line, with every plan marked Coming soon and
   no purchase. The free limit (5 a month) is shown, never enforced, until the user says otherwise. "Pro" is always a white
   rounded tag with the word knocked out in bold (see-through letters), next to "Ordir".
+- 2026-10-02: Own-phone tables explain themselves: the lobby lists the three steps (start a table, share the invite, the
+  others join with the code); starting a table opens a waiting room (big code, Share invite via the phone's share sheet
+  or copy, who has joined per side or seat, Start the guide); invites are links (?table=CODE) that open Join a table with
+  the code filled in; on your own phone the waiting screen says the other player acts on their phone and taps Done there,
+  or that nobody has joined that side yet, with the invite. Sign-in stays on the phone (remembered session and email).
+- 2026-10-02: Coming back to a table: the phone remembers its table for 12 hours (forgotten on sign-out or game over).
+  Back in the app it catches up (latest step, fresh Realtime); after a restart, Home shows "Back to your table" (with
+  "Not now") to sit down again on the same side.
+- 2026-10-02: Before every guide (preview and app), "Here's how I'll help": Ordir helps with the table setup (step count
+  shown), then every turn; "Start with setup" or "Skip setup, we're set up" (straight to round 1; Back still returns to
+  setup). On own phones only the host sees it, and a skip moves the whole table. Start over shows it again.
+- 2026-10-03: Leaving a loop of turns (e.g. Dune's "Harkonnen dice all used") is an outlined button as big as Done, beside it,
+  with "Next: <phase>" under it; never a small text link (testers missed it and the guide never reached the next round).
+  The Game menu always offers "Skip to the next phase" (Next: <phase>) for a table that's ahead of the guide.
