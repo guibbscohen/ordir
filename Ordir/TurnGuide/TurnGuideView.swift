@@ -158,6 +158,7 @@ private struct SetupPicker: View {
     let start: (PlayMode, Set<String>) -> Void
     @State private var mode: PlayMode
     @State private var chosen: Set<String> = []
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     init(script: TurnScript, mode: PlayMode, start: @escaping (PlayMode, Set<String>) -> Void) {
         self.script = script
@@ -166,6 +167,7 @@ private struct SetupPicker: View {
     }
 
     var body: some View {
+        ScrollViewReader { scroller in
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 HStack(spacing: 14) {
@@ -188,6 +190,7 @@ private struct SetupPicker: View {
                         .font(.ordir(.title3).weight(.semibold))
                         .fixedSize(horizontal: false, vertical: true)
                         .accessibilityAddTraits(.isHeader)
+                        .id("expansions")
                     VStack(spacing: 12) {
                         ForEach(script.expansions) { expansion in
                             Toggle(isOn: binding(for: expansion.id)) {
@@ -211,6 +214,12 @@ private struct SetupPicker: View {
                 }
             }
             .padding(20)
+        }
+        // Picking how you're playing brings up the next question, the expansions, which can sit below the fold.
+        .onChange(of: mode) {
+            guard !script.expansions.isEmpty else { return }
+            withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.35)) { scroller.scrollTo("expansions", anchor: .top) }
+        }
         }
         .safeAreaInset(edge: .bottom) {
             Button {

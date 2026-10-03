@@ -174,3 +174,5 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
 - 2026-10-03: Leaving a loop of turns (e.g. Dune's "Harkonnen dice all used") is an outlined button as big as Done, beside it,
   with "Next: <phase>" under it; never a small text link (testers missed it and the guide never reached the next round).
   The Game menu always offers "Skip to the next phase" (Next: <phase>) for a table that's ahead of the guide.
+- 2026-10-03: On the setup screen (preview and app), picking how you're playing glides the page to the expansions (testers
+  missed them below the fold); focus stays on the mode; a jump instead of a glide with Reduce Motion.
