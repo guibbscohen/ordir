@@ -64,8 +64,10 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   like Apple Music's tab bar): Games, Ask, Join a table, Account.
 - 2026-10-01: Game cards show the game's cover/box art (cropped from the official rulebook cover), not just
   the name. Games without official sources yet get house-style art until their sources are added.
-- 2026-10-01: The Ordir orb is the "Ask a rules question" button: on Home it opens Ask full screen; in a
-  game, tapping the step's orb opens a short ask sheet over that player's side.
+- 2026-10-03: The Ordir orb is the "Ask a rules question" button: on Home it opens Ask full screen; in a game the step's
+  and the waiting screen's orb carry a small "?" badge, a "Rules question? Tap Ordi" hint sits under the step title until
+  the player first asks on that phone, and tapping opens the rules chat over that player's whole screen (on the split
+  screen, their whole half).
 - 2026-10-01: Typeface is Google Sans Flex (SIL OFL 1.1; the open release of Google Sans), in the app
   (`Font.ordir(_:)`, Dynamic Type kept) and the preview (self-hosted woff2). Never imply Google affiliation.
 - 2026-10-01: Animations follow `docs/animations.md` (every interaction's motion and its Reduce Motion

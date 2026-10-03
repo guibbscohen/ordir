@@ -510,15 +510,22 @@ button.bubble { font: inherit; font-size: 15px; color: var(--fg); cursor: pointe
 @keyframes pill { from { transform: translateX(calc(var(--from, 0) * (100% + 2px))); } }
 .pane.home.fade { animation: fade .18s ease both; }
 
-/* In a game: the step's orb opens a short ask sheet over that player's side */
+/* In a game: the step's orb (with its "?" badge, and a hint until the player first asks) opens the rules chat over
+   that player's whole screen (on the split screen, their whole half). */
 .card .head .orb-btn { width: 40px; height: 40px; }
 .waiting .orb-btn { width: 64px; height: 64px; }
-.overlay.sheet { top: 30%; padding: 16px 20px 12px; border-radius: 20px 20px 0 0; background: var(--surface); border-top: 1px solid var(--line);
-  box-shadow: 0 0 0 100vmax rgba(0, 0, 0, .55); z-index: 3; }
+.orb-btn { position: relative; }
+.ask-badge { position: absolute; right: -3px; bottom: -2px; width: 17px; height: 17px; border-radius: 50%; background: var(--sparkle); color: #000;
+  font-size: 12px; font-weight: 800; line-height: 17px; text-align: center; box-shadow: 0 0 0 2px var(--bg); pointer-events: none; }
+.waiting .ask-badge { width: 22px; height: 22px; line-height: 22px; font-size: 15px; }
+.ask-hint { display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; margin: -12px 0 0 2px; min-height: 36px; padding: 0 12px 0 10px;
+  border-radius: 999px; background: var(--surface-2); color: var(--fg); font-size: 14px; font-weight: 600; position: relative; animation: hint-in .4s ease .6s both; }
+.ask-hint::before { content: ""; position: absolute; left: 14px; top: -6px; border: 6px solid transparent; border-top: 0; border-bottom-color: var(--surface-2); }
+.ask-hint b { color: var(--sparkle); font-weight: 800; }
+@keyframes hint-in { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+.overlay.sheet { top: 0; padding: 16px 20px 12px; background: var(--bg); z-index: 3; }
 .overlay.sheet.enter { animation: sheet-up .45s cubic-bezier(.2, 1.15, .35, 1) both; }
 @keyframes sheet-up { from { transform: translateY(100%); } to { transform: none; } }
-/* On the split screen a half is already small, so the sheet covers that player's whole half. */
-.phone:not(.pass):not(.single) .overlay.sheet { top: 0; }
 .overlay.sheet { gap: 8px; }
 
 /* Layout info (Account → Layout info): live layout numbers to screenshot when something looks wrong on a phone. */
@@ -634,6 +641,7 @@ html, body { overscroll-behavior-x: none; }
 @media (prefers-reduced-motion: reduce) {
   .tour-card.turn, .tour-card.turn.back { animation: fade .2s ease both; }
   .card.enter, .overlay.enter, .pane.enter, .card.enter.back, .overlay.sheet.enter, .answer.fresh { animation: fade .2s ease both; }
+  .ask-hint { animation: none; }
   .scroll.ghost { display: none; }
   .check.on.ticked .box path, .primary.ready, .phase-label b.roll, .tabbar.slide::before, .answer.fresh .chip, .game-list { animation: none; }
   .chat-row, .pill { transition: none; }
@@ -977,8 +985,9 @@ function stepCard(s, seat, animate) {
   const context = [st.side === "both" && seat !== "both" ? t("Both players") : null, st.expansion ? expansionTitle(st.expansion) : null].filter(Boolean).join(" · ");
   const loop = phaseOf(s).loop;
   return `<div class="card${animate ? ` enter${state.navBack ? " back" : ""}` : ""}">
-    <div class="head"><button class="orb-btn" data-act="ask-here" data-seat="${seat}" aria-label="${t("Ask Ordir a rules question")}">${mascot(state.speaking ? "speaking" : "idle")}</button>
+    <div class="head"><button class="orb-btn" data-act="ask-here" data-seat="${seat}" aria-label="${t("Ask Ordir a rules question")}">${mascot(state.speaking ? "speaking" : "idle")}${ASK_BADGE}</button>
       <div>${context ? `<div class="context">${esc(context)}</div>` : ""}<h2 class="title" tabindex="-1">${esc(stepTitle(s))}</h2></div></div>
+    ${askHinted() ? "" : `<button class="ask-hint" data-act="ask-here" data-seat="${seat}"><b aria-hidden="true">?</b>${t("Rules question? Tap Ordi")}</button>`}
     <div><p class="lead">${esc(st.instruction)}</p>${bullets(st.bullets)}
       ${st.opensBattle && state.script.battle && !s.isBattle ? `<button class="textbtn" data-act="battle">${t("Start a battle")}</button>` : ""}</div>
     ${additionsOf(s).map((a) => section(a.title || expansionTitle(a.expansion),
@@ -989,6 +998,10 @@ function stepCard(s, seat, animate) {
   </div>`;
 }
 
+// The in-game orb asks the rules: a "?" badge on it always, and a hint under the step's title until the player has
+// asked once on this phone.
+const ASK_BADGE = '<span class="ask-badge" aria-hidden="true">?</span>';
+const askHinted = () => { try { return localStorage.getItem("ordir-asked") === "1"; } catch { return true; } };
 function waiting(s, seat) {
   const st = stepOf(s);
   // On your own phone, say what's going on: the other player acts on their phone (or hasn't joined yet).
@@ -998,7 +1011,7 @@ function waiting(s, seat) {
     ? `<p class="wait-help">${t("No one has joined as the {0} yet. Send them the invite.", esc(sideName(st.side)))}</p>
        <button class="textbtn" data-act="table-share">${online.copied ? t("Invite copied") : t("Share invite · {0}", esc(online.table.code))}</button>`
     : `<p class="wait-help">${t("Whoever plays the {0} follows this step on their phone and taps Done there. Yours moves on by itself.", esc(sideName(st.side)))}</p>`;
-    return `<div class="waiting"><button class="orb-btn" data-act="ask-here" data-seat="${seat}" aria-label="${t("Ask Ordir a rules question")}">${mascot("thinking")}</button>
+    return `<div class="waiting"><button class="orb-btn" data-act="ask-here" data-seat="${seat}" aria-label="${t("Ask Ordir a rules question")}">${mascot("thinking")}${ASK_BADGE}</button>
     <p>${st.side === "both" ? t("Both players are on {0}", `<b>${esc(stepTitle(s))}</b>`) : t("The {0} is on {1}", esc(sideName(st.side)), `<b>${esc(stepTitle(s))}</b>`)}</p>
     ${help}<div class="timer" data-timer>${fmt(Date.now() - s.startedAt)}</div></div>`;
 }
@@ -2596,7 +2609,9 @@ function handleClick(el) {
       state.tab = el.dataset.act === "orb-ask" ? "ask" : el.dataset.act.slice(4); online.lobby.error = "";
       render(); if (state.tab !== "games") connect(); break;
     case "ask-open": state.menu = false; Object.assign(online.ask, { open: true, seat: null, error: "", toBottom: true }); render(); connect(); break;
-    case "ask-here": Object.assign(online.ask, { open: true, seat: el.dataset.seat, error: "", toBottom: true }); render(); connect(); break;
+    case "ask-here":
+      try { localStorage.setItem("ordir-asked", "1"); } catch {}
+      Object.assign(online.ask, { open: true, seat: el.dataset.seat, error: "", toBottom: true }); render(); connect(); break;
     case "ask-close": Object.assign(online.ask, { open: false, seat: null, error: "" }); render(); break;
     case "table-reset": Object.assign(online.lobby, { found: null, joinSide: null, error: "" }); render(); $("#table-code")?.focus(); break;
     case "battle": state.battle = makeBattle(state.session); state.lastKey = null; onStepChanged(); break;
