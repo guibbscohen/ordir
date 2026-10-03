@@ -612,6 +612,22 @@ html, body { overscroll-behavior-x: none; }
 .pro-top { display: flex; justify-content: flex-end; padding: 12px 16px 0; }
 .overlay.pro .scroll { display: flex; flex-direction: column; gap: 16px; padding: 0 20px 20px; }
 .overlay.pro .scroll:focus-visible { outline: 2px solid var(--sparkle); outline-offset: -2px; }
+/* "Since last time": what Ordi fixed and improved, a short list per release under Ordi. */
+.overlay.news { padding: 0; gap: 0; }
+.overlay.news .scroll { display: flex; flex-direction: column; gap: 12px; padding: 0 20px 20px; }
+.overlay.news .scroll:focus-visible { outline: 2px solid var(--sparkle); outline-offset: -2px; }
+.news-head { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; margin-bottom: 4px; }
+.news-head .mascot { width: 88px; height: 100px; }
+.news-head h2 { font-size: 24px; }
+.news-head p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.4; }
+.overlay.news h3 { margin: 8px 0 0; font-size: 13px; font-weight: 600; color: var(--muted); }
+.overlay.news ul { margin: 0; padding: 4px 0; list-style: none; background: var(--surface); border-radius: 16px; }
+.overlay.news li { position: relative; padding: 12px 16px 12px 38px; font-size: 15px; line-height: 1.4; }
+.overlay.news li + li { border-top: 1px solid var(--line); }
+.overlay.news li::before { content: ""; position: absolute; left: 18px; top: 19px; width: 7px; height: 7px; border-radius: 50%; background: var(--sparkle); }
+.news-foot { display: flex; padding: 12px 20px 0; }
+.phone > .overlay.news { padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
+.news-foot .primary { flex: 1; }
 .pro-hero { display: flex; justify-content: center; align-items: flex-end; gap: 28px; }
 .pro-hero figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
 .pro-hero .mascot { width: 76px; height: 86px; }
@@ -817,6 +833,7 @@ const state = {
   lang: startLang(),
   tutorial: null,     // the tutorial's open card ({ i }), on first launch or from Account
   pro: null,          // the Ordir Pro screen, while open ({ enter })
+  news: null,         // "Since last time" / What's new, while open ({ releases, all, enter })
   screen: "intro",    // "intro" → "home" → "game" (picker, lobby and guide)
   tab: "games",       // Home's tab: games, ask, join or account
   homeQuery: "",      // Home's game search
@@ -1328,6 +1345,7 @@ function accountPage() {
         <div><strong>${name}</strong></div><span class="radio" aria-hidden="true"></span></button>`).join("")}</div>
     <div class="group"><h2>${t("Help")}</h2>
       <button class="option" data-act="tutorial"><div><strong>${t("Replay the tutorial")}</strong><span>${t("A quick tour of how Ordir works.")}</span></div>${CHEVRON}</button>
+      <button class="option" data-act="news-open"><div><strong>${t("What’s new")}</strong><span>${t("Everything Ordi has fixed and improved lately.")}</span></div>${CHEVRON}</button>
       <button class="option" data-act="report-open"><div><strong>${t("Report a problem")}</strong><span>${t("Something broken or confusing? Tell us, with a screenshot if you like.")}</span></div>${CHEVRON}</button>
       <label class="toggle" for="share-usage"><div><strong>${t("Share usage data")}</strong>
         <span>${t("Anonymous: screens, games played and errors, to improve Ordir. Linked to your account when you’re signed in.")}</span></div>
@@ -1374,6 +1392,7 @@ function openTour() { state.tutorial = { i: 0, enter: true }; state.usedKey = "[
 function closeTour() {
   state.tutorial = null;
   try { localStorage.setItem("ordir-tour-done", "1"); } catch {}
+  markNewsSeen();  // a first visit starts from the current version: nothing to catch up on
   state.usedKey = state.tab === "account" ? "[data-act=tutorial]" : "[data-none]";
   render();
 }
@@ -1386,6 +1405,38 @@ function turnTour(by) {
   render();
 }
 const tourDone = () => { try { return localStorage.getItem("ordir-tour-done") === "1"; } catch { return true; } };
+
+// ---- What's new ----
+// After an update, the first time Home shows: "Since last time", what Ordi fixed and improved in the releases this
+// phone hasn't seen (Ordir/Localization/whats_new.json, shared with the app; lines marked "only": "app" are left
+// out). Account's "What's new" shows the last few releases. A first visit gets the tutorial instead.
+const NEWS = (typeof WHATS_NEW !== "undefined" ? WHATS_NEW : [])
+  .map((r) => ({ id: r.id, items: r.items.filter((item) => item.only !== "app").map((item) => item.text) }))
+  .filter((r) => r.items.length);
+const newsSeen = () => { try { return localStorage.getItem("ordir-news-seen"); } catch { return NEWS[0]?.id; } };
+function markNewsSeen() { try { if (NEWS[0]) localStorage.setItem("ordir-news-seen", NEWS[0].id); } catch {} }
+// Releases newer than the last one seen; a phone that played before this screen existed gets the latest one.
+const unseenNews = () => { const seen = newsSeen(); return (seen ? NEWS.filter((r) => r.id > seen) : NEWS.slice(0, 1)).slice(0, 3); };
+function openNews(all) {
+  const releases = all ? NEWS.slice(0, 5) : unseenNews();
+  if (!releases.length) return;
+  if (all) state.returnTo = state.usedKey;  // closing goes back to Account's row
+  state.news = { releases, all, enter: true };
+  markNewsSeen();
+  track("news_open", { all, release: releases[0].id });
+  render();
+}
+function newsPanel() {
+  const day = (id) => new Date(`${id}T12:00:00`).toLocaleDateString(state.lang, { day: "numeric", month: "long" });
+  return `<div class="overlay${state.news.enter ? " enter" : ""} menu news" role="dialog" aria-modal="true" aria-labelledby="news-title">
+    <div class="pro-top"><button class="close-x" data-act="news-close" aria-label="${t("Close")}">${CLOSE_X}</button></div>
+    <div class="scroll" tabindex="0" role="region" aria-labelledby="news-title">
+      <div class="news-head">${mascot("speaking")}<h2 id="news-title" tabindex="-1">${state.news.all ? t("What’s new") : t("Since last time")}</h2>
+        <p>${state.news.all ? t("Everything Ordi has fixed and improved lately.") : t("Ordi fixed and improved a few things:")}</p></div>
+      ${state.news.releases.map((r) => `<h3>${esc(day(r.id))}</h3><ul>${r.items.map((item) => `<li>${esc(t(item))}</li>`).join("")}</ul>`).join("")}
+    </div>
+    <div class="news-foot"><button class="primary" data-act="news-close">${t("Got it")}</button></div></div>`;
+}
 
 function picker() {
   return `<div class="pane"><div class="scroll">
@@ -2152,6 +2203,7 @@ function settleFocus(phone, stepChanged, kept) {
   }
   if (state.menu || state.tutorial || state.report || (online.ask.open && online.ask.seat === null)) for (const child of phone.children) if (!child.classList.contains("menu")) child.inert = true;
   if (state.pro) for (const child of phone.children) if (!child.classList.contains("pro")) child.inert = true;
+  if (state.news) for (const child of phone.children) if (!child.classList.contains("news")) child.inert = true;
   const first = (...selectors) => selectors.map((sel) => sel && phone.querySelector(sel)).find(Boolean);
   const dialog = [...phone.querySelectorAll('[role="dialog"] [tabindex="-1"]')].find((h) => !h.closest("[inert]"));
   // On Home, focus never scrolls the page (it keeps the player's place); back from a game, it returns to the
@@ -2204,7 +2256,7 @@ function render() {
   const kept = active && phone.contains(active) ? (active.id ? `#${active.id}` : focusKey(active) || "[data-none]") : null;
   const menu = s && state.menu ? gameMenu(s) : "";
   askEnter = !phone.querySelector(".chat, .sheet");
-  const ask = (online.ask.open && online.ask.seat === null ? chatPanel() : "") + (state.report ? reportPanel() : "") + (state.pro ? proPanel() : "");
+  const ask = (online.ask.open && online.ask.seat === null ? chatPanel() : "") + (state.report ? reportPanel() : "") + (state.pro ? proPanel() : "") + (state.news ? newsPanel() : "");
   const view = viewName();
   if (view !== tracking.view && state.screen !== "intro") { tracking.view = view; track("screen_view", { view, game: state.screen === "game" ? state.script?.game : undefined }); }
   if (signedIn() && online.client && online.ask.loadedFor !== online.session.user.id && (state.tab === "ask" || online.ask.open)) loadThreads();
@@ -2274,6 +2326,7 @@ function render() {
   if (state.tutorial) { state.tutorial.enter = false; state.tutorial.turn = 0; }
   if (state.report) state.report.enter = false;
   if (state.pro) state.pro.enter = false;
+  if (state.news) state.news.enter = false;
   const homeScroller = state.screen === "home" && phone.querySelector(".home > .scroll");
   const homeTop = homeScroll[state.tab] || 0;
   if (homeScroller) homeScroller.scrollTop = homeTop;
@@ -2427,6 +2480,10 @@ function showHome(landed) {
   setTimeout(() => { state.buildHome = false; }, 2000);
   // A first visit: the tutorial, once the orb has been built.
   if (!tourDone()) setTimeout(() => { if (state.screen === "home" && !state.tutorial) openTour(); }, landed || reducedMotion() ? 700 : 1400);
+  // Back after an update: what Ordi fixed and improved since (not over a table invite).
+  else if (!online.lobby.code && unseenNews().length) {
+    setTimeout(() => { if (state.screen === "home" && !state.tutorial && !state.news) openNews(false); }, landed || reducedMotion() ? 700 : 1400);
+  }
   // Opened from a table invite: straight to Join a table, the code filled in.
   if (online.lobby.code) { state.tab = "join"; state.lastKey = null; render(); connect(); }
   // Someone signed in before: load their session so Home shows it (no network otherwise).
@@ -2594,6 +2651,8 @@ function handleClick(el) {
     case "table-forget": forgetTable(); render(); break;
     case "table-go": online.waitingRoom = false; state.guideIntro = phaseOf(state.session).part === "setup" && !state.session.history.length; state.lastKey = null; render(); break;
     case "pro-close": state.pro = null; render(); break;
+    case "news-open": openNews(true); break;
+    case "news-close": state.news = null; render(); break;
     case "report-close": state.report = null; render(); break;
     case "report-unshot": state.report.shot = null; state.report.enter = false; render(); $("#report-shot")?.focus(); break;
     case "report-send": sendReport(); break;
@@ -2688,7 +2747,7 @@ document.addEventListener("input", (event) => {
 });
 // ---- Going back ----
 // What closes first: the tutorial, the rules chat, the picture, the Game menu, or the turn-change checklist.
-const closeAct = () => (state.tutorial ? (state.tutorial.i === TOUR.length - 1 ? "tour-next" : "tour-skip") : state.pro ? "pro-close" : state.report ? "report-close" : online.ask.open ? "ask-close" : state.enlarged ? "close-enlarged"
+const closeAct = () => (state.tutorial ? (state.tutorial.i === TOUR.length - 1 ? "tour-next" : "tour-skip") : state.pro ? "pro-close" : state.news ? "news-close" : state.report ? "report-close" : online.ask.open ? "ask-close" : state.enlarged ? "close-enlarged"
   : state.menu ? "menu-close" : state.pending ? "not-yet" : null);
 // What going back does: close that, or leave a game's setup (or the table lobby, or the end of the game).
 // A running guide has no "back" here: brushing the phone on the table never leaves a game.

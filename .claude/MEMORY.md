@@ -178,3 +178,7 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   The Game menu always offers "Skip to the next phase" (Next: <phase>) for a table that's ahead of the guide.
 - 2026-10-03: On the setup screen (preview and app), picking how you're playing glides the page to the expansions (testers
   missed them below the fold); focus stays on the mode; a jump instead of a glide with Reduce Motion.
+- 2026-10-03: Every merge that changes the UI or fixes something players notice adds a release to
+  Ordir/Localization/whats_new.json (date id, newest first; short plain lines, "only": "app"/"preview" where it applies
+  to one) with each line translated in strings.json. After an update, Home shows it once as "Since last time" (Ordi fixed
+  and improved…); Account (app: Settings) has "What's new". A first launch gets the tutorial instead.

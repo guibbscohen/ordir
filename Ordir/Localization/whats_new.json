@@ -1,0 +1,25 @@
+[
+  {
+    "id": "2026-10-03",
+    "items": [
+      { "text": "In a game, tap Ordi for a rules question: the orb now shows a “?”, and the chat opens full screen." },
+      { "text": "Choosing how you’re playing now brings the expansions into view, so they’re easy to find." },
+      { "text": "Before each guide, Ordi offers to help with the table setup, or to skip straight to round 1." },
+      { "text": "Dune: leaving the Harkonnen dice turns is now a big button, so the guide moves on to the next round." },
+      { "text": "The Game menu can skip to the next phase when your table is ahead of the guide." },
+      { "text": "Playing on your own phones: share an invite link, see who has joined, and get back to your table after closing the app.", "only": "preview" },
+      { "text": "Fixed: switching on an expansion no longer freezes the screen on Android phones.", "only": "preview" },
+      { "text": "“What’s new”, under Help, lists everything Ordi fixed and improved lately." }
+    ]
+  },
+  {
+    "id": "2026-10-02",
+    "items": [
+      { "text": "New game: Terraforming Mars, with Prelude, Venus Next, Colonies, Turmoil and the Hellas & Elysium maps." },
+      { "text": "Home now opens with Ordi’s newest game and current favorites." },
+      { "text": "Ordir Pro is coming soon, with more rules questions and Ordi in shades." },
+      { "text": "Report a problem from Account or the Game menu, with a screenshot if you like.", "only": "preview" },
+      { "text": "Fixed: the Home Screen app now opens the latest version, not an older copy.", "only": "preview" }
+    ]
+  }
+]

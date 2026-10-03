@@ -32,6 +32,8 @@ struct HomeView: View {
     @State private var query = ""
     @AppStorage("OrdirGameSort") private var sort = GameSort.recent
     @State private var showsTutorial = false
+    /// "Since last time": what changed since this phone last looked, once after an update.
+    @State private var showsNews = false
     /// Set once the tutorial has been seen or skipped (`-OrdirTourDone YES` at launch for tests).
     private var tourDone: Bool { UserDefaults.standard.bool(forKey: "OrdirTourDone") }
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -67,14 +69,18 @@ struct HomeView: View {
             .fullScreenCover(isPresented: $showsTutorial) {
                 TutorialView {
                     UserDefaults.standard.set(true, forKey: "OrdirTourDone")
+                    WhatsNew.markSeen()  // a first launch starts from the current version
                     showsTutorial = false
                 }
             }
+            .sheet(isPresented: $showsNews) { WhatsNewView() }
             .task(id: openingDone) {
-                // A first launch: the tutorial, once the opening has built Home's orb.
-                guard openingDone, !tourDone, path.isEmpty else { return }
+                // A first launch: the tutorial, once the opening has built Home's orb. Back after an update:
+                // what Ordi fixed and improved since.
+                guard openingDone, path.isEmpty, !tourDone || !WhatsNew.unseen.isEmpty else { return }
                 try? await Task.sleep(for: .milliseconds(reduceMotion ? 300 : 800))
-                if !Task.isCancelled, !tourDone { showsTutorial = true }
+                guard !Task.isCancelled else { return }
+                if !tourDone { showsTutorial = true } else if !WhatsNew.unseen.isEmpty { showsNews = true }
             }
             .navigationDestination(for: OrdirGame.self) { game in
                 if let script = scripts[game] {
