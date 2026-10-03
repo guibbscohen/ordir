@@ -67,6 +67,7 @@ Status key:
 | Moment | Animation | Reduce Motion | Engine | Status |
 | --- | --- | --- | --- | --- |
 | Play mode pick | Radio dot scales in; the card border glows briefly | Instant | SwiftUI / CSS | Partial (instant) |
+| Play mode picked | The setup page glides up to the expansions (the next question); focus stays on the mode | Jumps there, no glide | SwiftUI ScrollViewReader / CSS smooth scroll | Built |
 | Expansion switch | Thumb slides, track tints | Instant | System / CSS | Built |
 | Start guide | Setup slides away; the first step rises in; the orb starts speaking | Fades | SwiftUI / CSS | Partial (rise only) |
 

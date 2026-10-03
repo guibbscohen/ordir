@@ -416,17 +416,20 @@ def own_phone_seats(page, url, problems):
 
 
 def setup_scroll_and_invite(page, url, problems):
-    """On a phone: picking a play mode keeps the setup page where it was, ticking an expansion never shifts the whole
+    """On a phone: picking a play mode brings the expansions up the screen, ticking an expansion never shifts the whole
     screen (Android Chrome scrolled the app frame to a hidden checkbox and left it stuck), and a table invite link
     opens Join a table with its code filled in."""
     page.goto(url)
     page.keyboard.press("Enter")
     page.locator("[data-act=game-dune]:visible").first.tap()
     page.wait_for_selector("[data-mode=own]")
-    page.evaluate("document.querySelector('.pane > .scroll').scrollTop = 120")
     page.tap("[data-mode=pass]")
-    top = page.evaluate("document.querySelector('.pane > .scroll').scrollTop")
-    check(top == 120, f"picking a play mode moved the page to {top}")
+    page.wait_for_timeout(700)
+    # Picking a play mode brings the expansions (the next question) up the screen, focus staying on the mode.
+    heading, at_end = page.evaluate("(() => { const p = document.querySelector('.pane > .scroll'), r = document.querySelector('#expansions-title').getBoundingClientRect();"
+                                    " return [r.top - p.getBoundingClientRect().top, p.scrollTop + p.clientHeight >= p.scrollHeight - 2]; })()")
+    check(0 <= heading < 40 or (at_end and 0 <= heading < 200), f"the expansions heading sits {heading}px down after picking a mode")
+    check(focused(page, "[data-mode=pass]"), "focus left the play mode")
     page.tap("label[for=exp-smugglers]")
     page.wait_for_timeout(200)
     frame = page.evaluate("document.querySelector('#phone').scrollTop")
@@ -634,7 +637,7 @@ def main():
         try:
             setup_scroll_and_invite(page, url, problems)
             check(not problems, "; ".join(dict.fromkeys(problems)))
-            print("ok   setup keeps its place, expansions never shift the screen, invite links open Join a table")
+            print("ok   picking a mode brings up the expansions, which never shift the screen; invite links open Join a table")
         except Failed as error:
             failed = True
             page.screenshot(path=str(DIST / "failure-setup.png"))

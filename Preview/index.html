@@ -1385,7 +1385,7 @@ function picker() {
         `<button class="option" role="radio" aria-checked="${state.mode === id}" data-mode="${id}">
           <div><strong>${t(title)}</strong><span>${t(detail)}</span></div><span class="radio" aria-hidden="true"></span></button>`).join("")}
     </div>
-    ${state.script.expansions.length ? `<h1>${t("Which expansions are you playing with?")}</h1>
+    ${state.script.expansions.length ? `<h1 id="expansions-title">${t("Which expansions are you playing with?")}</h1>
     <div style="display:flex;flex-direction:column;gap:12px">
       ${state.script.expansions.map((e) => `<label class="toggle" for="exp-${e.id}">
         <div><strong>${esc(e.title)}</strong><span>${esc(e.summary)}</span></div>
@@ -2494,7 +2494,12 @@ function handleClick(el) {
   const s = cur();
   state.usedKey = focusKey(el);
   if (el.dataset.enlarge || ["done", "end-loop", "menu", "ask-here"].includes(el.dataset.act)) state.returnTo = state.usedKey;
-  if (el.dataset.mode) { state.mode = el.dataset.mode; render(); return; }
+  if (el.dataset.mode) {
+    state.mode = el.dataset.mode; render();
+    // Next question: the expansions, which can sit below the fold. Bring them up (focus stays on the mode).
+    $("#expansions-title")?.scrollIntoView({ behavior: reducedMotion() ? "auto" : "smooth", block: "start" });
+    return;
+  }
   if (el.dataset.lang) { setLang(el.dataset.lang); return; }
   if (el.dataset.side) { online.lobby.side = el.dataset.side; render(); return; }
   if (el.dataset.joinside) { online.lobby.joinSide = el.dataset.joinside; online.lobby.error = ""; render(); return; }
