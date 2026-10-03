@@ -136,6 +136,21 @@ final class TurnGuideSession {
         moveToNextPhase(from: position)
     }
 
+    /// The phase that comes after this one (round phases follow on into the next round), for "Next: Desert hazards".
+    var nextPhaseTitle: String? {
+        let firstRound = phases.firstIndex { $0.part == .round }
+        var index = position.phase
+        for _ in 0..<phases.count {
+            index += 1
+            if index >= phases.count {
+                guard let firstRound else { return nil }
+                index = firstRound
+            }
+            if firstApplicable(in: phases[index], after: -1) != nil { return phases[index].title }
+        }
+        return nil
+    }
+
     /// The player the phone was passed to has it now.
     func confirmHandoff() {
         handoffTo = nil

@@ -171,3 +171,6 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
 - 2026-10-02: Before every guide (preview and app), "Here's how I'll help": Ordir helps with the table setup (step count
   shown), then every turn; "Start with setup" or "Skip setup, we're set up" (straight to round 1; Back still returns to
   setup). On own phones only the host sees it, and a skip moves the whole table. Start over shows it again.
+- 2026-10-03: Leaving a loop of turns (e.g. Dune's "Harkonnen dice all used") is an outlined button as big as Done, beside it,
+  with "Next: <phase>" under it; never a small text link (testers missed it and the guide never reached the next round).
+  The Game menu always offers "Skip to the next phase" (Next: <phase>) for a table that's ahead of the guide.

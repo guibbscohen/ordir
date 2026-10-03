@@ -185,6 +185,8 @@ def play(page, url, problems, mode="table", expansions=(), fights_battle=False, 
             fight_battle(page, a11y)
             continue
         if end and turns_in_loop >= loop_taps:
+            check(script != "duneWarForArrakis" or "Next: Desert hazards" in end.text_content(),
+                  f"leaving the Action turns does not say what comes next: {end.text_content()}")
             end.click()
             turns_in_loop = 0
         else:
@@ -203,6 +205,8 @@ def play(page, url, problems, mode="table", expansions=(), fights_battle=False, 
     check(checklists > 0, "no turn ever showed the turn-change checklist")
     page.click("[data-act=menu]")
     check(focused(page, ".menu h2"), "focus did not move to the Game menu")
+    check(page.query_selector("[data-act=next-phase]") and "Next:" in page.text_content("[data-act=next-phase]"),
+          "the Game menu cannot skip to the next phase")
     a11y.scan("game menu")
     page.keyboard.press("Escape")
     check(not page.query_selector(".menu"), "Escape did not close the Game menu")

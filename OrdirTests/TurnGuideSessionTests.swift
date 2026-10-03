@@ -130,6 +130,18 @@ final class TurnGuideSessionTests: XCTestCase {
         XCTAssertEqual(session.step.id, roundStep)
     }
 
+    func testNextPhaseIsNamedAndSkippable() {
+        let session = TurnGuideSession(script: script, expansions: [])
+        session.skipSetup()
+        let next = session.nextPhaseTitle
+        XCTAssertNotNil(next)
+        session.endLoop()
+        XCTAssertEqual(session.phase.title, next)
+        // From the last phase of a round, the next phase is the next round's first.
+        while session.round == 1 { session.endLoop() }
+        XCTAssertEqual(session.round, 2)
+    }
+
     func testRoundsRepeatWithoutSetup() {
         let session = TurnGuideSession(script: script, expansions: [])
         let roundOne = walk(session)

@@ -355,6 +355,7 @@ private struct TurnGuideRunner: View {
             step: session.step,
             additions: session.additions,
             reminders: session.reminders,
+            nextPhaseTitle: session.nextPhaseTitle,
             stepTitle: stepTitle,
             stepKey: stepKey,
             startedAt: session.stepStartedAt,
@@ -626,6 +627,22 @@ private struct GameMenu: View {
                 Section {
                     Text(session.isInSetup ? tr("Setup") : tr("Round {0}", session.round))
                 }
+                if let next = session.nextPhaseTitle {
+                    Section {
+                        Button {
+                            session.endLoop()
+                            dismiss()
+                        } label: {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(tr("Skip to the next phase"))
+                                Text(tr("Next: {0}", next))
+                                    .font(.ordir(.footnote))
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        .accessibilityIdentifier("next-phase")
+                    }
+                }
                 if !session.availableStates.isEmpty {
                     Section(tr("Happened this game")) {
                         ForEach(session.availableStates) { state in
@@ -731,6 +748,8 @@ private struct SeatPanel: View {
     let step: TurnScript.Step
     let additions: [TurnScript.Addition]
     let reminders: [TurnScript.Reminder]
+    /// Where leaving a loop of turns leads, shown under its button.
+    let nextPhaseTitle: String?
     let stepTitle: String
     let stepKey: String
     let startedAt: Date
@@ -830,8 +849,16 @@ private struct SeatPanel: View {
     private var actions: some View {
         ActionRow {
             if let loop = phase.loop {
-                Button(loop.endLabel) { passTurn(then: endLoop) }
-                    .buttonStyle(TextButtonStyle())
+                Button { passTurn(then: endLoop) } label: {
+                    VStack(spacing: 2) {
+                        Text(loop.endLabel).font(.ordir(.subheadline).weight(.semibold))
+                        if let next = nextPhaseTitle {
+                            Text(tr("Next: {0}", next)).font(.ordir(.caption)).foregroundStyle(.secondary)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, minHeight: 50)
+                }
+                .buttonStyle(SecondaryButtonStyle())
             }
         } primary: {
             Button { passTurn(then: done) } label: {
@@ -1329,6 +1356,19 @@ struct TextButtonStyle: ButtonStyle {
             .frame(minWidth: 44, minHeight: 44)
             .contentShape(Rectangle())
             .opacity(configuration.isPressed ? 0.6 : 1)
+    }
+}
+
+/// Beside Done, for leaving a loop of turns: outlined, as easy to find as Done.
+struct SecondaryButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .multilineTextAlignment(.center)
+            .fixedSize(horizontal: false, vertical: true)
+            .foregroundStyle(.primary)
+            .background(Color(white: 0.11), in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).strokeBorder(Color(white: 0.17)))
+            .opacity(configuration.isPressed ? 0.7 : 1)
     }
 }
 

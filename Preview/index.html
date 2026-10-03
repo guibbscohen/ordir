@@ -98,6 +98,11 @@ main { display: flex; flex-direction: column; flex: 1; min-height: 0; width: 100
   font-weight: 600; font-size: 16px;
 }
 .primary:active { opacity: .7; }
+/* Beside Done: leaving a loop of turns (e.g. "Harkonnen dice all used"), with the phase it leads to. */
+.secondary { flex: 1; min-height: 48px; border-radius: 14px; background: var(--surface-2); border: 1px solid var(--line); color: var(--fg);
+  font-weight: 600; font-size: 15px; padding: 6px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; line-height: 1.2; }
+.secondary small { color: var(--muted); font-size: 12px; font-weight: 400; }
+.secondary:active { opacity: .7; }
 .textbtn { color: var(--sparkle); font-weight: 600; font-size: 15px; min-height: 44px; padding: 0 4px; }
 
 /* Middle bar */
@@ -863,6 +868,17 @@ function nextPhase(s) {
   }
   s.finished = true;
 }
+/** The phase "Done" leads into after this one (round 1's phases follow on into the next round). */
+function nextPhaseTitle(s) {
+  const at = s.pos.phase;
+  for (let i = 1; i <= s.phases.length; i++) {
+    let index = at + i;
+    if (index >= s.phases.length) index = s.phases.findIndex((p) => p.part === "round") + (index - s.phases.length);
+    const phase = s.phases[index];
+    if (phase && firstApplicable(s, phase, -1) >= 0) return phase.title;
+  }
+  return null;
+}
 function advance(s) {
   const phase = phaseOf(s);
   const next = firstApplicable(s, phase, s.pos.step);
@@ -1028,7 +1044,7 @@ function half(seat, isFar, animate) {
   const loop = phaseOf(s).loop;
   const body = acting
     ? `<div class="scroll">${stepCard(s, seat, animate)}</div>
-       <div class="actions">${loop ? `<button class="textbtn" data-act="end-loop" data-seat="${seat}">${esc(loop.endLabel)}</button>` : ""}
+       <div class="actions">${loop ? `<button class="secondary" data-act="end-loop" data-seat="${seat}">${esc(loop.endLabel)}${nextPhaseTitle(s) ? `<small>${t("Next: {0}", esc(nextPhaseTitle(s)))}</small>` : ""}</button>` : ""}
          <button class="primary" data-act="done" data-seat="${seat}">${t("Done")}</button></div>`
     : waiting(s, seat);
   // Without fixed sides both halves show the player on turn, so they're named by where they face.
@@ -1440,6 +1456,7 @@ function gameMenu(s) {
     <div class="scroll" style="padding:0;display:flex;flex-direction:column;gap:16px">
       <p class="hint" style="font-size:15px">${phaseOf(s).part === "setup" ? t("Setup") : t("Round {0}", s.pos.round)}${online.table ? ` · ${t("Table {0}", `<b>${esc(online.table.code)}</b>`)} · ${youAre(online.mySide)}` : ""}</p>
       <button class="option" data-act="ask-open"><div><strong>${t("Ask a rules question")}</strong><span>${t("Answers cite the rulebook and FAQ pages.")}</span></div></button>
+      ${nextPhaseTitle(s) ? `<button class="option" data-act="next-phase"><div><strong>${t("Skip to the next phase")}</strong><span>${t("Next: {0}", esc(nextPhaseTitle(s)))}</span></div></button>` : ""}
       ${toggles ? `<div class="section"><h3>${t("Happened this game")}</h3>${toggles}</div>` : ""}
       <div class="section"><h3>${t("End the game")}</h3>
         ${takesTurns() ? `<button class="option" data-winner=""><div><strong>${t("End the game now")}</strong></div></button>`
@@ -2588,6 +2605,7 @@ function handleClick(el) {
     case "swap": state.nearSeat = farSeat(); state.lastKey = null; render(); break;
     case "done": passTurn(el.dataset.seat, "done"); break;
     case "end-loop": passTurn(el.dataset.seat, "endLoop"); break;
+    case "next-phase": state.menu = false; track("next_phase", { game: state.script.game, from: phaseOf(s).id }); nextPhase(s); onStepChanged(); break;
     case "not-yet": state.pending = null; render(); break;
     case "pass": run(state.pending.action); break;
     case "close-enlarged": state.enlarged = null; render(); break;

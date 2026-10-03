@@ -326,7 +326,8 @@
     "Then I guide each round, turn by turn: who acts, what to do, and what to tidy up before passing the turn.": "Depois guio cada rodada, turno a turno: quem joga, o que fazer e o que arrumar antes de passar a vez.",
     "Tap the orb any time for a rules question.": "Toque no orbe a qualquer momento para tirar uma dúvida de regra.",
     "Start with setup": "Começar pela preparação",
-    "Skip setup, we’re set up": "Pular a preparação, já está tudo pronto"
+    "Skip setup, we’re set up": "Pular a preparação, já está tudo pronto",
+    "Skip to the next phase": "Pular para a próxima fase"
   },
   "es-419": {
     "Both players": "Ambos jugadores",
@@ -355,7 +356,7 @@
     "Swap seats": "Cambiar de lugar",
     "Pass the phone": "Pasar el celular",
     "Pass the phone to the {0}": "Pasa el celular: {0}",
-    "Next: {0}": "A continuación: {0}",
+    "Next: {0}": "Sigue: {0}",
     "I’m the {0}": "Tengo el celular ({0})",
     "Learn any turn, step by step.": "Aprende cualquier turno, paso a paso.",
     "Skip": "Omitir",
@@ -655,6 +656,7 @@
     "Then I guide each round, turn by turn: who acts, what to do, and what to tidy up before passing the turn.": "Luego guío cada ronda, turno a turno: quién juega, qué hacer y qué ordenar antes de pasar el turno.",
     "Tap the orb any time for a rules question.": "Toca el orbe en cualquier momento para hacer una pregunta de reglas.",
     "Start with setup": "Empezar por la preparación",
-    "Skip setup, we’re set up": "Saltar la preparación, ya está todo listo"
+    "Skip setup, we’re set up": "Saltar la preparación, ya está todo listo",
+    "Skip to the next phase": "Saltar a la siguiente fase"
   }
 }
