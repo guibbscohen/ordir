@@ -156,11 +156,15 @@ def play(page, url, problems, mode="table", expansions=(), fights_battle=False, 
     check(focused(page, ".title"), "focus did not move to the first step's title")
     if expansions:
         # The step's orb opens a short ask sheet; Escape closes it and returns to the orb.
+        check(page.query_selector(".ask-hint") and page.query_selector(".card .orb-btn .ask-badge"), "the orb does not say it answers questions")
         page.click(".near [data-act=ask-here], .half [data-act=ask-here] >> nth=0")
         check(focused(page, ".sheet h2"), "the step's orb did not open the ask sheet")
+        gap = page.evaluate("document.querySelector('.sheet').getBoundingClientRect().top - document.querySelector('.sheet').closest('.half').getBoundingClientRect().top")
+        check(abs(gap) < 2, f"the ask sheet does not fill the player's screen (starts {gap}px down)")
         a11y.scan("ask sheet", settle=1500)
         page.keyboard.press("Escape")
         check(not page.query_selector(".sheet") and focused(page, "[data-act=ask-here]"), "Escape did not close the ask sheet")
+        check(not page.query_selector(".ask-hint"), "the hint stayed after the player asked")
 
     steps = turns_in_loop = handoffs = checklists = 0
     fought = marked = False

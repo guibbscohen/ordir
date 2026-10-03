@@ -327,7 +327,8 @@
     "Tap the orb any time for a rules question.": "Toque no orbe a qualquer momento para tirar uma dúvida de regra.",
     "Start with setup": "Começar pela preparação",
     "Skip setup, we’re set up": "Pular a preparação, já está tudo pronto",
-    "Skip to the next phase": "Pular para a próxima fase"
+    "Skip to the next phase": "Pular para a próxima fase",
+    "Rules question? Tap Ordi": "Dúvida de regra? Toque no Ordi"
   },
   "es-419": {
     "Both players": "Ambos jugadores",
@@ -657,6 +658,7 @@
     "Tap the orb any time for a rules question.": "Toca el orbe en cualquier momento para hacer una pregunta de reglas.",
     "Start with setup": "Empezar por la preparación",
     "Skip setup, we’re set up": "Saltar la preparación, ya está todo listo",
-    "Skip to the next phase": "Saltar a la siguiente fase"
+    "Skip to the next phase": "Saltar a la siguiente fase",
+    "Rules question? Tap Ordi": "¿Duda de reglas? Toca a Ordi"
   }
 }
