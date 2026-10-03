@@ -50,7 +50,9 @@ Add new ones as dated bullets; replace a bullet when the user overrides it.
   OftalmoPronto was paused to free the slot). Secrets (e.g. ANTHROPIC_API_KEY) live only in Supabase.
 - 2026-10-01: Rules questions are answered by Claude Opus 5.5 in a Supabase Edge Function, from the
   official source texts only, with page citations on every claim; FAQ wins over the rulebook; if the
-  sources don't cover it, say so. Answers follow the itemized style (lead line + bullets).
+  sources don't cover it, say so. Answers follow the itemized style (lead line + bullets). 2026-10-03: stays on Opus
+  while testers are active (Sonnet 5.5 was ~55% cheaper but overstated unsettled rules in its first sentence on 2 of 30
+  real questions); revisit Sonnet when question volume makes the cost matter.
 - 2026-10-01: Sign-in is email one-time code now; Sign in with Apple is added once the Apple Developer
   account exists. Own-phone multiplayer (join a table by code, each player sees their side) ships in
   the browser preview and the app, on the same backend.
