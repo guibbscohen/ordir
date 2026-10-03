@@ -2,7 +2,7 @@
 //  SettingsView.swift
 //  Ordir
 //
-//  Ordir Pro (coming soon), the language Ordir speaks, and the tutorial again. Opened from Home's gear (the
+//  Ordir Pro (coming soon), the language Ordir speaks, the tutorial again and what's new. Opened from Home's gear (the
 //  preview has these on its Account tab).
 //
 
@@ -14,6 +14,7 @@ struct SettingsView: View {
     @AppStorage(OrdirLanguage.storageKey) private var language = OrdirLanguage.current.rawValue
     @Environment(\.dismiss) private var dismiss
     @State private var showsPro = false
+    @State private var showsNews = false
 
     var body: some View {
         NavigationStack {
@@ -79,6 +80,18 @@ struct SettingsView: View {
                         }
                     }
                     .accessibilityIdentifier("replay-tutorial")
+                    Button {
+                        showsNews = true
+                    } label: {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(tr("What’s new"))
+                            Text(tr("Everything Ordi has fixed and improved lately."))
+                                .font(.ordir(.footnote))
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .accessibilityIdentifier("whats-new")
+                    .sheet(isPresented: $showsNews) { WhatsNewView(all: true) }
                 }
                 Section {
                     Text(tr("Logo: “Magic Ball” by Ziyad Aljunaidi, Noun Project (CC BY 3.0). Type: Google Sans Flex (SIL OFL 1.1)."))

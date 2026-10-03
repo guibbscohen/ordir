@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Build the browser preview of the game guides from the same data the app ships.
 
-Copies Preview/index.html, its screen text in other languages (strings.js, from the app's
-Ordir/Localization/strings.json), its font (Preview/fonts), its icons
+Copies Preview/index.html, its screen text in other languages and its "What's new" lines (strings.js, from the
+app's Ordir/Localization/strings.json and whats_new.json), its font (Preview/fonts), its icons
 and web-app manifest, every game's turn script (scripts/<game>.json) with its translations
 (scripts/<game>.<lang>.json, from <game>.turnscript.<lang>.json) and every picture each names
 (img/<game>/<id>.jpg, the crops in Ordir/Assets.xcassets from tools/crop_source_images.py) into Preview/dist/,
@@ -69,7 +69,9 @@ def main():
     shutil.copy(ROOT / "Preview" / "manifest.webmanifest", DIST / "manifest.webmanifest")
     # Screen text in Portuguese and Spanish, shared with the app (Ordir/Localization/strings.json).
     strings = (ROOT / "Ordir" / "Localization" / "strings.json").read_text()
-    (DIST / "strings.js").write_text(f"const STRINGS = {strings.strip()};\n")
+    # And what changed lately, for "Since last time" (Ordir/Localization/whats_new.json, also shared with the app).
+    whats_new = (ROOT / "Ordir" / "Localization" / "whats_new.json").read_text()
+    (DIST / "strings.js").write_text(f"const STRINGS = {strings.strip()};\nconst WHATS_NEW = {whats_new.strip()};\n")
     # Every game's turn script (scripts/<game>.json) and its pictures (img/<game>/<id>.jpg).
     (DIST / "scripts").mkdir()
     missing, built = [], []

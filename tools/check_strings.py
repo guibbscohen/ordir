@@ -3,8 +3,9 @@
 
 Screen text is looked up by its English wording in Ordir/Localization/strings.json, shared by the app
 (tr("…"), Text(tr: "…"), and lists such as the tutorial's cards and Home's phrases) and the browser preview
-(t("…"), and the tables of tabs, games, tour cards and phrases in Preview/index.html). This finds every such
-string and checks both languages have it, with the same {0}, {1}… placeholders. Run from the repo root:
+(t("…"), and the tables of tabs, games, tour cards and phrases in Preview/index.html), and the "What's new" lines
+(Ordir/Localization/whats_new.json). This finds every such string and checks both languages have it, with the same
+{0}, {1}… placeholders. Run from the repo root:
 
     python3 tools/check_strings.py
 """
@@ -50,13 +51,25 @@ def app_strings():
     return found
 
 
+def whats_new_strings():
+    """Each release's lines, newest release first, each with a unique date id and an optional "only" platform."""
+    releases = json.loads((ROOT / "Ordir" / "Localization" / "whats_new.json").read_text())
+    ids = [release["id"] for release in releases]
+    if ids != sorted(set(ids), reverse=True) or not all(re.fullmatch(r"\d{4}-\d{2}-\d{2}", i) for i in ids):
+        sys.exit("FAIL Ordir/Localization/whats_new.json: release ids must be unique dates, newest first")
+    items = [item for release in releases for item in release["items"]]
+    if any(item.get("only") not in (None, "app", "preview") for item in items):
+        sys.exit('FAIL Ordir/Localization/whats_new.json: "only" must be "app" or "preview"')
+    return [item["text"] for item in items]
+
+
 def placeholders(text):
     return sorted(re.findall(r"\{\d\}", text))
 
 
 def main():
     table = json.loads((ROOT / "Ordir" / "Localization" / "strings.json").read_text())
-    used = {s.replace('\\"', '"') for s in preview_strings() + app_strings()}
+    used = {s.replace('\\"', '"') for s in preview_strings() + app_strings()} | set(whats_new_strings())
     errors = []
     for lang in LANGUAGES:
         words = table.get(lang, {})

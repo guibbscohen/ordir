@@ -241,7 +241,8 @@ def swipe(page, x0, y0, x1, y1, steps=8):
 
 
 def tour_gestures_languages(page, url, problems):
-    """First visit: the tutorial (buttons, swipes, Escape, replay from Account); swipe-back and browser Back;
+    """First visit: the tutorial (buttons, swipes, Escape, replay from Account); after an update, Since last time
+    (once) and What's new from Account; swipe-back and browser Back;
     swipe-down closing a picture; no swipe-back in a running guide; switching to Portuguese and Spanish."""
     a11y = Accessibility(page, problems)
     # Offline for this test: a sign-in library still loading can stall the emulated touches.
@@ -270,6 +271,31 @@ def tour_gestures_languages(page, url, problems):
     check(page.query_selector(".overlay.tour"), "Account did not replay the tutorial")
     page.keyboard.press("Escape")
     check(not page.query_selector(".overlay.tour") and focused(page, "[data-act=tutorial]"), "Escape did not close the tutorial back to its button")
+
+    # Back after an update: "Since last time" once, then never again; Account's What's new any time.
+    page.evaluate("localStorage.setItem('ordir-news-seen', '2000-01-01')")
+    page.reload()
+    page.keyboard.press("Enter")
+    page.wait_for_selector(".overlay.news", timeout=6000)
+    check(focused(page, ".news h2") and "Since last time" in page.text_content(".news h2"), "the update did not open Since last time")
+    check(page.locator(".overlay.news li").count() >= 3, "Since last time lists too few changes")
+    a11y.scan("since last time")
+    page.keyboard.press("Escape")
+    check(not page.query_selector(".overlay.news"), "Escape did not close Since last time")
+    page.reload()
+    page.keyboard.press("Enter")
+    page.wait_for_selector("[data-act=game-dune]:visible:not([disabled])")
+    page.wait_for_timeout(1800)
+    check(not page.query_selector(".overlay.news"), "Since last time came back after it was seen")
+    page.click("[data-act=tab-account]")
+    page.click("[data-act=news-open]")
+    check(focused(page, ".news h2") and "What’s new" in page.text_content(".news h2"), "Account did not open What's new")
+    page.click(".news-foot [data-act=news-close]")
+    check(not page.query_selector(".overlay.news") and focused(page, "[data-act=news-open]"), "Got it did not close What's new back to its button")
+    # Answers come with Markdown emphasis: it shows as bold and italic, never as stars.
+    html = page.evaluate("""answerHtml([{ text: "**Yes:** it moves *once*.\\n- ***Setup:*** a **Leader** stays", citations: [] }], "duneWarForArrakis")""")
+    check("<strong>Yes:</strong>" in html and "<em>once</em>" in html and "<strong><em>Setup:</em></strong>" in html
+          and "<strong>Leader</strong>" in html and "*" not in html, f"answer emphasis rendered as {html}")
 
     # Coming back to Home lands where the player left off, not at the top.
     page.click("[data-act=tab-games]")
@@ -567,7 +593,7 @@ def main():
                                     args=os.environ.get("CHROMIUM_ARGS", "").split())
         for number, (name, options) in enumerate(games, 1):
             page = browser.new_page(viewport={"width": 430, "height": 900})
-            page.add_init_script("try { localStorage.setItem('ordir-tour-done', '1') } catch {}")  # tour_gestures_languages covers the tour
+            page.add_init_script("try { localStorage.setItem('ordir-tour-done', '1'); localStorage.setItem('ordir-news-seen', '9999') } catch {}")  # tour_gestures_languages covers the tour
             problems = []
             page.on("pageerror", lambda e: problems.append(f"page error: {e}"))
             page.on("requestfailed", lambda r: problems.append(f"request failed: {r.url}"))
@@ -597,7 +623,7 @@ def main():
             print(f"FAIL tutorial, gestures and languages: {error}")
         context.close()
         page = browser.new_page(viewport={"width": 430, "height": 900})
-        page.add_init_script("try { localStorage.setItem('ordir-tour-done', '1') } catch {}")
+        page.add_init_script("try { localStorage.setItem('ordir-tour-done', '1'); localStorage.setItem('ordir-news-seen', '9999') } catch {}")
         problems = []
         page.on("pageerror", lambda e: problems.append(f"page error: {e}"))
         try:
@@ -621,7 +647,7 @@ def main():
             print(f"FAIL an older cached copy reloads into the live build: {error}")
         page.close()
         page = browser.new_page(viewport={"width": 430, "height": 900})
-        page.add_init_script("try { localStorage.setItem('ordir-tour-done', '1') } catch {}")
+        page.add_init_script("try { localStorage.setItem('ordir-tour-done', '1'); localStorage.setItem('ordir-news-seen', '9999') } catch {}")
         problems = []
         page.on("pageerror", lambda e: problems.append(f"page error: {e}"))
         try:
@@ -635,7 +661,7 @@ def main():
         page.close()
         context = browser.new_context(viewport={"width": 360, "height": 740}, has_touch=True, is_mobile=True)
         page = context.new_page()
-        page.add_init_script("try { localStorage.setItem('ordir-tour-done', '1') } catch {}")
+        page.add_init_script("try { localStorage.setItem('ordir-tour-done', '1'); localStorage.setItem('ordir-news-seen', '9999') } catch {}")
         problems = []
         page.on("pageerror", lambda e: problems.append(f"page error: {e}"))
         try:

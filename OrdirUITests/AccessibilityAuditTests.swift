@@ -16,7 +16,7 @@ final class AccessibilityAuditTests: XCTestCase {
 
     func testHome() throws {
         let app = XCUIApplication()
-        app.launchArguments = ["-OrdirTourDone", "YES", "-OrdirLanguage", "en"]
+        app.launchArguments = ["-OrdirTourDone", "YES", "-OrdirNewsSeen", "9999", "-OrdirLanguage", "en"]
         app.launch()
         // The opening plays first, then Home.
         XCTAssertTrue(app.staticTexts["Ordi’s Current Favorites"].waitForExistence(timeout: 20))
