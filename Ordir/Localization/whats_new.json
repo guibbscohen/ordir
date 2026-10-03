@@ -9,7 +9,8 @@
       { "text": "The Game menu can skip to the next phase when your table is ahead of the guide." },
       { "text": "Playing on your own phones: share an invite link, see who has joined, and get back to your table after closing the app.", "only": "preview" },
       { "text": "Fixed: switching on an expansion no longer freezes the screen on Android phones.", "only": "preview" },
-      { "text": "“What’s new”, under Help, lists everything Ordi fixed and improved lately." }
+      { "text": "“What’s new”, under Help, lists everything Ordi fixed and improved lately." },
+      { "text": "Fixed: words Ordi puts in bold in its answers now show in bold, without stars.", "only": "preview" }
     ]
   },
   {

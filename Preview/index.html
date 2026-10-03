@@ -1796,7 +1796,13 @@ function signInPane(reason) {
     ${f.error ? `<p class="error" role="alert">${esc(f.error)}</p>` : ""}</div>`;
 }
 
-/** Answer text with its citations as page chips; "- " lines become a list. */
+/** Claude's Markdown emphasis in an (already escaped) answer line: ***both***, **bold** and *italic*; a stray ** goes. */
+const emphasis = (line) => line
+  .replace(/\*\*\*(.+?)\*\*\*/g, "<strong><em>$1</em></strong>")
+  .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+  .replace(/(^|[\s(“"])\*(?!\s)([^*]+?)\*(?=$|[\s.,;:!?)”"])/g, "$1<em>$2</em>")
+  .replace(/\*\*/g, "");
+/** Answer text with its citations as page chips; "- " lines become a list, **bold** shows in bold. */
 function answerHtml(answer, game) {
   let chipIndex = 0;
   const html = answer.map((block) => {
@@ -1813,7 +1819,7 @@ function answerHtml(answer, game) {
     const item = /^\s*[-•]\s+/.test(line);
     if (item && !list) { out += "<ul>"; list = true; }
     if (!item && list) { out += "</ul>"; list = false; }
-    out += item ? `<li>${line.replace(/^\s*[-•]\s+/, "")}</li>` : `<p>${line}</p>`;
+    out += item ? `<li>${emphasis(line.replace(/^\s*[-•]\s+/, ""))}</li>` : `<p>${emphasis(line)}</p>`;
   }
   return out + (list ? "</ul>" : "");
 }

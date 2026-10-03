@@ -346,7 +346,8 @@
     "Ordir Pro is coming soon, with more rules questions and Ordi in shades.": "O Ordir Pro vem aí, com mais perguntas de regras e o Ordi de óculos escuros.",
     "Report a problem from Account or the Game menu, with a screenshot if you like.": "Relate um problema pela Conta ou pelo menu do jogo, com uma captura de tela se quiser.",
     "Fixed: the Home Screen app now opens the latest version, not an older copy.": "Corrigido: o app na tela de início agora abre a versão mais recente, não uma cópia antiga.",
-    "“What’s new”, under Help, lists everything Ordi fixed and improved lately.": "“Novidades”, em Ajuda, lista tudo o que o Ordi corrigiu e melhorou nos últimos tempos."
+    "“What’s new”, under Help, lists everything Ordi fixed and improved lately.": "“Novidades”, em Ajuda, lista tudo o que o Ordi corrigiu e melhorou nos últimos tempos.",
+    "Fixed: words Ordi puts in bold in its answers now show in bold, without stars.": "Corrigido: as palavras que o Ordi destaca nas respostas agora aparecem em negrito, sem asteriscos."
   },
   "es-419": {
     "Both players": "Ambos jugadores",
@@ -695,6 +696,7 @@
     "Ordir Pro is coming soon, with more rules questions and Ordi in shades.": "Ordir Pro llega pronto, con más preguntas de reglas y Ordi con gafas de sol.",
     "Report a problem from Account or the Game menu, with a screenshot if you like.": "Reporta un problema desde Cuenta o el menú del juego, con una captura de pantalla si quieres.",
     "Fixed: the Home Screen app now opens the latest version, not an older copy.": "Arreglado: la app en la pantalla de inicio ahora abre la versión más reciente, no una copia antigua.",
-    "“What’s new”, under Help, lists everything Ordi fixed and improved lately.": "“Novedades”, en Ayuda, muestra todo lo que Ordi arregló y mejoró últimamente."
+    "“What’s new”, under Help, lists everything Ordi fixed and improved lately.": "“Novedades”, en Ayuda, muestra todo lo que Ordi arregló y mejoró últimamente.",
+    "Fixed: words Ordi puts in bold in its answers now show in bold, without stars.": "Arreglado: las palabras que Ordi resalta en sus respuestas ahora se ven en negrita, sin asteriscos."
   }
 }

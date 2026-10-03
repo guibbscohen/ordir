@@ -292,6 +292,10 @@ def tour_gestures_languages(page, url, problems):
     check(focused(page, ".news h2") and "What’s new" in page.text_content(".news h2"), "Account did not open What's new")
     page.click(".news-foot [data-act=news-close]")
     check(not page.query_selector(".overlay.news") and focused(page, "[data-act=news-open]"), "Got it did not close What's new back to its button")
+    # Answers come with Markdown emphasis: it shows as bold and italic, never as stars.
+    html = page.evaluate("""answerHtml([{ text: "**Yes:** it moves *once*.\\n- ***Setup:*** a **Leader** stays", citations: [] }], "duneWarForArrakis")""")
+    check("<strong>Yes:</strong>" in html and "<em>once</em>" in html and "<strong><em>Setup:</em></strong>" in html
+          and "<strong>Leader</strong>" in html and "*" not in html, f"answer emphasis rendered as {html}")
 
     # Coming back to Home lands where the player left off, not at the top.
     page.click("[data-act=tab-games]")
